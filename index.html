@@ -1,313 +1,209 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MejorarIA</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body{
-      margin:0;
-      font-family:Inter, sans-serif;
-      background:#06111f;
-      color:white;
-    }
+<title>MejorarIA</title>
 
-    .container{
-      max-width:1100px;
-      margin:auto;
-      padding:20px;
-      text-align:center;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-    .brand{
-      font-family:'Oswald', sans-serif;
-      font-size:2.6rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-weight:600;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      position:relative;
-    }
+<style>
 
-    .brand::before{
-      content:"IA";
-      position:absolute;
-      font-size:5rem;
-      font-weight:700;
-      left:50%;
-      top:50%;
-      transform:translate(-50%, -50%);
-      opacity:0.06;
-      background:linear-gradient(90deg, #00D2BE, #6F2DA8);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      pointer-events:none;
-    }
+body{
+  margin:0;
+  font-family: 'Inter', sans-serif;
+  background:#06111f;
+  color:white;
+}
 
-    .brand .mejorar{
-      color:#d1d5db;
-      position:relative;
-      z-index:1;
-    }
+/* CONTENEDOR */
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:30px 20px;
+  text-align:center;
+}
 
-    .brand .ia{
-      background:linear-gradient(90deg, #00D2BE, #6F2DA8);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      text-shadow:
-        0 0 8px rgba(0,210,190,.4),
-        0 0 16px rgba(111,45,168,.4);
-      position:relative;
-      z-index:1;
-    }
+/* LOGO */
+.logo{
+  width:260px;
+  margin:auto;
+  display:block;
+}
 
-    .credits{
-      font-size:.7rem;
-      opacity:.6;
-      margin-top:8px;
-    }
+/* CRÉDITOS */
+.credits{
+  font-size:.7rem;
+  opacity:.5;
+  margin-top:8px;
+}
 
-    h1{
-      font-size:2.2rem;
-      margin-top:30px;
-      line-height:1.1;
-    }
+/* TITULO */
+h1{
+  font-size:2.4rem;
+  margin-top:30px;
+}
 
-    h2{
-      font-size:1.8rem;
-      margin-bottom:20px;
-    }
+/* TEXTO */
+p{
+  color:#9fb0c7;
+  max-width:600px;
+  margin:10px auto;
+}
 
-    h3{
-      margin-top:0;
-    }
+/* BOTONES */
+.cta{
+  margin-top:25px;
+}
 
-    p{
-      color:#9fb0c7;
-      max-width:650px;
-      margin:auto;
-      line-height:1.6;
-    }
+.btn{
+  padding:14px 22px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:600;
+  display:inline-block;
+  margin:6px;
+  transition:.2s;
+}
 
-    .cta{
-      margin-top:20px;
-    }
+.btn:hover{
+  transform:scale(1.05);
+}
 
-    .btn{
-      padding:12px 20px;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:600;
-      display:inline-block;
-      margin:5px;
-      transition:0.2s ease;
-    }
+/* COLORES F1 */
+.sonar{
+  background:#ff8000; /* McLaren */
+  color:black;
+}
 
-    .primary{
-      background:#006F62; /* Aston Martin */
-      color:white;
-    }
+.demo{
+  background:#2563eb; /* Williams */
+  color:white;
+}
 
-    .primary:hover{
-      background:#00897b;
-    }
+/* TARJETAS */
+.cards{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-top:40px;
+  flex-wrap:wrap;
+}
 
-    .secondary{
-      background:#005AFF; /* Williams */
-      color:white;
-    }
+.card{
+  background:#0b1a2d;
+  padding:20px;
+  border-radius:16px;
+  width:260px;
+  text-align:left;
+}
 
-    .secondary:hover{
-      background:#1a6cff;
-    }
+.card h3{
+  margin-top:0;
+}
 
-    .section{
-      margin-top:60px;
-    }
+/* COLORES */
+.sonar-title{
+  color:#ff8000;
+}
 
-    .grid{
-      display:flex;
-      gap:20px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
+.ensayar-title{
+  color:#dc2626; /* Ferrari */
+}
 
-    .card{
-      background:#0f1b2d;
-      padding:20px;
-      border-radius:16px;
-      width:280px;
-      box-sizing:border-box;
-      box-shadow:0 6px 20px rgba(0,0,0,.2);
-    }
+.portal-title{
+  color:#22c55e; /* Aston Martin */
+}
 
-    .sonaria{
-      color:#FF8700; /* McLaren */
-      text-shadow:0 0 10px rgba(255,135,0,.25);
-    }
+/* VIDEO */
+.video{
+  margin-top:30px;
+}
 
-    .ensayaria{
-      color:#DC0000; /* Ferrari */
-      text-shadow:0 0 10px rgba(220,0,0,.25);
-    }
+iframe{
+  width:100%;
+  max-width:700px;
+  height:380px;
+  border-radius:12px;
+  border:none;
+}
 
-    iframe{
-      width:100%;
-      max-width:800px;
-      height:450px;
-      border:0;
-      border-radius:12px;
-      margin-top:20px;
-      background:#0f1b2d;
-    }
+/* FOOTER */
+.footer{
+  margin-top:60px;
+  text-align:center;
+}
 
-    .video-box{
-      margin-top:30px;
-      display:flex;
-      justify-content:center;
-    }
-
-    .video-demo-card{
-      background:#0f1b2d;
-      padding:20px;
-      border-radius:16px;
-      max-width:600px;
-      text-align:left;
-      box-sizing:border-box;
-      box-shadow:0 6px 20px rgba(0,0,0,.2);
-    }
-
-    .demo-title{
-      color:#FF8700;
-      margin-bottom:10px;
-      font-weight:600;
-    }
-
-    .demo-bad{
-      background:#081523;
-      padding:12px;
-      border-radius:10px;
-      margin-bottom:10px;
-      color:#cbd5e1;
-    }
-
-    .demo-good{
-      background:#003d36;
-      padding:12px;
-      border-radius:10px;
-      color:#d1fae5;
-    }
-
-    footer{
-      margin-top:60px;
-      padding:30px 0 40px;
-    }
-
-    @media (max-width:768px){
-      h1{ font-size:1.8rem; }
-      .brand{ font-size:2rem; }
-      .brand::before{ font-size:3.6rem; }
-      iframe{ height:220px; }
-      .card{ width:100%; }
-      .video-demo-card{ width:100%; }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div class="container">
-    <div class="brand">
-      <span class="mejorar">Mejorar</span><span class="ia">IA</span>
+<div class="container">
+
+  <!-- LOGO ARRIBA -->
+  <img src="logo-mejoraria.png" class="logo">
+
+  <div class="credits">
+    Creado por MauRock · Mauricio José Pinto Basso
+  </div>
+
+  <!-- HERO -->
+  <h1>Menos tiempo planificando.<br>Más tiempo enseñando.</h1>
+
+  <p>
+    Un portal de herramientas con IA para profesores.
+    Optimiza tu tiempo, mejora tus clases y toma mejores decisiones.
+  </p>
+
+  <!-- BOTONES -->
+  <div class="cta">
+    <a href="#herramientas" class="btn sonar">Ver herramientas</a>
+    <a href="#video" class="btn demo">Ver demo</a>
+  </div>
+
+  <!-- VIDEO -->
+  <div id="video" class="video">
+    <!-- reemplaza con tu video -->
+    <iframe src="https://www.youtube.com/embed/VIDEO_ID"></iframe>
+  </div>
+
+  <!-- HERRAMIENTAS -->
+  <div id="herramientas" class="cards">
+
+    <div class="card">
+      <h3 class="portal-title">Portal</h3>
+      <p>
+        Un solo lugar para herramientas que ayudan a profesores a ahorrar tiempo y mejorar sus clases.
+      </p>
     </div>
+
+    <div class="card">
+      <h3 class="sonar-title">SonarIA</h3>
+      <p>
+        Analiza canciones, detecta lenguaje explícito y genera versiones aptas para el aula.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3 class="ensayar-title">EnsayarIA</h3>
+      <p>
+        Próximamente: acordes, instrumentos y ejecución musical adaptada a estudiantes.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- LOGO ABAJO -->
+  <div class="footer">
+    <img src="logo-mejoraria.png" class="logo">
     <div class="credits">
       Creado por MauRock · Mauricio José Pinto Basso
     </div>
   </div>
 
-  <div class="container">
-    <h1>Encuentra mejores recursos para tu clase en menos tiempo</h1>
-    <p>
-      Herramientas para profesores que buscan claridad, rapidez y mejores decisiones en el aula.
-    </p>
-
-    <div class="cta">
-      <a href="#video" class="btn primary">Ver demo</a>
-      <a href="#herramientas" class="btn secondary">Ver herramientas</a>
-    </div>
-  </div>
-
-  <div id="video" class="container section">
-    <h2>Cómo funciona SonarIA</h2>
-
-    <iframe src="https://www.youtube.com/embed/VIDEO_ID_AQUI" allowfullscreen></iframe>
-
-    <div class="video-box">
-      <div class="video-demo-card">
-        <div class="demo-title">🎵 SonarIA analiza una canción</div>
-        <div class="demo-bad">❌ Letra con lenguaje no apto</div>
-        <div class="demo-good">✅ Versión adaptada para contexto escolar</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="herramientas" class="container section">
-    <h2>Herramientas</h2>
-    <div class="grid">
-      <div class="card">
-        <h3 class="sonaria">🎵 SonarIA</h3>
-        <p>Analiza lenguaje y mensaje de canciones para uso escolar.</p>
-      </div>
-
-      <div class="card">
-        <h3 class="ensayaria">🎸 EnsayarIA</h3>
-        <p>Próximamente: acordes e ideas para ejecución musical.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container section">
-    <h2>Por qué importa</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Ahorra tiempo</h3>
-        <p>Menos búsqueda, más enseñanza.</p>
-      </div>
-
-      <div class="card">
-        <h3>Decisiones rápidas</h3>
-        <p>Elige mejor qué trabajar.</p>
-      </div>
-
-      <div class="card">
-        <h3>Hecho para profes</h3>
-        <p>Basado en realidad escolar.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container section">
-    <h2>¿Te interesa?</h2>
-    <div class="cta">
-      <a href="mailto:contacto@mejoraria.cl?subject=Quiero%20probar%20SonarIA" class="btn primary">Probar SonarIA</a>
-      <a href="mailto:contacto@mejoraria.cl?subject=Inter%C3%A9s%20de%20colegio%20en%20Mejoraria" class="btn secondary">Soy colegio</a>
-    </div>
-  </div>
-
-  <footer>
-    <div class="container">
-      <div class="brand">
-        <span class="mejorar">Mejorar</span><span class="ia">IA</span>
-      </div>
-      <div class="credits">
-        Creado por MauRock · Mauricio José Pinto Basso
-      </div>
-    </div>
-  </footer>
+</div>
 
 </body>
 </html>
