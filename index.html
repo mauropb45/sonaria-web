@@ -22,20 +22,53 @@
     }
 
     .brand{
-      font-family:Oswald, sans-serif;
-      font-size:2.4rem;
-      letter-spacing:.12em;
+      font-family:'Oswald', sans-serif;
+      font-size:2.6rem;
+      letter-spacing:.08em;
       text-transform:uppercase;
-      display:inline-block;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      position:relative;
     }
 
-    .mejorar{ color:#93c5fd; }
-    .ia{ color:#22c55e; }
+    .brand::before{
+      content:"IA";
+      position:absolute;
+      font-size:5rem;
+      font-weight:700;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      opacity:0.06;
+      background:linear-gradient(90deg, #00D2BE, #6F2DA8);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      pointer-events:none;
+    }
+
+    .brand .mejorar{
+      color:#d1d5db;
+      position:relative;
+      z-index:1;
+    }
+
+    .brand .ia{
+      background:linear-gradient(90deg, #00D2BE, #6F2DA8);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:
+        0 0 8px rgba(0,210,190,.4),
+        0 0 16px rgba(111,45,168,.4);
+      position:relative;
+      z-index:1;
+    }
 
     .credits{
       font-size:.7rem;
       opacity:.6;
-      margin-top:4px;
+      margin-top:8px;
     }
 
     h1{
@@ -75,7 +108,7 @@
     }
 
     .primary{
-      background:#006F62;
+      background:#006F62; /* Aston Martin */
       color:white;
     }
 
@@ -84,7 +117,7 @@
     }
 
     .secondary{
-      background:#005AFF;
+      background:#005AFF; /* Williams */
       color:white;
     }
 
@@ -109,15 +142,16 @@
       border-radius:16px;
       width:280px;
       box-sizing:border-box;
+      box-shadow:0 6px 20px rgba(0,0,0,.2);
     }
 
     .sonaria{
-      color:#FF8700;
+      color:#FF8700; /* McLaren */
       text-shadow:0 0 10px rgba(255,135,0,.25);
     }
 
     .ensayaria{
-      color:#DC0000;
+      color:#DC0000; /* Ferrari */
       text-shadow:0 0 10px rgba(220,0,0,.25);
     }
 
@@ -131,6 +165,43 @@
       background:#0f1b2d;
     }
 
+    .video-box{
+      margin-top:30px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .video-demo-card{
+      background:#0f1b2d;
+      padding:20px;
+      border-radius:16px;
+      max-width:600px;
+      text-align:left;
+      box-sizing:border-box;
+      box-shadow:0 6px 20px rgba(0,0,0,.2);
+    }
+
+    .demo-title{
+      color:#FF8700;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .demo-bad{
+      background:#081523;
+      padding:12px;
+      border-radius:10px;
+      margin-bottom:10px;
+      color:#cbd5e1;
+    }
+
+    .demo-good{
+      background:#003d36;
+      padding:12px;
+      border-radius:10px;
+      color:#d1fae5;
+    }
+
     footer{
       margin-top:60px;
       padding:30px 0 40px;
@@ -139,8 +210,10 @@
     @media (max-width:768px){
       h1{ font-size:1.8rem; }
       .brand{ font-size:2rem; }
+      .brand::before{ font-size:3.6rem; }
       iframe{ height:220px; }
       .card{ width:100%; }
+      .video-demo-card{ width:100%; }
     }
   </style>
 </head>
@@ -170,7 +243,16 @@
 
   <div id="video" class="container section">
     <h2>Cómo funciona SonarIA</h2>
+
     <iframe src="https://www.youtube.com/embed/VIDEO_ID_AQUI" allowfullscreen></iframe>
+
+    <div class="video-box">
+      <div class="video-demo-card">
+        <div class="demo-title">🎵 SonarIA analiza una canción</div>
+        <div class="demo-bad">❌ Letra con lenguaje no apto</div>
+        <div class="demo-good">✅ Versión adaptada para contexto escolar</div>
+      </div>
+    </div>
   </div>
 
   <div id="herramientas" class="container section">
