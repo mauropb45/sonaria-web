@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planes | MejorarIA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#06111f;
+      --bg2:#081728;
+      --panel:#0c1b2f;
+      --panel-2:#122742;
+      --text:#f8fafc;
+      --muted:#9fb0c7;
+      --line:rgba(255,255,255,.08);
+      --orange:#ff8000;
+      --orange-hover:#ff9826;
+      --blue:#3b82f6;
+      --blue-hover:#4d8fff;
+      --green:#22c55e;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
+      --max:1120px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family:'Inter', sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,128,0,.13), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(59,130,246,.14), transparent 26%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+      font-family:'Inter', sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea,
+    label,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    span,
+    div{
+      font-family:'Inter', sans-serif;
+    }
+
+    .container{
+      max-width:var(--max);
+      margin:auto;
+      padding:34px 20px 76px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:30px;
+      flex-wrap:wrap;
+    }
+
+    .logo-wrap{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:140px;
+      height:auto;
+      display:block;
+      object-fit:contain;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.22));
+    }
+
+    .brand-text{
+      font-size:0.95rem;
+      font-weight:700;
+      color:#dbe6f5;
+      letter-spacing:.01em;
+    }
+
+    .back{
+      padding:11px 16px;
+      border-radius:14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:.95rem;
+      font-weight:600;
+      transition:.2s ease;
+    }
+
+    .back:hover{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(2rem, 4vw, 3rem);
+      line-height:1.06;
+      letter-spacing:-.02em;
+      font-weight:800;
+    }
+
+    .hero p{
+      margin:0 auto;
+      max-width:760px;
+      color:var(--muted);
+      font-size:1.05rem;
+      line-height:1.72;
+      font-weight:500;
+    }
+
+    .hero strong{
+      color:#eef4fb;
+      font-weight:800;
+    }
+
+    .pricing{
+      margin-top:30px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .plan{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+
+    .plan.featured{
+      border:1px solid rgba(255,128,0,.35);
+      box-shadow:0 18px 40px rgba(255,128,0,.10);
+      transform:translateY(-4px);
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:max-content;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,128,0,.12);
+      color:#ffd5aa;
+      border:1px solid rgba(255,128,0,.2);
+      font-size:.85rem;
+      font-weight:800;
+      margin-bottom:16px;
+    }
+
+    .plan h2{
+      margin:0 0 8px;
+      font-size:1.6rem;
+      line-height:1.1;
+    }
+
+    .plan-sub{
+      color:var(--muted);
+      line-height:1.65;
+      font-size:1rem;
+      margin-bottom:18px;
+      min-height:78px;
+    }
+
+    .price{
+      font-size:2rem;
+      font-weight:800;
+      line-height:1.1;
+      margin:0 0 6px;
+    }
+
+    .price small{
+      font-size:1rem;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .meta{
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.6;
+      margin-bottom:18px;
+    }
+
+    .features{
+      list-style:none;
+      padding:0;
+      margin:0 0 24px;
+      display:grid;
+      gap:10px;
+      flex:1;
+    }
+
+    .features li{
+      position:relative;
+      padding-left:18px;
+      color:#e6eef8;
+      line-height:1.55;
+      font-size:1rem;
+      font-weight:500;
+    }
+
+    .features li::before{
+      content:"•";
+      position:absolute;
+      left:0;
+      top:0;
+      color:var(--orange);
+      font-weight:800;
+    }
+
+    .actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:16px;
+      padding:15px 22px;
+      font-size:1rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-primary{
+      background:var(--orange);
+      color:#111827;
+    }
+
+    .btn-primary:hover{
+      background:var(--orange-hover);
+    }
+
+    .btn-secondary{
+      background:var(--blue);
+      color:white;
+    }
+
+    .btn-secondary:hover{
+      background:var(--blue-hover);
+    }
+
+    .section{
+      margin-top:34px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .section h3{
+      margin:0 0 10px;
+      font-size:1.45rem;
+      line-height:1.15;
+    }
+
+    .section p{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.7;
+      font-weight:500;
+    }
+
+    .grid-2{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .mini{
+      background:linear-gradient(180deg, rgba(59,130,246,.15), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:20px;
+      padding:20px;
+    }
+
+    .mini strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:1.05rem;
+      font-weight:800;
+      color:#f2f7fd;
+    }
+
+    .mini span{
+      color:#d0dced;
+      line-height:1.6;
+      font-size:1rem;
+      font-weight:500;
+    }
+
+    .faq{
+      margin-top:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .faq-item{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px 20px;
+    }
+
+    .faq-item strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:1rem;
+      font-weight:800;
+      color:#eef4fb;
+    }
+
+    .faq-item span{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:1rem;
+      font-weight:500;
+    }
+
+    @media (max-width: 980px){
+      .pricing{
+        grid-template-columns:1fr;
+      }
+
+      .plan.featured{
+        transform:none;
+      }
+    }
+
+    @media (max-width: 760px){
+      .grid-2{
+        grid-template-columns:1fr;
+      }
+
+      .topbar{
+        align-items:flex-start;
+      }
+
+      .logo{
+        width:120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <div class="logo-wrap">
+        <img src="./logo-mejoraria.png" alt="Logo MejorarIA" class="logo">
+        <div class="brand-text">MejorarIA</div>
+      </div>
+
+      <a href="index.html" class="back">← Volver al inicio</a>
+    </div>
+
+    <div class="hero">
+      <h1>Planes pensados para validar, probar y escalar</h1>
+      <p>
+        En esta etapa, <strong>MejorarIA</strong> ofrece acceso guiado, pruebas y acompañamiento inicial.
+        La idea no es prometer un software cerrado que aún no corresponde, sino abrir una forma realista de
+        probar herramientas como <strong>SonarIA</strong>, validar su utilidad y avanzar hacia soluciones más completas.
+      </p>
+    </div>
+
+    <div class="pricing">
+      <div class="plan">
+        <div class="badge">Primer paso</div>
+        <h2>Explorar</h2>
+        <div class="plan-sub">
+          Para docentes que quieren conocer MejorarIA, dejar su interés y acceder a pruebas o novedades.
+        </div>
+
+        <div class="price">Gratis <small>/ inicio</small></div>
+        <div class="meta">
+          Ideal para primeros interesados y validación temprana.
+        </div>
+
+        <ul class="features">
+          <li>Solicitud de acceso a herramientas en etapa inicial.</li>
+          <li>Interés en productos como SonarIA o EnsayarIA.</li>
+          <li>Posibilidad de contar una necesidad de tu asignatura.</li>
+          <li>Ingreso a lista prioritaria de pruebas y novedades.</li>
+        </ul>
+
+        <div class="actions">
+          <a href="contacto.html" class="btn btn-secondary">Quiero explorar</a>
+        </div>
+      </div>
+
+      <div class="plan featured">
+        <div class="badge">Más recomendado</div>
+        <h2>Docente</h2>
+        <div class="plan-sub">
+          Para profesores que quieren probar SonarIA con foco pedagógico, uso real y conversación directa.
+        </div>
+
+        <div class="price">$9.990 <small>/ mes proyectado</small></div>
+        <div class="meta">
+          Valor de referencia para la versión docente cuando el acceso sea más estable y recurrente.
+        </div>
+
+        <ul class="features">
+          <li>Acceso guiado o piloto a herramientas activas.</li>
+          <li>Análisis de canciones con foco pedagógico.</li>
+          <li>Versión escolar sugerida.</li>
+          <li>Match con cursos de música MINEDUC y orientación curricular.</li>
+          <li>Feedback directo para mejorar el producto según tu realidad docente.</li>
+        </ul>
+
+        <div class="actions">
+          <a href="contacto.html" class="btn btn-primary">Solicitar acceso</a>
+          <a href="contacto.html" class="btn btn-secondary">Quiero una demo</a>
+        </div>
+      </div>
+
+      <div class="plan">
+        <div class="badge">Instituciones</div>
+        <h2>Colegio o programa</h2>
+        <div class="plan-sub">
+          Para equipos, coordinaciones o instituciones que quieren evaluar soluciones aplicadas a varios docentes.
+        </div>
+
+        <div class="price">A medida <small>/ implementación</small></div>
+        <div class="meta">
+          Conversación según contexto, número de usuarios y necesidades pedagógicas.
+        </div>
+
+        <ul class="features">
+          <li>Exploración de uso institucional.</li>
+          <li>Posibilidad de pilotos con docentes o áreas específicas.</li>
+          <li>Conversación sobre necesidades reales del establecimiento.</li>
+          <li>Diseño de soluciones que puedan crecer junto a la institución.</li>
+        </ul>
+
+        <div class="actions">
+          <a href="contacto.html" class="btn btn-secondary">Conversar implementación</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>¿Qué incluye hoy SonarIA como propuesta de valor?</h3>
+      <p>
+        SonarIA no es solo un filtro de letras. La dirección del producto apunta a ayudar a docentes de música
+        a trabajar canciones con más criterio pedagógico, conectando análisis de contenido, adaptación escolar
+        y orientación curricular para distintos cursos de música MINEDUC.
+      </p>
+
+      <div class="grid-2">
+        <div class="mini">
+          <strong>Valor inmediato</strong>
+          <span>
+            Análisis de canciones, detección de contenido sensible y apoyo para una versión más apta para el aula.
+          </span>
+        </div>
+
+        <div class="mini">
+          <strong>Diferencial pedagógico</strong>
+          <span>
+            Sugerencia de curso y orientación curricular en música, para que el profesor vea si la canción realmente le sirve.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Preguntas frecuentes</h3>
+
+      <div class="faq">
+        <div class="faq-item">
+          <strong>¿Puedo entrar y usar el software inmediatamente?</strong>
+          <span>
+            Por ahora, el acceso funciona como prueba guiada, piloto o acceso anticipado, según la herramienta y el momento de desarrollo.
+          </span>
+        </div>
+
+        <div class="faq-item">
+          <strong>¿Puedo pedir una solución para mi asignatura?</strong>
+          <span>
+            Sí. MejorarIA también busca detectar dificultades reales de docentes para evaluar nuevas herramientas que puedan co-construirse.
+          </span>
+        </div>
+
+        <div class="faq-item">
+          <strong>¿El precio docente ya está cerrado?</strong>
+          <span>
+            Aún no del todo. El valor mostrado es una referencia comercial para orientar la propuesta mientras se valida el producto con usuarios reales.
+          </span>
+        </div>
+
+        <div class="faq-item">
+          <strong>¿Puedo conversar por un colegio o institución?</strong>
+          <span>
+            Sí. Si trabajas con varios docentes o desde una coordinación, puedes solicitar una conversación para evaluar necesidades y pilotos.
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
