@@ -106,49 +106,65 @@ body{
   color:white;
 }
 
-/* VIDEO */
-.video{
-  margin-top:40px;
-  text-align:center;
-}
-
-iframe{
-  width:100%;
-  max-width:720px;
-  height:400px;
-  border-radius:16px;
-  border:none;
-}
-
-/* PRODUCTOS */
-.section{
-  margin-top:60px;
-}
-
-.cards{
+/* BLOQUES PRINCIPALES */
+.products{
+  margin-top:50px;
   display:flex;
   gap:20px;
   flex-wrap:wrap;
-  justify-content:center;
 }
 
-.card{
+.product{
+  flex:1;
+  min-width:300px;
   background:var(--panel);
   border:1px solid var(--line);
-  padding:22px;
-  border-radius:18px;
-  width:280px;
+  border-radius:20px;
+  padding:20px;
 }
 
-.card h3{
-  margin-top:0;
+/* VIDEO */
+.video iframe{
+  width:100%;
+  height:300px;
+  border-radius:12px;
+  border:none;
 }
 
-.sonar{ color:#ff8000; }
-.ensayar{ color:#ef4444; }
-.portal{ color:#22c55e; }
+/* ENSAYARIA */
+.placeholder{
+  height:300px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.placeholder h3{
+  margin:0;
+  font-size:1.5rem;
+  color:#ef4444;
+}
+
+.placeholder span{
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.placeholder p{
+  margin-top:14px;
+  max-width:260px;
+  color:#cbd5e1;
+  font-size:.95rem;
+}
 
 /* DIFERENCIAL */
+.section{
+  margin-top:60px;
+  text-align:center;
+}
+
 .features{
   display:flex;
   gap:20px;
@@ -169,10 +185,6 @@ iframe{
 .final{
   margin-top:70px;
   text-align:center;
-}
-
-.final h2{
-  margin-bottom:10px;
 }
 
 .footer{
@@ -204,48 +216,64 @@ iframe{
     <h1>IA aplicada a educación</h1>
 
     <p>
-      Herramientas para profesores que buscan ahorrar tiempo,
+      Herramientas reales para profesores que buscan ahorrar tiempo,
       mejorar sus clases y tomar mejores decisiones pedagógicas.
     </p>
 
     <div class="cta">
       <a href="planes.html" class="btn primary">Ver planes</a>
-      <a href="#video" class="btn secondary">Ver demo</a>
+      <a href="contacto.html" class="btn secondary">Probar / proponer</a>
     </div>
-  </div>
-
-  <!-- VIDEO -->
-  <div id="video" class="video">
-    <iframe 
-      src="https://www.youtube.com/embed/aD6MUQl0ajI"
-      allowfullscreen>
-    </iframe>
   </div>
 
   <!-- PRODUCTOS -->
-  <div class="section">
-    <div class="cards">
+  <div class="products">
 
-      <div class="card">
-        <h3 class="portal">MejorarIA</h3>
-        <p>Un ecosistema de herramientas con IA para educación.</p>
+    <!-- SONARIA -->
+    <div class="product">
+      <h3 style="color:#ff8000;">SonarIA</h3>
+
+      <div class="video">
+        <iframe 
+          src="https://www.youtube.com/embed/aD6MUQl0ajI"
+          allowfullscreen>
+        </iframe>
       </div>
 
-      <div class="card">
-        <h3 class="sonar">SonarIA</h3>
-        <p>Analiza canciones, adapta contenido y orienta su uso pedagógico.</p>
-      </div>
-
-      <div class="card">
-        <h3 class="ensayar">EnsayarIA</h3>
-        <p>Próximamente: apoyo para práctica instrumental y ejecución musical.</p>
-      </div>
-
+      <p style="margin-top:10px; color:#9fb0c7;">
+        Analiza canciones, adapta contenido y orienta su uso pedagógico.
+      </p>
     </div>
+
+    <!-- ENSAYARIA -->
+    <div class="product">
+      <div class="placeholder">
+
+        <h3>EnsayarIA</h3>
+        <span>Próximamente</span>
+
+        <p>
+          Herramienta para apoyar la práctica musical y ejecución en estudiantes.
+        </p>
+
+        <p style="font-size:.85rem; opacity:.7;">
+          Construyendo junto a docentes
+        </p>
+
+        <a href="contacto.html" class="btn secondary" style="margin-top:15px;">
+          Acceso anticipado
+        </a>
+
+      </div>
+    </div>
+
   </div>
 
   <!-- DIFERENCIAL -->
   <div class="section">
+
+    <h2>Más que herramientas</h2>
+
     <div class="features">
 
       <div class="feature">
