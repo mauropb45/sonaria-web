@@ -3,84 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>MejorarIA | IA para profesores</title>
+<title>MejorarIA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
+:root{
+  --bg:#06111f;
+  --bg2:#081728;
+  --panel:#0c1b2f;
+  --text:#f8fafc;
+  --muted:#9fb0c7;
+  --line:rgba(255,255,255,.08);
+  --orange:#ff8000;
+  --blue:#3b82f6;
+}
+
+*{box-sizing:border-box;}
+
 body{
   margin:0;
   font-family:'Inter',sans-serif;
-  background:#06111f;
-  color:white;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255,128,0,.12), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(59,130,246,.12), transparent 25%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
 }
 
 /* CONTENEDOR */
 .container{
-  max-width:1000px;
+  max-width:1100px;
   margin:auto;
-  padding:40px 20px;
-  text-align:center;
+  padding:30px 20px 80px;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:40px;
+}
+
+.logo{
+  width:150px;
+}
+
+.nav a{
+  margin-left:15px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:.9rem;
+  font-weight:600;
+  color:var(--muted);
+  border:1px solid var(--line);
+}
+
+.nav a:hover{
+  color:white;
+  background:rgba(255,255,255,.05);
 }
 
 /* HERO */
-h1{
+.hero{
+  text-align:center;
+  margin-bottom:40px;
+}
+
+.hero h1{
   font-size:2.6rem;
   margin-bottom:10px;
 }
 
-p{
-  color:#9fb0c7;
+.hero p{
+  color:var(--muted);
   max-width:600px;
-  margin:10px auto;
+  margin:auto;
 }
 
-/* BOTONES */
 .cta{
   margin-top:25px;
 }
 
 .btn{
-  padding:14px 22px;
-  border-radius:12px;
-  text-decoration:none;
+  padding:14px 20px;
+  border-radius:14px;
   font-weight:700;
+  text-decoration:none;
   display:inline-block;
   margin:6px;
-  transition:.2s;
-}
-
-.btn:hover{
-  transform:scale(1.05);
 }
 
 .primary{
-  background:#ff8000;
+  background:var(--orange);
   color:black;
 }
 
 .secondary{
-  background:#2563eb;
+  background:var(--blue);
   color:white;
 }
 
+/* VIDEO */
+.video{
+  margin-top:40px;
+  text-align:center;
+}
+
+iframe{
+  width:100%;
+  max-width:720px;
+  height:400px;
+  border-radius:16px;
+  border:none;
+}
+
 /* PRODUCTOS */
-.products{
+.section{
+  margin-top:60px;
+}
+
+.cards{
   display:flex;
   gap:20px;
-  justify-content:center;
   flex-wrap:wrap;
-  margin-top:40px;
+  justify-content:center;
 }
 
 .card{
-  background:#0b1a2d;
-  padding:25px;
-  border-radius:16px;
-  width:260px;
-  text-align:left;
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:22px;
+  border-radius:18px;
+  width:280px;
 }
 
 .card h3{
@@ -88,38 +145,41 @@ p{
 }
 
 .sonar{ color:#ff8000; }
-.ensayar{ color:#dc2626; }
-.idea{ color:#22c55e; }
+.ensayar{ color:#ef4444; }
+.portal{ color:#22c55e; }
 
-/* VIDEO */
-.video{
-  margin-top:50px;
+/* DIFERENCIAL */
+.features{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:20px;
 }
 
-iframe{
-  width:100%;
-  max-width:700px;
-  height:380px;
-  border-radius:12px;
-  border:none;
-}
-
-/* BLOQUE FINAL */
-.action{
-  margin-top:60px;
-}
-
-.action-box{
-  background:#0b1a2d;
-  padding:30px;
+.feature{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:20px;
   border-radius:16px;
+  width:260px;
 }
 
-/* FOOTER */
+/* CTA FINAL */
+.final{
+  margin-top:70px;
+  text-align:center;
+}
+
+.final h2{
+  margin-bottom:10px;
+}
+
 .footer{
   margin-top:60px;
+  text-align:center;
+  opacity:.6;
   font-size:.8rem;
-  color:#9fb0c7;
 }
 
 </style>
@@ -129,72 +189,93 @@ iframe{
 
 <div class="container">
 
-  <!-- HERO -->
-  <h1>IA aplicada a educación,<br>en herramientas reales para profesores</h1>
+  <!-- HEADER -->
+  <div class="header">
+    <img src="./logo-mejoraria.png" class="logo">
 
-  <p>
-    Ahorra tiempo, mejora tus clases y crea nuevas experiencias de aprendizaje.
-  </p>
-
-  <!-- CTA -->
-  <div class="cta">
-    <a href="planes.html" class="btn primary">Ver planes</a>
-    <a href="contacto.html" class="btn secondary">Probar o proponer idea</a>
+    <div class="nav">
+      <a href="planes.html">Planes</a>
+      <a href="contacto.html">Contacto</a>
+    </div>
   </div>
 
-  <!-- PRODUCTOS -->
-  <div class="products">
+  <!-- HERO -->
+  <div class="hero">
+    <h1>IA aplicada a educación</h1>
 
-    <div class="card">
-      <h3 class="sonar">SonarIA</h3>
-      <p>Analiza canciones y crea versiones aptas para el aula.</p>
-      <a href="contacto.html">Probar →</a>
+    <p>
+      Herramientas para profesores que buscan ahorrar tiempo,
+      mejorar sus clases y tomar mejores decisiones pedagógicas.
+    </p>
+
+    <div class="cta">
+      <a href="planes.html" class="btn primary">Ver planes</a>
+      <a href="#video" class="btn secondary">Ver demo</a>
     </div>
-
-    <div class="card">
-      <h3 class="ensayar">EnsayarIA</h3>
-      <p>Práctica musical, acordes y ejecución para estudiantes.</p>
-      <a href="contacto.html">Acceso anticipado →</a>
-    </div>
-
-    <div class="card">
-      <h3 class="idea">¿Tu necesidad?</h3>
-      <p>Cuéntanos una dificultad en tu asignatura y evaluamos crear una solución.</p>
-      <a href="contacto.html">Proponer →</a>
-    </div>
-
   </div>
 
   <!-- VIDEO -->
-  <div class="video">
+  <div id="video" class="video">
     <iframe 
-      src="https://www.youtube.com/embed/aD6MUQl0ajI?rel=0"
+      src="https://www.youtube.com/embed/aD6MUQl0ajI"
       allowfullscreen>
     </iframe>
   </div>
 
-  <!-- BLOQUE DE CONVERSIÓN -->
-  <div class="action">
+  <!-- PRODUCTOS -->
+  <div class="section">
+    <div class="cards">
 
-    <div class="action-box">
-      <h2>¿Te sirve o necesitas algo específico?</h2>
-
-      <p>
-        Puedes probar herramientas actuales o contarnos un problema real de tu asignatura.
-        Estamos construyendo soluciones desde lo que los profesores realmente necesitan.
-      </p>
-
-      <div class="cta">
-        <a href="contacto.html" class="btn primary">Quiero probar</a>
-        <a href="contacto.html" class="btn secondary">Tengo una idea</a>
+      <div class="card">
+        <h3 class="portal">MejorarIA</h3>
+        <p>Un ecosistema de herramientas con IA para educación.</p>
       </div>
-    </div>
 
+      <div class="card">
+        <h3 class="sonar">SonarIA</h3>
+        <p>Analiza canciones, adapta contenido y orienta su uso pedagógico.</p>
+      </div>
+
+      <div class="card">
+        <h3 class="ensayar">EnsayarIA</h3>
+        <p>Próximamente: apoyo para práctica instrumental y ejecución musical.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DIFERENCIAL -->
+  <div class="section">
+    <div class="features">
+
+      <div class="feature">
+        <strong>Análisis real</strong>
+        <p>Evalúa contenido y lenguaje de canciones.</p>
+      </div>
+
+      <div class="feature">
+        <strong>Versión escolar</strong>
+        <p>Adapta letras para uso en aula.</p>
+      </div>
+
+      <div class="feature">
+        <strong>Match curricular</strong>
+        <p>Conecta con cursos de música MINEDUC.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="final">
+    <h2>¿Quieres probar o construir una solución?</h2>
+
+    <a href="contacto.html" class="btn primary">Ir a contacto</a>
   </div>
 
   <!-- FOOTER -->
   <div class="footer">
-    MejorarIA · Creado por MauRock
+    MauRock · Mauricio José Pinto Basso
   </div>
 
 </div>
