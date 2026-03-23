@@ -5,295 +5,559 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MejorarIA</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 :root{
-  --bg:#050b14;
-  --bg2:#091423;
-  --panel:#0d1a2b;
-  --text:#f8fafc;
-  --muted:#9fb0c7;
-  --line:rgba(255,255,255,.08);
+  --bg:#08121f;
+  --bg2:#0c1828;
+  --panel:#101c2e;
+  --panel-soft:rgba(255,255,255,.05);
+  --panel-border:rgba(255,255,255,.10);
 
-  --orange:#ff8000;
-  --blue:#2563eb;
+  --text:#f8fafc;
+  --muted:#b3c0d4;
+  --muted-2:#8fa2bc;
+
+  --orange:#ff7a00;
+  --orange-2:#ff4d00;
+  --blue:#3b82f6;
+  --blue-2:#2563eb;
   --green:#00d084;
+  --green-2:#00a86b;
+  --red:#ef4444;
+
+  --shadow-lg:0 24px 60px rgba(0,0,0,.28);
+  --shadow-md:0 14px 30px rgba(0,0,0,.24);
+
+  --radius-xl:28px;
+  --radius-lg:22px;
+  --radius-md:16px;
+
+  --max:1180px;
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
   font-family:'Inter',sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at top left, rgba(255,128,0,.12), transparent 20%),
-    radial-gradient(circle at top right, rgba(0,208,132,.10), transparent 22%),
-    radial-gradient(circle at bottom right, rgba(59,130,246,.14), transparent 24%),
-    linear-gradient(180deg, var(--bg), var(--bg2));
+    radial-gradient(circle at 8% 8%, rgba(255,122,0,.18), transparent 18%),
+    radial-gradient(circle at 92% 10%, rgba(0,208,132,.14), transparent 20%),
+    radial-gradient(circle at 85% 88%, rgba(59,130,246,.16), transparent 22%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
 .container{
-  max-width:1100px;
+  max-width:var(--max);
   margin:auto;
-  padding:30px 20px 80px;
+  padding:28px 22px 88px;
 }
 
 /* HEADER */
 .header{
-  text-align:left;
-  margin-bottom:30px 20px;
+  margin-bottom:38px;
+}
+
+.header-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
 }
 
 .logo{
-  width:130px;
-  opacity:.9;
+  width:148px;
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
 }
 
-/* NAV */
 .nav{
   display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:20px;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
 .nav a{
-  padding:10px 14px;
-  border-radius:12px;
-  font-size:.9rem;
-  font-weight:600;
+  padding:11px 16px;
+  border-radius:999px;
+  font-size:.92rem;
+  font-weight:700;
   color:var(--muted);
-  border:1px solid var(--line);
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  backdrop-filter:blur(8px);
+  transition:.2s ease;
 }
 
 .nav a:hover{
-  color:white;
-  background:rgba(255,255,255,.05);
+  color:var(--text);
+  background:rgba(255,255,255,.07);
+  transform:translateY(-1px);
 }
 
 /* HERO */
 .hero{
   text-align:center;
-  margin-top:40px;
+  padding:30px 0 10px;
 }
 
-/* MARCA CENTRAL */
-.brand-main{
-  font-size:3.5rem;
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  border:1px solid rgba(0,208,132,.18);
+  background:rgba(0,208,132,.08);
+  color:#c7f9e8;
+  font-size:.88rem;
   font-weight:800;
-  letter-spacing:-0.03em;
-  margin-bottom:10px;
+  letter-spacing:.02em;
+  margin-bottom:22px;
 }
 
-.brand-main span{
+.brand-main{
+  font-size:clamp(3rem, 6vw, 5.2rem);
+  line-height:.98;
+  font-weight:800;
+  letter-spacing:-.05em;
+  margin:0;
+}
+
+.brand-main .ia{
   color:var(--green);
-  text-shadow:0 0 12px rgba(0,208,132,0.4);
+  text-shadow:0 0 24px rgba(0,208,132,.45);
 }
 
 .hero p{
+  margin:18px auto 0;
+  max-width:760px;
   color:var(--muted);
-  max-width:600px;
-  margin:auto;
+  font-size:1.1rem;
+  line-height:1.75;
+  font-weight:500;
 }
 
-/* BOTONES */
 .cta{
-  margin-top:25px;
+  margin-top:28px;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
 .btn{
-  padding:14px 20px;
-  border-radius:14px;
-  font-weight:700;
-  text-decoration:none;
-  display:inline-block;
-  margin:6px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 22px;
+  border-radius:16px;
+  font-weight:800;
+  font-size:1rem;
+  transition:.2s ease;
+  min-width:170px;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
 }
 
 .primary{
-  background:linear-gradient(135deg,#ff8000,#ff5500);
-  color:black;
+  background:linear-gradient(135deg, var(--orange), var(--orange-2));
+  color:#111827;
+  box-shadow:0 10px 24px rgba(255,122,0,.30);
 }
 
 .secondary{
-  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  background:linear-gradient(135deg, var(--blue), var(--blue-2));
   color:white;
+  box-shadow:0 10px 24px rgba(59,130,246,.24);
 }
 
-/* PRODUCTOS */
+/* MAIN SHOWCASE */
 .products{
-  margin-top:60px;
+  margin-top:54px;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:20px;
+  gap:22px;
 }
 
 .product{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:20px;
+  position:relative;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius-xl);
+  padding:22px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:.22s ease;
 }
 
-/* SONARIA */
+.product:hover{
+  transform:translateY(-4px);
+}
+
+.product::before{
+  content:"";
+  position:absolute;
+  inset:0 auto auto 0;
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  opacity:.65;
+}
+
+.product-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.product h3{
+  margin:0;
+  font-size:1.55rem;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+
+.product p{
+  margin:0;
+  color:var(--muted);
+  font-size:1rem;
+  line-height:1.68;
+  font-weight:500;
+}
+
+.tag{
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:800;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dce7f6;
+}
+
 .product.sonar{
-  border:1px solid rgba(255,128,0,.3);
+  border-color:rgba(255,122,0,.22);
+  box-shadow:0 22px 50px rgba(255,122,0,.08);
 }
 
 .product.sonar h3{
   color:var(--orange);
 }
 
-/* ENSAYARIA */
 .product.ensayar{
-  border:1px solid rgba(0,208,132,.3);
+  border-color:rgba(0,208,132,.20);
+  box-shadow:0 22px 50px rgba(0,208,132,.07);
 }
 
 .product.ensayar h3{
   color:var(--green);
 }
 
-/* VIDEO */
-.video iframe{
-  width:100%;
-  height:300px;
-  border-radius:12px;
-  border:none;
-  margin-top:10px;
+/* VIDEO CARD */
+.video{
+  margin-top:16px;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#000;
+  box-shadow:var(--shadow-md);
 }
 
-/* PLACEHOLDER */
+.video iframe{
+  display:block;
+  width:100%;
+  height:340px;
+  border:none;
+}
+
+/* ENSAYARIA PANEL */
 .placeholder{
-  height:300px;
+  margin-top:16px;
+  min-height:340px;
+  border-radius:20px;
+  border:1px solid rgba(0,208,132,.14);
+  background:
+    radial-gradient(circle at top right, rgba(0,208,132,.12), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(239,68,68,.08), transparent 28%),
+    linear-gradient(180deg, #0b1522 0%, #0e1a2a 100%);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
+  padding:28px;
+  box-shadow:var(--shadow-md);
+}
+
+.placeholder-icon{
+  display:flex;
+  gap:12px;
+  font-size:1.75rem;
+  margin-bottom:14px;
+  opacity:.95;
 }
 
 .placeholder h4{
   margin:0;
+  font-size:1.7rem;
+  font-weight:800;
   color:var(--green);
+  letter-spacing:-.03em;
+}
+
+.placeholder .sub{
+  margin-top:8px;
+  color:#dce8f4;
+  font-size:1rem;
+  font-weight:700;
 }
 
 .placeholder p{
-  margin-top:10px;
-  color:#cbd5e1;
-  max-width:260px;
-  font-size:.9rem;
+  margin-top:14px;
+  max-width:320px;
+  color:#c7d6e8;
+  font-size:1rem;
+  line-height:1.68;
 }
 
-/* FEATURES */
+.placeholder .micro{
+  margin-top:10px;
+  font-size:.88rem;
+  color:#97abc3;
+  opacity:.92;
+}
+
+.placeholder .btn{
+  margin-top:18px;
+  min-width:200px;
+}
+
+/* DIFFERENTIAL */
 .section{
-  margin-top:70px;
+  margin-top:78px;
   text-align:center;
+}
+
+.section h2{
+  margin:0 0 12px;
+  font-size:clamp(2rem, 4vw, 2.8rem);
+  line-height:1.05;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+
+.section-lead{
+  color:var(--muted);
+  max-width:760px;
+  margin:0 auto;
+  line-height:1.72;
+  font-size:1.06rem;
+  font-weight:500;
 }
 
 .features{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:20px;
+  margin-top:26px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
 }
 
 .feature{
-  background:var(--panel);
-  border:1px solid var(--line);
-  padding:20px;
-  border-radius:16px;
-  width:260px;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  text-align:left;
+  box-shadow:var(--shadow-md);
 }
 
-/* FINAL */
+.feature strong{
+  display:block;
+  margin-bottom:10px;
+  font-size:1.08rem;
+  font-weight:800;
+}
+
+.feature p{
+  margin:0;
+  color:#d1dceb;
+  font-size:1rem;
+  line-height:1.62;
+}
+
+.feature:nth-child(1) strong{ color:var(--orange); }
+.feature:nth-child(2) strong{ color:var(--blue); }
+.feature:nth-child(3) strong{ color:var(--green); }
+
+/* FINAL CTA */
 .final{
-  margin-top:70px;
+  margin-top:82px;
   text-align:center;
+  border-radius:var(--radius-xl);
+  padding:38px 26px;
+  background:
+    radial-gradient(circle at top left, rgba(255,122,0,.10), transparent 24%),
+    radial-gradient(circle at top right, rgba(0,208,132,.10), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:var(--shadow-lg);
 }
 
+.final h2{
+  margin:0 0 12px;
+  font-size:clamp(2rem, 4vw, 2.9rem);
+  line-height:1.05;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+
+.final p{
+  color:var(--muted);
+  max-width:700px;
+  margin:0 auto;
+  font-size:1.05rem;
+  line-height:1.72;
+  font-weight:500;
+}
+
+/* FOOTER */
 .footer{
-  margin-top:60px;
+  margin-top:58px;
   text-align:center;
-  opacity:.6;
-  font-size:.8rem;
+  color:var(--muted-2);
+  font-size:.9rem;
+  font-weight:600;
+  opacity:.88;
 }
 
-@media(max-width:900px){
-  .products{
+/* RESPONSIVE */
+@media (max-width: 980px){
+  .products,
+  .features{
     grid-template-columns:1fr;
   }
 }
 
+@media (max-width: 720px){
+  .header-inner{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav{
+    width:100%;
+  }
+
+  .nav a{
+    flex:1;
+    text-align:center;
+  }
+
+  .video iframe{
+    height:280px;
+  }
+
+  .placeholder{
+    min-height:280px;
+  }
+}
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
   <!-- HEADER -->
   <div class="header">
-    <img src="./logo-mejoraria.png" class="logo">
+    <div class="header-inner">
+      <img src="./logo-mejoraria.png" class="logo" alt="Logo MejorarIA">
+
+      <div class="nav">
+        <a href="planes.html">Planes</a>
+        <a href="contacto.html">Contacto</a>
+      </div>
+    </div>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
+    <div class="hero-badge">IA aplicada a educación</div>
 
-    <div class="brand-main">
-      Mejorar<span>IA</span>
-    </div>
+    <h1 class="brand-main">
+      Mejorar<span class="ia">IA</span>
+    </h1>
 
     <p>
-      IA aplicada a educación para ayudar a profesores a tomar mejores decisiones pedagógicas.
+      Herramientas para profesores que buscan ahorrar tiempo, mejorar sus clases y tomar decisiones pedagógicas con más claridad, criterio y velocidad.
     </p>
 
     <div class="cta">
       <a href="planes.html" class="btn primary">Ver planes</a>
       <a href="contacto.html" class="btn secondary">Probar / proponer</a>
     </div>
-
   </div>
 
-  <!-- PRODUCTOS -->
+  <!-- PRODUCTS -->
   <div class="products">
 
-    <!-- SONARIA -->
     <div class="product sonar">
-      <h3>SonarIA</h3>
+      <div class="product-head">
+        <h3>SonarIA</h3>
+        <div class="tag">Disponible en validación</div>
+      </div>
+
+      <p>
+        Analiza canciones, adapta contenido y orienta su uso pedagógico con enfoque curricular en música.
+      </p>
 
       <div class="video">
-        <iframe 
+        <iframe
           src="https://www.youtube.com/embed/aD6MUQl0ajI"
+          title="Demo SonarIA"
           allowfullscreen>
         </iframe>
       </div>
-
-      <p style="color:#9fb0c7;">
-        Analiza canciones, adapta contenido y orienta su uso pedagógico.
-      </p>
     </div>
 
-    <!-- ENSAYARIA -->
     <div class="product ensayar">
-      <h3>EnsayarIA</h3>
+      <div class="product-head">
+        <h3>EnsayarIA</h3>
+        <div class="tag">En construcción</div>
+      </div>
+
+      <p>
+        Próximamente, una herramienta para apoyar práctica musical, ejecución e interpretación en estudiantes.
+      </p>
 
       <div class="placeholder">
+        <div class="placeholder-icon">🎧 🎸 🥁</div>
         <h4>Próximamente</h4>
-
+        <div class="sub">Construyendo junto a docentes</div>
         <p>
-          Apoyo para práctica musical, ejecución e interpretación.
+          Estamos desarrollando una nueva herramienta para acompañar procesos de ensayo y trabajo con repertorio.
         </p>
-
-        <p style="opacity:.7; font-size:.8rem;">
-          Construyendo junto a docentes
-        </p>
-
-        <a href="contacto.html" class="btn secondary" style="margin-top:15px;">
-          Acceso anticipado
-        </a>
+        <div class="micro">Acceso anticipado disponible para interesados</div>
+        <a href="contacto.html" class="btn secondary">Acceso anticipado</a>
       </div>
     </div>
 
@@ -301,35 +565,39 @@ body{
 
   <!-- FEATURES -->
   <div class="section">
-
-    <h2>Más que herramientas</h2>
+    <h2>Más que herramientas aisladas</h2>
+    <p class="section-lead">
+      MejorarIA busca construir soluciones útiles para la práctica docente, combinando análisis, adaptación y orientación pedagógica.
+    </p>
 
     <div class="features">
-
       <div class="feature">
         <strong>Análisis real</strong>
-        <p>Evalúa contenido de canciones.</p>
+        <p>Evalúa contenido, lenguaje y pertinencia de canciones para contexto educativo.</p>
       </div>
 
       <div class="feature">
         <strong>Versión escolar</strong>
-        <p>Adapta letras para el aula.</p>
+        <p>Adapta contenido para facilitar un uso más seguro y útil dentro del aula.</p>
       </div>
 
       <div class="feature">
         <strong>Match curricular</strong>
-        <p>Conecta con música MINEDUC.</p>
+        <p>Conecta con cursos de música MINEDUC para apoyar decisiones pedagógicas concretas.</p>
       </div>
-
     </div>
-
   </div>
 
-  <!-- CTA FINAL -->
+  <!-- FINAL CTA -->
   <div class="final">
-    <h2>¿Quieres que construyamos juntos TU solución?</h2>
+    <h2>¿Quieres que construyamos juntos tu solución?</h2>
+    <p>
+      Puedes pedir acceso a herramientas actuales o contarnos una dificultad real de tu asignatura para explorar una solución contigo.
+    </p>
 
-    <a href="contacto.html" class="btn primary">Ir a contacto</a>
+    <div class="cta">
+      <a href="contacto.html" class="btn primary">Ir a contacto</a>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -341,4 +609,3 @@ body{
 
 </body>
 </html>
-<!-- Santi estuvo aqui :P -->
