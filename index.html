@@ -630,6 +630,30 @@ a{
   <button type="submit" class="btn primary">Enviar</button>
 </form>
 
+  <script>
+document.getElementById("formInteres").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const mensaje = document.getElementById("mensaje").value;
+
+  const { error } = await supabaseClient
+    .from("interesados")
+    .insert([{ nombre, email, mensaje }]);
+
+  if (error) {
+    console.error(error);
+    alert("Error al enviar");
+    return;
+  }
+
+  alert("¡Enviado! 🚀");
+  e.target.reset();
+});
+</script>
+
+  
   
   test();
 </script>
