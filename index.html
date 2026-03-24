@@ -92,11 +92,11 @@ document.getElementById("formInteres").addEventListener("submit", async (e) => {
     .from("interesados")
     .insert([{ nombre, email, mensaje }]);
 
-  if (error) {
-    console.error(error);
-    alert("Error al enviar");
-    return;
-  }
+ if (error) {
+  console.error("ERROR COMPLETO:", error);
+  alert("Error al enviar: " + error.message);
+  return;
+}
 
   alert("¡Enviado! 🚀");
   e.target.reset();
