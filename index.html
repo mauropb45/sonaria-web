@@ -13,29 +13,29 @@ body{
   font-family:'Inter',sans-serif;
   background:#08121f;
   color:#fff;
+  text-align:center;
 }
 
 .container{
   max-width:900px;
   margin:auto;
   padding:40px 20px;
-  text-align:center;
 }
 
 .btn{
-  padding:12px 20px;
-  border:none;
+  padding:14px 22px;
   border-radius:10px;
   background:#ff7a00;
-  color:#000;
-  font-weight:700;
+  border:none;
+  font-weight:800;
   cursor:pointer;
 }
 
 input, textarea{
-  padding:10px;
+  padding:12px;
   border-radius:8px;
   border:none;
+  width:100%;
 }
 </style>
 </head>
@@ -92,11 +92,11 @@ document.getElementById("formInteres").addEventListener("submit", async (e) => {
     .from("interesados")
     .insert([{ nombre, email, mensaje }]);
 
- if (error) {
-  console.error("ERROR COMPLETO:", error);
-  alert("Error al enviar: " + error.message);
-  return;
-}
+  if (error) {
+    console.error("ERROR COMPLETO:", error);
+    alert("Error al enviar: " + error.message);
+    return;
+  }
 
   alert("¡Enviado! 🚀");
   e.target.reset();
