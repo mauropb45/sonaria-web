@@ -18,6 +18,7 @@
   --orange:#ff7a00;
   --green:#00d084;
   --blue:#2563eb;
+  --red:#ef4444;
 }
 *{box-sizing:border-box}
 body{
@@ -201,6 +202,26 @@ a{
   line-height:1.55;
   font-size:.94rem;
 }
+.debug{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  font-size:.92rem;
+  line-height:1.5;
+  color:var(--muted);
+}
+.error{
+  color:#fecaca;
+  border-color:rgba(239,68,68,.45);
+  background:rgba(239,68,68,.08);
+}
+.success{
+  color:#d1fae5;
+  border-color:rgba(0,208,132,.35);
+  background:rgba(0,208,132,.08);
+}
 .muted{ color:var(--muted); }
 @media (max-width: 980px){
   .grid{ grid-template-columns:1fr; }
@@ -274,6 +295,8 @@ a{
         <div><strong>Plan:</strong> Gratuito</div>
       </div>
 
+      <div id="debugBox" class="debug">Iniciando panel...</div>
+
       <h2 style="margin-top:24px;">Historial reciente</h2>
       <p class="lead">Tus últimos análisis guardados en la plataforma.</p>
 
@@ -288,11 +311,18 @@ a{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = ibtklkjfpcopzgsrulob";
+const SUPABASE_ANON_KEY = "TU_PUBLISHABLE_KEY_AQUI";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
+
+function setDebug(message, type = "") {
+  const box = document.getElementById("debugBox");
+  box.textContent = message;
+  box.className = "debug";
+  if (type) box.classList.add(type);
+}
 
 function analizarLetraLocal(letra) {
   const texto = letra.toLowerCase();
@@ -308,13 +338,8 @@ function analizarLetraLocal(letra) {
 
   let puntaje = 0;
 
-  palabrasRiesgoAlto.forEach(p => {
-    if (texto.includes(p)) puntaje += 3;
-  });
-
-  palabrasRiesgoMedio.forEach(p => {
-    if (texto.includes(p)) puntaje += 1;
-  });
+  palabrasRiesgoAlto.forEach(p => { if (texto.includes(p)) puntaje += 3; });
+  palabrasRiesgoMedio.forEach(p => { if (texto.includes(p)) puntaje += 1; });
 
   const largo = texto.trim().length;
   let riesgo = "bajo";
@@ -366,55 +391,72 @@ function pintarResultado(resultado) {
 }
 
 async function checkUser() {
-  const { data: sessionData, error } = await supabaseClient.auth.getSession();
+  try {
+    setDebug("Revisando sesión...");
+    const { data: sessionData, error } = await supabaseClient.auth.getSession();
 
-  if (error) {
-    console.error("Error revisando sesión:", error);
-    window.location.href = "https://www.mejoraria.cl/login.html";
-    return;
+    if (error) {
+      console.error("Error revisando sesión:", error);
+      setDebug("Error revisando sesión: " + error.message, "error");
+      return;
+    }
+
+    const session = sessionData.session;
+
+    if (!session || !session.user) {
+      setDebug("No hay sesión activa. Redirigiendo al login...", "error");
+      setTimeout(() => {
+        window.location.href = "https://www.mejoraria.cl/login.html";
+      }, 1200);
+      return;
+    }
+
+    currentUser = session.user;
+    document.getElementById("userEmail").textContent = currentUser.email;
+    setDebug("Sesión activa como " + currentUser.email, "success");
+    await cargarHistorial();
+  } catch (err) {
+    console.error(err);
+    setDebug("Fallo general en checkUser: " + err.message, "error");
   }
-
-  const session = sessionData.session;
-
-  if (!session || !session.user) {
-    window.location.href = "https://www.mejoraria.cl/login.html";
-    return;
-  }
-
-  currentUser = session.user;
-  document.getElementById("userEmail").textContent = currentUser.email;
-  await cargarHistorial();
 }
 
 async function cargarHistorial() {
   const historialBox = document.getElementById("historial");
 
-  const { data, error } = await supabaseClient
-    .from("analisis")
-    .select("id, titulo_consulta, nivel_riesgo, apto_escolar, observaciones, fecha_creacion")
-    .eq("usuario_id", 1)
-    .order("fecha_creacion", { ascending: false })
-    .limit(8);
+  try {
+    const { data, error } = await supabaseClient
+      .from("analisis")
+      .select("id, titulo_consulta, nivel_riesgo, apto_escolar, observaciones, fecha_creacion")
+      .eq("usuario_id", 1)
+      .order("fecha_creacion", { ascending: false })
+      .limit(8);
 
-  if (error) {
-    console.error(error);
-    historialBox.innerHTML = '<div class="muted">No se pudo cargar el historial.</div>';
-    return;
+    if (error) {
+      console.error(error);
+      historialBox.innerHTML = '<div class="muted">No se pudo cargar el historial.</div>';
+      setDebug("Sesión OK, pero falló el historial: " + error.message, "error");
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      historialBox.innerHTML = '<div class="muted">Todavía no hay análisis guardados.</div>';
+      return;
+    }
+
+    historialBox.innerHTML = data.map(item => `
+      <div class="history-item">
+        <h4>${item.titulo_consulta || "Sin título"}</h4>
+        <p><strong>Riesgo:</strong> ${item.nivel_riesgo || "-"}</p>
+        <p><strong>Apto escolar:</strong> ${item.apto_escolar ? "Sí" : "No"}</p>
+        <p>${item.observaciones || ""}</p>
+      </div>
+    `).join("");
+  } catch (err) {
+    console.error(err);
+    historialBox.innerHTML = '<div class="muted">Error inesperado al cargar historial.</div>';
+    setDebug("Error inesperado en historial: " + err.message, "error");
   }
-
-  if (!data || data.length === 0) {
-    historialBox.innerHTML = '<div class="muted">Todavía no hay análisis guardados.</div>';
-    return;
-  }
-
-  historialBox.innerHTML = data.map(item => `
-    <div class="history-item">
-      <h4>${item.titulo_consulta || "Sin título"}</h4>
-      <p><strong>Riesgo:</strong> ${item.nivel_riesgo || "-"}</p>
-      <p><strong>Apto escolar:</strong> ${item.apto_escolar ? "Sí" : "No"}</p>
-      <p>${item.observaciones || ""}</p>
-    </div>
-  `).join("");
 }
 
 document.getElementById("analisisForm").addEventListener("submit", async (e) => {
@@ -425,35 +467,43 @@ document.getElementById("analisisForm").addEventListener("submit", async (e) => 
   const letra = document.getElementById("letra").value.trim();
   const estado = document.getElementById("estadoAnalisis");
 
-  estado.textContent = "Analizando canción...";
-  const resultado = analizarLetraLocal(letra);
-  pintarResultado(resultado);
+  try {
+    estado.textContent = "Analizando canción...";
+    const resultado = analizarLetraLocal(letra);
+    pintarResultado(resultado);
 
-  const tituloConsulta = artista ? `${titulo} · ${artista}` : titulo;
+    const tituloConsulta = artista ? `${titulo} · ${artista}` : titulo;
 
-  const { error } = await supabaseClient
-    .from("analisis")
-    .insert([{
-      usuario_id: 1,
-      herramienta_id: 1,
-      cancion_id: null,
-      titulo_consulta: tituloConsulta,
-      resultado_texto: resultado.resultado_texto,
-      nivel_riesgo: resultado.nivel_riesgo,
-      apto_escolar: resultado.apto_escolar,
-      version_escolar: resultado.version_escolar,
-      observaciones: resultado.observaciones
-    }]);
+    const { error } = await supabaseClient
+      .from("analisis")
+      .insert([{
+        usuario_id: 1,
+        herramienta_id: 1,
+        cancion_id: null,
+        titulo_consulta: tituloConsulta,
+        resultado_texto: resultado.resultado_texto,
+        nivel_riesgo: resultado.nivel_riesgo,
+        apto_escolar: resultado.apto_escolar,
+        version_escolar: resultado.version_escolar,
+        observaciones: resultado.observaciones
+      }]);
 
-  if (error) {
-    console.error(error);
-    estado.textContent = "El análisis se generó, pero no se pudo guardar.";
-    return;
+    if (error) {
+      console.error(error);
+      estado.textContent = "El análisis se generó, pero no se pudo guardar.";
+      setDebug("Error al guardar análisis: " + error.message, "error");
+      return;
+    }
+
+    estado.textContent = "Análisis completado y guardado correctamente.";
+    setDebug("Análisis guardado correctamente.", "success");
+    document.getElementById("analisisForm").reset();
+    await cargarHistorial();
+  } catch (err) {
+    console.error(err);
+    estado.textContent = "Ocurrió un error inesperado.";
+    setDebug("Error inesperado al analizar: " + err.message, "error");
   }
-
-  estado.textContent = "Análisis completado y guardado correctamente.";
-  document.getElementById("analisisForm").reset();
-  await cargarHistorial();
 });
 
 document.getElementById("btnLogout").addEventListener("click", async () => {
