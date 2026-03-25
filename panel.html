@@ -3,515 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel | MejorarIA</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Panel • SonarIA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#08121f;
-  --bg2:#0c1828;
-  --panel:#101c2e;
-  --line:rgba(255,255,255,.08);
-  --text:#f8fafc;
-  --muted:#9fb0c7;
-  --orange:#ff7a00;
-  --green:#00d084;
-  --blue:#2563eb;
-  --red:#ef4444;
-}
-*{box-sizing:border-box}
 body{
   margin:0;
   font-family:'Inter',sans-serif;
-  color:var(--text);
+  color:#fff;
   background:
-    radial-gradient(circle at top left, rgba(255,122,0,.12), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(0,208,132,.10), transparent 20%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
+    radial-gradient(circle at top left, rgba(255,122,0,.2), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(0,208,132,.2), transparent 30%),
+    #08121f;
 }
-a{
-  color:inherit;
-  text-decoration:none;
-}
+
 .container{
-  max-width:1180px;
+  max-width:1200px;
   margin:auto;
-  padding:28px 22px 80px;
+  padding:40px 20px;
 }
-.header{
+
+h1{
+  font-size:40px;
+}
+
+.card{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  padding:20px;
+  border-radius:20px;
+  margin-top:20px;
+}
+
+input, textarea{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border-radius:12px;
+  border:none;
+  background:rgba(255,255,255,.08);
+  color:white;
+}
+
+button{
+  margin-top:15px;
+  padding:14px;
+  width:100%;
+  border:none;
+  border-radius:12px;
+  font-weight:800;
+  background:#ff7a00;
+  cursor:pointer;
+}
+
+.topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:16px;
-  margin-bottom:30px;
+  margin-bottom:20px;
 }
-.brand{
-  font-size:1.8rem;
-  font-weight:800;
-  letter-spacing:-.04em;
-}
-.brand .ia{ color:var(--green); }
-.top-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+
 .btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:150px;
-  padding:13px 18px;
-  border-radius:14px;
+  padding:10px 16px;
+  border-radius:10px;
   border:none;
   cursor:pointer;
-  font-weight:800;
-  font-size:.98rem;
-  transition:.2s ease;
 }
-.btn:hover{ transform:translateY(-2px); }
-.primary{
-  background:linear-gradient(135deg,var(--orange),#ff4d00);
-  color:#111827;
-}
+
 .secondary{
-  background:linear-gradient(135deg,#3b82f6,var(--blue));
+  background:#2563eb;
   color:white;
 }
-.ghost{
-  background:rgba(255,255,255,.04);
-  color:var(--text);
-  border:1px solid var(--line);
-}
-.hero{
-  margin-bottom:24px;
-}
-.hero h1{
-  margin:0 0 10px;
-  font-size:clamp(2rem,4vw,3rem);
-  letter-spacing:-.04em;
-}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.7;
-  max-width:780px;
-}
-.grid{
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:22px;
-  margin-top:26px;
-}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:22px;
-}
-.card h2{
-  margin:0 0 12px;
-  font-size:1.35rem;
-}
-.lead{
-  color:var(--muted);
-  line-height:1.65;
-  margin:0 0 18px;
-}
-.form-grid{
-  display:grid;
-  gap:12px;
-}
-.input,
-.textarea{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  font:inherit;
-  outline:none;
-}
-.input::placeholder,
-.textarea::placeholder{
-  color:#8ea4bf;
-}
-.textarea{
-  min-height:180px;
-  resize:vertical;
-}
-.result-box{
-  margin-top:18px;
-  display:grid;
-  gap:12px;
-}
-.result-item{
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px 16px;
-}
-.result-item strong{
-  display:block;
-  margin-bottom:6px;
-  font-size:.95rem;
-}
-.status{
-  margin-top:14px;
-  color:var(--muted);
-  line-height:1.55;
-}
-.user-box{
-  display:grid;
-  gap:10px;
-}
-.pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(0,208,132,.08);
-  border:1px solid rgba(0,208,132,.18);
-  color:#c7f9e8;
-  font-weight:800;
-  font-size:.86rem;
-}
-.history{
-  margin-top:16px;
-  display:grid;
-  gap:10px;
-  max-height:420px;
-  overflow:auto;
-}
-.history-item{
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.035);
-  border-radius:16px;
-  padding:14px;
-}
-.history-item h4{
-  margin:0 0 6px;
-  font-size:1rem;
-}
-.history-item p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.55;
-  font-size:.94rem;
-}
-.debug{
-  margin-top:16px;
-  padding:12px 14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);
-  font-size:.92rem;
-  line-height:1.5;
-  color:var(--muted);
-}
-.error{
-  color:#fecaca;
-  border-color:rgba(239,68,68,.45);
-  background:rgba(239,68,68,.08);
-}
-.success{
-  color:#d1fae5;
-  border-color:rgba(0,208,132,.35);
-  background:rgba(0,208,132,.08);
-}
-.muted{ color:var(--muted); }
-@media (max-width: 980px){
-  .grid{ grid-template-columns:1fr; }
-}
+
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
-  <div class="header">
-    <div class="brand">Mejorar<span class="ia">IA</span></div>
-
-    <div class="top-actions">
-      <a href="https://www.mejoraria.cl/" class="btn ghost">Volver al inicio</a>
-      <button id="btnLogout" class="btn secondary" type="button">Cerrar sesión</button>
-    </div>
-  </div>
-
-  <div class="hero">
-    <h1>Panel privado · SonarIA</h1>
-    <p>
-      Analiza canciones, detecta posibles riesgos de uso escolar y genera una orientación pedagógica inicial.
-    </p>
-  </div>
-
-  <div class="grid">
-
-    <div class="card">
-      <h2>Nuevo análisis</h2>
-      <p class="lead">Completa los datos de la canción y pega la letra o un fragmento significativo.</p>
-
-      <form id="analisisForm" class="form-grid">
-        <input class="input" type="text" id="titulo" placeholder="Título de la canción" required>
-        <input class="input" type="text" id="artista" placeholder="Artista o banda">
-        <textarea class="textarea" id="letra" placeholder="Pega aquí la letra o un fragmento..." required></textarea>
-        <button class="btn primary" type="submit">Analizar con SonarIA</button>
-      </form>
-
-      <div id="estadoAnalisis" class="status">Esperando una canción para analizar.</div>
-
-      <div id="resultado" class="result-box" style="display:none;">
-        <div class="result-item">
-          <strong>Nivel de riesgo</strong>
-          <div id="outRiesgo"></div>
-        </div>
-
-        <div class="result-item">
-          <strong>Apto escolar</strong>
-          <div id="outApto"></div>
-        </div>
-
-        <div class="result-item">
-          <strong>Observaciones</strong>
-          <div id="outObservaciones"></div>
-        </div>
-
-        <div class="result-item">
-          <strong>Sugerencia pedagógica</strong>
-          <div id="outPedagogia"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Tu cuenta</h2>
-
-      <div class="user-box">
-        <div class="pill">Panel activo</div>
-        <div><strong>Usuario:</strong> <span id="userEmail">Cargando...</span></div>
-        <div><strong>Plan:</strong> Gratuito</div>
-      </div>
-
-      <div id="debugBox" class="debug">Iniciando panel...</div>
-
-      <h2 style="margin-top:24px;">Historial reciente</h2>
-      <p class="lead">Tus últimos análisis guardados en la plataforma.</p>
-
-      <div id="historial" class="history">
-        <div class="muted">Cargando historial...</div>
-      </div>
-    </div>
-
+<div class="topbar">
+  <h2>Mejorar<span style="color:#00d084">IA</span></h2>
+  <div>
+    <button class="btn" onclick="window.location.href='index.html'">Volver</button>
+    <button class="btn secondary" onclick="logout()">Cerrar sesión</button>
   </div>
 </div>
 
+<h1>Panel privado • SonarIA</h1>
+
+<div class="card">
+  <h3>Nuevo análisis</h3>
+
+  <input id="titulo" placeholder="Título de la canción">
+  <input id="artista" placeholder="Artista o banda">
+  <textarea id="letra" rows="6" placeholder="Pega aquí la letra..."></textarea>
+
+  <button onclick="analizar()">Analizar con SonarIA</button>
+
+  <p id="resultado"></p>
+</div>
+
+<div class="card">
+  <h3>Tu cuenta</h3>
+  <p id="usuario">Cargando usuario...</p>
+</div>
+
+</div>
+
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "ibtklkjfpcopzgsrulob";
+const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_PUBLISHABLE_KEY";
 
-const supabaseClient = supabase.createClient("ibtklkjfpcopzgsrulob");
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUser = null;
+// 🔐 Verificar sesión
+async function checkUser(){
+  const { data } = await supabaseClient.auth.getUser();
 
-function setDebug(message, type = "") {
-  const box = document.getElementById("debugBox");
-  box.textContent = message;
-  box.className = "debug";
-  if (type) box.classList.add(type);
+  if(!data.user){
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("usuario").innerText = "Usuario: " + data.user.email;
 }
-
-function analizarLetraLocal(letra) {
-  const texto = letra.toLowerCase();
-
-  const palabrasRiesgoAlto = [
-    "droga","drogas","cocaína","cocaina","marihuana","sexo","sexual",
-    "matar","muerte","arma","pistola","sangre","violencia","suicidio"
-  ];
-
-  const palabrasRiesgoMedio = [
-    "odio","borracho","alcohol","mentira","rabia","venganza","insulto"
-  ];
-
-  let puntaje = 0;
-
-  palabrasRiesgoAlto.forEach(p => { if (texto.includes(p)) puntaje += 3; });
-  palabrasRiesgoMedio.forEach(p => { if (texto.includes(p)) puntaje += 1; });
-
-  const largo = texto.trim().length;
-  let riesgo = "bajo";
-  let apto = true;
-  let observaciones = [];
-  let sugerencia = "";
-
-  if (puntaje >= 6) {
-    riesgo = "alto";
-    apto = false;
-    observaciones.push("Se detectan referencias sensibles que podrían dificultar su uso directo en contexto escolar.");
-  } else if (puntaje >= 2) {
-    riesgo = "medio";
-    apto = true;
-    observaciones.push("La letra contiene elementos que conviene revisar antes de usar en aula.");
-  } else {
-    riesgo = "bajo";
-    apto = true;
-    observaciones.push("No se observan señales evidentes de riesgo alto en este análisis inicial.");
-  }
-
-  if (largo < 120) {
-    observaciones.push("El fragmento es breve; conviene revisar la canción completa para una evaluación más confiable.");
-  }
-
-  if (riesgo === "alto") {
-    sugerencia = "Usarla solo como caso de análisis crítico o buscar una versión escolar adaptada.";
-  } else if (riesgo === "medio") {
-    sugerencia = "Puede usarse con mediación docente, enfocando análisis de lenguaje, contexto y sentido.";
-  } else {
-    sugerencia = "Apta para explorar elementos musicales, interpretación y vínculo con objetivos pedagógicos.";
-  }
-
-  return {
-    nivel_riesgo: riesgo,
-    apto_escolar: apto,
-    observaciones: observaciones.join(" "),
-    resultado_texto: `Análisis inicial SonarIA: riesgo ${riesgo}.`,
-    version_escolar: sugerencia
-  };
-}
-
-function pintarResultado(resultado) {
-  document.getElementById("resultado").style.display = "grid";
-  document.getElementById("outRiesgo").textContent = resultado.nivel_riesgo;
-  document.getElementById("outApto").textContent = resultado.apto_escolar ? "Sí" : "No";
-  document.getElementById("outObservaciones").textContent = resultado.observaciones;
-  document.getElementById("outPedagogia").textContent = resultado.version_escolar;
-}
-
-async function checkUser() {
-  try {
-    setDebug("Revisando sesión...");
-    const { data: sessionData, error } = await supabaseClient.auth.getSession();
-
-    if (error) {
-      console.error("Error revisando sesión:", error);
-      setDebug("Error revisando sesión: " + error.message, "error");
-      return;
-    }
-
-    const session = sessionData.session;
-
-    if (!session || !session.user) {
-      setDebug("No hay sesión activa. Redirigiendo al login...", "error");
-      setTimeout(() => {
-        window.location.href = "https://www.mejoraria.cl/login.html";
-      }, 1200);
-      return;
-    }
-
-    currentUser = session.user;
-    document.getElementById("userEmail").textContent = currentUser.email;
-    setDebug("Sesión activa como " + currentUser.email, "success");
-    await cargarHistorial();
-  } catch (err) {
-    console.error(err);
-    setDebug("Fallo general en checkUser: " + err.message, "error");
-  }
-}
-
-async function cargarHistorial() {
-  const historialBox = document.getElementById("historial");
-
-  try {
-    const { data, error } = await supabaseClient
-      .from("analisis")
-      .select("id, titulo_consulta, nivel_riesgo, apto_escolar, observaciones, fecha_creacion")
-      .eq("usuario_id", 1)
-      .order("fecha_creacion", { ascending: false })
-      .limit(8);
-
-    if (error) {
-      console.error(error);
-      historialBox.innerHTML = '<div class="muted">No se pudo cargar el historial.</div>';
-      setDebug("Sesión OK, pero falló el historial: " + error.message, "error");
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      historialBox.innerHTML = '<div class="muted">Todavía no hay análisis guardados.</div>';
-      return;
-    }
-
-    historialBox.innerHTML = data.map(item => `
-      <div class="history-item">
-        <h4>${item.titulo_consulta || "Sin título"}</h4>
-        <p><strong>Riesgo:</strong> ${item.nivel_riesgo || "-"}</p>
-        <p><strong>Apto escolar:</strong> ${item.apto_escolar ? "Sí" : "No"}</p>
-        <p>${item.observaciones || ""}</p>
-      </div>
-    `).join("");
-  } catch (err) {
-    console.error(err);
-    historialBox.innerHTML = '<div class="muted">Error inesperado al cargar historial.</div>';
-    setDebug("Error inesperado en historial: " + err.message, "error");
-  }
-}
-
-document.getElementById("analisisForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const titulo = document.getElementById("titulo").value.trim();
-  const artista = document.getElementById("artista").value.trim();
-  const letra = document.getElementById("letra").value.trim();
-  const estado = document.getElementById("estadoAnalisis");
-
-  try {
-    estado.textContent = "Analizando canción...";
-    const resultado = analizarLetraLocal(letra);
-    pintarResultado(resultado);
-
-    const tituloConsulta = artista ? `${titulo} · ${artista}` : titulo;
-
-    const { error } = await supabaseClient
-      .from("analisis")
-      .insert([{
-        usuario_id: 1,
-        herramienta_id: 1,
-        cancion_id: null,
-        titulo_consulta: tituloConsulta,
-        resultado_texto: resultado.resultado_texto,
-        nivel_riesgo: resultado.nivel_riesgo,
-        apto_escolar: resultado.apto_escolar,
-        version_escolar: resultado.version_escolar,
-        observaciones: resultado.observaciones
-      }]);
-
-    if (error) {
-      console.error(error);
-      estado.textContent = "El análisis se generó, pero no se pudo guardar.";
-      setDebug("Error al guardar análisis: " + error.message, "error");
-      return;
-    }
-
-    estado.textContent = "Análisis completado y guardado correctamente.";
-    setDebug("Análisis guardado correctamente.", "success");
-    document.getElementById("analisisForm").reset();
-    await cargarHistorial();
-  } catch (err) {
-    console.error(err);
-    estado.textContent = "Ocurrió un error inesperado.";
-    setDebug("Error inesperado al analizar: " + err.message, "error");
-  }
-});
-
-document.getElementById("btnLogout").addEventListener("click", async () => {
-  await supabaseClient.auth.signOut();
-  window.location.href = "https://www.mejoraria.cl/";
-});
 
 checkUser();
+
+// 🚪 Logout
+async function logout(){
+  await supabaseClient.auth.signOut();
+  window.location.href = "login.html";
+}
+
+// 🧠 Simulación SonarIA (luego lo conectamos con IA real)
+function analizar(){
+  const titulo = document.getElementById("titulo").value;
+  const artista = document.getElementById("artista").value;
+  const letra = document.getElementById("letra").value;
+
+  if(!titulo || !artista || !letra){
+    alert("Completa todos los campos");
+    return;
+  }
+
+  document.getElementById("resultado").innerText =
+    "🔎 Analizando...\n\nResultado inicial:\nPosible contenido emocional + revisión sugerida para contexto escolar.";
+}
 </script>
 
 </body>
