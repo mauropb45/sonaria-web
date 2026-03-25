@@ -12,7 +12,6 @@
   --bg:#08121f;
   --bg2:#0c1828;
   --panel:#101c2e;
-  --panel-soft:rgba(255,255,255,.05);
   --panel-border:rgba(255,255,255,.10);
 
   --text:#f8fafc;
@@ -24,23 +23,18 @@
   --blue:#3b82f6;
   --blue-2:#2563eb;
   --green:#00d084;
-  --green-2:#00a86b;
 
   --shadow-lg:0 24px 60px rgba(0,0,0,.28);
   --shadow-md:0 14px 30px rgba(0,0,0,.24);
 
   --radius-xl:28px;
   --radius-lg:22px;
-  --radius-md:16px;
 
   --max:1180px;
 }
 
 *{box-sizing:border-box}
-
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -71,32 +65,9 @@ a{
 
 .header-inner{
   display:flex;
-  justify-content:space-between;
+  justify-content:flex-end;
   align-items:center;
   gap:18px;
-}
-
-.logo-wrap{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.logo{
-  width:56px;
-  height:56px;
-  object-fit:contain;
-  filter:drop-shadow(0 8px 18px rgba(0,0,0,.25));
-}
-
-.brand-text{
-  font-size:1.7rem;
-  font-weight:800;
-  letter-spacing:-.04em;
-}
-
-.brand-text .ia{
-  color:var(--green);
 }
 
 .nav{
@@ -157,6 +128,39 @@ a{
   text-shadow:0 0 24px rgba(0,208,132,.45);
 }
 
+.hero-left{
+  width:100%;
+  max-width:900px;
+  text-align:left;
+  margin:0 auto;
+}
+
+.arrow-box{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin-top:22px;
+}
+
+.arrow{
+  font-size:2.5rem;
+  color:var(--green);
+  animation:bounce 1.2s infinite;
+}
+
+.arrow-text{
+  font-size:.96rem;
+  color:#c7f9e8;
+  font-weight:700;
+  opacity:.95;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(10px)}
+}
+
 .hero p{
   margin:18px auto 0;
   max-width:760px;
@@ -204,7 +208,7 @@ a{
   box-shadow:0 10px 24px rgba(59,130,246,.24);
 }
 
-/* MAIN SHOWCASE */
+/* PRODUCTS */
 .products{
   margin-top:54px;
   display:grid;
@@ -225,16 +229,6 @@ a{
 
 .product:hover{
   transform:translateY(-4px);
-}
-
-.product::before{
-  content:"";
-  position:absolute;
-  inset:0 auto auto 0;
-  width:100%;
-  height:1px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-  opacity:.65;
 }
 
 .product-head{
@@ -275,21 +269,14 @@ a{
   border-color:rgba(255,122,0,.22);
   box-shadow:0 22px 50px rgba(255,122,0,.08);
 }
-
-.product.sonar h3{
-  color:var(--orange);
-}
+.product.sonar h3{ color:var(--orange); }
 
 .product.ensayar{
   border-color:rgba(0,208,132,.20);
   box-shadow:0 22px 50px rgba(0,208,132,.07);
 }
+.product.ensayar h3{ color:var(--green); }
 
-.product.ensayar h3{
-  color:var(--green);
-}
-
-/* VIDEO CARD */
 .video{
   margin-top:16px;
   border-radius:20px;
@@ -306,7 +293,6 @@ a{
   border:none;
 }
 
-/* ENSAYARIA PANEL */
 .placeholder{
   margin-top:16px;
   min-height:340px;
@@ -330,7 +316,6 @@ a{
   gap:12px;
   font-size:1.75rem;
   margin-bottom:14px;
-  opacity:.95;
 }
 
 .placeholder h4{
@@ -338,7 +323,6 @@ a{
   font-size:1.7rem;
   font-weight:800;
   color:var(--green);
-  letter-spacing:-.03em;
 }
 
 .placeholder .sub{
@@ -360,7 +344,6 @@ a{
   margin-top:10px;
   font-size:.88rem;
   color:#97abc3;
-  opacity:.92;
 }
 
 .placeholder .btn{
@@ -368,7 +351,7 @@ a{
   min-width:220px;
 }
 
-/* DIFFERENTIAL */
+/* SECTIONS */
 .section{
   margin-top:78px;
   text-align:center;
@@ -515,10 +498,8 @@ a{
   opacity:.88;
 }
 
-/* RESPONSIVE */
 @media (max-width: 980px){
-  .products,
-  .features{
+  .products, .features{
     grid-template-columns:1fr;
   }
 }
@@ -526,29 +507,14 @@ a{
 @media (max-width: 720px){
   .header-inner{
     flex-direction:column;
-    align-items:flex-start;
+    align-items:flex-end;
   }
-
   .nav{
     width:100%;
+    justify-content:flex-end;
   }
-
-  .nav a{
-    flex:1;
-    text-align:center;
-  }
-
-  .video iframe{
-    height:280px;
-  }
-
-  .placeholder{
-    min-height:280px;
-  }
-
-  .brand-text{
-    font-size:1.4rem;
-  }
+  .video iframe{ height:280px; }
+  .placeholder{ min-height:280px; }
 }
 </style>
 </head>
@@ -556,42 +522,38 @@ a{
 
 <div class="container">
 
-  <!-- HEADER -->
   <div class="header">
     <div class="header-inner">
-      <div class="logo-wrap">
-        <img src="./logo-mejoraria.png" class="logo" alt="Logo MejorarIA">
-        <div class="brand-text">Mejorar<span class="ia">IA</span></div>
-      </div>
-
       <div class="nav">
-        <a href="login.html">Ingresar</a>
-        <a href="login.html">Crear cuenta</a>
+        <a href="https://www.mejoraria.cl/login.html">Ingresar</a>
+        <a href="https://www.mejoraria.cl/login.html">Crear cuenta</a>
       </div>
     </div>
   </div>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-badge">IA aplicada a educación musical</div>
 
-    <h1 class="brand-main">
-      Mejorar<span class="ia">IA</span>
-    </h1>
+    <div class="hero-left">
+      <h1 class="brand-main">Mejorar<span class="ia">IA</span></h1>
+    </div>
+
+    <div class="arrow-box">
+      <a href="#video-sonaria" class="arrow">⬇</a>
+      <div class="arrow-text">Ven a conocer los beneficios de SonarIA</div>
+    </div>
 
     <p>
       Herramientas para profesores que buscan ahorrar tiempo, mejorar sus clases y tomar decisiones pedagógicas con más claridad, criterio y velocidad.
     </p>
 
     <div class="cta">
-      <a href="login.html" class="btn primary">Probar / Crear cuenta</a>
-      <a href="login.html" class="btn secondary">Ingresar</a>
+      <a href="https://www.mejoraria.cl/login.html" class="btn primary">Probar / Crear cuenta</a>
+      <a href="https://www.mejoraria.cl/login.html" class="btn secondary">Ingresar</a>
     </div>
   </div>
 
-  <!-- PRODUCTS -->
   <div class="products">
-
     <div class="product sonar">
       <div class="product-head">
         <h3>SonarIA</h3>
@@ -602,7 +564,7 @@ a{
         Analiza canciones, adapta contenido y orienta su uso pedagógico con enfoque curricular en música.
       </p>
 
-      <div class="video">
+      <div class="video" id="video-sonaria">
         <iframe
           src="https://www.youtube.com/embed/aD6MUQl0ajI"
           title="Demo SonarIA"
@@ -632,10 +594,8 @@ a{
         <a href="#interes" class="btn secondary">Quiero acceso anticipado</a>
       </div>
     </div>
-
   </div>
 
-  <!-- FEATURES -->
   <div class="section">
     <h2>Más que herramientas aisladas</h2>
     <p class="section-lead">
@@ -660,7 +620,6 @@ a{
     </div>
   </div>
 
-  <!-- FORMULARIO -->
   <div class="section" id="interes">
     <h2>¿Te interesa probar MejorarIA?</h2>
     <p class="section-lead">
@@ -680,7 +639,6 @@ a{
     </div>
   </div>
 
-  <!-- FINAL CTA -->
   <div class="final">
     <h2>¿Quieres que construyamos juntos tu solución?</h2>
     <p>
@@ -688,23 +646,20 @@ a{
     </p>
 
     <div class="cta">
-      <a href="login.html" class="btn primary">Crear cuenta</a>
+      <a href="https://www.mejoraria.cl/login.html" class="btn primary">Crear cuenta</a>
       <a href="#interes" class="btn secondary">Ir al formulario</a>
     </div>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
     MauRock · Mauricio José Pinto Basso
   </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_IwR4ByvxMHbrJPZF4Q4ZKg_ra6ji7HM";
+const SUPABASE_ANON_KEY = "TU_PUBLISHABLE_KEY_AQUI";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
