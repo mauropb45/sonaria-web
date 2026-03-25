@@ -124,7 +124,18 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 🔐 Verificar sesión
 async function checkUser(){
-  const { data } = await supabaseClient.auth.getUser();
+  async function checkUser(){
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if(!session){
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("usuario").innerText =
+    "Usuario: " + session.user.email;
+}
 
   if(!data.user){
     window.location.href = "login.html";
