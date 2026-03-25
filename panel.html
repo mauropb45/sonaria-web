@@ -19,9 +19,7 @@
   --green:#00d084;
   --blue:#2563eb;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:'Inter',sans-serif;
@@ -31,18 +29,15 @@ body{
     radial-gradient(circle at bottom right, rgba(0,208,132,.10), transparent 20%),
     linear-gradient(180deg,var(--bg),var(--bg2));
 }
-
 a{
   color:inherit;
   text-decoration:none;
 }
-
 .container{
   max-width:1180px;
   margin:auto;
   padding:28px 22px 80px;
 }
-
 .header{
   display:flex;
   justify-content:space-between;
@@ -50,23 +45,17 @@ a{
   gap:16px;
   margin-bottom:30px;
 }
-
 .brand{
   font-size:1.8rem;
   font-weight:800;
   letter-spacing:-.04em;
 }
-
-.brand .ia{
-  color:var(--green);
-}
-
+.brand .ia{ color:var(--green); }
 .top-actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
 }
-
 .btn{
   display:inline-flex;
   align-items:center;
@@ -80,74 +69,59 @@ a{
   font-size:.98rem;
   transition:.2s ease;
 }
-
-.btn:hover{
-  transform:translateY(-2px);
-}
-
+.btn:hover{ transform:translateY(-2px); }
 .primary{
   background:linear-gradient(135deg,var(--orange),#ff4d00);
   color:#111827;
 }
-
 .secondary{
   background:linear-gradient(135deg,#3b82f6,var(--blue));
   color:white;
 }
-
 .ghost{
   background:rgba(255,255,255,.04);
   color:var(--text);
   border:1px solid var(--line);
 }
-
 .hero{
   margin-bottom:24px;
 }
-
 .hero h1{
   margin:0 0 10px;
   font-size:clamp(2rem,4vw,3rem);
   letter-spacing:-.04em;
 }
-
 .hero p{
   margin:0;
   color:var(--muted);
   line-height:1.7;
   max-width:780px;
 }
-
 .grid{
   display:grid;
   grid-template-columns:1.15fr .85fr;
   gap:22px;
   margin-top:26px;
 }
-
 .card{
   background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
   border:1px solid var(--line);
   border-radius:24px;
   padding:22px;
 }
-
 .card h2{
   margin:0 0 12px;
   font-size:1.35rem;
 }
-
 .lead{
   color:var(--muted);
   line-height:1.65;
   margin:0 0 18px;
 }
-
 .form-grid{
   display:grid;
   gap:12px;
 }
-
 .input,
 .textarea{
   width:100%;
@@ -159,47 +133,39 @@ a{
   font:inherit;
   outline:none;
 }
-
 .input::placeholder,
 .textarea::placeholder{
   color:#8ea4bf;
 }
-
 .textarea{
   min-height:180px;
   resize:vertical;
 }
-
 .result-box{
   margin-top:18px;
   display:grid;
   gap:12px;
 }
-
 .result-item{
   background:rgba(255,255,255,.04);
   border:1px solid var(--line);
   border-radius:16px;
   padding:14px 16px;
 }
-
 .result-item strong{
   display:block;
   margin-bottom:6px;
   font-size:.95rem;
 }
-
 .status{
   margin-top:14px;
   color:var(--muted);
   line-height:1.55;
 }
-
 .user-box{
   display:grid;
   gap:10px;
 }
-
 .pill{
   display:inline-flex;
   align-items:center;
@@ -212,7 +178,6 @@ a{
   font-weight:800;
   font-size:.86rem;
 }
-
 .history{
   margin-top:16px;
   display:grid;
@@ -220,34 +185,25 @@ a{
   max-height:420px;
   overflow:auto;
 }
-
 .history-item{
   border:1px solid var(--line);
   background:rgba(255,255,255,.035);
   border-radius:16px;
   padding:14px;
 }
-
 .history-item h4{
   margin:0 0 6px;
   font-size:1rem;
 }
-
 .history-item p{
   margin:0;
   color:var(--muted);
   line-height:1.55;
   font-size:.94rem;
 }
-
-.muted{
-  color:var(--muted);
-}
-
+.muted{ color:var(--muted); }
 @media (max-width: 980px){
-  .grid{
-    grid-template-columns:1fr;
-  }
+  .grid{ grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -259,7 +215,7 @@ a{
     <div class="brand">Mejorar<span class="ia">IA</span></div>
 
     <div class="top-actions">
-      <a href="index.html" class="btn ghost">Volver al inicio</a>
+      <a href="https://www.mejoraria.cl/" class="btn ghost">Volver al inicio</a>
       <button id="btnLogout" class="btn secondary" type="button">Cerrar sesión</button>
     </div>
   </div>
@@ -268,7 +224,6 @@ a{
     <h1>Panel privado · SonarIA</h1>
     <p>
       Analiza canciones, detecta posibles riesgos de uso escolar y genera una orientación pedagógica inicial.
-      Esta es la primera versión funcional dentro del panel.
     </p>
   </div>
 
@@ -331,10 +286,9 @@ a{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "ibtklkjfpcopzgsrulob";
+const SUPABASE_ANON_KEY = ibtklkjfpcopzgsrulob";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -412,14 +366,22 @@ function pintarResultado(resultado) {
 }
 
 async function checkUser() {
-  const { data, error } = await supabaseClient.auth.getUser();
+  const { data: sessionData, error } = await supabaseClient.auth.getSession();
 
-  if (error || !data.user) {
-    window.location.href = "login.html";
+  if (error) {
+    console.error("Error revisando sesión:", error);
+    window.location.href = "https://www.mejoraria.cl/login.html";
     return;
   }
 
-  currentUser = data.user;
+  const session = sessionData.session;
+
+  if (!session || !session.user) {
+    window.location.href = "https://www.mejoraria.cl/login.html";
+    return;
+  }
+
+  currentUser = session.user;
   document.getElementById("userEmail").textContent = currentUser.email;
   await cargarHistorial();
 }
@@ -467,9 +429,7 @@ document.getElementById("analisisForm").addEventListener("submit", async (e) => 
   const resultado = analizarLetraLocal(letra);
   pintarResultado(resultado);
 
-  const tituloConsulta = artista
-    ? `${titulo} · ${artista}`
-    : titulo;
+  const tituloConsulta = artista ? `${titulo} · ${artista}` : titulo;
 
   const { error } = await supabaseClient
     .from("analisis")
@@ -498,7 +458,7 @@ document.getElementById("analisisForm").addEventListener("submit", async (e) => 
 
 document.getElementById("btnLogout").addEventListener("click", async () => {
   await supabaseClient.auth.signOut();
-  window.location.href = "index.html";
+  window.location.href = "https://www.mejoraria.cl/";
 });
 
 checkUser();
