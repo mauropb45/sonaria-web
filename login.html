@@ -2,77 +2,323 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Login - MejorarIA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | MejorarIA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --bg:#08121f;
+  --bg2:#0c1828;
+  --panel:#101c2e;
+  --line:rgba(255,255,255,.08);
+  --text:#f8fafc;
+  --muted:#9fb0c7;
+  --orange:#ff7a00;
+  --orange-2:#ff4d00;
+  --blue:#2563eb;
+  --green:#00d084;
+}
+*{box-sizing:border-box}
 body{
-  font-family:Arial;
-  background:#08121f;
-  color:white;
+  margin:0;
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255,122,0,.12), transparent 18%),
+    radial-gradient(circle at bottom right, rgba(0,208,132,.10), transparent 20%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:32px 20px 70px;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:36px;
+}
+.brand{
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.brand .ia{ color:var(--green); }
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:12px 18px;
+  font-weight:800;
+  cursor:pointer;
+}
+.btn-primary{
+  background:linear-gradient(135deg, var(--orange), var(--orange-2));
+  color:#111827;
+}
+.btn-ghost{
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  border:1px solid var(--line);
+}
+.hero{
   text-align:center;
-  padding:40px;
+  margin-bottom:28px;
 }
-
+.hero h1{
+  margin:0;
+  font-size:clamp(2.2rem, 5vw, 3.5rem);
+}
+.hero p{
+  margin:14px auto 0;
+  max-width:700px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+}
+.card h2{
+  margin:0 0 12px;
+}
+.lead{
+  margin:0 0 18px;
+  color:var(--muted);
+  line-height:1.65;
+}
+.tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+}
+.tab{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+}
+.tab.active{
+  background:var(--orange);
+  color:#111827;
+  border-color:transparent;
+}
+.form-panel{ display:none; }
+.form-panel.active{ display:block; }
+form{
+  display:grid;
+  gap:12px;
+}
+label{
+  font-size:.95rem;
+  font-weight:700;
+}
 input{
-  display:block;
-  margin:10px auto;
-  padding:10px;
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-size:1rem;
 }
-
-button{
-  padding:10px 20px;
-  margin-top:10px;
+input::placeholder{ color:#93a7bf; }
+.status{
+  margin-top:16px;
+  padding:14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  color:var(--muted);
+  line-height:1.6;
+}
+.feature{
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+}
+.feature strong{
+  display:block;
+  margin-bottom:6px;
+}
+.feature p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.55;
+}
+@media (max-width: 860px){
+  .grid{ grid-template-columns:1fr; }
 }
 </style>
 </head>
-
 <body>
 
-<h2>Acceso MejorarIA</h2>
+<div class="container">
+  <div class="header">
+    <div class="brand">Mejorar<span class="ia">IA</span></div>
+    <button class="btn btn-ghost" onclick="window.location.href='https://www.mejoraria.cl/'">Volver al inicio</button>
+  </div>
 
-<input type="email" id="email" placeholder="Correo">
-<input type="password" id="password" placeholder="Contraseña">
+  <div class="hero">
+    <h1>Accede a tu espacio docente</h1>
+    <p>Regístrate o inicia sesión para entrar al panel privado de MejorarIA.</p>
+  </div>
 
-<button onclick="login()">Entrar</button>
-<button onclick="register()">Crear cuenta</button>
+  <div class="grid">
+    <div class="card">
+      <h2>Qué podrás hacer</h2>
+      <p class="lead">Esta base te permitirá pasar de landing a plataforma real.</p>
 
-<p id="msg"></p>
+      <div class="feature">
+        <strong>Historial personal</strong>
+        <p>Cada docente podrá ver sus análisis y actividad en un espacio propio.</p>
+      </div>
+
+      <div class="feature">
+        <strong>SonarIA conectado</strong>
+        <p>Guardar resultados, observaciones y usos pedagógicos por cuenta.</p>
+      </div>
+
+      <div class="feature">
+        <strong>Base para SaaS</strong>
+        <p>Luego podrás agregar planes, límites por uso y acceso institucional.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="tabs">
+        <button id="tabLogin" class="tab active" type="button">Iniciar sesión</button>
+        <button id="tabRegister" class="tab" type="button">Registrarse</button>
+      </div>
+
+      <div id="panelLogin" class="form-panel active">
+        <h2>Iniciar sesión</h2>
+        <p class="lead">Entra con tu correo y contraseña.</p>
+
+        <form id="loginForm">
+          <div>
+            <label for="loginEmail">Correo</label>
+            <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+          </div>
+
+          <div>
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Entrar</button>
+        </form>
+      </div>
+
+      <div id="panelRegister" class="form-panel">
+        <h2>Crear cuenta</h2>
+        <p class="lead">Regístrate para acceder a tu espacio privado.</p>
+
+        <form id="registerForm">
+          <div>
+            <label for="registerEmail">Correo</label>
+            <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+          </div>
+
+          <div>
+            <label for="registerPassword">Contraseña</label>
+            <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Crear cuenta</button>
+        </form>
+      </div>
+
+      <div id="statusBox" class="status">Estado: esperando acción.</div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_IwR4ByvxMHbrJPZF4Q4ZKg_ra6ji7HM";
+const SUPABASE_ANON_KEY = "TU_PUBLISHABLE_KEY_AQUI";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-async function login(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+const tabLogin = document.getElementById("tabLogin");
+const tabRegister = document.getElementById("tabRegister");
+const panelLogin = document.getElementById("panelLogin");
+const panelRegister = document.getElementById("panelRegister");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+const statusBox = document.getElementById("statusBox");
+
+function setTab(mode) {
+  const isLogin = mode === "login";
+  tabLogin.classList.toggle("active", isLogin);
+  tabRegister.classList.toggle("active", !isLogin);
+  panelLogin.classList.toggle("active", isLogin);
+  panelRegister.classList.toggle("active", !isLogin);
+}
+
+function setStatus(message, isError = false) {
+  statusBox.textContent = "Estado: " + message;
+  statusBox.style.borderColor = isError ? "rgba(239,68,68,.45)" : "rgba(255,255,255,.08)";
+}
+
+tabLogin.addEventListener("click", () => setTab("login"));
+tabRegister.addEventListener("click", () => setTab("register"));
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
   const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-  if(error){
-    document.getElementById("msg").innerText = error.message;
+  if (error) {
+    console.error(error);
+    setStatus(error.message, true);
     return;
   }
 
-  window.location.href = "panel.html";
-}
+  setStatus("inicio de sesión correcto.");
+  window.location.href = "https://www.mejoraria.cl/panel.html";
+});
 
-async function register(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+registerForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  const { error } = await supabaseClient.auth.signUp({ email, password });
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
 
-  if(error){
-    document.getElementById("msg").innerText = error.message;
+  const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+  if (error) {
+    console.error(error);
+    setStatus(error.message, true);
     return;
   }
 
-  document.getElementById("msg").innerText = "Cuenta creada. Ahora inicia sesión.";
-}
+  if (data.user && !data.session) {
+    setStatus("cuenta creada. Revisa tu correo para confirmar el registro.");
+  } else {
+    setStatus("cuenta creada correctamente. Entrando al panel...");
+    window.location.href = "https://www.mejoraria.cl/panel.html";
+  }
+});
 </script>
 
 </body>
