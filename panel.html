@@ -1,172 +1,259 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel • SonarIA</title>
 
-<title>Panel • SonarIA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:#fff;
+      background:
+        radial-gradient(circle at top left, rgba(255,122,0,.2), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,208,132,.2), transparent 30%),
+        #08121f;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  color:#fff;
-  background:
-    radial-gradient(circle at top left, rgba(255,122,0,.2), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(0,208,132,.2), transparent 30%),
-    #08121f;
-}
+    .container{
+      max-width:1200px;
+      margin:auto;
+      padding:40px 20px;
+    }
 
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:40px 20px;
-}
+    h1{
+      font-size:40px;
+      margin:0 0 24px;
+    }
 
-h1{
-  font-size:40px;
-}
+    .card{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.1);
+      padding:20px;
+      border-radius:20px;
+      margin-top:20px;
+    }
 
-.card{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  padding:20px;
-  border-radius:20px;
-  margin-top:20px;
-}
+    input, textarea{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border-radius:12px;
+      border:none;
+      background:rgba(255,255,255,.08);
+      color:white;
+      box-sizing:border-box;
+    }
 
-input, textarea{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border-radius:12px;
-  border:none;
-  background:rgba(255,255,255,.08);
-  color:white;
-}
+    textarea{
+      min-height:180px;
+      resize:vertical;
+    }
 
-button{
-  margin-top:15px;
-  padding:14px;
-  width:100%;
-  border:none;
-  border-radius:12px;
-  font-weight:800;
-  background:#ff7a00;
-  cursor:pointer;
-}
+    button{
+      margin-top:15px;
+      padding:14px;
+      width:100%;
+      border:none;
+      border-radius:12px;
+      font-weight:800;
+      background:#ff7a00;
+      cursor:pointer;
+    }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+      gap:12px;
+      flex-wrap:wrap;
+    }
 
-.btn{
-  padding:10px 16px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-}
+    .btn{
+      padding:10px 16px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      width:auto;
+      margin-top:0;
+    }
 
-.secondary{
-  background:#2563eb;
-  color:white;
-}
+    .secondary{
+      background:#2563eb;
+      color:white;
+    }
 
-</style>
+    .ghost{
+      background:rgba(255,255,255,.08);
+      color:white;
+    }
+
+    .status{
+      margin-top:16px;
+      color:#cbd5e1;
+      white-space:pre-line;
+      line-height:1.6;
+    }
+
+    .result{
+      margin-top:16px;
+      padding:16px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      line-height:1.7;
+      white-space:pre-line;
+    }
+
+    .debug{
+      margin-top:12px;
+      color:#93c5fd;
+      font-size:.95rem;
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<div class="topbar">
-  <h2>Mejorar<span style="color:#00d084">IA</span></h2>
-  <div>
-    <button class="btn" onclick="window.location.href='index.html'">Volver</button>
-    <button class="btn secondary" onclick="logout()">Cerrar sesión</button>
+  <div class="topbar">
+    <h2 style="margin:0;">Mejorar<span style="color:#00d084">IA</span></h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn ghost" onclick="window.location.href='https://www.mejoraria.cl/'">Volver al inicio</button>
+      <button class="btn secondary" onclick="logout()">Cerrar sesión</button>
+    </div>
   </div>
+
+  <h1>Panel privado • SonarIA</h1>
+
+  <div class="card">
+    <h3>Nuevo análisis</h3>
+
+    <input id="titulo" placeholder="Título de la canción">
+    <input id="artista" placeholder="Artista o banda">
+    <textarea id="letra" placeholder="Pega aquí la letra..."></textarea>
+
+    <button onclick="analizar()">Analizar con SonarIA</button>
+
+    <div id="resultado" class="result" style="display:none;"></div>
+    <div id="estado" class="status">Esperando canción para analizar.</div>
+  </div>
+
+  <div class="card">
+    <h3>Tu cuenta</h3>
+    <p id="usuario">Cargando usuario...</p>
+    <div id="debug" class="debug">Revisando sesión...</div>
+  </div>
+
 </div>
 
-<h1>Panel privado • SonarIA</h1>
-
-<div class="card">
-  <h3>Nuevo análisis</h3>
-
-  <input id="titulo" placeholder="Título de la canción">
-  <input id="artista" placeholder="Artista o banda">
-  <textarea id="letra" rows="6" placeholder="Pega aquí la letra..."></textarea>
-
-  <button onclick="analizar()">Analizar con SonarIA</button>
-
-  <p id="resultado"></p>
-</div>
-
-<div class="card">
-  <h3>Tu cuenta</h3>
-  <p id="usuario">Cargando usuario...</p>
-</div>
-
-</div>
-
-<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_IwR4ByvxMHbrJPZF4Q4ZKg_ra6ji7HM;
+  const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
+  const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_PUBLISHABLE_KEY";
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 🔐 Verificar sesión
-async function checkUser(){
-  async function checkUser(){
+  async function checkUser() {
+    const usuarioEl = document.getElementById("usuario");
+    const debugEl = document.getElementById("debug");
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+    try {
+      const { data, error } = await supabaseClient.auth.getSession();
 
-  if(!session){
-    window.location.href = "login.html";
-    return;
+      if (error) {
+        console.error("Error getSession:", error);
+        usuarioEl.innerText = "No se pudo cargar el usuario.";
+        debugEl.innerText = "Error de sesión: " + error.message;
+        return;
+      }
+
+      const session = data.session;
+
+      if (!session || !session.user) {
+        usuarioEl.innerText = "Sin sesión activa.";
+        debugEl.innerText = "No hay sesión. Redirigiendo...";
+        setTimeout(() => {
+          window.location.href = "https://www.mejoraria.cl/login.html";
+        }, 1200);
+        return;
+      }
+
+      usuarioEl.innerText = "Usuario: " + session.user.email;
+      debugEl.innerText = "Sesión activa correctamente.";
+    } catch (err) {
+      console.error("Error inesperado:", err);
+      usuarioEl.innerText = "Error al cargar usuario.";
+      debugEl.innerText = "Fallo inesperado: " + err.message;
+    }
   }
 
-  document.getElementById("usuario").innerText =
-    "Usuario: " + session.user.email;
-}
-
-  if(!data.user){
-    window.location.href = "login.html";
-    return;
+  async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.href = "https://www.mejoraria.cl/login.html";
   }
 
-  document.getElementById("usuario").innerText = "Usuario: " + data.user.email;
-}
+  function analizar() {
+    const titulo = document.getElementById("titulo").value.trim();
+    const artista = document.getElementById("artista").value.trim();
+    const letra = document.getElementById("letra").value.trim();
+    const resultadoEl = document.getElementById("resultado");
+    const estadoEl = document.getElementById("estado");
 
-checkUser();
+    if (!titulo || !artista || !letra) {
+      estadoEl.innerText = "Completa título, artista y letra.";
+      resultadoEl.style.display = "none";
+      return;
+    }
 
-// 🚪 Logout
-async function logout(){
-  await supabaseClient.auth.signOut();
-  window.location.href = "login.html";
-}
+    const texto = letra.toLowerCase();
 
-// 🧠 Simulación SonarIA (luego lo conectamos con IA real)
-function analizar(){
-  const titulo = document.getElementById("titulo").value;
-  const artista = document.getElementById("artista").value;
-  const letra = document.getElementById("letra").value;
+    let riesgo = "Bajo";
+    let apto = "Sí";
+    let observacion = "No se detectan señales evidentes de alto riesgo en este análisis inicial.";
+    let sugerencia = "Puede usarse como punto de partida para análisis musical y pedagógico.";
 
-  if(!titulo || !artista || !letra){
-    alert("Completa todos los campos");
-    return;
+    const palabrasAltas = ["droga", "sexo", "matar", "arma", "violencia", "suicidio"];
+    const palabrasMedias = ["odio", "alcohol", "rabia", "insulto"];
+
+    let score = 0;
+
+    palabrasAltas.forEach(p => {
+      if (texto.includes(p)) score += 3;
+    });
+
+    palabrasMedias.forEach(p => {
+      if (texto.includes(p)) score += 1;
+    });
+
+    if (score >= 6) {
+      riesgo = "Alto";
+      apto = "No";
+      observacion = "Se detectan referencias sensibles que podrían dificultar su uso directo en contexto escolar.";
+      sugerencia = "Conviene usarla solo para análisis crítico o buscar una versión adaptada.";
+    } else if (score >= 2) {
+      riesgo = "Medio";
+      apto = "Sí, con mediación";
+      observacion = "La letra contiene elementos que conviene revisar antes de trabajarla en aula.";
+      sugerencia = "Se recomienda contextualizar el lenguaje y orientar la escucha.";
+    }
+
+    resultadoEl.style.display = "block";
+    resultadoEl.innerText =
+      "Canción: " + titulo + " · " + artista + "\n\n" +
+      "Nivel de riesgo: " + riesgo + "\n" +
+      "Apto escolar: " + apto + "\n\n" +
+      "Observaciones: " + observacion + "\n\n" +
+      "Sugerencia pedagógica: " + sugerencia;
+
+    estadoEl.innerText = "Análisis completado.";
   }
 
-  document.getElementById("resultado").innerText =
-    "🔎 Analizando...\n\nResultado inicial:\nPosible contenido emocional + revisión sugerida para contexto escolar.";
-}
+  checkUser();
 </script>
 
 </body>
