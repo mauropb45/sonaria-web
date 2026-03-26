@@ -1,260 +1,600 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel • SonarIA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | Panel Pro</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    :root{
+      --bg:#07111d;
+      --bg2:#0b1626;
+      --panel:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.10);
+      --text:#eef2f7;
+      --muted:#9fb0c7;
+      --green:#14d68f;
+      --green-soft:rgba(20,214,143,.12);
+      --orange:#ff8a00;
+      --orange-soft:rgba(255,138,0,.12);
+      --red:#ff5d5d;
+      --red-soft:rgba(255,93,93,.12);
+      --blue:#4b82ff;
+      --blue-soft:rgba(75,130,255,.12);
+      --shadow:0 20px 60px rgba(0,0,0,.30);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family:'Inter',sans-serif;
-      color:#fff;
+      color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,122,0,.2), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(0,208,132,.2), transparent 30%),
-        #08121f;
+        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(20,214,143,.12), transparent 20%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      min-height:100vh;
     }
 
     .container{
-      max-width:1200px;
-      margin:auto;
-      padding:40px 20px;
-    }
-
-    h1{
-      font-size:40px;
-      margin:0 0 24px;
-    }
-
-    .card{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.1);
-      padding:20px;
-      border-radius:20px;
-      margin-top:20px;
-    }
-
-    input, textarea{
-      width:100%;
-      padding:14px;
-      margin-top:10px;
-      border-radius:12px;
-      border:none;
-      background:rgba(255,255,255,.08);
-      color:white;
-      box-sizing:border-box;
-    }
-
-    textarea{
-      min-height:180px;
-      resize:vertical;
-    }
-
-    button{
-      margin-top:15px;
-      padding:14px;
-      width:100%;
-      border:none;
-      border-radius:12px;
-      font-weight:800;
-      background:#ff7a00;
-      cursor:pointer;
+      max-width:1260px;
+      margin:0 auto;
+      padding:28px 22px 60px;
     }
 
     .topbar{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:20px;
-      gap:12px;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:26px;
+    }
+
+    .brand{
+      font-size:2rem;
+      font-weight:800;
+      letter-spacing:-.04em;
+    }
+
+    .brand .ia{
+      color:var(--green);
+      text-shadow:0 0 22px rgba(20,214,143,.35);
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
       flex-wrap:wrap;
     }
 
     .btn{
-      padding:10px 16px;
-      border-radius:10px;
       border:none;
       cursor:pointer;
-      width:auto;
-      margin-top:0;
+      border-radius:16px;
+      padding:13px 18px;
+      font-weight:800;
+      font-size:.98rem;
+      transition:.2s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
 
-    .secondary{
-      background:#2563eb;
-      color:white;
+    .btn:hover{ transform:translateY(-2px); }
+
+    .btn-ghost{
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      border:1px solid var(--line);
     }
 
-    .ghost{
-      background:rgba(255,255,255,.08);
-      color:white;
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),#ff6a00);
+      color:#111827;
+      box-shadow:0 10px 24px rgba(255,138,0,.26);
+    }
+
+    .hero{
+      margin-bottom:26px;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--blue-soft);
+      border:1px solid rgba(75,130,255,.24);
+      color:#cfe0ff;
+      font-weight:700;
+      font-size:.9rem;
+      margin-bottom:16px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(2.2rem, 5vw, 4rem);
+      letter-spacing:-.05em;
+      line-height:.98;
+    }
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:1.08rem;
+      line-height:1.7;
+      max-width:900px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:22px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      overflow:hidden;
+    }
+
+    .card h2{
+      margin:0 0 8px;
+      font-size:1.5rem;
+      letter-spacing:-.03em;
+    }
+
+    .card p.lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .field{
+      margin-bottom:12px;
+    }
+
+    .label{
+      display:block;
+      margin-bottom:8px;
+      font-size:.95rem;
+      font-weight:700;
+      color:#dde7f3;
+    }
+
+    .input,
+    .textarea{
+      width:100%;
+      padding:15px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font:inherit;
+      outline:none;
+      transition:.18s ease;
+    }
+
+    .input:focus,
+    .textarea:focus{
+      border-color:rgba(75,130,255,.5);
+      box-shadow:0 0 0 4px rgba(75,130,255,.12);
+    }
+
+    .input::placeholder,
+    .textarea::placeholder{
+      color:#90a4be;
+    }
+
+    .textarea{
+      min-height:220px;
+      resize:vertical;
+      line-height:1.55;
+    }
+
+    .helper{
+      margin-top:8px;
+      color:#8fa5c2;
+      font-size:.9rem;
     }
 
     .status{
-      margin-top:16px;
-      color:#cbd5e1;
-      white-space:pre-line;
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
       line-height:1.6;
+      min-height:56px;
     }
 
-    .result{
-      margin-top:16px;
+    .status.loading{
+      color:#dbeafe;
+      border-color:rgba(75,130,255,.35);
+      background:rgba(75,130,255,.08);
+    }
+
+    .status.ok{
+      color:#d1fae5;
+      border-color:rgba(20,214,143,.35);
+      background:rgba(20,214,143,.08);
+    }
+
+    .status.error{
+      color:#fee2e2;
+      border-color:rgba(255,93,93,.35);
+      background:rgba(255,93,93,.08);
+    }
+
+    .result-hero{
+      display:flex;
+      align-items:center;
+      gap:14px;
       padding:16px;
-      border-radius:14px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.1);
-      line-height:1.7;
+      border-radius:20px;
+      margin-bottom:18px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .result-hero.green{
+      background:var(--green-soft);
+      border-color:rgba(20,214,143,.22);
+    }
+
+    .result-hero.orange{
+      background:var(--orange-soft);
+      border-color:rgba(255,138,0,.22);
+    }
+
+    .result-hero.red{
+      background:var(--red-soft);
+      border-color:rgba(255,93,93,.22);
+    }
+
+    .risk-dot{
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      flex:0 0 auto;
+      box-shadow:0 0 20px currentColor;
+    }
+
+    .green .risk-dot{ background:var(--green); color:var(--green); }
+    .orange .risk-dot{ background:var(--orange); color:var(--orange); }
+    .red .risk-dot{ background:var(--red); color:var(--red); }
+
+    .result-hero strong{
+      display:block;
+      font-size:1.06rem;
+      margin-bottom:3px;
+    }
+
+    .result-hero span{
+      color:#e8eef7;
+      font-size:.96rem;
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .mini{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px 15px;
+    }
+
+    .mini .k{
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#8ea4bf;
+      margin-bottom:6px;
+      font-weight:800;
+    }
+
+    .mini .v{
+      font-size:1rem;
+      font-weight:700;
+      line-height:1.45;
+    }
+
+    .section-title{
+      margin:18px 0 10px;
+      font-size:.95rem;
+      font-weight:800;
+      color:#d9e6f5;
+      letter-spacing:.02em;
+    }
+
+    .box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px 15px;
+      color:#d4deeb;
+      line-height:1.65;
       white-space:pre-line;
     }
 
-    .debug{
-      margin-top:12px;
-      color:#93c5fd;
-      font-size:.95rem;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:#e7eef7;
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .list{
+      display:grid;
+      gap:8px;
+    }
+
+    .list-item{
+      padding:12px 13px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dbe5f2;
+      line-height:1.55;
+      font-size:.94rem;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    @media (max-width: 980px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .result-grid{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
 
-<div class="container">
+    <div class="topbar">
+      <div class="brand">Sonar<span class="ia">IA</span></div>
 
-  <div class="topbar">
-    <h2 style="margin:0;">Mejorar<span style="color:#00d084">IA</span></h2>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn ghost" onclick="window.location.href='https://www.mejoraria.cl/'">Volver al inicio</button>
-      <button class="btn secondary" onclick="logout()">Cerrar sesión</button>
+      <div class="top-actions">
+        <a class="btn btn-ghost" href="https://www.mejoraria.cl/">Volver a MejorarIA</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-badge">Panel profesional · análisis pedagógico musical</div>
+      <h1>Evalúa canciones con criterio educativo</h1>
+      <p>
+        SonarIA analiza letras, detecta señales sensibles, identifica temáticas emocionales
+        y entrega una recomendación útil para contexto escolar.
+      </p>
+    </div>
+
+    <div class="layout">
+
+      <div class="card">
+        <h2>Nuevo análisis</h2>
+        <p class="lead">
+          Ingresa la canción, artista y letra. El motor de SonarIA evaluará riesgo,
+          mediación docente y hallazgos relevantes.
+        </p>
+
+        <div class="field">
+          <label class="label" for="titulo">Título</label>
+          <input class="input" id="titulo" placeholder="Ej: Creep">
+        </div>
+
+        <div class="field">
+          <label class="label" for="artista">Artista</label>
+          <input class="input" id="artista" placeholder="Ej: Radiohead">
+        </div>
+
+        <div class="field">
+          <label class="label" for="letra">Letra</label>
+          <textarea class="textarea" id="letra" placeholder="Pega aquí la letra completa o un fragmento significativo..."></textarea>
+          <div class="helper">Para resultados más precisos, usa un fragmento representativo o la letra completa.</div>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;" onclick="analizar()">Analizar con SonarIA</button>
+
+        <div id="estado" class="status">Esperando canción para analizar.</div>
+      </div>
+
+      <div class="card">
+        <h2>Resultado</h2>
+        <p class="lead">Aquí verás la clasificación, el nivel de riesgo y los hallazgos de SonarIA.</p>
+
+        <div id="emptyState" class="box muted">
+          Todavía no hay un análisis cargado. Ingresa una canción y presiona “Analizar con SonarIA”.
+        </div>
+
+        <div id="resultWrap" style="display:none;">
+          <div id="resultHero" class="result-hero orange">
+            <div class="risk-dot"></div>
+            <div>
+              <strong id="heroResultado">Resultado</strong>
+              <span id="heroSub">Esperando análisis</span>
+            </div>
+          </div>
+
+          <div class="result-grid">
+            <div class="mini">
+              <div class="k">Canción</div>
+              <div class="v" id="outCancion">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Riesgo</div>
+              <div class="v" id="outRisk">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Edad sugerida</div>
+              <div class="v" id="outEdad">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Justificación</div>
+              <div class="v" id="outJustificacion">-</div>
+            </div>
+          </div>
+
+          <div class="section-title">Temas detectados</div>
+          <div id="outTemas" class="chips"></div>
+
+          <div class="section-title">Hallazgos</div>
+          <div id="outHallazgos" class="list"></div>
+
+          <div class="section-title">Detalle técnico</div>
+          <div id="outCounts" class="box"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <h1>Panel privado • SonarIA</h1>
+  <script>
+    function pickTone(resultado = "") {
+      const r = resultado.toLowerCase();
+      if (r.includes("no apta") || r.includes("roja") || r.includes("🔴")) return "red";
+      if (r.includes("mediación") || r.includes("mediacion") || r.includes("🟠")) return "orange";
+      return "green";
+    }
 
-  <div class="card">
-    <h3>Nuevo análisis</h3>
+    function renderTemas(temasObj) {
+      const box = document.getElementById("outTemas");
+      box.innerHTML = "";
 
-    <input id="titulo" placeholder="Título de la canción">
-    <input id="artista" placeholder="Artista o banda">
-    <textarea id="letra" placeholder="Pega aquí la letra..."></textarea>
+      const themes = (temasObj && temasObj.themes) ? temasObj.themes : [];
 
-    <button onclick="analizar()">Analizar con SonarIA</button>
-
-    <div id="resultado" class="result" style="display:none;"></div>
-    <div id="estado" class="status">Esperando canción para analizar.</div>
-  </div>
-
-  <div class="card">
-    <h3>Tu cuenta</h3>
-    <p id="usuario">Cargando usuario...</p>
-    <div id="debug" class="debug">Revisando sesión...</div>
-  </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-  const SUPABASE_ANON_KEY = "ibtklkjfpcopzgsrulob";
-
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  async function checkUser() {
-    const usuarioEl = document.getElementById("usuario");
-    const debugEl = document.getElementById("debug");
-
-    try {
-      const { data, error } = await supabaseClient.auth.getSession();
-
-      if (error) {
-        console.error("Error getSession:", error);
-        usuarioEl.innerText = "No se pudo cargar el usuario.";
-        debugEl.innerText = "Error de sesión: " + error.message;
+      if (!themes.length) {
+        box.innerHTML = `<span class="chip">Sin temas destacados</span>`;
         return;
       }
 
-      const session = data.session;
+      themes.forEach(t => {
+        const el = document.createElement("span");
+        el.className = "chip";
+        el.textContent = t;
+        box.appendChild(el);
+      });
+    }
 
-      if (!session || !session.user) {
-        usuarioEl.innerText = "Sin sesión activa.";
-        debugEl.innerText = "No hay sesión. Redirigiendo...";
-        setTimeout(() => {
-          window.location.href = "https://www.mejoraria.cl/login.html";
-        }, 1200);
+    function renderHallazgos(hallazgos) {
+      const box = document.getElementById("outHallazgos");
+      box.innerHTML = "";
+
+      if (!hallazgos || !hallazgos.length) {
+        box.innerHTML = `<div class="list-item">No se registran hallazgos específicos.</div>`;
         return;
       }
 
-      usuarioEl.innerText = "Usuario: " + session.user.email;
-      debugEl.innerText = "Sesión activa correctamente.";
-    } catch (err) {
-      console.error("Error inesperado:", err);
-      usuarioEl.innerText = "Error al cargar usuario.";
-      debugEl.innerText = "Fallo inesperado: " + err.message;
-    }
-  }
-
-  async function logout() {
-    await supabaseClient.auth.signOut();
-    window.location.href = "https://www.mejoraria.cl/login.html";
-  }
-
-  function analizar() {
-    const titulo = document.getElementById("titulo").value.trim();
-    const artista = document.getElementById("artista").value.trim();
-    const letra = document.getElementById("letra").value.trim();
-    const resultadoEl = document.getElementById("resultado");
-    const estadoEl = document.getElementById("estado");
-
-    if (!titulo || !artista || !letra) {
-      estadoEl.innerText = "Completa título, artista y letra.";
-      resultadoEl.style.display = "none";
-      return;
+      hallazgos.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `<strong>${item.type || "Hallazgo"}:</strong> ${item.context || "-"}`;
+        box.appendChild(div);
+      });
     }
 
-    const texto = letra.toLowerCase();
-
-    let riesgo = "Bajo";
-    let apto = "Sí";
-    let observacion = "No se detectan señales evidentes de alto riesgo en este análisis inicial.";
-    let sugerencia = "Puede usarse como punto de partida para análisis musical y pedagógico.";
-
-    const palabrasAltas = ["droga", "sexo", "matar", "arma", "violencia", "suicidio"];
-    const palabrasMedias = ["odio", "alcohol", "rabia", "insulto"];
-
-    let score = 0;
-
-    palabrasAltas.forEach(p => {
-      if (texto.includes(p)) score += 3;
-    });
-
-    palabrasMedias.forEach(p => {
-      if (texto.includes(p)) score += 1;
-    });
-
-    if (score >= 6) {
-      riesgo = "Alto";
-      apto = "No";
-      observacion = "Se detectan referencias sensibles que podrían dificultar su uso directo en contexto escolar.";
-      sugerencia = "Conviene usarla solo para análisis crítico o buscar una versión adaptada.";
-    } else if (score >= 2) {
-      riesgo = "Medio";
-      apto = "Sí, con mediación";
-      observacion = "La letra contiene elementos que conviene revisar antes de trabajarla en aula.";
-      sugerencia = "Se recomienda contextualizar el lenguaje y orientar la escucha.";
+    function renderCounts(counts) {
+      const box = document.getElementById("outCounts");
+      box.textContent =
+        `Groserías: ${counts?.profanity ?? 0}
+Sexual: ${counts?.sexual ?? 0}
+Drogas: ${counts?.drugs ?? 0}
+Violencia: ${counts?.violence ?? 0}
+Madurez/romance adulto: ${counts?.maturity ?? 0}`;
     }
 
-    resultadoEl.style.display = "block";
-    resultadoEl.innerText =
-      "Canción: " + titulo + " · " + artista + "\n\n" +
-      "Nivel de riesgo: " + riesgo + "\n" +
-      "Apto escolar: " + apto + "\n\n" +
-      "Observaciones: " + observacion + "\n\n" +
-      "Sugerencia pedagógica: " + sugerencia;
+    async function analizar() {
+      const titulo = document.getElementById("titulo").value.trim();
+      const artista = document.getElementById("artista").value.trim();
+      const letra = document.getElementById("letra").value.trim();
 
-    estadoEl.innerText = "Análisis completado.";
-  }
+      const estadoEl = document.getElementById("estado");
+      const emptyState = document.getElementById("emptyState");
+      const resultWrap = document.getElementById("resultWrap");
 
-  checkUser();
-</script>
+      if (!titulo || !artista || !letra) {
+        estadoEl.className = "status error";
+        estadoEl.textContent = "Completa título, artista y letra antes de analizar.";
+        return;
+      }
 
+      estadoEl.className = "status loading";
+      estadoEl.textContent = "Analizando con SonarIA real...";
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/analizar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ titulo, artista, letra })
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error("Error API: " + txt);
+        }
+
+        const data = await res.json();
+
+        emptyState.style.display = "none";
+        resultWrap.style.display = "block";
+
+        const tone = pickTone(data.resultado || "");
+        const hero = document.getElementById("resultHero");
+        hero.className = "result-hero " + tone;
+
+        document.getElementById("heroResultado").textContent = data.resultado || "Sin resultado";
+        document.getElementById("heroSub").textContent = `Riesgo estimado: ${data.risk ?? 0}`;
+
+        document.getElementById("outCancion").textContent = `${data.titulo || "-"} · ${data.artista || "-"}`;
+        document.getElementById("outRisk").textContent = data.risk ?? "-";
+        document.getElementById("outEdad").textContent = data.edad_sugerida || "-";
+        document.getElementById("outJustificacion").textContent = data.justificacion || "-";
+
+        renderTemas(data.temas);
+        renderHallazgos(data.hallazgos);
+        renderCounts(data.counts);
+
+        estadoEl.className = "status ok";
+        estadoEl.textContent = "Análisis completado correctamente.";
+      } catch (err) {
+        console.error(err);
+        estadoEl.className = "status error";
+        estadoEl.textContent = "Error al conectar con la API local. Verifica que la terminal con Uvicorn siga corriendo.";
+      }
+    }
+  </script>
 </body>
 </html>
