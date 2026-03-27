@@ -553,7 +553,9 @@ Madurez/romance adulto: ${counts?.maturity ?? 0}`;
       estadoEl.textContent = "Analizando con SonarIA real...";
 
       try {
-        const res = await fetch("http://127.0.0.1:8000/analizar", {
+        const API_URL = "https://https://sonaria-api.onrender.com/analizar";
+
+const res = await fetch(API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
