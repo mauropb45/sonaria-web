@@ -1,689 +1,724 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MejorarIA</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-:root{
-  --bg:#08121f;
-  --bg2:#0c1828;
-  --panel:#101c2e;
-  --panel-border:rgba(255,255,255,.10);
-
-  --text:#f8fafc;
-  --muted:#b3c0d4;
-  --muted-2:#8fa2bc;
-
-  --orange:#ff7a00;
-  --orange-2:#ff4d00;
-  --blue:#3b82f6;
-  --blue-2:#2563eb;
-  --green:#00d084;
-
-  --shadow-lg:0 24px 60px rgba(0,0,0,.28);
-  --shadow-md:0 14px 30px rgba(0,0,0,.24);
-
-  --radius-xl:28px;
-  --radius-lg:22px;
-
-  --max:1180px;
-}
-
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 8% 8%, rgba(255,122,0,.18), transparent 18%),
-    radial-gradient(circle at 92% 10%, rgba(0,208,132,.14), transparent 20%),
-    radial-gradient(circle at 85% 88%, rgba(59,130,246,.16), transparent 22%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.container{
-  max-width:var(--max);
-  margin:auto;
-  padding:28px 22px 88px;
-}
-
-/* HEADER */
-.header{
-  margin-bottom:38px;
-}
-
-.header-inner{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:18px;
-}
-
-.nav{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.nav a{
-  padding:11px 16px;
-  border-radius:999px;
-  font-size:.92rem;
-  font-weight:700;
-  color:var(--muted);
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
-  backdrop-filter:blur(8px);
-  transition:.2s ease;
-}
-
-.nav a:hover{
-  color:var(--text);
-  background:rgba(255,255,255,.07);
-  transform:translateY(-1px);
-}
-
-/* HERO */
-.hero{
-  text-align:center;
-  padding:30px 0 10px;
-}
-
-.hero-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:9px 14px;
-  border-radius:999px;
-  border:1px solid rgba(0,208,132,.18);
-  background:rgba(0,208,132,.08);
-  color:#c7f9e8;
-  font-size:.88rem;
-  font-weight:800;
-  letter-spacing:.02em;
-  margin-bottom:22px;
-}
-
-.brand-main{
-  font-size:clamp(3rem, 6vw, 5.2rem);
-  line-height:.98;
-  font-weight:800;
-  letter-spacing:-.05em;
-  margin:0;
-}
-
-.brand-main .ia{
-  color:var(--green);
-  text-shadow:0 0 24px rgba(0,208,132,.45);
-}
-
-.hero-left{
-  width:100%;
-  max-width:900px;
-  text-align:left;
-  margin:0 auto;
-}
-
-.arrow-box{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-  margin-top:22px;
-}
-
-.arrow{
-  font-size:2.5rem;
-  color:var(--green);
-  animation:bounce 1.2s infinite;
-}
-
-.arrow-text{
-  font-size:.96rem;
-  color:#c7f9e8;
-  font-weight:700;
-  opacity:.95;
-}
-
-@keyframes bounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(10px)}
-}
-
-.hero p{
-  margin:18px auto 0;
-  max-width:760px;
-  color:var(--muted);
-  font-size:1.1rem;
-  line-height:1.75;
-  font-weight:500;
-}
-
-.cta{
-  margin-top:28px;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:14px 22px;
-  border-radius:16px;
-  font-weight:800;
-  font-size:1rem;
-  transition:.2s ease;
-  min-width:170px;
-  border:none;
-  cursor:pointer;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-}
-
-.primary{
-  background:linear-gradient(135deg, var(--orange), var(--orange-2));
-  color:#111827;
-  box-shadow:0 10px 24px rgba(255,122,0,.30);
-}
-
-.secondary{
-  background:linear-gradient(135deg, var(--blue), var(--blue-2));
-  color:white;
-  box-shadow:0 10px 24px rgba(59,130,246,.24);
-}
-
-/* PRODUCTS */
-.products{
-  margin-top:54px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-}
-
-.product{
-  position:relative;
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
-  border:1px solid var(--panel-border);
-  border-radius:var(--radius-xl);
-  padding:22px;
-  box-shadow:var(--shadow-lg);
-  overflow:hidden;
-  transition:.22s ease;
-}
-
-.product:hover{
-  transform:translateY(-4px);
-}
-
-.product-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:12px;
-}
-
-.product h3{
-  margin:0;
-  font-size:1.55rem;
-  font-weight:800;
-  letter-spacing:-.03em;
-}
-
-.product p{
-  margin:0;
-  color:var(--muted);
-  font-size:1rem;
-  line-height:1.68;
-  font-weight:500;
-}
-
-.tag{
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:.8rem;
-  font-weight:800;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  color:#dce7f6;
-}
-
-.product.sonar{
-  border-color:rgba(255,122,0,.22);
-  box-shadow:0 22px 50px rgba(255,122,0,.08);
-}
-.product.sonar h3{ color:var(--orange); }
-
-.product.ensayar{
-  border-color:rgba(0,208,132,.20);
-  box-shadow:0 22px 50px rgba(0,208,132,.07);
-}
-.product.ensayar h3{ color:var(--green); }
-
-.video{
-  margin-top:16px;
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
-  background:#000;
-  box-shadow:var(--shadow-md);
-}
-
-.video iframe{
-  display:block;
-  width:100%;
-  height:340px;
-  border:none;
-}
-
-.placeholder{
-  margin-top:16px;
-  min-height:340px;
-  border-radius:20px;
-  border:1px solid rgba(0,208,132,.14);
-  background:
-    radial-gradient(circle at top right, rgba(0,208,132,.12), transparent 28%),
-    radial-gradient(circle at bottom left, rgba(255,122,0,.08), transparent 28%),
-    linear-gradient(180deg, #0b1522 0%, #0e1a2a 100%);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:28px;
-  box-shadow:var(--shadow-md);
-}
-
-.placeholder-icon{
-  display:flex;
-  gap:12px;
-  font-size:1.75rem;
-  margin-bottom:14px;
-}
-
-.placeholder h4{
-  margin:0;
-  font-size:1.7rem;
-  font-weight:800;
-  color:var(--green);
-}
-
-.placeholder .sub{
-  margin-top:8px;
-  color:#dce8f4;
-  font-size:1rem;
-  font-weight:700;
-}
-
-.placeholder p{
-  margin-top:14px;
-  max-width:320px;
-  color:#c7d6e8;
-  font-size:1rem;
-  line-height:1.68;
-}
-
-.placeholder .micro{
-  margin-top:10px;
-  font-size:.88rem;
-  color:#97abc3;
-}
-
-.placeholder .btn{
-  margin-top:18px;
-  min-width:220px;
-}
-
-/* SECTIONS */
-.section{
-  margin-top:78px;
-  text-align:center;
-}
-
-.section h2{
-  margin:0 0 12px;
-  font-size:clamp(2rem, 4vw, 2.8rem);
-  line-height:1.05;
-  font-weight:800;
-  letter-spacing:-.03em;
-}
-
-.section-lead{
-  color:var(--muted);
-  max-width:760px;
-  margin:0 auto;
-  line-height:1.72;
-  font-size:1.06rem;
-  font-weight:500;
-}
-
-.features{
-  margin-top:26px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.feature{
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:var(--radius-lg);
-  padding:24px;
-  text-align:left;
-  box-shadow:var(--shadow-md);
-}
-
-.feature strong{
-  display:block;
-  margin-bottom:10px;
-  font-size:1.08rem;
-  font-weight:800;
-}
-
-.feature p{
-  margin:0;
-  color:#d1dceb;
-  font-size:1rem;
-  line-height:1.62;
-}
-
-.feature:nth-child(1) strong{ color:var(--orange); }
-.feature:nth-child(2) strong{ color:var(--blue); }
-.feature:nth-child(3) strong{ color:var(--green); }
-
-/* FORM */
-.form-wrap{
-  margin-top:32px;
-  display:flex;
-  justify-content:center;
-}
-
-.form-card{
-  width:min(100%, 560px);
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:var(--shadow-md);
-}
-
-.form-grid{
-  display:grid;
-  gap:12px;
-}
-
-.input,
-.textarea{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  font:inherit;
-  outline:none;
-}
-
-.input::placeholder,
-.textarea::placeholder{
-  color:#93a7bf;
-}
-
-.textarea{
-  min-height:130px;
-  resize:vertical;
-}
-
-.form-note{
-  margin-top:10px;
-  color:var(--muted-2);
-  font-size:.92rem;
-}
-
-/* FINAL CTA */
-.final{
-  margin-top:82px;
-  text-align:center;
-  border-radius:var(--radius-xl);
-  padding:38px 26px;
-  background:
-    radial-gradient(circle at top left, rgba(255,122,0,.10), transparent 24%),
-    radial-gradient(circle at top right, rgba(0,208,132,.10), transparent 24%),
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.09);
-  box-shadow:var(--shadow-lg);
-}
-
-.final h2{
-  margin:0 0 12px;
-  font-size:clamp(2rem, 4vw, 2.9rem);
-  line-height:1.05;
-  font-weight:800;
-  letter-spacing:-.03em;
-}
-
-.final p{
-  color:var(--muted);
-  max-width:700px;
-  margin:0 auto;
-  font-size:1.05rem;
-  line-height:1.72;
-  font-weight:500;
-}
-
-/* FOOTER */
-.footer{
-  margin-top:58px;
-  text-align:center;
-  color:var(--muted-2);
-  font-size:.9rem;
-  font-weight:600;
-  opacity:.88;
-}
-
-@media (max-width: 980px){
-  .products, .features{
-    grid-template-columns:1fr;
-  }
-}
-
-@media (max-width: 720px){
-  .header-inner{
-    flex-direction:column;
-    align-items:flex-end;
-  }
-  .nav{
-    width:100%;
-    justify-content:flex-end;
-  }
-  .video iframe{ height:280px; }
-  .placeholder{ min-height:280px; }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MejorarIA</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#07111d;
+      --bg2:#0b1626;
+      --panel:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.10);
+
+      --text:#eef2f7;
+      --muted:#9fb0c7;
+      --muted-2:#8396af;
+
+      --green:#14d68f;
+      --green-soft:rgba(20,214,143,.12);
+      --orange:#ff8a00;
+      --orange-2:#ff6500;
+      --orange-soft:rgba(255,138,0,.12);
+      --blue:#4b82ff;
+      --blue-2:#2d67f6;
+      --blue-soft:rgba(75,130,255,.12);
+
+      --shadow:0 20px 60px rgba(0,0,0,.30);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --max:1200px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .container{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:26px 22px 84px;
+    }
+
+    /* HEADER */
+    .header{
+      margin-bottom:28px;
+    }
+
+    .header-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+    }
+
+    .brand-mini{
+      font-size:1.9rem;
+      font-weight:800;
+      letter-spacing:-.05em;
+      line-height:1;
+    }
+
+    .brand-mini .ia{
+      color:var(--green);
+      text-shadow:0 0 20px rgba(20,214,143,.35);
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:11px 16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--text);
+      font-size:.92rem;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    .nav a:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.08);
+    }
+
+    /* HERO */
+    .hero{
+      text-align:center;
+      padding:34px 0 18px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 15px;
+      border-radius:999px;
+      background:var(--green-soft);
+      border:1px solid rgba(20,214,143,.22);
+      color:#d7fff0;
+      font-size:.9rem;
+      font-weight:800;
+      margin-bottom:22px;
+    }
+
+    .brand-main{
+      margin:0;
+      font-size:clamp(3.1rem, 8vw, 5.5rem);
+      line-height:.95;
+      font-weight:800;
+      letter-spacing:-.06em;
+    }
+
+    .brand-main .ia{
+      color:var(--green);
+      text-shadow:0 0 24px rgba(20,214,143,.40);
+    }
+
+    .hero-arrow-wrap{
+      margin:22px auto 10px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+
+    .hero-arrow{
+      font-size:2.2rem;
+      color:var(--green);
+      animation:bounce 1.3s infinite;
+      line-height:1;
+    }
+
+    .hero-arrow-text{
+      color:#d6fff0;
+      font-size:.95rem;
+      font-weight:800;
+      text-align:center;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(9px)}
+    }
+
+    .hero p{
+      margin:10px auto 0;
+      max-width:760px;
+      color:var(--muted);
+      font-size:1.08rem;
+      line-height:1.75;
+      font-weight:500;
+    }
+
+    .cta{
+      margin-top:28px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:170px;
+      padding:14px 22px;
+      border-radius:16px;
+      border:none;
+      font-weight:800;
+      font-size:1rem;
+      transition:.2s ease;
+      cursor:pointer;
+      text-align:center;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),var(--orange-2));
+      color:#111827;
+      box-shadow:0 10px 24px rgba(255,138,0,.28);
+    }
+
+    .btn-secondary{
+      background:linear-gradient(135deg,var(--blue),var(--blue-2));
+      color:white;
+      box-shadow:0 10px 24px rgba(75,130,255,.24);
+    }
+
+    .btn-ghost{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      color:var(--text);
+    }
+
+    /* PRODUCTS */
+    .products{
+      margin-top:54px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .product{
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .product-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    .product h3{
+      margin:0;
+      font-size:1.65rem;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+
+    .product p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.68;
+      font-size:1rem;
+    }
+
+    .tag{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dce7f6;
+      font-size:.8rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .sonaria{
+      border-color:rgba(255,138,0,.22);
+      box-shadow:0 22px 50px rgba(255,138,0,.08);
+    }
+
+    .sonaria h3{ color:var(--orange); }
+
+    .ensayaria{
+      border-color:rgba(20,214,143,.22);
+      box-shadow:0 22px 50px rgba(20,214,143,.08);
+    }
+
+    .ensayaria h3{ color:var(--green); }
+
+    .product-body{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      margin-top:10px;
+    }
+
+    .video{
+      margin-top:2px;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:#000;
+      box-shadow:0 12px 28px rgba(0,0,0,.24);
+    }
+
+    .video iframe{
+      display:block;
+      width:100%;
+      height:320px;
+      border:none;
+    }
+
+    .placeholder{
+      min-height:320px;
+      border-radius:20px;
+      border:1px solid rgba(20,214,143,.14);
+      background:
+        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(75,130,255,.10), transparent 28%),
+        linear-gradient(180deg,#0b1522 0%, #0e1a2a 100%);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:28px;
+      box-shadow:0 12px 28px rgba(0,0,0,.24);
+    }
+
+    .placeholder-icon{
+      display:flex;
+      gap:12px;
+      font-size:1.8rem;
+      margin-bottom:14px;
+      opacity:.95;
+    }
+
+    .placeholder h4{
+      margin:0;
+      font-size:1.8rem;
+      font-weight:800;
+      color:var(--green);
+      letter-spacing:-.03em;
+    }
+
+    .placeholder .sub{
+      margin-top:8px;
+      color:#dce8f4;
+      font-size:1rem;
+      font-weight:700;
+    }
+
+    .placeholder p{
+      margin-top:14px;
+      max-width:340px;
+      color:#c7d6e8;
+      line-height:1.68;
+    }
+
+    .placeholder .micro{
+      margin-top:10px;
+      color:#97abc3;
+      font-size:.88rem;
+    }
+
+    .product-actions{
+      margin-top:auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    /* SECTIONS */
+    .section{
+      margin-top:76px;
+      text-align:center;
+    }
+
+    .section h2{
+      margin:0 0 12px;
+      font-size:clamp(2rem, 5vw, 3rem);
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:-.04em;
+    }
+
+    .section-lead{
+      max-width:760px;
+      margin:0 auto;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:1.04rem;
+    }
+
+    .features{
+      margin-top:26px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .feature{
+      text-align:left;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:var(--radius-lg);
+      padding:24px;
+      box-shadow:0 14px 30px rgba(0,0,0,.22);
+    }
+
+    .feature strong{
+      display:block;
+      margin-bottom:10px;
+      font-size:1.08rem;
+      font-weight:800;
+    }
+
+    .feature p{
+      margin:0;
+      color:#d1dceb;
+      line-height:1.62;
+    }
+
+    .feature:nth-child(1) strong{ color:var(--orange); }
+    .feature:nth-child(2) strong{ color:var(--blue); }
+    .feature:nth-child(3) strong{ color:var(--green); }
+
+    /* FORM */
+    .interest{
+      margin-top:32px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .interest-card{
+      width:100%;
+      max-width:560px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .interest-form{
+      display:grid;
+      gap:10px;
+    }
+
+    .interest-form input,
+    .interest-form textarea{
+      width:100%;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font:inherit;
+      outline:none;
+    }
+
+    .interest-form input::placeholder,
+    .interest-form textarea::placeholder{
+      color:#8ea3bf;
+    }
+
+    .interest-form textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    .form-note{
+      margin-top:10px;
+      color:var(--muted-2);
+      font-size:.88rem;
+      text-align:center;
+    }
+
+    /* FINAL CTA */
+    .final{
+      margin-top:78px;
+      text-align:center;
+      border-radius:var(--radius-xl);
+      padding:38px 26px;
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(20,214,143,.10), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:var(--shadow);
+    }
+
+    .final h2{
+      margin:0 0 12px;
+      font-size:clamp(2rem, 5vw, 3rem);
+      line-height:1.05;
+      font-weight:800;
+      letter-spacing:-.04em;
+    }
+
+    .final p{
+      max-width:760px;
+      margin:0 auto;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:1.04rem;
+    }
+
+    .footer{
+      margin-top:34px;
+      text-align:center;
+      color:var(--muted-2);
+      font-size:.9rem;
+      font-weight:600;
+      opacity:.9;
+    }
+
+    @media (max-width: 980px){
+      .products,
+      .features{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 720px){
+      .header-inner{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .nav{
+        width:100%;
+      }
+
+      .video iframe{
+        height:260px;
+      }
+
+      .placeholder{
+        min-height:280px;
+      }
+
+      .cta{
+        flex-direction:column;
+        align-items:center;
+      }
+
+      .btn{
+        width:100%;
+        max-width:320px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <div class="header">
-    <div class="header-inner">
-      <div class="nav">
-        <a href="https://www.mejoraria.cl/login.html">Ingresar</a>
-        <a href="https://www.mejoraria.cl/login.html">Crear cuenta</a>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-inner">
+        <div class="brand-mini">Mejorar<span class="ia">IA</span></div>
+
+        <div class="nav">
+          <a href="login.html">Ingresar</a>
+          <a href="login.html">Crear cuenta</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="hero">
-    <div class="hero-badge">IA aplicada a educación musical</div>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge">IA aplicada a educación musical</div>
 
-    <div class="hero-left">
-      <h1 class="brand-main">Mejorar<span class="ia">IA</span></h1>
-    </div>
+      <h1 class="brand-main">
+        Mejorar<span class="ia">IA</span>
+      </h1>
 
-    <div class="arrow-box">
-      <a href="#video-sonaria" class="arrow">⬇</a>
-      <div class="arrow-text">Ven a conocer los beneficios de SonarIA</div>
-    </div>
-
-    <p>
-      Herramientas para profesores que buscan ahorrar tiempo, mejorar sus clases y tomar decisiones pedagógicas con más claridad, criterio y velocidad.
-    </p>
-
-    <div class="cta">
-      <a href="https://www.mejoraria.cl/login.html" class="btn primary">Probar / Crear cuenta</a>
-      <a href="https://www.mejoraria.cl/login.html" class="btn secondary">Ingresar</a>
-    </div>
-  </div>
-
-  <div class="products">
-    <div class="product sonar">
-      <div class="product-head">
-        <h3>SonarIA</h3>
-        <div class="tag">Disponible en validación</div>
+      <div class="hero-arrow-wrap">
+        <div class="hero-arrow">↓</div>
+        <div class="hero-arrow-text">Ven a conocer los beneficios de SonarIA</div>
       </div>
 
       <p>
-        Analiza canciones, adapta contenido y orienta su uso pedagógico con enfoque curricular en música.
+        Herramientas para profesores que buscan ahorrar tiempo, mejorar sus clases y tomar decisiones pedagógicas con más claridad, criterio y velocidad.
       </p>
 
-      <div class="video" id="video-sonaria">
-        <iframe
-          src="https://www.youtube.com/embed/aD6MUQl0ajI"
-          title="Demo SonarIA"
-          allowfullscreen>
-        </iframe>
+      <div class="cta">
+        <a href="panel.html" class="btn btn-primary">🎵 Probar SonarIA</a>
+        <a href="login.html" class="btn btn-secondary">Ingresar</a>
+        <a href="login.html" class="btn btn-ghost">Crear cuenta</a>
       </div>
-    </div>
+    </section>
 
-    <div class="product ensayar">
-      <div class="product-head">
-        <h3>EnsayarIA</h3>
-        <div class="tag">Próximamente</div>
+    <!-- PRODUCTS -->
+    <section class="products">
+
+      <article class="product sonaria">
+        <div class="product-head">
+          <h3>SonarIA</h3>
+          <div class="tag">Disponible en validación</div>
+        </div>
+
+        <div class="product-body">
+          <p>
+            Analiza canciones, adapta contenido y orienta su uso pedagógico con enfoque curricular en música.
+          </p>
+
+          <div class="video">
+            <iframe
+              src="https://www.youtube.com/embed/aD6MUQl0ajI"
+              title="Demo SonarIA"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="product-actions">
+            <a href="panel.html" class="btn btn-primary">Probar SonarIA</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="product ensayaria">
+        <div class="product-head">
+          <h3>EnsayarIA</h3>
+          <div class="tag">Próximamente</div>
+        </div>
+
+        <div class="product-body">
+          <p>
+            Una herramienta para apoyar práctica musical, ejecución e interpretación en estudiantes.
+          </p>
+
+          <div class="placeholder">
+            <div class="placeholder-icon">🎧 🎸 🥁</div>
+            <h4>Próximamente</h4>
+            <div class="sub">Construyendo junto a docentes</div>
+            <p>
+              Estamos desarrollando una nueva herramienta para acompañar procesos de ensayo y trabajo con repertorio.
+            </p>
+            <div class="micro">Acceso anticipado disponible para interesados</div>
+            <a href="#interes" class="btn btn-secondary" style="margin-top:18px;">Quiero acceso anticipado</a>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section">
+      <h2>Más que herramientas aisladas</h2>
+      <p class="section-lead">
+        MejorarIA busca construir soluciones útiles para la práctica docente, combinando análisis, adaptación y orientación pedagógica.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <strong>Análisis real</strong>
+          <p>Evalúa contenido, lenguaje y pertinencia de canciones para contexto educativo.</p>
+        </div>
+
+        <div class="feature">
+          <strong>Versión escolar</strong>
+          <p>Adapta contenido para facilitar un uso más seguro y útil dentro del aula.</p>
+        </div>
+
+        <div class="feature">
+          <strong>Match curricular</strong>
+          <p>Conecta con cursos de música MINEDUC para apoyar decisiones pedagógicas concretas.</p>
+        </div>
       </div>
+    </section>
 
+    <!-- INTEREST -->
+    <section class="section" id="interes">
+      <h2>¿Te interesa probar MejorarIA?</h2>
+      <p class="section-lead">
+        Déjanos tus datos y cuéntanos qué necesidad te gustaría resolver en música o en tu práctica docente.
+      </p>
+
+      <div class="interest">
+        <div class="interest-card">
+          <form class="interest-form">
+            <input type="text" placeholder="Tu nombre">
+            <input type="email" placeholder="Tu correo">
+            <textarea placeholder="¿Qué te gustaría resolver?"></textarea>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Enviar</button>
+          </form>
+          <div class="form-note">
+            Te contactaremos para invitarte a probar la plataforma o conversar una solución.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final">
+      <h2>¿Quieres que construyamos juntos tu solución?</h2>
       <p>
-        Una herramienta para apoyar práctica musical, ejecución e interpretación en estudiantes.
+        Puedes pedir acceso a herramientas actuales, crear tu cuenta o contarnos una dificultad real de tu asignatura para explorar una solución contigo.
       </p>
 
-      <div class="placeholder">
-        <div class="placeholder-icon">🎧 🎸 🥁</div>
-        <h4>Próximamente</h4>
-        <div class="sub">Construyendo junto a docentes</div>
-        <p>
-          Estamos desarrollando una nueva herramienta para acompañar procesos de ensayo y trabajo con repertorio.
-        </p>
-        <div class="micro">Acceso anticipado disponible para interesados</div>
-        <a href="#interes" class="btn secondary">Quiero acceso anticipado</a>
+      <div class="cta">
+        <a href="login.html" class="btn btn-primary">Crear cuenta</a>
+        <a href="#interes" class="btn btn-secondary">Ir al formulario</a>
       </div>
+    </section>
+
+    <div class="footer">
+      MauRock · Mauricio José Pinto Basso
     </div>
   </div>
-
-  <div class="section">
-    <h2>Más que herramientas aisladas</h2>
-    <p class="section-lead">
-      MejorarIA busca construir soluciones útiles para la práctica docente, combinando análisis, adaptación y orientación pedagógica.
-    </p>
-
-    <div class="features">
-      <div class="feature">
-        <strong>Análisis real</strong>
-        <p>Evalúa contenido, lenguaje y pertinencia de canciones para contexto educativo.</p>
-      </div>
-
-      <div class="feature">
-        <strong>Versión escolar</strong>
-        <p>Adapta contenido para facilitar un uso más seguro y útil dentro del aula.</p>
-      </div>
-
-      <div class="feature">
-        <strong>Match curricular</strong>
-        <p>Conecta con cursos de música MINEDUC para apoyar decisiones pedagógicas concretas.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" id="interes">
-    <h2>¿Te interesa probar MejorarIA?</h2>
-    <p class="section-lead">
-      Déjanos tus datos y cuéntanos qué necesidad te gustaría resolver en música o en tu práctica docente.
-    </p>
-
-    <div class="form-wrap">
-      <div class="form-card">
-        <form id="formInteres" class="form-grid">
-          <input class="input" type="text" id="nombre" placeholder="Tu nombre" required>
-          <input class="input" type="email" id="email" placeholder="Tu correo" required>
-          <textarea class="textarea" id="mensaje" placeholder="¿Qué te gustaría resolver?"></textarea>
-          <button type="submit" class="btn primary">Enviar</button>
-        </form>
-        <div class="form-note">Te contactaremos para invitarte a probar la plataforma o conversar una solución.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="final">
-    <h2>¿Quieres que construyamos juntos tu solución?</h2>
-    <p>
-      Puedes pedir acceso a herramientas actuales, crear tu cuenta o contarnos una dificultad real de tu asignatura para explorar una solución contigo.
-    </p>
-
-    <div class="cta">
-      <a href="https://www.mejoraria.cl/login.html" class="btn primary">Crear cuenta</a>
-      <a href="#interes" class="btn secondary">Ir al formulario</a>
-    </div>
-  </div>
-
-  <div class="footer">
-    MauRock · Mauricio José Pinto Basso
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://ibtklkjfpcopzgsrulob.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_IwR4ByvxMHbrJPZF4Q4ZKg_ra6ji7HM";
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-document.getElementById("formInteres").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const nombre = document.getElementById("nombre").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const mensaje = document.getElementById("mensaje").value.trim();
-
-  const { error } = await supabaseClient
-    .from("interesados")
-    .insert([{ nombre, email, mensaje }]);
-
-  if (error) {
-    console.error("ERROR COMPLETO:", error);
-    alert("Error al enviar: " + error.message);
-    return;
-  }
-
-  alert("¡Gracias! Te contactaremos pronto 🚀");
-  e.target.reset();
-});
-</script>
 
 </body>
 </html>
