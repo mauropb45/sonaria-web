@@ -314,4 +314,324 @@
 
     .mini .k{
       font-size:.8rem;
-      text-transform:
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#8ea4bf;
+      margin-bottom:6px;
+      font-weight:800;
+    }
+
+    .mini .v{
+      font-size:1rem;
+      font-weight:700;
+      line-height:1.45;
+    }
+
+    .section-title{
+      margin:18px 0 10px;
+      font-size:.95rem;
+      font-weight:800;
+      color:#d9e6f5;
+      letter-spacing:.02em;
+    }
+
+    .box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px 15px;
+      color:#d4deeb;
+      line-height:1.65;
+      white-space:pre-line;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:#e7eef7;
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .list{
+      display:grid;
+      gap:8px;
+    }
+
+    .list-item{
+      padding:12px 13px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dbe5f2;
+      line-height:1.55;
+      font-size:.94rem;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    @media (max-width: 980px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .result-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <div class="brand">Sonar<span class="ia">IA</span></div>
+
+      <div class="top-actions">
+        <a class="btn btn-ghost" href="https://www.mejoraria.cl/">Volver a MejorarIA</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-badge">Panel profesional · análisis pedagógico musical</div>
+      <h1>Evalúa canciones con criterio educativo</h1>
+      <p>
+        SonarIA analiza letras, detecta señales sensibles, identifica temáticas emocionales
+        y entrega una recomendación útil para contexto escolar.
+      </p>
+    </div>
+
+    <div class="layout">
+
+      <div class="card">
+        <h2>Nuevo análisis</h2>
+        <p class="lead">
+          Escribe título y artista. Puedes pegar la letra manualmente o dejar que SonarIA intente buscarla automáticamente.
+        </p>
+
+        <div class="field">
+          <label class="label" for="titulo">Título</label>
+          <input class="input" id="titulo" placeholder="Ej: Creep">
+        </div>
+
+        <div class="field">
+          <label class="label" for="artista">Artista</label>
+          <input class="input" id="artista" placeholder="Ej: Radiohead">
+        </div>
+
+        <div class="field">
+          <label class="label" for="letra">Letra (opcional)</label>
+          <textarea class="textarea" id="letra" placeholder="Pega aquí la letra completa o un fragmento. Si la dejas vacía, SonarIA intentará buscarla automáticamente."></textarea>
+          <div class="helper">Para resultados más precisos, usa letra completa o un fragmento representativo.</div>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn btn-primary" onclick="analizar()">Analizar con SonarIA</button>
+          <button class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+        </div>
+
+        <div id="estado" class="status">Esperando canción para analizar.</div>
+      </div>
+
+      <div class="card">
+        <h2>Resultado</h2>
+        <p class="lead">Aquí verás la clasificación, el nivel de riesgo y los hallazgos de SonarIA.</p>
+
+        <div id="emptyState" class="box muted">
+          Todavía no hay un análisis cargado. Ingresa una canción y presiona “Analizar con SonarIA”.
+        </div>
+
+        <div id="resultWrap" style="display:none;">
+          <div id="resultHero" class="result-hero orange">
+            <div class="risk-dot"></div>
+            <div>
+              <strong id="heroResultado">Resultado</strong>
+              <span id="heroSub">Esperando análisis</span>
+            </div>
+          </div>
+
+          <div class="result-grid">
+            <div class="mini">
+              <div class="k">Canción</div>
+              <div class="v" id="outCancion">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Riesgo</div>
+              <div class="v" id="outRisk">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Edad sugerida</div>
+              <div class="v" id="outEdad">-</div>
+            </div>
+            <div class="mini">
+              <div class="k">Justificación</div>
+              <div class="v" id="outJustificacion">-</div>
+            </div>
+          </div>
+
+          <div class="section-title">Temas detectados</div>
+          <div id="outTemas" class="chips"></div>
+
+          <div class="section-title">Hallazgos</div>
+          <div id="outHallazgos" class="list"></div>
+
+          <div class="section-title">Detalle técnico</div>
+          <div id="outCounts" class="box"></div>
+
+          <div class="section-title">Letra utilizada</div>
+          <div id="outLyrics" class="box"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://sonaria-api.onrender.com/analizar";
+
+    function pickTone(resultado = "") {
+      const r = resultado.toLowerCase();
+      if (r.includes("no apta") || r.includes("roja") || r.includes("🔴")) return "red";
+      if (r.includes("mediación") || r.includes("mediacion") || r.includes("🟠")) return "orange";
+      return "green";
+    }
+
+    function renderTemas(temasObj) {
+      const box = document.getElementById("outTemas");
+      box.innerHTML = "";
+
+      const themes = (temasObj && temasObj.themes) ? temasObj.themes : [];
+
+      if (!themes.length) {
+        box.innerHTML = `<span class="chip">Sin temas destacados</span>`;
+        return;
+      }
+
+      themes.forEach(t => {
+        const el = document.createElement("span");
+        el.className = "chip";
+        el.textContent = t;
+        box.appendChild(el);
+      });
+    }
+
+    function renderHallazgos(hallazgos) {
+      const box = document.getElementById("outHallazgos");
+      box.innerHTML = "";
+
+      if (!hallazgos || !hallazgos.length) {
+        box.innerHTML = `<div class="list-item">No se registran hallazgos específicos.</div>`;
+        return;
+      }
+
+      hallazgos.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `<strong>${item.type || "Hallazgo"}:</strong> ${item.context || "-"}`;
+        box.appendChild(div);
+      });
+    }
+
+    function renderCounts(counts) {
+      const box = document.getElementById("outCounts");
+      box.textContent =
+`Groserías: ${counts?.profanity ?? 0}
+Sexual: ${counts?.sexual ?? 0}
+Drogas: ${counts?.drugs ?? 0}
+Violencia: ${counts?.violence ?? 0}
+Madurez/romance adulto: ${counts?.maturity ?? 0}`;
+    }
+
+    function limpiarFormulario() {
+      document.getElementById("titulo").value = "";
+      document.getElementById("artista").value = "";
+      document.getElementById("letra").value = "";
+      document.getElementById("estado").className = "status";
+      document.getElementById("estado").textContent = "Esperando canción para analizar.";
+    }
+
+    async function analizar() {
+      const titulo = document.getElementById("titulo").value.trim();
+      const artista = document.getElementById("artista").value.trim();
+      const letra = document.getElementById("letra").value.trim();
+
+      const estadoEl = document.getElementById("estado");
+      const emptyState = document.getElementById("emptyState");
+      const resultWrap = document.getElementById("resultWrap");
+
+      if (!titulo || !artista) {
+        estadoEl.className = "status error";
+        estadoEl.textContent = "Completa al menos título y artista.";
+        return;
+      }
+
+      estadoEl.className = "status loading";
+      estadoEl.textContent = letra
+        ? "Analizando con SonarIA en línea..."
+        : "Buscando letra automáticamente y analizando con SonarIA...";
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ titulo, artista, letra })
+        });
+
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error("Error API: " + txt);
+        }
+
+        const data = await res.json();
+
+        emptyState.style.display = "none";
+        resultWrap.style.display = "block";
+
+        const tone = pickTone(data.resultado || "");
+        const hero = document.getElementById("resultHero");
+        hero.className = "result-hero " + tone;
+
+        document.getElementById("heroResultado").textContent = data.resultado || "Sin resultado";
+        document.getElementById("heroSub").textContent = `Riesgo estimado: ${data.risk ?? 0}`;
+
+        document.getElementById("outCancion").textContent = `${data.titulo || "-"} · ${data.artista || "-"}`;
+        document.getElementById("outRisk").textContent = data.risk ?? "-";
+        document.getElementById("outEdad").textContent = data.edad_sugerida || "-";
+        document.getElementById("outJustificacion").textContent = data.justificacion || "-";
+
+        renderTemas(data.temas);
+        renderHallazgos(data.hallazgos);
+        renderCounts(data.counts);
+
+        document.getElementById("outLyrics").textContent =
+          data.letra_usada && data.letra_usada.trim()
+            ? data.letra_usada
+            : "No se encontró letra automáticamente para esta canción.";
+
+        estadoEl.className = "status ok";
+        estadoEl.textContent = data.letra_encontrada
+          ? "Análisis completado correctamente."
+          : "No se encontró la letra automáticamente. Puedes pegarla manualmente para un análisis más preciso.";
+      } catch (err) {
+        console.error(err);
+        estadoEl.className = "status error";
+        estadoEl.textContent = "Error al conectar con la API pública. Revisa tu deploy en Render.";
+      }
+    }
+  </script>
+</body>
+</html>
