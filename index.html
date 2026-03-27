@@ -1,175 +1,466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MejorarIA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MejorarIA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#05070b;
+      --bg2:#0a1220;
+      --panel:#101826;
+      --panel-2:#131f31;
+      --text:#f5f7fb;
+      --muted:#a8b3c7;
+      --line:rgba(255,255,255,.08);
+      --red:#e10600;
+      --red-2:#ff5a36;
+      --blue:#0f2747;
+      --blue-2:#14345e;
+      --silver:#d9dee8;
+      --shadow:0 24px 60px rgba(0,0,0,.45);
+      --shadow-soft:0 16px 40px rgba(0,0,0,.28);
+      --radius:22px;
+      --max:1240px;
+    }
 
-<style>
-:root{
-  --bg:#0b1220;
-  --bg2:#111a2e;
-  --panel:#16233a;
-  --text:#f8fafc;
-  --muted:#9fb0c7;
-  --line:rgba(255,255,255,.08);
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
 
-  --orange:#ff8000;
-  --blue:#3b82f6;
-  --green:#22c55e;
-}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(225,6,0,.18), transparent 18%),
+        radial-gradient(circle at 85% 18%, rgba(20,52,94,.42), transparent 24%),
+        linear-gradient(180deg, var(--bg) 0%, #08101c 45%, var(--bg2) 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
 
-*{box-sizing:border-box;}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:34px 34px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.45), transparent 75%);
+      z-index:0;
+    }
 
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
-}
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(calc(100% - 48px), var(--max));
+      margin:0 auto;
+    }
 
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:20px 40px;
-}
+    header{
+      width:min(calc(100% - 48px), var(--max));
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:22px 0;
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(14px);
+    }
 
-.logo{
-  font-weight:800;
-  font-size:20px;
-  cursor:pointer;
-}
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:1.35rem;
+      letter-spacing:-.03em;
+      color:var(--text);
+      text-decoration:none;
+    }
 
-nav a{
-  margin-left:20px;
-  text-decoration:none;
-  color:var(--muted);
-  font-weight:500;
-}
+    .logo-mark{
+      width:15px;
+      height:15px;
+      border-radius:4px;
+      background:linear-gradient(135deg,var(--red),var(--red-2));
+      box-shadow:0 0 0 8px rgba(225,6,0,.12);
+      transform:rotate(45deg);
+    }
 
-.hero{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:60px 40px;
-  gap:40px;
-}
+    nav{
+      display:flex;
+      align-items:center;
+      gap:24px;
+    }
 
-.hero-text{
-  max-width:520px;
-}
+    nav a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      transition:.25s ease;
+    }
 
-.hero h1{
-  font-size:48px;
-  margin-bottom:20px;
-}
+    nav a:hover{color:var(--text);}
 
-.hero p{
-  color:var(--muted);
-  font-size:18px;
-  margin-bottom:30px;
-}
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 1.08fr;
+      align-items:center;
+      gap:48px;
+      padding:42px 0 34px;
+    }
 
-.cta{
-  display:inline-block;
-  padding:14px 28px;
-  background:var(--orange);
-  border-radius:12px;
-  font-weight:600;
-  text-decoration:none;
-  color:white;
-}
+    .hero-text h1{
+      margin:0 0 18px;
+      font-size:clamp(3rem, 6vw, 5.5rem);
+      line-height:.94;
+      letter-spacing:-.07em;
+      max-width:620px;
+    }
 
-.video-container{
-  flex:1;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
+    .hero-text p{
+      margin:0 0 28px;
+      max-width:560px;
+      color:var(--muted);
+      font-size:1.16rem;
+      line-height:1.7;
+    }
 
-video{
-  width:100%;
-  display:block;
-}
+    .cta-row{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+    }
 
-.features{
-  padding:60px 40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-}
+    .cta{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:16px 28px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--red),var(--red-2));
+      color:white;
+      text-decoration:none;
+      font-weight:800;
+      box-shadow:0 16px 36px rgba(225,6,0,.28);
+      transition:transform .2s ease, box-shadow .25s ease;
+    }
 
-.card{
-  background:var(--panel);
-  padding:24px;
-  border-radius:16px;
-  border:1px solid var(--line);
-}
+    .cta:hover{
+      transform:translateY(-2px);
+      box-shadow:0 22px 46px rgba(225,6,0,.34);
+    }
 
-.card h3{
-  margin-bottom:10px;
-}
+    .cta-arrow{
+      font-size:1.05rem;
+      transform:translateX(0);
+      transition:transform .2s ease;
+    }
 
-.card p{
-  color:var(--muted);
-}
+    .cta:hover .cta-arrow{transform:translateX(3px);}
 
-footer{
-  text-align:center;
-  padding:40px;
-  color:var(--muted);
-}
-</style>
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 14px;
+      margin-bottom:22px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dfe6f2;
+      font-weight:700;
+      font-size:.92rem;
+    }
+
+    .hero-badge::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--red);
+      box-shadow:0 0 0 5px rgba(225,6,0,.14);
+    }
+
+    .video-wrap{
+      position:relative;
+    }
+
+    .video-glow{
+      position:absolute;
+      inset:8% -4% -8% 8%;
+      background:
+        radial-gradient(circle at 75% 20%, rgba(20,52,94,.55), transparent 35%),
+        radial-gradient(circle at 25% 80%, rgba(225,6,0,.18), transparent 28%);
+      filter:blur(26px);
+      pointer-events:none;
+    }
+
+    .video-frame{
+      position:relative;
+      border-radius:28px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#0b1320,#08111d);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .frame-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+
+    .frame-dots{
+      display:flex;
+      gap:8px;
+    }
+
+    .frame-dots span{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+    }
+
+    .frame-dots span:nth-child(1){background:#ff5f57;}
+    .frame-dots span:nth-child(2){background:#febc2e;}
+    .frame-dots span:nth-child(3){background:#28c840;}
+
+    .frame-title{
+      font-size:.92rem;
+      font-weight:700;
+      color:#d9e0ed;
+    }
+
+    .frame-pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.07);
+      font-size:.82rem;
+      font-weight:700;
+      color:#dbe3f0;
+    }
+
+    .video-container{
+      position:relative;
+      aspect-ratio:16/10;
+      background:linear-gradient(180deg,#0a1321,#09101a);
+    }
+
+    .video-container::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.22));
+      pointer-events:none;
+    }
+
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .video-note{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-end;
+      z-index:2;
+    }
+
+    .video-card{
+      max-width:68%;
+      padding:16px 18px;
+      border-radius:18px;
+      background:rgba(8,14,24,.72);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .video-card strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:1rem;
+    }
+
+    .video-card p{
+      margin:0;
+      color:#c1cad9;
+      font-size:.94rem;
+      line-height:1.55;
+    }
+
+    .video-chip{
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(8,14,24,.72);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.08);
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+      white-space:nowrap;
+    }
+
+    .features{
+      padding:28px 0 0;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,var(--panel),var(--panel-2));
+      padding:26px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      top:-40px;
+      right:-40px;
+      width:120px;
+      height:120px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(225,6,0,.16), transparent 65%);
+      pointer-events:none;
+    }
+
+    .card h3{
+      margin:0 0 12px;
+      font-size:1.34rem;
+      letter-spacing:-.03em;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    footer{
+      text-align:center;
+      padding:42px 0 34px;
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    @media (max-width: 1024px){
+      .hero{grid-template-columns:1fr;}
+      .video-note{flex-direction:column; align-items:flex-start;}
+      .video-card{max-width:100%;}
+    }
+
+    @media (max-width: 780px){
+      header, .page{width:min(calc(100% - 28px), var(--max));}
+      header{padding:16px 0;}
+      nav{gap:14px;}
+      .features{grid-template-columns:1fr;}
+      .hero{gap:28px; padding:24px 0 22px;}
+      .hero-text p{font-size:1.04rem;}
+      .logo{font-size:1.12rem;}
+      .frame-pill{display:none;}
+    }
+  </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo" onclick="window.location.href='index.html'">MejorarIA</div>
+  <a class="logo" href="index.html">
+    <span class="logo-mark"></span>
+    <span>MejorarIA</span>
+  </a>
+
   <nav>
-    <a href="#">Inicio</a>
-    <a href="#">Funciones</a>
-    <a href="#">Login</a>
+    <a href="index.html">Inicio</a>
+    <a href="#funciones">Funciones</a>
+    <a href="login.html">Login</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="hero-text">
-    <h1>Practica, mejora y domina con IA</h1>
-    <p>Una experiencia interactiva para aprender música de forma más rápida, clara y entretenida.</p>
-    <a href="app.html" class="cta">Probar SonarIA →</a>
-  </div>
+<main class="page">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">Experiencia interactiva para aprender música</div>
+      <h1>Practica, mejora y domina con IA</h1>
+      <p>Una experiencia interactiva para aprender música de forma más rápida, clara y entretenida.</p>
+      <div class="cta-row">
+        <a href="app.html" class="cta">Probar SonarIA <span class="cta-arrow">→</span></a>
+      </div>
+    </div>
 
-  <div class="video-container">
-    <video autoplay muted loop playsinline>
-      <source src="video-demo.mp4" type="video/mp4">
-    </video>
-  </div>
-</section>
+    <div class="video-wrap">
+      <div class="video-glow"></div>
+      <div class="video-frame">
+        <div class="frame-top">
+          <div class="frame-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="frame-title">Vista previa de SonarIA</div>
+          <div class="frame-pill">Demo en acción</div>
+        </div>
 
-<section class="features">
-  <div class="card">
-    <h3>Feedback inmediato</h3>
-    <p>Recibe sugerencias en tiempo real mientras practicas.</p>
-  </div>
+        <div class="video-container">
+          <video autoplay muted loop playsinline>
+            <source src="video-demo.mp4" type="video/mp4">
+          </video>
 
-  <div class="card">
-    <h3>Aprendizaje dinámico</h3>
-    <p>Interactúa con la IA como si fuera un profesor real.</p>
-  </div>
+          <div class="video-note">
+            <div class="video-card">
+              <strong>Aprende con una experiencia visual clara</strong>
+              <p>Una interfaz moderna, dinámica y entretenida para que practicar música se sienta mucho más motivante.</p>
+            </div>
+            <div class="video-chip">SonarIA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div class="card">
-    <h3>Motivación constante</h3>
-    <p>Convierte tu práctica en una experiencia entretenida.</p>
-  </div>
-</section>
+  <section class="features" id="funciones">
+    <div class="card">
+      <h3>Feedback inmediato</h3>
+      <p>Recibe sugerencias en tiempo real mientras practicas.</p>
+    </div>
 
-<footer>
-  © 2026 MejorarIA
-</footer>
+    <div class="card">
+      <h3>Aprendizaje dinámico</h3>
+      <p>Interactúa con la IA como si fuera un profesor real.</p>
+    </div>
+
+    <div class="card">
+      <h3>Motivación constante</h3>
+      <p>Convierte tu práctica en una experiencia entretenida.</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 MejorarIA
+  </footer>
+</main>
 
 </body>
 </html>
