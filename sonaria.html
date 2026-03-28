@@ -54,8 +54,8 @@
     .tag{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.8rem; font-weight:800; white-space:nowrap;}
     .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
     .form-grid{display:grid; gap:12px;}
-    .input,.textarea,.select{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;}
-    .input:focus,.textarea:focus,.select:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
+    .input,.textarea{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;}
+    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
     .input::placeholder,.textarea::placeholder{color:#8ea3bf}
     .textarea{min-height:210px; resize:vertical;}
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
@@ -80,7 +80,7 @@
     .side-card{padding:24px;}
     .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em;}
     .side-card p{margin:0; color:var(--muted); line-height:1.72;}
-    .side-card:nth-child(1) h3{color:var(--orange)} .side-card:nth-child(2) h3{color:var(--green)} .side-card:nth-child(3) h3{color:var(--blue)}
+    .side-card:nth-child(1) h3{color:var(--orange)} .side-card:nth-child(2) h3{color:var(--blue)}
     .mini-list{margin:16px 0 0; display:grid; gap:12px;}
     .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
     .mini-item strong{display:block; margin-bottom:6px;}
@@ -123,7 +123,7 @@
           <h2>Analizador SonarIA</h2>
           <div class="tag">Conectado a API</div>
         </div>
-        <p class="lead">Esta interfaz envía la información a tu endpoint de análisis para devolver un resultado legible, sin mostrar la documentación técnica de FastAPI al usuario final.</p>
+        <p class="lead">Esta interfaz envía la información a tu endpoint de análisis para devolver un resultado legible, sin mostrar la documentación técnica al usuario final.</p>
 
         <form id="analysisForm" class="form-grid">
           <div class="row">
@@ -135,7 +135,7 @@
 
           <div class="switches">
             <label class="switch">
-              <input id="buscarLetra" type="checkbox">
+              <input id="buscarLetra" type="checkbox" checked>
               <div>
                 <strong>Intentar buscar la letra automáticamente</strong>
                 <span>Útil cuando tienes título y artista, pero no quieres pegar la letra completa.</span>
@@ -166,27 +166,12 @@
           <p>Ayuda a revisar repertorio, detectar señales sensibles y generar una primera orientación útil para decidir su uso pedagógico.</p>
           <div class="mini-list">
             <div class="mini-item">
-              <strong>Menos tiempo revisando</strong>
+              <strong>Menos tiempo planificando</strong>
               <span>Acelera la lectura inicial del material antes de llevarlo al aula.</span>
             </div>
             <div class="mini-item">
-              <strong>Más criterio educativo</strong>
-              <span>Favorece decisiones más claras y justificadas en contexto escolar.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="side-card card">
-          <h3>Ruta actual de la API</h3>
-          <p>Este archivo viene configurado para enviar la solicitud a tu servicio en Render.</p>
-          <div class="mini-list">
-            <div class="mini-item">
-              <strong>Endpoint base</strong>
-              <span id="apiBaseText">https://sonaria-api.onrender.com/analizar</span>
-            </div>
-            <div class="mini-item">
-              <strong>Nota importante</strong>
-              <span>Al estar en plan free, el primer análisis puede tardar más mientras el servicio despierta.</span>
+              <strong>Más tiempo ensayando</strong>
+              <span>Libera tiempo para concentrarte en la práctica musical y el trabajo en clase.</span>
             </div>
           </div>
         </div>
@@ -249,6 +234,9 @@
     const temasChips = document.getElementById("temasChips");
     const rawResponse = document.getElementById("rawResponse");
     const riskBadge = document.getElementById("riskBadge");
+    const tituloInput = document.getElementById("titulo");
+    const artistaInput = document.getElementById("artista");
+    const textoInput = document.getElementById("texto");
 
     function setStatus(message, type = "loading") {
       statusBox.textContent = message;
@@ -303,7 +291,7 @@
     }
 
     function inferRisk(data) {
-      return String(getFirstExisting(data, ["nivel_riesgo","riesgo","risk_level","risk","clasificacion","classification"], "Sin clasificar"));
+      return String(getFirstExisting(data, ["nivel_riesgo","riesgo","risk_level","risk","clasificacion","classification","risk_score"], "Sin clasificar"));
     }
 
     function inferSummary(data) {
@@ -315,7 +303,12 @@
     }
 
     function inferTopics(data) {
-      return normalizeList(getFirstExisting(data, ["temas_detectados","temas","flags","senales","señales","topics"], []));
+      const direct = getFirstExisting(data, ["temas_detectados","temas","flags","senales","señales","topics"], null);
+      if (Array.isArray(direct)) return direct;
+      if (typeof direct === "string" && direct.trim()) return [direct.trim()];
+      if (data && data.temas && Array.isArray(data.temas.themes)) return data.temas.themes;
+      if (Array.isArray(data.hallazgos)) return data.hallazgos.map(h => h.type || h.tipo).filter(Boolean);
+      return [];
     }
 
     async function sendAnalysis(payloadPrimary, payloadFallback) {
@@ -325,9 +318,7 @@
         body: JSON.stringify(payloadPrimary)
       });
 
-      if (first.ok) {
-        return await first.json();
-      }
+      if (first.ok) return await first.json();
 
       if (first.status === 422 && payloadFallback) {
         const second = await fetch(API_URL, {
@@ -335,11 +326,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payloadFallback)
         });
-
-        if (second.ok) {
-          return await second.json();
-        }
-
+        if (second.ok) return await second.json();
         const fallbackText = await second.text();
         throw new Error("La API respondió " + second.status + ". " + fallbackText);
       }
@@ -348,12 +335,10 @@
       throw new Error("La API respondió " + first.status + ". " + text);
     }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const titulo = document.getElementById("titulo").value.trim();
-      const artista = document.getElementById("artista").value.trim();
-      const texto = document.getElementById("texto").value.trim();
+    async function runAnalysis() {
+      const titulo = tituloInput.value.trim();
+      const artista = artistaInput.value.trim();
+      const texto = textoInput.value.trim();
       const buscarLetra = document.getElementById("buscarLetra").checked;
       const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
@@ -396,10 +381,26 @@
         console.error(error);
         setStatus("No se pudo completar el análisis. Revisa CORS, el formato esperado por la API o si el backend está dormido. Detalle: " + error.message, "error");
       }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await runAnalysis();
+    });
+
+    [tituloInput, artistaInput].forEach(input => {
+      input.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          await runAnalysis();
+        }
+      });
     });
 
     clearBtn.addEventListener("click", () => {
       form.reset();
+      document.getElementById("buscarLetra").checked = true;
+      document.getElementById("contextoEscolar").checked = true;
       hideStatus();
       resetResults();
     });
