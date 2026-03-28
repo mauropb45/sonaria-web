@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | MejorarIA</title>
+  <meta name="description" content="Analiza canciones y recibe orientación pedagógica con SonarIA.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
+      --text:#eef2f7; --muted:#9fb0c7; --muted-2:#8396af;
+      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff; --blue-soft:rgba(75,130,255,.12);
+      --shadow:0 24px 70px rgba(0,0,0,.34); --shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --radius-xl:28px; --radius-lg:22px; --radius-md:16px; --max:1180px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      overflow-x:hidden;
+    }
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
+    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px; animation:fadeIn .8s ease;}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
+    .brand-global:hover{transform:scale(1.05)}
+    .brand-global::after{content:""; position:absolute; inset:-10px; border-radius:20px; background:radial-gradient(circle, rgba(20,214,143,.25), transparent 70%); opacity:0; transition:opacity .3s ease; z-index:-1;}
+    .brand-global:hover::after{opacity:1}
+    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
+    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
+    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
+    .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
+    .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
+    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
+    .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
+    .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
+    .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
+    .tool{padding:28px;}
+    .tool-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;}
+    .tool-head h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .tag{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.8rem; font-weight:800; white-space:nowrap;}
+    .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
+    .form-grid{display:grid; gap:12px;}
+    .input,.textarea,.select{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;}
+    .input:focus,.textarea:focus,.select:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
+    .input::placeholder,.textarea::placeholder{color:#8ea3bf}
+    .textarea{min-height:210px; resize:vertical;}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .switches{display:grid; gap:10px; margin-top:2px;}
+    .switch{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green);}
+    .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
+    .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:190px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
+    .btn-primary:hover{box-shadow:0 18px 38px rgba(255,138,0,.34)}
+    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
+    .btn-ghost:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
+    .status{margin-top:14px; padding:14px 16px; border-radius:16px; background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff; line-height:1.6; display:none;}
+    .status.show{display:block}
+    .status.loading{background:rgba(255,138,0,.08); border-color:rgba(255,138,0,.18); color:#ffe0bf}
+    .status.success{background:rgba(20,214,143,.08); border-color:rgba(20,214,143,.18); color:#d9fff0}
+    .status.error{background:rgba(255,90,90,.08); border-color:rgba(255,90,90,.18); color:#ffd7d7}
+    .side{display:grid; gap:18px;}
+    .side-card{padding:24px;}
+    .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em;}
+    .side-card p{margin:0; color:var(--muted); line-height:1.72;}
+    .side-card:nth-child(1) h3{color:var(--orange)} .side-card:nth-child(2) h3{color:var(--green)} .side-card:nth-child(3) h3{color:var(--blue)}
+    .mini-list{margin:16px 0 0; display:grid; gap:12px;}
+    .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .mini-item strong{display:block; margin-bottom:6px;}
+    .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
+    .result{margin-top:34px; padding:26px;}
+    .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+    .result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-weight:800; font-size:.82rem; white-space:nowrap;}
+    .result-empty{color:var(--muted); line-height:1.8;}
+    .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
+    .result-box{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .result-box h4{margin:0 0 10px; font-size:1.05rem; letter-spacing:-.02em;}
+    .result-box p{margin:0; color:#d7e2f1; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
+    .chips{display:flex; flex-wrap:wrap; gap:8px;}
+    .chip{padding:8px 12px; border-radius:999px; background:rgba(75,130,255,.10); border:1px solid rgba(75,130,255,.20); color:#dce8ff; font-size:.88rem; font-weight:700;}
+    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800; line-height:1.8; letter-spacing:-.01em; opacity:.98;}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
+    @media (max-width:980px){.layout,.result-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%; max-width:none}.tool,.side-card,.result{padding:22px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="index.html" class="brand-global">
+        <div class="brand-main">Mejorar<span class="ia">IA</span></div>
+        <div class="brand-sub">IA aplicada a educación musical</div>
+      </a>
+    </div>
+
+    <section class="hero">
+      <div class="hero-badge">Interfaz real de SonarIA</div>
+      <h1>Analiza canciones con orientación pedagógica</h1>
+      <p>Ingresa título, artista o la letra completa y recibe una primera lectura útil para apoyar decisiones educativas con más claridad, criterio y rapidez.</p>
+    </section>
+
+    <section class="layout">
+      <section class="tool card">
+        <div class="tool-head">
+          <h2>Analizador SonarIA</h2>
+          <div class="tag">Conectado a API</div>
+        </div>
+        <p class="lead">Esta interfaz envía la información a tu endpoint de análisis para devolver un resultado legible, sin mostrar la documentación técnica de FastAPI al usuario final.</p>
+
+        <form id="analysisForm" class="form-grid">
+          <div class="row">
+            <input id="titulo" class="input" type="text" placeholder="Título de la canción">
+            <input id="artista" class="input" type="text" placeholder="Artista">
+          </div>
+
+          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o escribe el texto que quieres analizar..."></textarea>
+
+          <div class="switches">
+            <label class="switch">
+              <input id="buscarLetra" type="checkbox">
+              <div>
+                <strong>Intentar buscar la letra automáticamente</strong>
+                <span>Útil cuando tienes título y artista, pero no quieres pegar la letra completa.</span>
+              </div>
+            </label>
+
+            <label class="switch">
+              <input id="contextoEscolar" type="checkbox" checked>
+              <div>
+                <strong>Priorizar lectura en contexto escolar</strong>
+                <span>Orienta la respuesta hacia uso pedagógico, mediación y pertinencia educativa.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Analizar canción</button>
+            <button type="button" id="clearBtn" class="btn btn-ghost">Limpiar</button>
+          </div>
+
+          <div id="statusBox" class="status"></div>
+        </form>
+      </section>
+
+      <aside class="side">
+        <div class="side-card card">
+          <h3>Qué hace SonarIA</h3>
+          <p>Ayuda a revisar repertorio, detectar señales sensibles y generar una primera orientación útil para decidir su uso pedagógico.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Menos tiempo revisando</strong>
+              <span>Acelera la lectura inicial del material antes de llevarlo al aula.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Más criterio educativo</strong>
+              <span>Favorece decisiones más claras y justificadas en contexto escolar.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-card card">
+          <h3>Ruta actual de la API</h3>
+          <p>Este archivo viene configurado para enviar la solicitud a tu servicio en Render.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Endpoint base</strong>
+              <span id="apiBaseText">https://sonaria-api.onrender.com/analizar</span>
+            </div>
+            <div class="mini-item">
+              <strong>Nota importante</strong>
+              <span>Al estar en plan free, el primer análisis puede tardar más mientras el servicio despierta.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-card card">
+          <h3>Si algo falla</h3>
+          <p>Lo más común es que el backend esté dormido, que haya CORS bloqueando o que el formato esperado por la API no coincida exactamente con el body enviado.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="result card">
+      <div class="result-top">
+        <h2>Resultado del análisis</h2>
+        <div id="riskBadge" class="risk">Esperando análisis</div>
+      </div>
+
+      <div id="resultEmpty" class="result-empty">
+        Cuando envíes una canción, aquí aparecerá una versión clara del resultado para el usuario.
+      </div>
+
+      <div id="resultContent" style="display:none;">
+        <div class="result-grid">
+          <div class="result-box">
+            <h4>Resumen general</h4>
+            <p id="resumenTexto">—</p>
+          </div>
+
+          <div class="result-box">
+            <h4>Justificación</h4>
+            <p id="justificacionTexto">—</p>
+          </div>
+
+          <div class="result-box">
+            <h4>Temas o señales detectadas</h4>
+            <div id="temasChips" class="chips"></div>
+          </div>
+
+          <div class="result-box">
+            <h4>Respuesta cruda de la API</h4>
+            <p id="rawResponse">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">MauRock · Mauricio José Pinto Basso</div>
+  </div>
+
+  <script>
+    const API_URL = "https://sonaria-api.onrender.com/analizar";
+
+    const form = document.getElementById("analysisForm");
+    const clearBtn = document.getElementById("clearBtn");
+    const statusBox = document.getElementById("statusBox");
+    const resultEmpty = document.getElementById("resultEmpty");
+    const resultContent = document.getElementById("resultContent");
+    const resumenTexto = document.getElementById("resumenTexto");
+    const justificacionTexto = document.getElementById("justificacionTexto");
+    const temasChips = document.getElementById("temasChips");
+    const rawResponse = document.getElementById("rawResponse");
+    const riskBadge = document.getElementById("riskBadge");
+
+    function setStatus(message, type = "loading") {
+      statusBox.textContent = message;
+      statusBox.className = "status show " + type;
+    }
+
+    function hideStatus() {
+      statusBox.className = "status";
+      statusBox.textContent = "";
+    }
+
+    function resetResults() {
+      resultEmpty.style.display = "block";
+      resultContent.style.display = "none";
+      resumenTexto.textContent = "—";
+      justificacionTexto.textContent = "—";
+      temasChips.innerHTML = "";
+      rawResponse.textContent = "—";
+      riskBadge.textContent = "Esperando análisis";
+    }
+
+    function normalizeList(value) {
+      if (Array.isArray(value)) return value;
+      if (typeof value === "string" && value.trim()) return [value.trim()];
+      return [];
+    }
+
+    function renderChips(items) {
+      temasChips.innerHTML = "";
+      if (!items.length) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = "Sin temas detectados";
+        temasChips.appendChild(chip);
+        return;
+      }
+      items.forEach(item => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = item;
+        temasChips.appendChild(chip);
+      });
+    }
+
+    function getFirstExisting(obj, keys, fallback = "No disponible") {
+      for (const key of keys) {
+        if (obj && obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== "") {
+          return obj[key];
+        }
+      }
+      return fallback;
+    }
+
+    function inferRisk(data) {
+      return String(getFirstExisting(data, ["nivel_riesgo","riesgo","risk_level","risk","clasificacion","classification"], "Sin clasificar"));
+    }
+
+    function inferSummary(data) {
+      return String(getFirstExisting(data, ["resumen","summary","orientacion","resultado","decision","recomendacion"], "La API respondió correctamente, pero no se encontró un campo resumen estándar."));
+    }
+
+    function inferJustification(data) {
+      return String(getFirstExisting(data, ["justificacion","justificación","reason","explicacion","explicación","detalle"], "No se encontró una justificación explícita en la respuesta."));
+    }
+
+    function inferTopics(data) {
+      return normalizeList(getFirstExisting(data, ["temas_detectados","temas","flags","senales","señales","topics"], []));
+    }
+
+    async function sendAnalysis(payloadPrimary, payloadFallback) {
+      const first = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payloadPrimary)
+      });
+
+      if (first.ok) {
+        return await first.json();
+      }
+
+      if (first.status === 422 && payloadFallback) {
+        const second = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payloadFallback)
+        });
+
+        if (second.ok) {
+          return await second.json();
+        }
+
+        const fallbackText = await second.text();
+        throw new Error("La API respondió " + second.status + ". " + fallbackText);
+      }
+
+      const text = await first.text();
+      throw new Error("La API respondió " + first.status + ". " + text);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const titulo = document.getElementById("titulo").value.trim();
+      const artista = document.getElementById("artista").value.trim();
+      const texto = document.getElementById("texto").value.trim();
+      const buscarLetra = document.getElementById("buscarLetra").checked;
+      const contextoEscolar = document.getElementById("contextoEscolar").checked;
+
+      if (!texto && !(titulo && artista)) {
+        setStatus("Ingresa la letra completa o al menos título y artista para intentar el análisis.", "error");
+        return;
+      }
+
+      setStatus("Analizando canción... Si Render está dormido, esto puede tardar unos segundos.", "loading");
+      resetResults();
+
+      const payloadPrimary = {
+        titulo,
+        artista,
+        texto,
+        buscar_letra: buscarLetra,
+        contexto_escolar: contextoEscolar
+      };
+
+      const payloadFallback = {
+        texto: texto || [titulo, artista].filter(Boolean).join(" - "),
+        titulo,
+        artista
+      };
+
+      try {
+        const data = await sendAnalysis(payloadPrimary, payloadFallback);
+
+        riskBadge.textContent = inferRisk(data);
+        resumenTexto.textContent = inferSummary(data);
+        justificacionTexto.textContent = inferJustification(data);
+        renderChips(inferTopics(data));
+        rawResponse.textContent = JSON.stringify(data, null, 2);
+
+        resultEmpty.style.display = "none";
+        resultContent.style.display = "block";
+
+        setStatus("Análisis completado correctamente.", "success");
+      } catch (error) {
+        console.error(error);
+        setStatus("No se pudo completar el análisis. Revisa CORS, el formato esperado por la API o si el backend está dormido. Detalle: " + error.message, "error");
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      hideStatus();
+      resetResults();
+    });
+
+    resetResults();
+  </script>
+</body>
+</html>
