@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MejorarIA | IA aplicada a educación musical</title>
-  <meta name="description" content="Herramientas de IA para docentes e instituciones que necesitan analizar repertorio musical y tomar decisiones pedagógicas con mayor seguridad.">
+  <meta name="description" content="Herramientas de IA para docentes de música: análisis pedagógico de canciones con SonarIA y apoyo de práctica musical con EnsayarIA.">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -110,11 +110,15 @@
     }
 
     .hero{
-      text-align:center;
-      padding:34px 0 18px;
-      display:flex;
-      flex-direction:column;
+      padding:40px 0 22px;
+      display:grid;
+      grid-template-columns:1fr 1.08fr;
+      gap:34px;
       align-items:center;
+    }
+
+    .hero-left{
+      text-align:left;
     }
 
     .hero-badge{
@@ -146,10 +150,10 @@
     }
 
     .hero-arrow-wrap{
-      margin:22px auto 10px;
+      margin:22px 0 10px;
       display:flex;
       flex-direction:column;
-      align-items:center;
+      align-items:flex-start;
       gap:8px;
     }
 
@@ -164,7 +168,7 @@
       color:#d6fff0;
       font-size:.95rem;
       font-weight:800;
-      text-align:center;
+      text-align:left;
     }
 
     @keyframes bounce{
@@ -173,7 +177,7 @@
     }
 
     .hero p{
-      margin:10px auto 0;
+      margin:10px 0 0;
       max-width:820px;
       color:var(--muted);
       font-size:1.08rem;
@@ -184,7 +188,6 @@
     .cta{
       margin-top:28px;
       display:flex;
-      justify-content:center;
       gap:12px;
       flex-wrap:wrap;
     }
@@ -255,6 +258,81 @@
       color:var(--muted);
       font-size:.95rem;
       line-height:1.55;
+    }
+
+    .hero-video-wrap{
+      position:relative;
+    }
+
+    .hero-video-wrap::before{
+      content:"";
+      position:absolute;
+      inset:8% -3% -10% 8%;
+      background:
+        radial-gradient(circle at 75% 20%, rgba(75,130,255,.18), transparent 34%),
+        radial-gradient(circle at 20% 80%, rgba(255,138,0,.12), transparent 26%);
+      filter:blur(28px);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .hero-video{
+      position:relative;
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:#000;
+      box-shadow:0 30px 70px rgba(0,0,0,.45);
+      z-index:1;
+    }
+
+    .video-frame-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+
+    .video-frame-left{
+      display:flex;
+      gap:8px;
+    }
+
+    .video-frame-left span{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+    }
+
+    .video-frame-left span:nth-child(1){background:#ff5f57;}
+    .video-frame-left span:nth-child(2){background:#febc2e;}
+    .video-frame-left span:nth-child(3){background:#28c840;}
+
+    .video-frame-title{
+      color:#dbe5f2;
+      font-size:.88rem;
+      font-weight:700;
+    }
+
+    .video-frame-pill{
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dce7f6;
+      font-size:.78rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .hero-video iframe{
+      display:block;
+      width:100%;
+      height:390px;
+      border:none;
     }
 
     .products{
@@ -611,11 +689,16 @@
     }
 
     @media (max-width: 980px){
+      .hero,
       .products,
       .features,
       .how,
       .metrics{
         grid-template-columns:1fr;
+      }
+
+      .hero-video iframe{
+        height:300px;
       }
     }
 
@@ -629,7 +712,8 @@
         width:100%;
       }
 
-      .video iframe{
+      .video iframe,
+      .hero-video iframe{
         height:260px;
       }
 
@@ -639,12 +723,16 @@
 
       .cta{
         flex-direction:column;
-        align-items:center;
+        align-items:flex-start;
       }
 
       .btn{
         width:100%;
         max-width:320px;
+      }
+
+      .hero-arrow-wrap{
+        align-items:flex-start;
       }
     }
   </style>
@@ -665,39 +753,59 @@
     </div>
 
     <section class="hero">
-      <div class="hero-badge">IA aplicada a educación musical</div>
+      <div class="hero-left">
+        <div class="hero-badge">IA aplicada a educación musical</div>
 
-      <h1 class="brand-main">
-        Mejorar<span class="ia">IA</span>
-      </h1>
+        <h1 class="brand-main">
+          Mejorar<span class="ia">IA</span>
+        </h1>
 
-      <div class="hero-arrow-wrap">
-        <div class="hero-arrow">↓</div>
-        <div class="hero-arrow-text">Descubre cómo SonarIA puede apoyar tus decisiones pedagógicas</div>
+        <div class="hero-arrow-wrap">
+          <div class="hero-arrow">↓</div>
+          <div class="hero-arrow-text">Descubre cómo SonarIA puede apoyar tus decisiones pedagógicas</div>
+        </div>
+
+        <p>
+          Herramientas para docentes de música que buscan ahorrar tiempo, analizar repertorio con criterio educativo y tomar decisiones pedagógicas con más claridad, seguridad y velocidad.
+        </p>
+
+        <div class="cta">
+          <a href="panel.html" class="btn btn-primary">🎵 Probar SonarIA</a>
+          <a href="#como-funciona" class="btn btn-secondary">Ver cómo funciona</a>
+          <a href="#interes" class="btn btn-ghost">Solicitar acceso</a>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <strong>Análisis real</strong>
+            <span>Evalúa canciones con señales sensibles, riesgo y mediación pedagógica.</span>
+          </div>
+          <div class="metric">
+            <strong>Búsqueda automática</strong>
+            <span>SonarIA puede intentar obtener la letra automáticamente a partir de título y artista.</span>
+          </div>
+          <div class="metric">
+            <strong>Enfoque escolar</strong>
+            <span>Diseñado para apoyar decisiones docentes en educación musical.</span>
+          </div>
+        </div>
       </div>
 
-      <p>
-        Herramientas de inteligencia artificial para docentes e instituciones que necesitan analizar repertorio musical, reducir tiempo de revisión y tomar decisiones pedagógicas con mayor seguridad.
-      </p>
+      <div class="hero-video-wrap">
+        <div class="hero-video">
+          <div class="video-frame-top">
+            <div class="video-frame-left">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="video-frame-title">Vista previa de SonarIA</div>
+            <div class="video-frame-pill">Demo</div>
+          </div>
 
-      <div class="cta">
-        <a href="panel.html" class="btn btn-primary">🎵 Probar SonarIA</a>
-        <a href="#como-funciona" class="btn btn-secondary">Ver cómo funciona</a>
-        <a href="#interes" class="btn btn-ghost">Solicitar acceso</a>
-      </div>
-
-      <div class="metrics">
-        <div class="metric">
-          <strong>Análisis real</strong>
-          <span>Evalúa canciones con señales sensibles, riesgo y mediación pedagógica.</span>
-        </div>
-        <div class="metric">
-          <strong>Búsqueda automática</strong>
-          <span>SonarIA puede intentar obtener la letra automáticamente a partir de título y artista.</span>
-        </div>
-        <div class="metric">
-          <strong>Enfoque escolar</strong>
-          <span>Diseñado para apoyar decisiones docentes en educación musical.</span>
+          <iframe
+            src="https://www.youtube.com/embed/aD6MUQl0ajI"
+            title="Demo SonarIA"
+            allowfullscreen>
+          </iframe>
         </div>
       </div>
     </section>
@@ -712,7 +820,7 @@
 
         <div class="product-body">
           <p>
-            Analiza canciones, detecta señales sensibles y entrega una orientación pedagógica inicial para apoyar decisiones de uso en aula, talleres y proyectos musicales escolares.
+            Analiza canciones, detecta señales sensibles y orienta su uso pedagógico para contexto escolar.
           </p>
 
           <div class="video">
@@ -758,23 +866,23 @@
     <section class="section">
       <h2>Más que herramientas aisladas</h2>
       <p class="section-lead">
-        MejorarIA desarrolla soluciones concretas para el trabajo docente en música: análisis, apoyo de repertorio y herramientas pensadas para contexto educativo real.
+        MejorarIA busca construir soluciones útiles para la práctica docente, combinando análisis, adaptación y orientación pedagógica.
       </p>
 
       <div class="features">
         <div class="feature">
           <strong>Análisis pedagógico</strong>
-          <p>Entrega una primera lectura del repertorio para apoyar decisiones docentes antes de usar una canción en clase.</p>
+          <p>Evalúa contenido, lenguaje y pertinencia de canciones para contexto educativo.</p>
         </div>
 
         <div class="feature">
-          <strong>Ahorro de tiempo</strong>
-          <p>Reduce el tiempo de revisión manual de letras y acelera la preparación de actividades, clases y proyectos musicales.</p>
+          <strong>Versión escolar</strong>
+          <p>Orienta el uso más seguro y útil del repertorio dentro del aula o el taller musical.</p>
         </div>
 
         <div class="feature">
-          <strong>Uso institucional</strong>
-          <p>Puede convertirse en una herramienta útil para departamentos, coordinaciones y colegios que buscan más criterio y trazabilidad.</p>
+          <strong>Match curricular</strong>
+          <p>Se proyecta para apoyar decisiones vinculadas a objetivos y contextos de aprendizaje.</p>
         </div>
       </div>
     </section>
@@ -809,7 +917,7 @@
     <section class="section">
       <h2>¿Para quién es?</h2>
       <p class="section-lead">
-        Pensado para docentes, equipos directivos e instituciones que necesitan criterios más claros para trabajar repertorio musical en contexto escolar.
+        MejorarIA está pensado para quienes necesitan filtrar, analizar o adaptar repertorio con criterio educativo y musical.
       </p>
 
       <div class="audience">
@@ -845,10 +953,10 @@
     <section class="final">
       <h2>Empieza hoy con SonarIA</h2>
       <p>
-        Si quieres explorar SonarIA en tu práctica docente o evaluar una implementación para tu institución, ya puedes comenzar con la versión disponible.
+        Ya puedes explorar una primera versión funcional del análisis musical pedagógico. Si quieres implementarlo en tu contexto o institución, conversemos.
       </p>
 
-      <div class="cta">
+      <div class="cta" style="justify-content:center;">
         <a href="panel.html" class="btn btn-primary">Probar SonarIA</a>
         <a href="login.html" class="btn btn-secondary">Crear cuenta</a>
       </div>
