@@ -41,11 +41,13 @@
     .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
     .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
     .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
+
     .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
     .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
     .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
     .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
     .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
+
     .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
     .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
     .tool{padding:28px;}
@@ -71,11 +73,13 @@
     .btn-primary:hover{box-shadow:0 18px 38px rgba(255,138,0,.34)}
     .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
     .btn-ghost:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
+
     .status{margin-top:14px; padding:14px 16px; border-radius:16px; background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff; line-height:1.6; display:none;}
     .status.show{display:block}
     .status.loading{background:rgba(255,138,0,.08); border-color:rgba(255,138,0,.18); color:#ffe0bf}
     .status.success{background:rgba(20,214,143,.08); border-color:rgba(20,214,143,.18); color:#d9fff0}
     .status.error{background:rgba(255,90,90,.08); border-color:rgba(255,90,90,.18); color:#ffd7d7}
+
     .side{display:grid; gap:18px;}
     .side-card{padding:24px;}
     .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em;}
@@ -85,7 +89,35 @@
     .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
     .mini-item strong{display:block; margin-bottom:6px;}
     .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
-    .result{margin-top:34px; padding:26px;}
+
+    .result-arrow-wrap{
+      display:none;
+      justify-content:center;
+      margin-top:30px;
+      margin-bottom:12px;
+    }
+    .result-arrow-wrap.show{display:flex}
+    .result-arrow{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      color:var(--orange);
+      text-shadow:0 0 16px rgba(255,138,0,.35);
+      animation:mclarenBlink 1s infinite;
+      font-weight:900;
+    }
+    .result-arrow .arrow-symbol{
+      font-size:2.3rem;
+      line-height:1;
+    }
+    .result-arrow .arrow-text{
+      font-size:.92rem;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+
+    .result{margin-top:0; padding:26px;}
     .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
     .result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
     .risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-weight:800; font-size:.82rem; white-space:nowrap;}
@@ -96,10 +128,78 @@
     .result-box p{margin:0; color:#d7e2f1; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
     .chips{display:flex; flex-wrap:wrap; gap:8px;}
     .chip{padding:8px 12px; border-radius:999px; background:rgba(75,130,255,.10); border:1px solid rgba(75,130,255,.20); color:#dce8ff; font-size:.88rem; font-weight:700;}
+    .meta-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+    .meta-card{
+      padding:16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .meta-card strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:.92rem;
+      color:#cfdcf0;
+    }
+    .meta-card span{
+      color:#ffffff;
+      font-weight:800;
+      line-height:1.5;
+    }
+    .raw-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:14px;
+      color:#dce8ff;
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+    }
+    .raw-panel{
+      margin-top:14px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+      display:none;
+      max-height:420px;
+      overflow:auto;
+    }
+    .raw-panel.show{display:block}
+    .raw-panel pre{
+      margin:0;
+      color:#d7e2f1;
+      white-space:pre-wrap;
+      word-break:break-word;
+      line-height:1.7;
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:.92rem;
+    }
+
     .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800; line-height:1.8; letter-spacing:-.01em; opacity:.98;}
+
     @keyframes fadeIn{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
-    @media (max-width:980px){.layout,.result-grid{grid-template-columns:1fr}}
-    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%; max-width:none}.tool,.side-card,.result{padding:22px}}
+    @keyframes mclarenBlink{
+      0%,100%{opacity:1; transform:translateY(0)}
+      50%{opacity:.35; transform:translateY(4px)}
+    }
+
+    @media (max-width:980px){
+      .layout,.result-grid,.meta-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:720px){
+      .container{padding:24px 16px 72px}
+      .row{grid-template-columns:1fr}
+      .actions{flex-direction:column}
+      .btn{width:100%; max-width:none}
+      .tool,.side-card,.result{padding:22px}
+    }
   </style>
 </head>
 <body>
@@ -183,6 +283,13 @@
       </aside>
     </section>
 
+    <div id="resultArrowWrap" class="result-arrow-wrap">
+      <div class="result-arrow">
+        <div class="arrow-symbol">↓</div>
+        <div class="arrow-text">Resultado listo</div>
+      </div>
+    </div>
+
     <section class="result card">
       <div class="result-top">
         <h2>Resultado del análisis</h2>
@@ -211,9 +318,27 @@
           </div>
 
           <div class="result-box">
-            <h4>Respuesta cruda de la API</h4>
-            <p id="rawResponse">—</p>
+            <h4>Datos clave</h4>
+            <div class="meta-grid">
+              <div class="meta-card">
+                <strong>Riesgo</strong>
+                <span id="metaRiesgo">—</span>
+              </div>
+              <div class="meta-card">
+                <strong>Edad sugerida</strong>
+                <span id="metaEdad">—</span>
+              </div>
+              <div class="meta-card">
+                <strong>Letra encontrada</strong>
+                <span id="metaLetra">—</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="raw-toggle" id="rawToggle">▶ Ver respuesta técnica de la API</div>
+        <div class="raw-panel" id="rawPanel">
+          <pre id="rawResponse">—</pre>
         </div>
       </div>
     </section>
@@ -233,10 +358,15 @@
     const justificacionTexto = document.getElementById("justificacionTexto");
     const temasChips = document.getElementById("temasChips");
     const rawResponse = document.getElementById("rawResponse");
+    const rawToggle = document.getElementById("rawToggle");
+    const rawPanel = document.getElementById("rawPanel");
     const riskBadge = document.getElementById("riskBadge");
+    const resultArrowWrap = document.getElementById("resultArrowWrap");
+    const metaRiesgo = document.getElementById("metaRiesgo");
+    const metaEdad = document.getElementById("metaEdad");
+    const metaLetra = document.getElementById("metaLetra");
     const tituloInput = document.getElementById("titulo");
     const artistaInput = document.getElementById("artista");
-    const textoInput = document.getElementById("texto");
 
     function setStatus(message, type = "loading") {
       statusBox.textContent = message;
@@ -256,6 +386,12 @@
       temasChips.innerHTML = "";
       rawResponse.textContent = "—";
       riskBadge.textContent = "Esperando análisis";
+      metaRiesgo.textContent = "—";
+      metaEdad.textContent = "—";
+      metaLetra.textContent = "—";
+      rawPanel.classList.remove("show");
+      rawToggle.textContent = "▶ Ver respuesta técnica de la API";
+      resultArrowWrap.classList.remove("show");
     }
 
     function normalizeList(value) {
@@ -291,11 +427,14 @@
     }
 
     function inferRisk(data) {
-      return String(getFirstExisting(data, ["nivel_riesgo","riesgo","risk_level","risk","clasificacion","classification","risk_score"], "Sin clasificar"));
+      const riskValue = getFirstExisting(data, ["nivel_riesgo","riesgo","risk_level","risk","clasificacion","classification","risk_score"], "Sin clasificar");
+      return String(riskValue);
     }
 
     function inferSummary(data) {
-      return String(getFirstExisting(data, ["resumen","summary","orientacion","resultado","decision","recomendacion"], "La API respondió correctamente, pero no se encontró un campo resumen estándar."));
+      let summary = getFirstExisting(data, ["resumen","summary","orientacion","resultado","decision","recomendacion"], "");
+      if (!summary && data && data.resultado) summary = data.resultado;
+      return String(summary || "La API respondió correctamente, pero no se encontró un campo resumen estándar.");
     }
 
     function inferJustification(data) {
@@ -309,6 +448,17 @@
       if (data && data.temas && Array.isArray(data.temas.themes)) return data.temas.themes;
       if (Array.isArray(data.hallazgos)) return data.hallazgos.map(h => h.type || h.tipo).filter(Boolean);
       return [];
+    }
+
+    function inferEdad(data) {
+      return String(getFirstExisting(data, ["edad_sugerida","edad","recommended_age"], "No especificada"));
+    }
+
+    function inferLetraEncontrada(data) {
+      const found = getFirstExisting(data, ["letra_encontrada","lyrics_found"], null);
+      if (found === true || found === "true") return "Sí";
+      if (found === false || found === "false") return "No";
+      return "No informado";
     }
 
     async function sendAnalysis(payloadPrimary, payloadFallback) {
@@ -336,9 +486,9 @@
     }
 
     async function runAnalysis() {
-      const titulo = tituloInput.value.trim();
-      const artista = artistaInput.value.trim();
-      const texto = textoInput.value.trim();
+      const titulo = document.getElementById("titulo").value.trim();
+      const artista = document.getElementById("artista").value.trim();
+      const texto = document.getElementById("texto").value.trim();
       const buscarLetra = document.getElementById("buscarLetra").checked;
       const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
@@ -367,16 +517,27 @@
       try {
         const data = await sendAnalysis(payloadPrimary, payloadFallback);
 
-        riskBadge.textContent = inferRisk(data);
-        resumenTexto.textContent = inferSummary(data);
-        justificacionTexto.textContent = inferJustification(data);
-        renderChips(inferTopics(data));
+        const riesgo = inferRisk(data);
+        const resumen = inferSummary(data);
+        const justificacion = inferJustification(data);
+        const temas = inferTopics(data);
+
+        riskBadge.textContent = riesgo;
+        resumenTexto.textContent = resumen;
+        justificacionTexto.textContent = justificacion;
+        renderChips(temas);
         rawResponse.textContent = JSON.stringify(data, null, 2);
+
+        metaRiesgo.textContent = riesgo;
+        metaEdad.textContent = inferEdad(data);
+        metaLetra.textContent = inferLetraEncontrada(data);
 
         resultEmpty.style.display = "none";
         resultContent.style.display = "block";
+        resultArrowWrap.classList.add("show");
 
         setStatus("Análisis completado correctamente.", "success");
+        document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         console.error(error);
         setStatus("No se pudo completar el análisis. Revisa CORS, el formato esperado por la API o si el backend está dormido. Detalle: " + error.message, "error");
@@ -395,6 +556,13 @@
           await runAnalysis();
         }
       });
+    });
+
+    rawToggle.addEventListener("click", () => {
+      rawPanel.classList.toggle("show");
+      rawToggle.textContent = rawPanel.classList.contains("show")
+        ? "▼ Ocultar respuesta técnica de la API"
+        : "▶ Ver respuesta técnica de la API";
     });
 
     clearBtn.addEventListener("click", () => {
