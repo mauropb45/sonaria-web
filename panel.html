@@ -1,637 +1,83 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Panel Pro</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel | MejorarIA</title>
+<meta name="description" content="Panel principal de MejorarIA y acceso a SonarIA.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#07111d;
-      --bg2:#0b1626;
-      --panel:rgba(255,255,255,.05);
-      --line:rgba(255,255,255,.10);
-      --text:#eef2f7;
-      --muted:#9fb0c7;
-      --green:#14d68f;
-      --green-soft:rgba(20,214,143,.12);
-      --orange:#ff8a00;
-      --orange-soft:rgba(255,138,0,.12);
-      --red:#ff5d5d;
-      --red-soft:rgba(255,93,93,.12);
-      --blue:#4b82ff;
-      --blue-soft:rgba(75,130,255,.12);
-      --shadow:0 20px 60px rgba(0,0,0,.30);
-      --radius:24px;
+      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
+      --text:#eef2f7; --muted:#9fb0c7; --muted-2:#8396af;
+      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff; --blue-soft:rgba(75,130,255,.12);
+      --shadow:0 24px 70px rgba(0,0,0,.34); --shadow-soft:0 14px 34px rgba(0,0,0,.22);
+      --radius-xl:28px; --radius-lg:22px; --max:1180px;
     }
-
-    *{box-sizing:border-box}
-
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
     body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 20%),
-        radial-gradient(circle at bottom right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
+      overflow-x:hidden;
     }
-
-    .container{
-      max-width:1260px;
-      margin:0 auto;
-      padding:28px 22px 60px;
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
     }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      flex-wrap:wrap;
-      margin-bottom:26px;
-    }
-
-    .brand{
-      font-size:2rem;
-      font-weight:800;
-      letter-spacing:-.04em;
-    }
-
-    .brand .ia{
-      color:var(--green);
-      text-shadow:0 0 22px rgba(20,214,143,.35);
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:none;
-      cursor:pointer;
-      border-radius:16px;
-      padding:13px 18px;
-      font-weight:800;
-      font-size:.98rem;
-      transition:.2s ease;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .btn:hover{ transform:translateY(-2px); }
-
-    .btn-ghost{
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg,var(--orange),#ff6a00);
-      color:#111827;
-      box-shadow:0 10px 24px rgba(255,138,0,.26);
-    }
-
-    .btn-secondary{
-      background:linear-gradient(135deg,var(--blue),#2d67f6);
-      color:white;
-      box-shadow:0 10px 24px rgba(75,130,255,.24);
-    }
-
-    .hero{
-      margin-bottom:26px;
-    }
-
-    .hero-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:var(--blue-soft);
-      border:1px solid rgba(75,130,255,.24);
-      color:#cfe0ff;
-      font-weight:700;
-      font-size:.9rem;
-      margin-bottom:16px;
-    }
-
-    .hero h1{
-      margin:0 0 10px;
-      font-size:clamp(2.2rem, 5vw, 4rem);
-      letter-spacing:-.05em;
-      line-height:.98;
-    }
-
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      font-size:1.08rem;
-      line-height:1.7;
-      max-width:900px;
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:22px;
-    }
-
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-      overflow:hidden;
-    }
-
-    .card h2{
-      margin:0 0 8px;
-      font-size:1.5rem;
-      letter-spacing:-.03em;
-    }
-
-    .card p.lead{
-      margin:0 0 18px;
-      color:var(--muted);
-      line-height:1.65;
-    }
-
-    .field{
-      margin-bottom:12px;
-    }
-
-    .label{
-      display:block;
-      margin-bottom:8px;
-      font-size:.95rem;
-      font-weight:700;
-      color:#dde7f3;
-    }
-
-    .input,
-    .textarea{
-      width:100%;
-      padding:15px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      font:inherit;
-      outline:none;
-      transition:.18s ease;
-    }
-
-    .input:focus,
-    .textarea:focus{
-      border-color:rgba(75,130,255,.5);
-      box-shadow:0 0 0 4px rgba(75,130,255,.12);
-    }
-
-    .input::placeholder,
-    .textarea::placeholder{
-      color:#90a4be;
-    }
-
-    .textarea{
-      min-height:220px;
-      resize:vertical;
-      line-height:1.55;
-    }
-
-    .helper{
-      margin-top:8px;
-      color:#8fa5c2;
-      font-size:.9rem;
-    }
-
-    .actions-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .status{
-      margin-top:14px;
-      padding:14px 16px;
-      border-radius:16px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--muted);
-      line-height:1.6;
-      min-height:56px;
-    }
-
-    .status.loading{
-      color:#dbeafe;
-      border-color:rgba(75,130,255,.35);
-      background:rgba(75,130,255,.08);
-    }
-
-    .status.ok{
-      color:#d1fae5;
-      border-color:rgba(20,214,143,.35);
-      background:rgba(20,214,143,.08);
-    }
-
-    .status.error{
-      color:#fee2e2;
-      border-color:rgba(255,93,93,.35);
-      background:rgba(255,93,93,.08);
-    }
-
-    .result-hero{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:16px;
-      border-radius:20px;
-      margin-bottom:18px;
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .result-hero.green{
-      background:var(--green-soft);
-      border-color:rgba(20,214,143,.22);
-    }
-
-    .result-hero.orange{
-      background:var(--orange-soft);
-      border-color:rgba(255,138,0,.22);
-    }
-
-    .result-hero.red{
-      background:var(--red-soft);
-      border-color:rgba(255,93,93,.22);
-    }
-
-    .risk-dot{
-      width:18px;
-      height:18px;
-      border-radius:999px;
-      flex:0 0 auto;
-      box-shadow:0 0 20px currentColor;
-    }
-
-    .green .risk-dot{ background:var(--green); color:var(--green); }
-    .orange .risk-dot{ background:var(--orange); color:var(--orange); }
-    .red .risk-dot{ background:var(--red); color:var(--red); }
-
-    .result-hero strong{
-      display:block;
-      font-size:1.06rem;
-      margin-bottom:3px;
-    }
-
-    .result-hero span{
-      color:#e8eef7;
-      font-size:.96rem;
-    }
-
-    .result-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .mini{
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px 15px;
-    }
-
-    .mini .k{
-      font-size:.8rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#8ea4bf;
-      margin-bottom:6px;
-      font-weight:800;
-    }
-
-    .mini .v{
-      font-size:1rem;
-      font-weight:700;
-      line-height:1.45;
-    }
-
-    .section-title{
-      margin:18px 0 10px;
-      font-size:.95rem;
-      font-weight:800;
-      color:#d9e6f5;
-      letter-spacing:.02em;
-    }
-
-    .box{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px 15px;
-      color:#d4deeb;
-      line-height:1.65;
-      white-space:pre-line;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      padding:9px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      color:#e7eef7;
-      font-size:.9rem;
-      font-weight:700;
-    }
-
-    .list{
-      display:grid;
-      gap:8px;
-    }
-
-    .list-item{
-      padding:12px 13px;
-      border-radius:14px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      color:#dbe5f2;
-      line-height:1.55;
-      font-size:.94rem;
-    }
-
-    .muted{
-      color:var(--muted);
-    }
-
-    @media (max-width: 980px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-
-      .result-grid{
-        grid-template-columns:1fr;
-      }
-    }
+    a{color:inherit; text-decoration:none}
+    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
+    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px; animation:fadeIn .8s ease;}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
+    .brand-global:hover{transform:scale(1.05)}
+    .brand-global::after{content:""; position:absolute; inset:-10px; border-radius:20px; background:radial-gradient(circle, rgba(20,214,143,.25), transparent 70%); opacity:0; transition:opacity .3s ease; z-index:-1;}
+    .brand-global:hover::after{opacity:1}
+    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em; text-wrap:balance;}
+    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
+    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
+    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:210px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
+    .btn-primary:hover{box-shadow:0 18px 38px rgba(255,138,0,.34)}
+    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
+    .btn-ghost:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
+    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800; line-height:1.8; letter-spacing:-.01em; opacity:.98;}
+    @keyframes fadeIn{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
+    @media (max-width:720px){.container{padding:24px 16px 72px}.btn{width:100%; max-width:340px}}
   </style>
-</head>
-<body>
-  <div class="container">
 
-    <div class="topbar">
-      <div class="brand">Sonar<span class="ia">IA</span></div>
+<style>
+.hero{text-align:center; margin-top:10px} .hero h1{margin:0 0 12px; font-size:clamp(2.4rem, 6vw, 4.4rem); line-height:.96; letter-spacing:-.05em} .hero p{max-width:760px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem}
+.grid{margin-top:34px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+.tool{padding:24px; transition:transform .2s ease, border-color .2s ease} .tool:hover{transform:translateY(-4px); border-color:rgba(255,255,255,.14)}
+.tool h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em} .tool p{margin:0 0 18px; color:var(--muted); line-height:1.7}
+.tool:nth-child(1) h3{color:var(--orange)} .tool:nth-child(2) h3{color:var(--green)} .tool:nth-child(3) h3{color:var(--blue)}
+.history{margin-top:34px; padding:26px} .history h2{margin:0 0 12px; font-size:2rem; letter-spacing:-.04em} .history p{margin:0 0 18px; color:var(--muted); line-height:1.75}
+.history-list{display:grid; gap:12px}
+.history-item{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)}
+.history-item strong{display:block; margin-bottom:6px} .history-item span{color:#d1dceb; line-height:1.6}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body><div class="container">
 
-      <div class="top-actions">
-        <a class="btn btn-ghost" href="https://www.mejoraria.cl/">Volver a MejorarIA</a>
-      </div>
+    <div class="header">
+      <a href="index.html" class="brand-global">
+        <div class="brand-main">Mejorar<span class="ia">IA</span></div>
+        <div class="brand-sub">IA aplicada a educación musical</div>
+      </a>
     </div>
 
-    <div class="hero">
-      <div class="hero-badge">Panel profesional · análisis pedagógico musical</div>
-      <h1>Evalúa canciones con criterio educativo</h1>
-      <p>
-        SonarIA analiza letras, detecta señales sensibles, identifica temáticas emocionales
-        y entrega una recomendación útil para contexto escolar.
-      </p>
-    </div>
-
-    <div class="layout">
-
-      <div class="card">
-        <h2>Nuevo análisis</h2>
-        <p class="lead">
-          Escribe título y artista. Puedes pegar la letra manualmente o dejar que SonarIA intente buscarla automáticamente.
-        </p>
-
-        <div class="field">
-          <label class="label" for="titulo">Título</label>
-          <input class="input" id="titulo" placeholder="Ej: Creep">
-        </div>
-
-        <div class="field">
-          <label class="label" for="artista">Artista</label>
-          <input class="input" id="artista" placeholder="Ej: Radiohead">
-        </div>
-
-        <div class="field">
-          <label class="label" for="letra">Letra (opcional)</label>
-          <textarea class="textarea" id="letra" placeholder="Pega aquí la letra completa o un fragmento. Si la dejas vacía, SonarIA intentará buscarla automáticamente."></textarea>
-          <div class="helper">Para resultados más precisos, usa letra completa o un fragmento representativo.</div>
-        </div>
-
-        <div class="actions-row">
-          <button class="btn btn-primary" onclick="analizar()">Analizar con SonarIA</button>
-          <button class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
-        </div>
-
-        <div id="estado" class="status">Esperando canción para analizar.</div>
-      </div>
-
-      <div class="card">
-        <h2>Resultado</h2>
-        <p class="lead">Aquí verás la clasificación, el nivel de riesgo y los hallazgos de SonarIA.</p>
-
-        <div id="emptyState" class="box muted">
-          Todavía no hay un análisis cargado. Ingresa una canción y presiona “Analizar con SonarIA”.
-        </div>
-
-        <div id="resultWrap" style="display:none;">
-          <div id="resultHero" class="result-hero orange">
-            <div class="risk-dot"></div>
-            <div>
-              <strong id="heroResultado">Resultado</strong>
-              <span id="heroSub">Esperando análisis</span>
-            </div>
-          </div>
-
-          <div class="result-grid">
-            <div class="mini">
-              <div class="k">Canción</div>
-              <div class="v" id="outCancion">-</div>
-            </div>
-            <div class="mini">
-              <div class="k">Riesgo</div>
-              <div class="v" id="outRisk">-</div>
-            </div>
-            <div class="mini">
-              <div class="k">Edad sugerida</div>
-              <div class="v" id="outEdad">-</div>
-            </div>
-            <div class="mini">
-              <div class="k">Justificación</div>
-              <div class="v" id="outJustificacion">-</div>
-            </div>
-          </div>
-
-          <div class="section-title">Temas detectados</div>
-          <div id="outTemas" class="chips"></div>
-
-          <div class="section-title">Hallazgos</div>
-          <div id="outHallazgos" class="list"></div>
-
-          <div class="section-title">Detalle técnico</div>
-          <div id="outCounts" class="box"></div>
-
-          <div class="section-title">Letra utilizada</div>
-          <div id="outLyrics" class="box"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    const API_URL = "https://sonaria-api.onrender.com/analizar";
-
-    function pickTone(resultado = "") {
-      const r = resultado.toLowerCase();
-      if (r.includes("no apta") || r.includes("roja") || r.includes("🔴")) return "red";
-      if (r.includes("mediación") || r.includes("mediacion") || r.includes("🟠")) return "orange";
-      return "green";
-    }
-
-    function renderTemas(temasObj) {
-      const box = document.getElementById("outTemas");
-      box.innerHTML = "";
-
-      const themes = (temasObj && temasObj.themes) ? temasObj.themes : [];
-
-      if (!themes.length) {
-        box.innerHTML = `<span class="chip">Sin temas destacados</span>`;
-        return;
-      }
-
-      themes.forEach(t => {
-        const el = document.createElement("span");
-        el.className = "chip";
-        el.textContent = t;
-        box.appendChild(el);
-      });
-    }
-
-    function renderHallazgos(hallazgos) {
-      const box = document.getElementById("outHallazgos");
-      box.innerHTML = "";
-
-      if (!hallazgos || !hallazgos.length) {
-        box.innerHTML = `<div class="list-item">No se registran hallazgos específicos.</div>`;
-        return;
-      }
-
-      hallazgos.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `<strong>${item.type || "Hallazgo"}:</strong> ${item.context || "-"}`;
-        box.appendChild(div);
-      });
-    }
-
-    function renderCounts(counts) {
-      const box = document.getElementById("outCounts");
-      box.textContent =
-`Groserías: ${counts?.profanity ?? 0}
-Sexual: ${counts?.sexual ?? 0}
-Drogas: ${counts?.drugs ?? 0}
-Violencia: ${counts?.violence ?? 0}
-Madurez/romance adulto: ${counts?.maturity ?? 0}`;
-    }
-
-    function limpiarFormulario() {
-      document.getElementById("titulo").value = "";
-      document.getElementById("artista").value = "";
-      document.getElementById("letra").value = "";
-      document.getElementById("estado").className = "status";
-      document.getElementById("estado").textContent = "Esperando canción para analizar.";
-    }
-
-    async function analizar() {
-      const titulo = document.getElementById("titulo").value.trim();
-      const artista = document.getElementById("artista").value.trim();
-      const letra = document.getElementById("letra").value.trim();
-
-      const estadoEl = document.getElementById("estado");
-      const emptyState = document.getElementById("emptyState");
-      const resultWrap = document.getElementById("resultWrap");
-
-      if (!titulo || !artista) {
-        estadoEl.className = "status error";
-        estadoEl.textContent = "Completa al menos título y artista.";
-        return;
-      }
-
-      estadoEl.className = "status loading";
-      estadoEl.textContent = letra
-        ? "Analizando con SonarIA en línea..."
-        : "Buscando letra automáticamente y analizando con SonarIA...";
-
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ titulo, artista, letra })
-        });
-
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error("Error API: " + txt);
-        }
-
-        const data = await res.json();
-
-        emptyState.style.display = "none";
-        resultWrap.style.display = "block";
-
-        const tone = pickTone(data.resultado || "");
-        const hero = document.getElementById("resultHero");
-        hero.className = "result-hero " + tone;
-
-        document.getElementById("heroResultado").textContent = data.resultado || "Sin resultado";
-        document.getElementById("heroSub").textContent = `Riesgo estimado: ${data.risk ?? 0}`;
-
-        document.getElementById("outCancion").textContent = `${data.titulo || "-"} · ${data.artista || "-"}`;
-        document.getElementById("outRisk").textContent = data.risk ?? "-";
-        document.getElementById("outEdad").textContent = data.edad_sugerida || "-";
-        document.getElementById("outJustificacion").textContent = data.justificacion || "-";
-
-        renderTemas(data.temas);
-        renderHallazgos(data.hallazgos);
-        renderCounts(data.counts);
-
-        document.getElementById("outLyrics").textContent =
-          data.letra_usada && data.letra_usada.trim()
-            ? data.letra_usada
-            : "No se encontró letra automáticamente para esta canción.";
-
-        estadoEl.className = "status ok";
-        estadoEl.textContent = data.letra_encontrada
-          ? "Análisis completado correctamente."
-          : "No se encontró la letra automáticamente. Puedes pegarla manualmente para un análisis más preciso.";
-      } catch (err) {
-        console.error(err);
-        estadoEl.className = "status error";
-        estadoEl.textContent = "Error al conectar con la API pública. Revisa tu deploy en Render.";
-      }
-    }
-  </script>
-</body>
-</html>
+<section class="hero"><h1>Tu espacio en MejorarIA</h1><p>Desde aquí puedes entrar a SonarIA, revisar actividad reciente y prepararte para futuras herramientas construidas junto a docentes.</p></section>
+<section class="grid">
+<article class="tool card"><h3>Entrar a SonarIA</h3><p>Accede al análisis pedagógico de canciones y repertorio para contexto escolar.</p><a href="#" class="btn btn-primary">Abrir SonarIA</a></article>
+<article class="tool card"><h3>EnsayarIA</h3><p>Explora el futuro espacio para práctica musical, ensayo y acompañamiento del estudiante.</p><a href="register.html" class="btn btn-ghost">Quiero acceso anticipado</a></article>
+<article class="tool card"><h3>Proponer una solución</h3><p>Comparte una necesidad de tu asignatura para construir nuevas herramientas dentro de MejorarIA.</p><a href="register.html" class="btn btn-ghost">Proponer idea</a></article>
+</section>
+<section class="history card"><h2>Actividad y seguimiento</h2><p>Este espacio puede crecer para mostrar historial, observaciones, análisis guardados y trazabilidad del trabajo pedagógico.</p><div class="history-list"><div class="history-item"><strong>Último análisis</strong><span>Revisa aquí tu actividad más reciente dentro de SonarIA.</span></div><div class="history-item"><strong>Observaciones guardadas</strong><span>Centraliza comentarios, decisiones pedagógicas y uso del repertorio.</span></div><div class="history-item"><strong>Crecimiento futuro</strong><span>MejorarIA irá incorporando nuevas herramientas y espacios según necesidades reales docentes.</span></div></div></section>
+<div class="footer">MauRock · Mauricio José Pinto Basso</div>
+</div></body></html>
