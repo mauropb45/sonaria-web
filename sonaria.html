@@ -144,7 +144,7 @@
               <input id="buscarLetra" type="checkbox" checked>
               <div>
                 <strong>Intentar buscar la letra automáticamente</strong>
-                <span>Útil cuando tienes título y artista, pero no quieres pegar la letra completa.</span>
+                <span>Si SonarIA la encuentra, la pegará automáticamente en este espacio.</span>
               </div>
             </label>
 
@@ -253,6 +253,7 @@
     const metaLetra = document.getElementById("metaLetra");
     const tituloInput = document.getElementById("titulo");
     const artistaInput = document.getElementById("artista");
+    const textoInput = document.getElementById("texto");
 
     function setStatus(message, type) {
       statusBox.textContent = message;
@@ -293,7 +294,6 @@
     function normalizeTopics(data) {
       if (data?.temas?.themes && Array.isArray(data.temas.themes)) return data.temas.themes;
       if (Array.isArray(data?.temas_detectados)) return data.temas_detectados;
-      if (Array.isArray(data?.hallazgos)) return data.hallazgos.map(x => x.type || x.tipo).filter(Boolean);
       return [];
     }
     function getValue(obj, keys, fallback = "No disponible") {
@@ -316,7 +316,7 @@
     async function runAnalysis() {
       const titulo = tituloInput.value.trim();
       const artista = artistaInput.value.trim();
-      const texto = document.getElementById("texto").value.trim();
+      const texto = textoInput.value.trim();
       const buscarLetra = document.getElementById("buscarLetra").checked;
       const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
@@ -333,8 +333,8 @@
       try {
         const payloads = [
           { titulo, artista, texto, buscar_letra: buscarLetra, contexto_escolar: contextoEscolar },
-          { texto, titulo, artista },
-          { texto: texto || [titulo, artista].filter(Boolean).join(" - ") }
+          { texto, titulo, artista, buscar_letra: buscarLetra },
+          { texto: texto || [titulo, artista].filter(Boolean).join(" - "), buscar_letra: buscarLetra }
         ];
 
         let final = null;
@@ -348,7 +348,11 @@
 
         if (!final) throw new Error(lastError || "No hubo respuesta válida de la API.");
 
-        const resumen = getValue(final, ["resultado", "resumen", "summary", "orientacion"], "Resultado disponible");
+        if (final.letra_usada && !textoInput.value.trim()) {
+          textoInput.value = final.letra_usada;
+        }
+
+        const resumen = getValue(final, ["resultado", "resumen", "summary", "orientacion", "nivel"], "Resultado disponible");
         const justificacion = getValue(final, ["justificacion", "justificación", "reason", "explicacion", "explicación"], "Sin justificación disponible");
         const riesgo = String(getValue(final, ["risk", "riesgo", "nivel_riesgo", "risk_score", "classification"], "Sin clasificar"));
         const edad = String(getValue(final, ["edad_sugerida", "edad", "recommended_age"], "No especificada"));
@@ -368,7 +372,7 @@
         resultArrowWrap.classList.add("show");
 
         setStatus("Análisis completado correctamente.", "success");
-        setDebug("");
+        setDebug(final.fuente_letra ? "Fuente de letra: " + final.fuente_letra : "");
         document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         setStatus("No se pudo completar el análisis.", "error");
