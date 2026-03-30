@@ -1,132 +1,401 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SonarIA</title>
-
-<style>
-body{
-  background:#0b1220;
-  color:white;
-  font-family:Arial;
-  padding:40px;
-}
-
-input, textarea{
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  border-radius:8px;
-  border:none;
-}
-
-button{
-  padding:10px 20px;
-  background:orange;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-#resultado{
-  margin-top:30px;
-  padding:20px;
-  background:#1a2238;
-  border-radius:12px;
-}
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | MejorarIA</title>
+  <meta name="description" content="Analiza canciones y recibe orientación pedagógica con SonarIA.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
+      --text:#eef2f7; --muted:#9fb0c7;
+      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff;
+      --shadow:0 24px 70px rgba(0,0,0,.34); --radius-xl:28px; --max:1180px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      overflow-x:hidden;
+    }
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
+    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px;}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
+    .brand-global:hover{transform:scale(1.05)}
+    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
+    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
+    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
+    .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
+    .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
+    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
+    .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
+    .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
+    .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
+    .tool{padding:28px;}
+    .tool-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;}
+    .tool-head h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .tag{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.8rem; font-weight:800; white-space:nowrap;}
+    .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
+    .form-grid{display:grid; gap:12px;}
+    .input,.textarea{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;}
+    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
+    .input::placeholder,.textarea::placeholder{color:#8ea3bf}
+    .textarea{min-height:210px; resize:vertical;}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .switches{display:grid; gap:10px; margin-top:2px;}
+    .switch{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green);}
+    .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
+    .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:190px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
+    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
+    .status{margin-top:14px; padding:14px 16px; border-radius:16px; display:none; line-height:1.6}
+    .status.show{display:block}
+    .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
+    .status.success{background:rgba(20,214,143,.08); border:1px solid rgba(20,214,143,.18); color:#d9fff0}
+    .status.error{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.18); color:#ffd7d7}
+    .debug{display:none; margin-top:10px; color:#c7d6e8; font-size:.92rem}
+    .debug.show{display:block}
+    .side{display:grid; gap:18px;}
+    .side-card{padding:24px;}
+    .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em; color:var(--orange)}
+    .side-card p{margin:0; color:var(--muted); line-height:1.72;}
+    .mini-list{margin:16px 0 0; display:grid; gap:12px;}
+    .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .mini-item strong{display:block; margin-bottom:6px;}
+    .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
+    .result-arrow-wrap{display:none; justify-content:center; margin-top:30px; margin-bottom:12px;}
+    .result-arrow-wrap.show{display:flex}
+    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); text-shadow:0 0 16px rgba(255,138,0,.35); animation:mclarenBlink 1s infinite; font-weight:900; text-align:center;}
+    .result-arrow .arrow-symbol{font-size:2.3rem; line-height:1;}
+    .result-arrow .arrow-text{font-size:.92rem; letter-spacing:.02em; text-transform:uppercase;}
+    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none; letter-spacing:0;}
+    .result{margin-top:0; padding:26px;}
+    .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+    .result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-weight:800; font-size:.82rem; white-space:nowrap;}
+    .result-empty{color:var(--muted); line-height:1.8;}
+    .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
+    .result-box{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .result-box h4{margin:0 0 10px; font-size:1.05rem; letter-spacing:-.02em;}
+    .result-box p{margin:0; color:#d7e2f1; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
+    .chips{display:flex; flex-wrap:wrap; gap:8px;}
+    .chip{padding:8px 12px; border-radius:999px; background:rgba(75,130,255,.10); border:1px solid rgba(75,130,255,.20); color:#dce8ff; font-size:.88rem; font-weight:700;}
+    .meta-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+    .meta-card{padding:16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .meta-card strong{display:block; margin-bottom:6px; font-size:.92rem; color:#cfdcf0;}
+    .meta-card span{color:#fff; font-weight:800; line-height:1.5;}
+    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800;}
+    @keyframes mclarenBlink{0%,100%{opacity:1; transform:translateY(0)}50%{opacity:.35; transform:translateY(4px)}}
+    @media (max-width:980px){.layout,.result-grid,.meta-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%; max-width:none}.tool,.side-card,.result{padding:22px}}
+  </style>
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <a href="index.html" class="brand-global">
+        <div class="brand-main">Mejorar<span class="ia">IA</span></div>
+        <div class="brand-sub">IA aplicada a educación musical</div>
+      </a>
+    </div>
 
-<h1>SonarIA</h1>
+    <section class="hero">
+      <div class="hero-badge">Interfaz real de SonarIA</div>
+      <h1>Analiza canciones con orientación pedagógica</h1>
+      <p>Ingresa título, artista o la letra completa y recibe una primera lectura útil para apoyar decisiones educativas con más claridad, criterio y rapidez.</p>
+    </section>
 
-<input id="titulo" placeholder="Título">
-<input id="artista" placeholder="Artista">
+    <section class="layout">
+      <section class="tool card">
+        <div class="tool-head">
+          <h2>Analizador SonarIA</h2>
+          <div class="tag">Conectado a API</div>
+        </div>
+        <p class="lead">Esta interfaz envía la información a tu endpoint de análisis para devolver un resultado legible, sin mostrar la documentación técnica al usuario final.</p>
 
-<textarea id="texto" rows="6" placeholder="Pega aquí la letra..."></textarea>
+        <form id="analysisForm" class="form-grid">
+          <div class="row">
+            <input id="titulo" class="input" type="text" placeholder="Título de la canción">
+            <input id="artista" class="input" type="text" placeholder="Artista">
+          </div>
 
-<label>
-<input type="checkbox" id="buscarLetra" checked>
- Buscar letra automáticamente
-</label>
+          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o escribe el texto que quieres analizar..."></textarea>
 
-<br><br>
+          <div class="switches">
+            <label class="switch">
+              <input id="buscarLetra" type="checkbox" checked>
+              <div>
+                <strong>Intentar buscar la letra automáticamente</strong>
+                <span>Si SonarIA la encuentra, la pegará automáticamente en este espacio.</span>
+              </div>
+            </label>
 
-<button onclick="runAnalysis()">Analizar</button>
+            <label class="switch">
+              <input id="contextoEscolar" type="checkbox" checked>
+              <div>
+                <strong>Priorizar lectura en contexto escolar</strong>
+                <span>Orienta la respuesta hacia uso pedagógico, mediación y pertinencia educativa.</span>
+              </div>
+            </label>
+          </div>
 
-<div id="estado"></div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Analizar canción</button>
+            <button type="button" id="clearBtn" class="btn btn-ghost">Limpiar</button>
+          </div>
 
-<div id="resultado"></div>
+          <div id="statusBox" class="status"></div>
+          <div id="debugBox" class="debug"></div>
+        </form>
+      </section>
 
-<script>
+      <aside class="side">
+        <div class="side-card card">
+          <h3>Qué hace SonarIA</h3>
+          <p>Ayuda a revisar repertorio, detectar señales sensibles y generar una primera orientación útil para decidir su uso pedagógico.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Menos tiempo planificando</strong>
+              <span>Acelera la lectura inicial del material antes de llevarlo al aula.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Más tiempo ensayando</strong>
+              <span>Libera tiempo para concentrarte en la práctica musical y el trabajo en clase.</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-const API_URL = "https://sonaria-api.onrender.com/analizar";
+    <div id="resultArrowWrap" class="result-arrow-wrap">
+      <div class="result-arrow">
+        <div class="arrow-symbol">↓</div>
+        <div class="arrow-text">Resultado listo</div>
+        <div class="arrow-sub">SonarIA es más que esto: contiene traducción, contexto cultural, lectura implícita y más funciones en camino.</div>
+      </div>
+    </div>
 
-const tituloInput = document.getElementById("titulo");
-const artistaInput = document.getElementById("artista");
-const textoInput = document.getElementById("texto");
-const estadoDiv = document.getElementById("estado");
-const resultadoDiv = document.getElementById("resultado");
+    <section class="result card">
+      <div class="result-top">
+        <h2>Resultado del análisis</h2>
+        <div id="riskBadge" class="risk">Esperando análisis</div>
+      </div>
 
-async function postJson(body) {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
+      <div id="resultEmpty" class="result-empty">
+        Cuando envíes una canción, aquí aparecerá una versión clara del resultado para el usuario.
+      </div>
 
-  const text = await res.text();
-  let data = null;
+      <div id="resultContent" style="display:none;">
+        <div class="result-grid">
+          <div class="result-box">
+            <h4>Resumen general</h4>
+            <p id="resumenTexto">—</p>
+          </div>
 
-  try {
-    data = JSON.parse(text);
-  } catch {}
+          <div class="result-box">
+            <h4>Justificación</h4>
+            <p id="justificacionTexto">—</p>
+          </div>
 
-  return { ok: res.ok, status: res.status, data };
-}
+          <div class="result-box">
+            <h4>Temas o señales detectadas</h4>
+            <div id="temasChips" class="chips"></div>
+          </div>
 
-async function runAnalysis(){
+          <div class="result-box">
+            <h4>Datos clave</h4>
+            <div class="meta-grid">
+              <div class="meta-card"><strong>Riesgo</strong><span id="metaRiesgo">—</span></div>
+              <div class="meta-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
+              <div class="meta-card"><strong>Letra encontrada</strong><span id="metaLetra">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  const titulo = tituloInput.value.trim();
-  const artista = artistaInput.value.trim();
-  const texto = textoInput.value.trim();
-  const buscarLetra = document.getElementById("buscarLetra").checked;
+    <div class="footer">MauRock · Mauricio José Pinto Basso</div>
+  </div>
 
-  estadoDiv.innerHTML = "Analizando...";
+  <script>
+    const API_URL = "https://sonaria-api.onrender.com/analizar";
+    const form = document.getElementById("analysisForm");
+    const clearBtn = document.getElementById("clearBtn");
+    const statusBox = document.getElementById("statusBox");
+    const debugBox = document.getElementById("debugBox");
+    const resultEmpty = document.getElementById("resultEmpty");
+    const resultContent = document.getElementById("resultContent");
+    const resumenTexto = document.getElementById("resumenTexto");
+    const justificacionTexto = document.getElementById("justificacionTexto");
+    const temasChips = document.getElementById("temasChips");
+    const riskBadge = document.getElementById("riskBadge");
+    const resultArrowWrap = document.getElementById("resultArrowWrap");
+    const metaRiesgo = document.getElementById("metaRiesgo");
+    const metaEdad = document.getElementById("metaEdad");
+    const metaLetra = document.getElementById("metaLetra");
+    const tituloInput = document.getElementById("titulo");
+    const artistaInput = document.getElementById("artista");
+    const textoInput = document.getElementById("texto");
 
-  const { ok, data } = await postJson({
-    titulo,
-    artista,
-    texto,
-    buscar_letra: buscarLetra
-  });
+    function setStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = "status show " + type;
+    }
+    function setDebug(message) {
+      debugBox.textContent = message;
+      debugBox.className = message ? "debug show" : "debug";
+    }
+    function resetResults() {
+      resultEmpty.style.display = "block";
+      resultContent.style.display = "none";
+      resultArrowWrap.classList.remove("show");
+      resumenTexto.textContent = "—";
+      justificacionTexto.textContent = "—";
+      temasChips.innerHTML = "";
+      riskBadge.textContent = "Esperando análisis";
+      metaRiesgo.textContent = "—";
+      metaEdad.textContent = "—";
+      metaLetra.textContent = "—";
+    }
+    function renderChips(items) {
+      temasChips.innerHTML = "";
+      if (!items || !items.length) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = "Sin temas detectados";
+        temasChips.appendChild(chip);
+        return;
+      }
+      items.forEach(item => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = String(item);
+        temasChips.appendChild(chip);
+      });
+    }
+    function normalizeTopics(data) {
+      if (data?.temas?.themes && Array.isArray(data.temas.themes)) return data.temas.themes;
+      if (Array.isArray(data?.temas_detectados)) return data.temas_detectados;
+      return [];
+    }
+    function getValue(obj, keys, fallback = "No disponible") {
+      for (const key of keys) {
+        if (obj && obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== "") return obj[key];
+      }
+      return fallback;
+    }
+    async function postJson(body) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const text = await res.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch {}
+      return { ok: res.ok, status: res.status, text, data };
+    }
+    async function runAnalysis() {
+      const titulo = tituloInput.value.trim();
+      const artista = artistaInput.value.trim();
+      const texto = textoInput.value.trim();
+      const buscarLetra = document.getElementById("buscarLetra").checked;
+      const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
-  if (!ok || !data) {
-    estadoDiv.innerHTML = "Error al conectar con la API";
-    return;
-  }
+      if (!texto && !(titulo && artista)) {
+        setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
+        setDebug("");
+        return;
+      }
 
-  estadoDiv.innerHTML = "Análisis completado";
+      resetResults();
+      setStatus("Analizando canción... Si Render está dormido, esto puede tardar unos segundos.", "loading");
+      setDebug("Probando conexión con la API...");
 
-  // 🔥 PEGAR LETRA AUTOMÁTICAMENTE
-  if (data.letra_encontrada && data.letra_usada) {
-    textoInput.value = data.letra_usada;
-  }
+      try {
+        const payloads = [
+          { titulo, artista, texto, buscar_letra: buscarLetra, contexto_escolar: contextoEscolar },
+          { texto, titulo, artista, buscar_letra: buscarLetra },
+          { texto: texto || [titulo, artista].filter(Boolean).join(" - "), buscar_letra: buscarLetra }
+        ];
 
-  resultadoDiv.innerHTML = `
-    <h2>Resultado</h2>
-    <p><b>Resumen:</b> ${data.resumen}</p>
-    <p><b>Justificación:</b> ${data.justificacion}</p>
-    <p><b>Temas:</b> ${data.temas.join(", ")}</p>
-    <p><b>Riesgo:</b> ${data.riesgo}</p>
-    <p><b>Edad sugerida:</b> ${data.edad}</p>
-    <p><b>Letra encontrada:</b> ${data.letra_encontrada ? "Sí" : "No"}</p>
-  `;
-}
+        let final = null;
+        let lastError = "";
 
-</script>
+        for (const payload of payloads) {
+          const res = await postJson(payload);
+          if (res.ok && res.data) { final = res.data; break; }
+          lastError = "Status " + res.status + (res.text ? " | " + res.text.slice(0, 200) : "");
+        }
 
+        if (!final) throw new Error(lastError || "No hubo respuesta válida de la API.");
+
+        if (final.letra_usada && !textoInput.value.trim()) {
+          textoInput.value = final.letra_usada;
+        }
+
+        const resumen = getValue(final, ["resultado", "resumen", "summary", "orientacion", "nivel"], "Resultado disponible");
+        const justificacion = getValue(final, ["justificacion", "justificación", "reason", "explicacion", "explicación"], "Sin justificación disponible");
+        const riesgo = String(getValue(final, ["risk", "riesgo", "nivel_riesgo", "risk_score", "classification"], "Sin clasificar"));
+        const edad = String(getValue(final, ["edad_sugerida", "edad", "recommended_age"], "No especificada"));
+        const letra = getValue(final, ["letra_encontrada", "lyrics_found"], null);
+        const letraTexto = letra === true || letra === "true" ? "Sí" : letra === false || letra === "false" ? "No" : "No informado";
+
+        resumenTexto.textContent = resumen;
+        justificacionTexto.textContent = justificacion;
+        renderChips(normalizeTopics(final));
+        riskBadge.textContent = riesgo;
+        metaRiesgo.textContent = riesgo;
+        metaEdad.textContent = edad;
+        metaLetra.textContent = letraTexto;
+
+        resultEmpty.style.display = "none";
+        resultContent.style.display = "block";
+        resultArrowWrap.classList.add("show");
+
+        setStatus("Análisis completado correctamente.", "success");
+        setDebug(final.fuente_letra ? "Fuente de letra: " + final.fuente_letra : "");
+        document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        setStatus("No se pudo completar el análisis.", "error");
+        setDebug("Detalle técnico: " + error.message);
+        console.error(error);
+      }
+    }
+    form.addEventListener("submit", async (e) => { e.preventDefault(); await runAnalysis(); });
+    [tituloInput, artistaInput].forEach(input => {
+      input.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") { e.preventDefault(); await runAnalysis(); }
+      });
+    });
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      document.getElementById("buscarLetra").checked = true;
+      document.getElementById("contextoEscolar").checked = true;
+      statusBox.className = "status";
+      statusBox.textContent = "";
+      setDebug("");
+      resetResults();
+    });
+    resetResults();
+  </script>
 </body>
 </html>
