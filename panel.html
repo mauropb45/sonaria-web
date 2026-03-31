@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Panel | MejorarIA</title>
-<meta name="description" content="Panel principal de MejorarIA y acceso a SonarIA.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | MejorarIA</title>
+  <meta name="description" content="Analiza canciones y recibe orientación pedagógica con SonarIA.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
-      --text:#eef2f7; --muted:#9fb0c7; --muted-2:#8396af;
-      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff; --blue-soft:rgba(75,130,255,.12);
-      --shadow:0 24px 70px rgba(0,0,0,.34); --shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius-xl:28px; --radius-lg:22px; --max:1180px;
+      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
+      --text:#eef2f7; --muted:#9fb0c7; --green:#14d68f; --orange:#ff8a00; --orange2:#ff6500; --blue:#4b82ff; --red:#ff7272;
+      --shadow:0 24px 70px rgba(0,0,0,.34); --radius-xl:28px; --max:1180px;
     }
     *{box-sizing:border-box} html{scroll-behavior:smooth}
     body{
       margin:0; font-family:'Inter',sans-serif; color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at top left, rgba(255,138,0,.14), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.10), transparent 20%),
         radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
       overflow-x:hidden;
@@ -27,44 +27,117 @@
       background:
         linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+      z-index:0;
     }
-    a{color:inherit; text-decoration:none}
+    a{color:inherit;text-decoration:none}
     .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
-    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px; animation:fadeIn .8s ease;}
-    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
-    .brand-global:hover{transform:scale(1.05)}
-    .brand-global::after{content:""; position:absolute; inset:-10px; border-radius:20px; background:radial-gradient(circle, rgba(20,214,143,.25), transparent 70%); opacity:0; transition:opacity .3s ease; z-index:-1;}
-    .brand-global:hover::after{opacity:1}
-    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em; text-wrap:balance;}
+    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px;}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; transition:transform .25s ease}
+    .brand-global:hover{transform:scale(1.03)}
+    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
     .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
-    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
-    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:210px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
-    .btn-primary:hover{box-shadow:0 18px 38px rgba(255,138,0,.34)}
-    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
-    .btn-ghost:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
-    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
-    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800; line-height:1.8; letter-spacing:-.01em; opacity:.98;}
-    @keyframes fadeIn{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
-    @media (max-width:720px){.container{padding:24px 16px 72px}.btn{width:100%; max-width:340px}}
+    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800;}
+    .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
+    .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
+    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
+    .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
+    .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
+
+    .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
+    .tool,.side-card,.result{padding:28px;}
+    .tool-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;}
+    .tool-head h2,.result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .tag,.risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.82rem; font-weight:800; white-space:nowrap;}
+    .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
+    .form-grid{display:grid; gap:12px;}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .input,.textarea{
+      width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;
+      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .input:focus,.textarea:focus{
+      border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);
+    }
+    .textarea{min-height:210px; resize:vertical;}
+    .switches{display:grid; gap:10px; margin-top:2px;}
+    .switch{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green);}
+    .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
+    .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; min-width:180px; padding:15px 24px;
+      border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
+    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text);}
+    .status,.source-box,.error-box,.debug-box{
+      display:none; margin-top:10px; padding:12px 14px; border-radius:14px; line-height:1.55;
+    }
+    .status.show,.source-box.show,.error-box.show,.debug-box.show{display:block}
+    .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
+    .status.success{background:rgba(20,214,143,.08); border:1px solid rgba(20,214,143,.18); color:#d9fff0}
+    .status.error{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.18); color:#ffd7d7}
+    .source-box{background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff;}
+    .error-box{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.22); color:#ffd7d7;}
+    .debug-box{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); color:#cdd8e7; white-space:pre-wrap; font-size:.9rem}
+    .helper-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .helper-pill{
+      display:none; padding:9px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+      color:#dce7f6; font-size:.82rem; font-weight:700;
+    }
+    .helper-pill.show{display:inline-flex}
+    .helper-pill.green{border-color:rgba(20,214,143,.24); background:rgba(20,214,143,.08); color:#d9fff0}
+    .helper-pill.orange{border-color:rgba(255,138,0,.24); background:rgba(255,138,0,.08); color:#ffe0bf}
+    .helper-pill.blue{border-color:rgba(75,130,255,.24); background:rgba(75,130,255,.08); color:#dce8ff}
+
+    .side{display:grid; gap:18px;}
+    .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em; color:var(--orange)}
+    .side-card p{margin:0; color:var(--muted); line-height:1.72;}
+    .mini-list{margin:16px 0 0; display:grid; gap:12px;}
+    .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .mini-item strong{display:block; margin-bottom:6px;}
+    .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
+
+    .result-arrow-wrap{display:none; justify-content:center; margin-top:26px; margin-bottom:12px;}
+    .result-arrow-wrap.show{display:flex}
+    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); text-align:center; font-weight:900; animation:pulseArrow 1.1s ease-in-out infinite;}
+    .result-arrow .arrow-symbol{font-size:2.3rem; line-height:1;}
+    .result-arrow .arrow-text{font-size:.92rem; letter-spacing:.02em; text-transform:uppercase;}
+    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none; font-weight:800;}
+    @keyframes pulseArrow{0%,100%{opacity:1; transform:translateY(0)}50%{opacity:.55; transform:translateY(4px)}}
+
+    .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
+    .result-empty{color:var(--muted); line-height:1.8;}
+    .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
+    .result-box{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .result-box h4{margin:0 0 10px; font-size:1.05rem; letter-spacing:-.02em;}
+    .result-box p{margin:0; color:#d7e2f1; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
+    .chips{display:flex; flex-wrap:wrap; gap:8px;}
+    .chip{padding:8px 12px; border-radius:999px; background:rgba(75,130,255,.10); border:1px solid rgba(75,130,255,.20); color:#dce8ff; font-size:.88rem; font-weight:700;}
+    .meta-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+    .meta-card{padding:16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
+    .meta-card strong{display:block; margin-bottom:6px; font-size:.92rem; color:#cfdcf0;}
+    .meta-card span{color:#fff; font-weight:800; line-height:1.5;}
+    .stack{display:grid; gap:12px;}
+    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800;}
+
+    details{border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); padding:12px 14px;}
+    summary{cursor:pointer; font-weight:800; color:#dce7f6}
+    details pre{white-space:pre-wrap; color:#cdd8e7; font-size:.88rem; line-height:1.5; margin:10px 0 0}
+
+    @media (max-width:980px){.layout,.result-grid,.meta-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%}.tool,.side-card,.result{padding:22px}}
   </style>
-
-<style>
-.hero{text-align:center; margin-top:10px} .hero h1{margin:0 0 12px; font-size:clamp(2.4rem, 6vw, 4.4rem); line-height:.96; letter-spacing:-.05em} .hero p{max-width:760px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem}
-.grid{margin-top:34px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
-.tool{padding:24px; transition:transform .2s ease, border-color .2s ease} .tool:hover{transform:translateY(-4px); border-color:rgba(255,255,255,.14)}
-.tool h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em} .tool p{margin:0 0 18px; color:var(--muted); line-height:1.7}
-.tool:nth-child(1) h3{color:var(--orange)} .tool:nth-child(2) h3{color:var(--green)} .tool:nth-child(3) h3{color:var(--blue)}
-.history{margin-top:34px; padding:26px} .history h2{margin:0 0 12px; font-size:2rem; letter-spacing:-.04em} .history p{margin:0 0 18px; color:var(--muted); line-height:1.75}
-.history-list{display:grid; gap:12px}
-.history-item{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)}
-.history-item strong{display:block; margin-bottom:6px} .history-item span{color:#d1dceb; line-height:1.6}
-@media (max-width:980px){.grid{grid-template-columns:1fr}}
-</style></head>
-<body><div class="container">
-
+</head>
+<body>
+  <div class="container">
     <div class="header">
       <a href="index.html" class="brand-global">
         <div class="brand-main">Mejorar<span class="ia">IA</span></div>
@@ -72,12 +145,426 @@
       </a>
     </div>
 
-<section class="hero"><h1>Tu espacio en MejorarIA</h1><p>Desde aquí puedes entrar a SonarIA, revisar actividad reciente y prepararte para futuras herramientas construidas junto a docentes.</p></section>
-<section class="grid">
-<article class="tool card"><h3>Entrar a SonarIA</h3><p>Accede al análisis pedagógico de canciones y repertorio para contexto escolar.</p><a href="#" class="btn btn-primary">Abrir SonarIA</a></article>
-<article class="tool card"><h3>EnsayarIA</h3><p>Explora el futuro espacio para práctica musical, ensayo y acompañamiento del estudiante.</p><a href="register.html" class="btn btn-ghost">Quiero acceso anticipado</a></article>
-<article class="tool card"><h3>Proponer una solución</h3><p>Comparte una necesidad de tu asignatura para construir nuevas herramientas dentro de MejorarIA.</p><a href="register.html" class="btn btn-ghost">Proponer idea</a></article>
-</section>
-<section class="history card"><h2>Actividad y seguimiento</h2><p>Este espacio puede crecer para mostrar historial, observaciones, análisis guardados y trazabilidad del trabajo pedagógico.</p><div class="history-list"><div class="history-item"><strong>Último análisis</strong><span>Revisa aquí tu actividad más reciente dentro de SonarIA.</span></div><div class="history-item"><strong>Observaciones guardadas</strong><span>Centraliza comentarios, decisiones pedagógicas y uso del repertorio.</span></div><div class="history-item"><strong>Crecimiento futuro</strong><span>MejorarIA irá incorporando nuevas herramientas y espacios según necesidades reales docentes.</span></div></div></section>
-<div class="footer">MauRock · Mauricio José Pinto Basso</div>
-</div></body></html>
+    <section class="hero">
+      <div class="hero-badge">Interfaz real de SonarIA</div>
+      <h1>Analiza canciones con orientación pedagógica</h1>
+      <p>Ingresa título, artista o la letra completa y recibe una primera lectura útil para apoyar decisiones educativas con más claridad, criterio y rapidez.</p>
+    </section>
+
+    <section class="layout">
+      <section class="tool card">
+        <div class="tool-head">
+          <h2>Analizador SonarIA</h2>
+          <div class="tag">Conectado a API</div>
+        </div>
+        <p class="lead">Esta interfaz busca la letra automáticamente cuando corresponde, distingue entre texto manual y texto autocompletado, y entrega una lectura pedagógica inicial lista para revisar.</p>
+
+        <form id="analysisForm" class="form-grid">
+          <div class="row">
+            <input id="titulo" class="input" type="text" placeholder="Título de la canción">
+            <input id="artista" class="input" type="text" placeholder="Artista">
+          </div>
+
+          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o escribe el texto que quieres analizar..."></textarea>
+
+          <div class="helper-row">
+            <div id="pillAutoLyric" class="helper-pill green">Letra autocompletada</div>
+            <div id="pillManualText" class="helper-pill blue">Texto manual detectado</div>
+            <div id="pillFallback" class="helper-pill orange">Fallback inteligente activo</div>
+          </div>
+
+          <div class="switches">
+            <label class="switch">
+              <input id="buscarLetra" type="checkbox" checked>
+              <div>
+                <strong>Intentar buscar la letra automáticamente</strong>
+                <span>Si cambias de canción y el cuadro tenía una letra autocompletada anterior, SonarIA la limpiará antes de buscar la nueva.</span>
+              </div>
+            </label>
+
+            <label class="switch">
+              <input id="contextoEscolar" type="checkbox" checked>
+              <div>
+                <strong>Priorizar lectura en contexto escolar</strong>
+                <span>Orienta la respuesta hacia uso pedagógico, mediación y pertinencia educativa.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Analizar canción</button>
+            <button type="button" id="clearBtn" class="btn btn-ghost">Limpiar</button>
+          </div>
+
+          <div id="statusBox" class="status"></div>
+          <div id="sourceBox" class="source-box"></div>
+          <div id="errorBox" class="error-box"></div>
+          <div id="debugBox" class="debug-box"></div>
+        </form>
+      </section>
+
+      <aside class="side">
+        <div class="side-card card">
+          <h3>Qué hace SonarIA</h3>
+          <p>Ayuda a revisar repertorio, detectar señales sensibles y generar una primera orientación útil para decidir su uso pedagógico.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Menos tiempo planificando</strong>
+              <span>Acelera la lectura inicial del material antes de llevarlo al aula.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Más tiempo ensayando</strong>
+              <span>Libera tiempo para concentrarte en la práctica musical y el trabajo en clase.</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div id="resultArrowWrap" class="result-arrow-wrap">
+      <div class="result-arrow">
+        <div class="arrow-symbol">↓</div>
+        <div class="arrow-text">Resultado listo</div>
+        <div class="arrow-sub">SonarIA es más que esto: contiene traducción, contexto cultural, lectura implícita y más funciones en camino.</div>
+      </div>
+    </div>
+
+    <section class="result card">
+      <div class="result-top">
+        <h2>Resultado del análisis</h2>
+        <div id="riskBadge" class="risk">Esperando análisis</div>
+      </div>
+
+      <div id="resultEmpty" class="result-empty">
+        Cuando envíes una canción, aquí aparecerá una versión clara del resultado para el usuario.
+      </div>
+
+      <div id="resultContent" style="display:none;">
+        <div class="result-grid">
+          <div class="stack">
+            <div class="result-box">
+              <h4>Resumen general</h4>
+              <p id="resumenTexto">—</p>
+            </div>
+            <div class="result-box">
+              <h4>Temas o señales detectadas</h4>
+              <div id="temasChips" class="chips"></div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="result-box">
+              <h4>Justificación</h4>
+              <p id="justificacionTexto">—</p>
+            </div>
+            <div class="result-box">
+              <h4>Enfoque sugerido</h4>
+              <p id="enfoqueTexto">—</p>
+            </div>
+          </div>
+
+          <div class="result-box">
+            <h4>Datos clave</h4>
+            <div class="meta-grid">
+              <div class="meta-card"><strong>Riesgo</strong><span id="metaRiesgo">—</span></div>
+              <div class="meta-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
+              <div class="meta-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
+            </div>
+          </div>
+
+          <div class="result-box">
+            <h4>Observaciones pedagógicas</h4>
+            <div id="obsChips" class="chips"></div>
+          </div>
+        </div>
+
+        <details style="margin-top:16px;">
+          <summary>Ver detalle técnico</summary>
+          <pre id="debugDetails">—</pre>
+        </details>
+      </div>
+    </section>
+
+    <div class="footer">MauRock · Mauricio José Pinto Basso</div>
+  </div>
+
+  <script>
+    const API_URL = "https://sonaria-api.onrender.com/analizar";
+
+    const form = document.getElementById("analysisForm");
+    const clearBtn = document.getElementById("clearBtn");
+    const statusBox = document.getElementById("statusBox");
+    const sourceBox = document.getElementById("sourceBox");
+    const errorBox = document.getElementById("errorBox");
+    const debugBox = document.getElementById("debugBox");
+    const debugDetails = document.getElementById("debugDetails");
+    const resultEmpty = document.getElementById("resultEmpty");
+    const resultContent = document.getElementById("resultContent");
+    const resumenTexto = document.getElementById("resumenTexto");
+    const justificacionTexto = document.getElementById("justificacionTexto");
+    const enfoqueTexto = document.getElementById("enfoqueTexto");
+    const temasChips = document.getElementById("temasChips");
+    const obsChips = document.getElementById("obsChips");
+    const riskBadge = document.getElementById("riskBadge");
+    const resultArrowWrap = document.getElementById("resultArrowWrap");
+    const metaRiesgo = document.getElementById("metaRiesgo");
+    const metaEdad = document.getElementById("metaEdad");
+    const metaFuente = document.getElementById("metaFuente");
+    const tituloInput = document.getElementById("titulo");
+    const artistaInput = document.getElementById("artista");
+    const textoInput = document.getElementById("texto");
+    const pillAutoLyric = document.getElementById("pillAutoLyric");
+    const pillManualText = document.getElementById("pillManualText");
+    const pillFallback = document.getElementById("pillFallback");
+
+    let lastAutoFilledLyrics = "";
+    let lastAutoFillSongKey = "";
+    let lastSourceKind = "";
+
+    function songKey() {
+      return (tituloInput.value.trim().toLowerCase() + " | " + artistaInput.value.trim().toLowerCase()).trim();
+    }
+
+    function showPill(el, show) {
+      el.classList.toggle("show", !!show);
+    }
+
+    function syncPills() {
+      const text = textoInput.value.trim();
+      showPill(pillAutoLyric, !!lastAutoFilledLyrics && text === lastAutoFilledLyrics);
+      showPill(pillManualText, !!text && (!lastAutoFilledLyrics || text !== lastAutoFilledLyrics));
+      showPill(pillFallback, lastSourceKind === "fallback inteligente");
+    }
+
+    function maybeClearPreviousAutoLyrics() {
+      const currentKey = songKey();
+      const currentText = textoInput.value.trim();
+
+      if (
+        lastAutoFilledLyrics &&
+        currentText === lastAutoFilledLyrics &&
+        currentKey !== lastAutoFillSongKey
+      ) {
+        textoInput.value = "";
+        lastAutoFilledLyrics = "";
+        lastSourceKind = "";
+      }
+      syncPills();
+    }
+
+    tituloInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+    artistaInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+    textoInput.addEventListener("input", () => {
+      if (textoInput.value.trim() !== lastAutoFilledLyrics) {
+        lastSourceKind = lastSourceKind === "lyrics.ovh" ? "texto editado por usuario" : lastSourceKind;
+      }
+      syncPills();
+    });
+
+    function setStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = "status show " + type;
+    }
+    function setSource(message) {
+      sourceBox.textContent = message;
+      sourceBox.className = message ? "source-box show" : "source-box";
+    }
+    function setError(message) {
+      errorBox.textContent = message;
+      errorBox.className = message ? "error-box show" : "error-box";
+    }
+    function setDebug(value) {
+      if (!value) {
+        debugBox.textContent = "";
+        debugBox.className = "debug-box";
+        debugDetails.textContent = "—";
+        return;
+      }
+      const rendered = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      debugBox.textContent = rendered;
+      debugBox.className = "debug-box show";
+      debugDetails.textContent = rendered;
+    }
+    function resetResults() {
+      resultEmpty.style.display = "block";
+      resultContent.style.display = "none";
+      resultArrowWrap.classList.remove("show");
+      resumenTexto.textContent = "—";
+      justificacionTexto.textContent = "—";
+      enfoqueTexto.textContent = "—";
+      temasChips.innerHTML = "";
+      obsChips.innerHTML = "";
+      riskBadge.textContent = "Esperando análisis";
+      metaRiesgo.textContent = "—";
+      metaEdad.textContent = "—";
+      metaFuente.textContent = "—";
+    }
+    function renderChips(container, items, emptyLabel) {
+      container.innerHTML = "";
+      if (!items || !items.length) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = emptyLabel;
+        container.appendChild(chip);
+        return;
+      }
+      items.forEach(item => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = String(item);
+        container.appendChild(chip);
+      });
+    }
+    async function postJson(body) {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const text = await res.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch {}
+      return { ok: res.ok, status: res.status, text, data };
+    }
+
+    async function runAnalysis() {
+      maybeClearPreviousAutoLyrics();
+
+      const titulo = tituloInput.value.trim();
+      const artista = artistaInput.value.trim();
+      let texto = textoInput.value.trim();
+      const buscarLetra = document.getElementById("buscarLetra").checked;
+      const contextoEscolar = document.getElementById("contextoEscolar").checked;
+
+      if (!texto && !(titulo && artista)) {
+        setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
+        setError("Falta información mínima para hacer el análisis.");
+        setDebug("");
+        setSource("");
+        return;
+      }
+
+      resetResults();
+      setError("");
+      setSource("");
+      setDebug("");
+      setStatus("Analizando canción... Si cambiaste de canción, SonarIA ya limpió cualquier letra autocompletada anterior.", "loading");
+
+      try {
+        const payload = {
+          titulo,
+          artista,
+          texto,
+          buscar_letra: buscarLetra,
+          contexto_escolar: contextoEscolar
+        };
+
+        const res = await postJson(payload);
+
+        if (!res.ok || !res.data) {
+          setStatus("No se pudo completar el análisis.", "error");
+          setError("ERROR DE API: la respuesta no fue válida.");
+          setDebug({
+            http_status: res.status,
+            raw_text_preview: (res.text || "").slice(0, 500)
+          });
+          return;
+        }
+
+        const final = res.data;
+
+        if (final.letra_encontrada && final.letra_usada) {
+          textoInput.value = final.letra_usada;
+          lastAutoFilledLyrics = final.letra_usada.trim();
+          lastAutoFillSongKey = songKey();
+          lastSourceKind = "lyrics.ovh";
+        } else if (final.fallback_inteligente) {
+          lastAutoFilledLyrics = "";
+          lastSourceKind = "fallback inteligente";
+        } else if ((textoInput.value.trim().length >= 20)) {
+          lastAutoFilledLyrics = "";
+          lastSourceKind = "texto pegado por usuario";
+        }
+
+        resumenTexto.textContent = final.resumen || final.resultado || "Sin resumen";
+        justificacionTexto.textContent = final.justificacion || "Sin justificación";
+        enfoqueTexto.textContent = final.enfoque
+          ? `${final.enfoque.lectura_sugerida || "—"} · ${final.enfoque.uso_recomendado || "—"} · ${final.enfoque.fuente_de_sentido || "—"}`
+          : "Sin enfoque disponible";
+        renderChips(temasChips, final.temas || final.temas_detectados || [], "Sin temas detectados");
+        renderChips(obsChips, final.observaciones || [], "Sin observaciones adicionales");
+
+        riskBadge.textContent = String(final.riesgo ?? final.risk ?? "Sin dato");
+        metaRiesgo.textContent = String(final.riesgo ?? final.risk ?? "—");
+        metaEdad.textContent = String(final.edad ?? final.edad_sugerida ?? "—");
+        metaFuente.textContent = final.fuente_letra || "desconocida";
+
+        resultEmpty.style.display = "none";
+        resultContent.style.display = "block";
+        resultArrowWrap.classList.add("show");
+
+        if (final.fuente_letra === "lyrics.ovh") {
+          setSource("Letra encontrada automáticamente ✔ Fuente: lyrics.ovh");
+        } else if (final.fuente_letra === "texto pegado por usuario") {
+          setSource("Se analizó el texto pegado manualmente.");
+        } else if (final.fallback_inteligente) {
+          setSource("No se encontró letra real. SonarIA usó análisis inteligente para esta canción.");
+        } else {
+          setSource("Análisis realizado.");
+        }
+
+        setStatus("Análisis completado correctamente.", "success");
+        setDebug({
+          backend_version: final.backend_version || "sin versión",
+          letra_encontrada: final.letra_encontrada,
+          fuente_letra: final.fuente_letra,
+          fallback_inteligente: final.fallback_inteligente,
+          enfoque: final.enfoque || {},
+          observaciones: final.observaciones || [],
+          debug: final.debug || {}
+        });
+
+        syncPills();
+        document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        setStatus("No se pudo completar el análisis.", "error");
+        setError("ERROR DE FRONTEND O RED: revisa la conexión o el endpoint.");
+        setDebug({ exception: String(error) });
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await runAnalysis();
+    });
+
+    [tituloInput, artistaInput].forEach(input => {
+      input.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          await runAnalysis();
+        }
+      });
+    });
+
+    clearBtn.addEventListener("click", () => {
+      form.reset();
+      document.getElementById("buscarLetra").checked = true;
+      document.getElementById("contextoEscolar").checked = true;
+      statusBox.className = "status";
+      statusBox.textContent = "";
+      setError("");
+      setSource("");
+      setDebug("");
+      lastAutoFilledLyrics = "";
+      lastAutoFillSongKey = "";
+      lastSourceKind = "";
+      resetResults();
+      syncPills();
+    });
+
+    resetResults();
+    syncPills();
+  </script>
+</body>
+</html>
