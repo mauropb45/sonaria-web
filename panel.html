@@ -3,286 +3,371 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | MejorarIA</title>
-  <meta name="description" content="Analiza canciones y recibe orientación pedagógica con SonarIA.">
+  <title>SonarIA | Dashboard escolar</title>
+  <meta name="description" content="SonarIA - Evaluador pedagógico musical.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
-      --text:#eef2f7; --muted:#9fb0c7; --green:#14d68f; --orange:#ff8a00; --orange2:#ff6500; --blue:#4b82ff; --red:#ff7272;
-      --shadow:0 24px 70px rgba(0,0,0,.34); --radius-xl:28px; --max:1180px;
+      --bg:#06101b;
+      --bg2:#0a1627;
+      --panel:rgba(255,255,255,.05);
+      --panel-strong:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.10);
+      --text:#eef2f7;
+      --muted:#9fb0c7;
+      --blue:#4b82ff;
+      --green:#19d28d;
+      --yellow:#f7b944;
+      --red:#ff6b6b;
+      --orange:#ff8a00;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+      --radius:24px;
+      --max:1380px;
     }
-    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
-      margin:0; font-family:'Inter',sans-serif; color:var(--text);
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,138,0,.14), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.10), transparent 20%),
+        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
         radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
-      overflow-x:hidden;
+      min-height:100vh;
     }
     body::before{
-      content:""; position:fixed; inset:0; pointer-events:none;
+      content:"";
+      position:fixed; inset:0; pointer-events:none;
       background:
         linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
       background-size:38px 38px;
       mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-      z-index:0;
     }
     a{color:inherit;text-decoration:none}
-    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
-    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px;}
-    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; transition:transform .25s ease}
-    .brand-global:hover{transform:scale(1.03)}
-    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
-    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
-    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800;}
-    .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
-    .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
-    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
-    .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
-    .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
-
-    .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
-    .card{background:linear-gradient(180deg, var(--panel), var(--panel2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
-    .tool,.side-card,.result{padding:28px;}
-    .tool-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;}
-    .tool-head h2,.result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
-    .tag,.risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.82rem; font-weight:800; white-space:nowrap;}
-    .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
-    .form-grid{display:grid; gap:12px;}
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-    .input,.textarea{
-      width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;
+    .container{
+      position:relative; z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:24px 22px 70px;
+    }
+    .header{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .brand-main{
+      font-size:clamp(2.4rem, 5vw, 4rem);
+      line-height:.95; font-weight:900; letter-spacing:-.06em; margin:0;
+    }
+    .brand-main .ia{color:var(--green)}
+    .brand-sub{color:#d7fff0; font-weight:800}
+    .shell{
+      display:grid;
+      grid-template-columns:420px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{padding:24px}
+    .panel h2,.panel h3{margin:0}
+    .muted{color:var(--muted)}
+    .stack{display:grid; gap:14px}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .input,.textarea,.select{
+      width:100%;
+      padding:15px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font:inherit;
+      outline:none;
       transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
     }
-    .input:focus,.textarea:focus{
-      border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);
+    .input:focus,.textarea:focus,.select:focus{
+      border-color:rgba(75,130,255,.38);
+      background:rgba(255,255,255,.07);
+      box-shadow:0 0 0 4px rgba(75,130,255,.10);
     }
-    .textarea{min-height:210px; resize:vertical;}
-    .switches{display:grid; gap:10px; margin-top:2px;}
-    .switch{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green);}
-    .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
-    .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
-    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+    .textarea{min-height:200px; resize:vertical}
+    .helper-row{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{
+      display:none; align-items:center; padding:8px 12px; border-radius:999px;
+      font-size:.82rem; font-weight:800;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+    .pill.show{display:inline-flex}
+    .pill.green{background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24); color:#d9fff0}
+    .pill.blue{background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.24); color:#dce8ff}
+    .pill.orange{background:rgba(255,138,0,.1); border-color:rgba(255,138,0,.24); color:#ffe0bf}
+    .switch{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green)}
+    .switch strong{display:block; margin-bottom:4px}
+    .switch span{display:block; color:var(--muted); font-size:.93rem; line-height:1.55}
+    .actions{display:grid; grid-template-columns:1fr 1fr; gap:12px}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; min-width:180px; padding:15px 24px;
-      border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; cursor:pointer;
-      transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:50px; padding:14px 18px; border:none; cursor:pointer;
+      border-radius:18px; font:inherit; font-weight:800;
+      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
     }
     .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
-    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text);}
-    .status,.source-box,.error-box,.debug-box{
-      display:none; margin-top:10px; padding:12px 14px; border-radius:14px; line-height:1.55;
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),#ff6700);
+      color:#111827;
+      box-shadow:0 12px 28px rgba(255,138,0,.28);
     }
-    .status.show,.source-box.show,.error-box.show,.debug-box.show{display:block}
+    .btn-ghost{
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .status{
+      display:none;
+      padding:12px 14px; border-radius:14px; line-height:1.55;
+      font-size:.95rem;
+    }
+    .status.show{display:block}
     .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
-    .status.success{background:rgba(20,214,143,.08); border:1px solid rgba(20,214,143,.18); color:#d9fff0}
-    .status.error{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.18); color:#ffd7d7}
-    .source-box{background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff;}
-    .error-box{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.22); color:#ffd7d7;}
-    .debug-box{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); color:#cdd8e7; white-space:pre-wrap; font-size:.9rem}
-    .helper-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .helper-pill{
-      display:none; padding:9px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
-      color:#dce7f6; font-size:.82rem; font-weight:700;
+    .status.success{background:rgba(25,210,141,.08); border:1px solid rgba(25,210,141,.18); color:#d9fff0}
+    .status.error{background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.18); color:#ffd7d7}
+    .right-col{display:grid; gap:18px}
+    .summary-card{
+      display:grid; grid-template-columns:110px 1fr; gap:16px; align-items:center;
     }
-    .helper-pill.show{display:inline-flex}
-    .helper-pill.green{border-color:rgba(20,214,143,.24); background:rgba(20,214,143,.08); color:#d9fff0}
-    .helper-pill.orange{border-color:rgba(255,138,0,.24); background:rgba(255,138,0,.08); color:#ffe0bf}
-    .helper-pill.blue{border-color:rgba(75,130,255,.24); background:rgba(75,130,255,.08); color:#dce8ff}
-
-    .side{display:grid; gap:18px;}
-    .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em; color:var(--orange)}
-    .side-card p{margin:0; color:var(--muted); line-height:1.72;}
-    .mini-list{margin:16px 0 0; display:grid; gap:12px;}
-    .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .mini-item strong{display:block; margin-bottom:6px;}
-    .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
-
-    .result-arrow-wrap{display:none; justify-content:center; margin-top:26px; margin-bottom:12px;}
-    .result-arrow-wrap.show{display:flex}
-    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); text-align:center; font-weight:900; animation:pulseArrow 1.1s ease-in-out infinite;}
-    .result-arrow .arrow-symbol{font-size:2.3rem; line-height:1;}
-    .result-arrow .arrow-text{font-size:.92rem; letter-spacing:.02em; text-transform:uppercase;}
-    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none; font-weight:800;}
-    @keyframes pulseArrow{0%,100%{opacity:1; transform:translateY(0)}50%{opacity:.55; transform:translateY(4px)}}
-
-    .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
-    .result-empty{color:var(--muted); line-height:1.8;}
-    .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
-    .result-box{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .result-box h4{margin:0 0 10px; font-size:1.05rem; letter-spacing:-.02em;}
-    .result-box p{margin:0; color:#d7e2f1; line-height:1.7; white-space:pre-wrap; word-break:break-word;}
-    .chips{display:flex; flex-wrap:wrap; gap:8px;}
-    .chip{padding:8px 12px; border-radius:999px; background:rgba(75,130,255,.10); border:1px solid rgba(75,130,255,.20); color:#dce8ff; font-size:.88rem; font-weight:700;}
-    .meta-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
-    .meta-card{padding:16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .meta-card strong{display:block; margin-bottom:6px; font-size:.92rem; color:#cfdcf0;}
-    .meta-card span{color:#fff; font-weight:800; line-height:1.5;}
-    .stack{display:grid; gap:12px;}
-    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800;}
-
-    details{border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); padding:12px 14px;}
-    summary{cursor:pointer; font-weight:800; color:#dce7f6}
-    details pre{white-space:pre-wrap; color:#cdd8e7; font-size:.88rem; line-height:1.5; margin:10px 0 0}
-
-    @media (max-width:980px){.layout,.result-grid,.meta-grid{grid-template-columns:1fr}}
-    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%}.tool,.side-card,.result{padding:22px}}
+    .summary-icon{
+      width:96px; height:96px; border-radius:26px; display:flex; align-items:center; justify-content:center;
+      font-size:3rem; font-weight:900;
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09);
+    }
+    .summary-main{display:grid; gap:8px}
+    .result-title{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      font-size:clamp(1.35rem, 2.2vw, 2rem); font-weight:900; letter-spacing:-.03em;
+    }
+    .badge{
+      padding:8px 12px; border-radius:999px; font-size:.85rem; font-weight:800;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+    }
+    .badge.green{color:#d9fff0; background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24)}
+    .badge.yellow{color:#fff1cc; background:rgba(247,185,68,.12); border-color:rgba(247,185,68,.26)}
+    .badge.red{color:#ffd9d9; background:rgba(255,107,107,.12); border-color:rgba(255,107,107,.26)}
+    .badge.blue{color:#dce8ff; background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.22)}
+    .cards-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:18px}
+    .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+    .mini-card{
+      padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+    }
+    .mini-card strong{display:block; margin-bottom:6px; color:#cfdcf0; font-size:.92rem}
+    .mini-card span{font-weight:800}
+    .box{
+      padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+    }
+    .box h4{margin:0 0 10px; font-size:1.02rem}
+    .box p{
+      margin:0; white-space:pre-wrap; line-height:1.72; color:#d7e2f1;
+    }
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      padding:8px 12px; border-radius:999px;
+      font-size:.88rem; font-weight:700;
+      color:#dce8ff;
+      background:rgba(75,130,255,.1);
+      border:1px solid rgba(75,130,255,.2);
+    }
+    .risk-block{display:grid; gap:12px}
+    .meter-label{display:flex; justify-content:space-between; gap:12px; font-size:.93rem; color:#d7e2f1}
+    .meter-track{
+      width:100%; height:11px; border-radius:999px; overflow:hidden;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .meter-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
+      transition:width .35s ease;
+    }
+    .context-list{display:grid; gap:10px}
+    .context-item{
+      padding:14px 16px; border-radius:16px;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+      color:#d7e2f1; line-height:1.6;
+    }
+    .empty{
+      color:var(--muted); line-height:1.8;
+    }
+    .footer{margin-top:32px; text-align:center; color:#d7e2f1; font-size:1.02rem; font-weight:800}
+    @media (max-width:1180px){
+      .shell{grid-template-columns:1fr}
+      .cards-grid,.mini-grid{grid-template-columns:1fr}
+    }
+    @media (max-width:720px){
+      .container{padding:18px 14px 56px}
+      .row,.actions{grid-template-columns:1fr}
+      .summary-card{grid-template-columns:1fr}
+      .summary-icon{width:72px;height:72px;border-radius:20px}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <a href="index.html" class="brand-global">
-        <div class="brand-main">Mejorar<span class="ia">IA</span></div>
-        <div class="brand-sub">IA aplicada a educación musical</div>
+    <header class="header">
+      <a href="index.html" class="brand">
+        <h1 class="brand-main">Sonar<span class="ia">IA</span></h1>
+        <div class="brand-sub">Evaluador pedagógico musical</div>
       </a>
-    </div>
+    </header>
 
-    <section class="hero">
-      <div class="hero-badge">Interfaz real de SonarIA</div>
-      <h1>Analiza canciones con orientación pedagógica</h1>
-      <p>Ingresa título, artista o la letra completa y recibe una primera lectura útil para apoyar decisiones educativas con más claridad, criterio y rapidez.</p>
-    </section>
-
-    <section class="layout">
-      <section class="tool card">
-        <div class="tool-head">
-          <h2>Analizador SonarIA</h2>
-          <div class="tag">Conectado a API</div>
+    <section class="shell">
+      <aside class="card panel stack">
+        <div>
+          <h2 style="font-size:1.8rem; letter-spacing:-.03em;">Dashboard escolar</h2>
+          <p class="muted" style="line-height:1.75; margin:10px 0 0;">
+            Una interfaz web más parecida a la versión local: clara, pedagógica y sin mostrar código técnico al usuario.
+          </p>
         </div>
-        <p class="lead">Esta interfaz busca la letra automáticamente cuando corresponde, distingue entre texto manual y texto autocompletado, y entrega una lectura pedagógica inicial lista para revisar.</p>
 
-        <form id="analysisForm" class="form-grid">
+        <form id="analysisForm" class="stack">
           <div class="row">
             <input id="titulo" class="input" type="text" placeholder="Título de la canción">
             <input id="artista" class="input" type="text" placeholder="Artista">
           </div>
 
-          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o escribe el texto que quieres analizar..."></textarea>
+          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o deja que SonarIA la busque automáticamente..."></textarea>
 
           <div class="helper-row">
-            <div id="pillAutoLyric" class="helper-pill green">Letra autocompletada</div>
-            <div id="pillManualText" class="helper-pill blue">Texto manual detectado</div>
-            <div id="pillFallback" class="helper-pill orange">Fallback inteligente activo</div>
+            <div id="pillAutoLyric" class="pill green">Letra autocompletada</div>
+            <div id="pillManualText" class="pill blue">Texto manual detectado</div>
+            <div id="pillFallback" class="pill orange">Análisis por fallback</div>
           </div>
 
-          <div class="switches">
-            <label class="switch">
-              <input id="buscarLetra" type="checkbox" checked>
-              <div>
-                <strong>Intentar buscar la letra automáticamente</strong>
-                <span>Si cambias de canción y el cuadro tenía una letra autocompletada anterior, SonarIA la limpiará antes de buscar la nueva.</span>
-              </div>
-            </label>
+          <label class="switch">
+            <input id="buscarLetra" type="checkbox" checked>
+            <div>
+              <strong>Buscar la letra automáticamente</strong>
+              <span>Si cambias de canción, SonarIA limpia la letra autocompletada anterior antes de buscar la nueva.</span>
+            </div>
+          </label>
 
-            <label class="switch">
-              <input id="contextoEscolar" type="checkbox" checked>
-              <div>
-                <strong>Priorizar lectura en contexto escolar</strong>
-                <span>Orienta la respuesta hacia uso pedagógico, mediación y pertinencia educativa.</span>
-              </div>
-            </label>
-          </div>
+          <label class="switch">
+            <input id="contextoEscolar" type="checkbox" checked>
+            <div>
+              <strong>Priorizar contexto escolar</strong>
+              <span>Da prioridad a mediación docente, pertinencia educativa y uso pedagógico.</span>
+            </div>
+          </label>
 
           <div class="actions">
-            <button type="submit" class="btn btn-primary">Analizar canción</button>
-            <button type="button" id="clearBtn" class="btn btn-ghost">Limpiar</button>
+            <button id="analyzeBtn" type="submit" class="btn btn-primary">Analizar canción</button>
+            <button id="clearBtn" type="button" class="btn btn-ghost">Limpiar</button>
           </div>
 
           <div id="statusBox" class="status"></div>
-          <div id="sourceBox" class="source-box"></div>
-          <div id="errorBox" class="error-box"></div>
-          <div id="debugBox" class="debug-box"></div>
         </form>
-      </section>
-
-      <aside class="side">
-        <div class="side-card card">
-          <h3>Qué hace SonarIA</h3>
-          <p>Ayuda a revisar repertorio, detectar señales sensibles y generar una primera orientación útil para decidir su uso pedagógico.</p>
-          <div class="mini-list">
-            <div class="mini-item">
-              <strong>Menos tiempo planificando</strong>
-              <span>Acelera la lectura inicial del material antes de llevarlo al aula.</span>
-            </div>
-            <div class="mini-item">
-              <strong>Más tiempo ensayando</strong>
-              <span>Libera tiempo para concentrarte en la práctica musical y el trabajo en clase.</span>
-            </div>
-          </div>
-        </div>
       </aside>
-    </section>
 
-    <div id="resultArrowWrap" class="result-arrow-wrap">
-      <div class="result-arrow">
-        <div class="arrow-symbol">↓</div>
-        <div class="arrow-text">Resultado listo</div>
-        <div class="arrow-sub">SonarIA es más que esto: contiene traducción, contexto cultural, lectura implícita y más funciones en camino.</div>
-      </div>
-    </div>
-
-    <section class="result card">
-      <div class="result-top">
-        <h2>Resultado del análisis</h2>
-        <div id="riskBadge" class="risk">Esperando análisis</div>
-      </div>
-
-      <div id="resultEmpty" class="result-empty">
-        Cuando envíes una canción, aquí aparecerá una versión clara del resultado para el usuario.
-      </div>
-
-      <div id="resultContent" style="display:none;">
-        <div class="result-grid">
-          <div class="stack">
-            <div class="result-box">
-              <h4>Resumen general</h4>
-              <p id="resumenTexto">—</p>
-            </div>
-            <div class="result-box">
-              <h4>Temas o señales detectadas</h4>
-              <div id="temasChips" class="chips"></div>
-            </div>
+      <main class="right-col">
+        <section class="card panel">
+          <div id="summaryEmpty" class="empty">
+            Aquí verás un resultado más parecido al dashboard local: estado general, edad sugerida, justificación, riesgo y señales detectadas.
           </div>
 
-          <div class="stack">
-            <div class="result-box">
-              <h4>Justificación</h4>
-              <p id="justificacionTexto">—</p>
+          <div id="summaryContent" style="display:none;">
+            <div class="summary-card">
+              <div id="summaryIcon" class="summary-icon">—</div>
+              <div class="summary-main">
+                <div class="result-title">
+                  <span id="resultTitle">Esperando análisis</span>
+                  <span id="resultBadge" class="badge blue">Sin datos</span>
+                </div>
+                <div id="songMeta" class="muted">—</div>
+                <div id="mainJustificacion" style="line-height:1.75; color:#d7e2f1;">—</div>
+              </div>
             </div>
-            <div class="result-box">
-              <h4>Enfoque sugerido</h4>
-              <p id="enfoqueTexto">—</p>
+
+            <div class="mini-grid" style="margin-top:18px;">
+              <div class="mini-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
+              <div class="mini-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
+              <div class="mini-card"><strong>Lectura sugerida</strong><span id="metaLectura">—</span></div>
             </div>
           </div>
+        </section>
 
-          <div class="result-box">
-            <h4>Datos clave</h4>
-            <div class="meta-grid">
-              <div class="meta-card"><strong>Riesgo</strong><span id="metaRiesgo">—</span></div>
-              <div class="meta-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
-              <div class="meta-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
+        <section class="cards-grid">
+          <section class="card panel">
+            <div class="stack">
+              <div class="box">
+                <h4>Resumen pedagógico</h4>
+                <p id="resumenTexto">—</p>
+              </div>
+
+              <div class="box">
+                <h4>Temas detectados</h4>
+                <div id="temasChips" class="chips"></div>
+              </div>
+
+              <div class="box">
+                <h4>Enfoque sugerido</h4>
+                <p id="enfoqueTexto">—</p>
+              </div>
+
+              <div class="box">
+                <h4>Observaciones pedagógicas</h4>
+                <div id="obsChips" class="chips"></div>
+              </div>
             </div>
-          </div>
+          </section>
 
-          <div class="result-box">
-            <h4>Observaciones pedagógicas</h4>
-            <div id="obsChips" class="chips"></div>
-          </div>
-        </div>
+          <section class="card panel">
+            <div class="stack">
+              <div class="box">
+                <h4>Semáforo de riesgo</h4>
+                <div class="risk-block">
+                  <div>
+                    <div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div>
+                    <div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div>
+                  </div>
+                  <div>
+                    <div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div>
+                    <div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div>
+                  </div>
+                  <div>
+                    <div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div>
+                    <div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div>
+                  </div>
+                </div>
+              </div>
 
-        <details style="margin-top:16px;">
-          <summary>Ver detalle técnico</summary>
-          <pre id="debugDetails">—</pre>
-        </details>
-      </div>
+              <div class="box">
+                <h4>Contextos detectados</h4>
+                <div id="contextList" class="context-list">
+                  <div class="empty">Cuando analices una canción, aquí aparecerán señales y observaciones en lenguaje claro.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
     </section>
 
     <div class="footer">MauRock · Mauricio José Pinto Basso</div>
@@ -292,59 +377,69 @@
     const API_URL = "https://sonaria-api.onrender.com/analizar";
 
     const form = document.getElementById("analysisForm");
+    const analyzeBtn = document.getElementById("analyzeBtn");
     const clearBtn = document.getElementById("clearBtn");
     const statusBox = document.getElementById("statusBox");
-    const sourceBox = document.getElementById("sourceBox");
-    const errorBox = document.getElementById("errorBox");
-    const debugBox = document.getElementById("debugBox");
-    const debugDetails = document.getElementById("debugDetails");
-    const resultEmpty = document.getElementById("resultEmpty");
-    const resultContent = document.getElementById("resultContent");
-    const resumenTexto = document.getElementById("resumenTexto");
-    const justificacionTexto = document.getElementById("justificacionTexto");
-    const enfoqueTexto = document.getElementById("enfoqueTexto");
-    const temasChips = document.getElementById("temasChips");
-    const obsChips = document.getElementById("obsChips");
-    const riskBadge = document.getElementById("riskBadge");
-    const resultArrowWrap = document.getElementById("resultArrowWrap");
-    const metaRiesgo = document.getElementById("metaRiesgo");
-    const metaEdad = document.getElementById("metaEdad");
-    const metaFuente = document.getElementById("metaFuente");
+
     const tituloInput = document.getElementById("titulo");
     const artistaInput = document.getElementById("artista");
     const textoInput = document.getElementById("texto");
+
     const pillAutoLyric = document.getElementById("pillAutoLyric");
     const pillManualText = document.getElementById("pillManualText");
     const pillFallback = document.getElementById("pillFallback");
+
+    const summaryEmpty = document.getElementById("summaryEmpty");
+    const summaryContent = document.getElementById("summaryContent");
+    const summaryIcon = document.getElementById("summaryIcon");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultBadge = document.getElementById("resultBadge");
+    const songMeta = document.getElementById("songMeta");
+    const mainJustificacion = document.getElementById("mainJustificacion");
+
+    const metaEdad = document.getElementById("metaEdad");
+    const metaFuente = document.getElementById("metaFuente");
+    const metaLectura = document.getElementById("metaLectura");
+    const resumenTexto = document.getElementById("resumenTexto");
+    const enfoqueTexto = document.getElementById("enfoqueTexto");
+    const temasChips = document.getElementById("temasChips");
+    const obsChips = document.getElementById("obsChips");
+    const contextList = document.getElementById("contextList");
+
+    const riskPercent = document.getElementById("riskPercent");
+    const riskSensitive = document.getElementById("riskSensitive");
+    const riskSchool = document.getElementById("riskSchool");
+    const riskTotalFill = document.getElementById("riskTotalFill");
+    const riskSensitiveFill = document.getElementById("riskSensitiveFill");
+    const riskSchoolFill = document.getElementById("riskSchoolFill");
 
     let lastAutoFilledLyrics = "";
     let lastAutoFillSongKey = "";
     let lastSourceKind = "";
 
-    function songKey() {
+    function songKey(){
       return (tituloInput.value.trim().toLowerCase() + " | " + artistaInput.value.trim().toLowerCase()).trim();
     }
 
-    function showPill(el, show) {
+    function clamp(n, min, max){
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function showPill(el, show){
       el.classList.toggle("show", !!show);
     }
 
-    function syncPills() {
+    function syncPills(){
       const text = textoInput.value.trim();
       showPill(pillAutoLyric, !!lastAutoFilledLyrics && text === lastAutoFilledLyrics);
       showPill(pillManualText, !!text && (!lastAutoFilledLyrics || text !== lastAutoFilledLyrics));
       showPill(pillFallback, lastSourceKind === "fallback inteligente");
     }
 
-    function maybeClearPreviousAutoLyrics() {
+    function maybeClearPreviousAutoLyrics(){
       const currentKey = songKey();
       const currentText = textoInput.value.trim();
-
-      if (
-        lastAutoFilledLyrics &&
-        currentText === lastAutoFilledLyrics &&
-        currentKey !== lastAutoFillSongKey
-      ) {
+      if (lastAutoFilledLyrics && currentText === lastAutoFilledLyrics && currentKey !== lastAutoFillSongKey){
         textoInput.value = "";
         lastAutoFilledLyrics = "";
         lastSourceKind = "";
@@ -355,79 +450,122 @@
     tituloInput.addEventListener("input", maybeClearPreviousAutoLyrics);
     artistaInput.addEventListener("input", maybeClearPreviousAutoLyrics);
     textoInput.addEventListener("input", () => {
-      if (textoInput.value.trim() !== lastAutoFilledLyrics) {
-        lastSourceKind = lastSourceKind === "lyrics.ovh" ? "texto editado por usuario" : lastSourceKind;
+      if (textoInput.value.trim() !== lastAutoFilledLyrics && lastSourceKind === "lyrics.ovh"){
+        lastSourceKind = "texto editado por usuario";
       }
       syncPills();
     });
 
-    function setStatus(message, type) {
+    function setStatus(message, type){
       statusBox.textContent = message;
       statusBox.className = "status show " + type;
     }
-    function setSource(message) {
-      sourceBox.textContent = message;
-      sourceBox.className = message ? "source-box show" : "source-box";
+
+    function clearStatus(){
+      statusBox.textContent = "";
+      statusBox.className = "status";
     }
-    function setError(message) {
-      errorBox.textContent = message;
-      errorBox.className = message ? "error-box show" : "error-box";
-    }
-    function setDebug(value) {
-      if (!value) {
-        debugBox.textContent = "";
-        debugBox.className = "debug-box";
-        debugDetails.textContent = "—";
-        return;
-      }
-      const rendered = typeof value === "string" ? value : JSON.stringify(value, null, 2);
-      debugBox.textContent = rendered;
-      debugBox.className = "debug-box show";
-      debugDetails.textContent = rendered;
-    }
-    function resetResults() {
-      resultEmpty.style.display = "block";
-      resultContent.style.display = "none";
-      resultArrowWrap.classList.remove("show");
+
+    function resetResults(){
+      summaryEmpty.style.display = "block";
+      summaryContent.style.display = "none";
+      summaryIcon.textContent = "—";
+      resultTitle.textContent = "Esperando análisis";
+      resultBadge.textContent = "Sin datos";
+      resultBadge.className = "badge blue";
+      songMeta.textContent = "—";
+      mainJustificacion.textContent = "—";
+      metaEdad.textContent = "—";
+      metaFuente.textContent = "—";
+      metaLectura.textContent = "—";
       resumenTexto.textContent = "—";
-      justificacionTexto.textContent = "—";
       enfoqueTexto.textContent = "—";
       temasChips.innerHTML = "";
       obsChips.innerHTML = "";
-      riskBadge.textContent = "Esperando análisis";
-      metaRiesgo.textContent = "—";
-      metaEdad.textContent = "—";
-      metaFuente.textContent = "—";
+      contextList.innerHTML = '<div class="empty">Cuando analices una canción, aquí aparecerán señales y observaciones en lenguaje claro.</div>';
+      setMeter(riskTotalFill, riskPercent, 0);
+      setMeter(riskSensitiveFill, riskSensitive, 0);
+      setMeter(riskSchoolFill, riskSchool, 0);
     }
-    function renderChips(container, items, emptyLabel) {
+
+    function setMeter(fillEl, labelEl, value){
+      const clean = clamp(Math.round(Number(value) || 0), 0, 100);
+      fillEl.style.width = clean + "%";
+      labelEl.textContent = clean + "%";
+    }
+
+    function renderChips(container, items, fallbackText){
       container.innerHTML = "";
-      if (!items || !items.length) {
+      const arr = Array.isArray(items) ? items : [];
+      if (!arr.length){
         const chip = document.createElement("div");
         chip.className = "chip";
-        chip.textContent = emptyLabel;
+        chip.textContent = fallbackText;
         container.appendChild(chip);
         return;
       }
-      items.forEach(item => {
+      arr.forEach(item => {
         const chip = document.createElement("div");
         chip.className = "chip";
         chip.textContent = String(item);
         container.appendChild(chip);
       });
     }
-    async function postJson(body) {
+
+    function renderContext(items){
+      contextList.innerHTML = "";
+      const arr = Array.isArray(items) ? items.filter(Boolean) : [];
+      if (!arr.length){
+        contextList.innerHTML = '<div class="empty">No se detectaron observaciones adicionales para mostrar.</div>';
+        return;
+      }
+      arr.forEach(item => {
+        const box = document.createElement("div");
+        box.className = "context-item";
+        box.textContent = String(item);
+        contextList.appendChild(box);
+      });
+    }
+
+    function classifyResult(text){
+      const base = String(text || "").toLowerCase();
+      if (base.includes("no recomendada") || base.includes("contenido sensible") || base.includes("no apta")) {
+        return { emoji:"🔴", badge:"No apta / sensible", badgeClass:"badge red" };
+      }
+      if (base.includes("mediación") || base.includes("criterio") || base.includes("revisar")) {
+        return { emoji:"🟡", badge:"Con mediación", badgeClass:"badge yellow" };
+      }
+      return { emoji:"🟢", badge:"Apta", badgeClass:"badge green" };
+    }
+
+    function inferFriendlyObservations(final){
+      const obs = [];
+      if (Array.isArray(final.observaciones)) {
+        obs.push(...final.observaciones);
+      }
+      if (final.fuente_letra === "lyrics.ovh") {
+        obs.unshift("Letra encontrada automáticamente desde lyrics.ovh.");
+      } else if (final.fuente_letra === "texto pegado por usuario") {
+        obs.unshift("Se analizó el texto pegado manualmente.");
+      } else if (final.fallback_inteligente) {
+        obs.unshift("No se encontró la letra completa y se usó una lectura orientativa según título y artista.");
+      }
+      return [...new Set(obs)];
+    }
+
+    async function postJson(body){
       const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify(body)
       });
       const text = await res.text();
       let data = null;
       try { data = JSON.parse(text); } catch {}
-      return { ok: res.ok, status: res.status, text, data };
+      return { ok:res.ok, status:res.status, data, text };
     }
 
-    async function runAnalysis() {
+    async function runAnalysis(){
       maybeClearPreviousAutoLyrics();
 
       const titulo = tituloInput.value.trim();
@@ -436,21 +574,16 @@
       const buscarLetra = document.getElementById("buscarLetra").checked;
       const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
-      if (!texto && !(titulo && artista)) {
+      if (!texto && !(titulo && artista)){
         setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
-        setError("Falta información mínima para hacer el análisis.");
-        setDebug("");
-        setSource("");
         return;
       }
 
-      resetResults();
-      setError("");
-      setSource("");
-      setDebug("");
-      setStatus("Analizando canción... Si cambiaste de canción, SonarIA ya limpió cualquier letra autocompletada anterior.", "loading");
+      analyzeBtn.disabled = true;
+      analyzeBtn.style.opacity = ".75";
+      setStatus("Analizando canción...", "loading");
 
-      try {
+      try{
         const payload = {
           titulo,
           artista,
@@ -461,75 +594,66 @@
 
         const res = await postJson(payload);
 
-        if (!res.ok || !res.data) {
-          setStatus("No se pudo completar el análisis.", "error");
-          setError("ERROR DE API: la respuesta no fue válida.");
-          setDebug({
-            http_status: res.status,
-            raw_text_preview: (res.text || "").slice(0, 500)
-          });
-          return;
+        if (!res.ok || !res.data){
+          throw new Error("Respuesta inválida del servidor.");
         }
 
         const final = res.data;
 
-        if (final.letra_encontrada && final.letra_usada) {
+        if (final.letra_encontrada && final.letra_usada){
           textoInput.value = final.letra_usada;
           lastAutoFilledLyrics = final.letra_usada.trim();
           lastAutoFillSongKey = songKey();
           lastSourceKind = "lyrics.ovh";
-        } else if (final.fallback_inteligente) {
+        } else if (final.fallback_inteligente){
           lastAutoFilledLyrics = "";
           lastSourceKind = "fallback inteligente";
-        } else if ((textoInput.value.trim().length >= 20)) {
+        } else if (textoInput.value.trim().length >= 20){
           lastAutoFilledLyrics = "";
           lastSourceKind = "texto pegado por usuario";
         }
 
-        resumenTexto.textContent = final.resumen || final.resultado || "Sin resumen";
-        justificacionTexto.textContent = final.justificacion || "Sin justificación";
-        enfoqueTexto.textContent = final.enfoque
-          ? `${final.enfoque.lectura_sugerida || "—"} · ${final.enfoque.uso_recomendado || "—"} · ${final.enfoque.fuente_de_sentido || "—"}`
-          : "Sin enfoque disponible";
+        const resumen = final.resumen || final.resultado || "Sin resumen";
+        const justificacion = final.justificacion || "Sin justificación";
+        const riesgo = clamp(Number(final.riesgo ?? final.risk ?? 0), 0, 100);
+        const clas = classifyResult(resumen);
+        const enfoque = final.enfoque || {};
+        const friendlyObs = inferFriendlyObservations(final);
+        const sensitive = clamp(riesgo + (friendlyObs.length * 4), 0, 100);
+        const school = 100 - riesgo;
+
+        summaryEmpty.style.display = "none";
+        summaryContent.style.display = "block";
+
+        summaryIcon.textContent = clas.emoji;
+        resultTitle.textContent = resumen;
+        resultBadge.textContent = clas.badge;
+        resultBadge.className = clas.badgeClass;
+        songMeta.textContent = [titulo || "Canción sin título", artista || "Artista no indicado"].join(" — ");
+        mainJustificacion.textContent = justificacion;
+
+        metaEdad.textContent = final.edad || final.edad_sugerida || "—";
+        metaFuente.textContent = final.fuente_letra || "desconocida";
+        metaLectura.textContent = enfoque.lectura_sugerida || "pedagógica";
+        resumenTexto.textContent = resumen;
+        enfoqueTexto.textContent =
+          `${enfoque.lectura_sugerida || "—"} · ${enfoque.uso_recomendado || "—"} · ${enfoque.fuente_de_sentido || "—"}`;
+
         renderChips(temasChips, final.temas || final.temas_detectados || [], "Sin temas detectados");
         renderChips(obsChips, final.observaciones || [], "Sin observaciones adicionales");
+        renderContext(friendlyObs);
 
-        riskBadge.textContent = String(final.riesgo ?? final.risk ?? "Sin dato");
-        metaRiesgo.textContent = String(final.riesgo ?? final.risk ?? "—");
-        metaEdad.textContent = String(final.edad ?? final.edad_sugerida ?? "—");
-        metaFuente.textContent = final.fuente_letra || "desconocida";
-
-        resultEmpty.style.display = "none";
-        resultContent.style.display = "block";
-        resultArrowWrap.classList.add("show");
-
-        if (final.fuente_letra === "lyrics.ovh") {
-          setSource("Letra encontrada automáticamente ✔ Fuente: lyrics.ovh");
-        } else if (final.fuente_letra === "texto pegado por usuario") {
-          setSource("Se analizó el texto pegado manualmente.");
-        } else if (final.fallback_inteligente) {
-          setSource("No se encontró letra real. SonarIA usó análisis inteligente para esta canción.");
-        } else {
-          setSource("Análisis realizado.");
-        }
+        setMeter(riskTotalFill, riskPercent, riesgo);
+        setMeter(riskSensitiveFill, riskSensitive, sensitive);
+        setMeter(riskSchoolFill, riskSchool, school);
 
         setStatus("Análisis completado correctamente.", "success");
-        setDebug({
-          backend_version: final.backend_version || "sin versión",
-          letra_encontrada: final.letra_encontrada,
-          fuente_letra: final.fuente_letra,
-          fallback_inteligente: final.fallback_inteligente,
-          enfoque: final.enfoque || {},
-          observaciones: final.observaciones || [],
-          debug: final.debug || {}
-        });
-
         syncPills();
-        document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
-      } catch (error) {
-        setStatus("No se pudo completar el análisis.", "error");
-        setError("ERROR DE FRONTEND O RED: revisa la conexión o el endpoint.");
-        setDebug({ exception: String(error) });
+      } catch (error){
+        setStatus("No se pudo completar el análisis. Revisa la conexión o el backend.", "error");
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.style.opacity = "1";
       }
     }
 
@@ -540,7 +664,7 @@
 
     [tituloInput, artistaInput].forEach(input => {
       input.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter"){
           e.preventDefault();
           await runAnalysis();
         }
@@ -551,14 +675,10 @@
       form.reset();
       document.getElementById("buscarLetra").checked = true;
       document.getElementById("contextoEscolar").checked = true;
-      statusBox.className = "status";
-      statusBox.textContent = "";
-      setError("");
-      setSource("");
-      setDebug("");
       lastAutoFilledLyrics = "";
       lastAutoFillSongKey = "";
       lastSourceKind = "";
+      clearStatus();
       resetResults();
       syncPills();
     });
