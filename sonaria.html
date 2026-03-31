@@ -9,8 +9,7 @@
   <style>
     :root{
       --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
-      --text:#eef2f7; --muted:#9fb0c7;
-      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff;
+      --text:#eef2f7; --muted:#9fb0c7; --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff;
       --shadow:0 24px 70px rgba(0,0,0,.34); --radius-xl:28px; --max:1180px;
     }
     *{box-sizing:border-box} html{scroll-behavior:smooth}
@@ -30,17 +29,15 @@
         linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
       background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
     }
-    a{color:inherit;text-decoration:none}
     .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
     .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px;}
-    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
-    .brand-global:hover{transform:scale(1.05)}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; color:inherit}
     .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
-    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
-    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
+    .brand-main .ia{color:var(--green);}
+    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800;}
     .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
     .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
-    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
+    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green);}
     .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
     .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
     .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
@@ -51,9 +48,7 @@
     .tag{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.8rem; font-weight:800; white-space:nowrap;}
     .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
     .form-grid{display:grid; gap:12px;}
-    .input,.textarea{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;}
-    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
-    .input::placeholder,.textarea::placeholder{color:#8ea3bf}
+    .input,.textarea{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;}
     .textarea{min-height:210px; resize:vertical;}
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
     .switches{display:grid; gap:10px; margin-top:2px;}
@@ -62,17 +57,20 @@
     .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
     .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
     .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
-    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:190px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
-    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
+    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:190px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; cursor:pointer; text-align:center;}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827;}
+    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text);}
     .status{margin-top:14px; padding:14px 16px; border-radius:16px; display:none; line-height:1.6}
     .status.show{display:block}
     .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
     .status.success{background:rgba(20,214,143,.08); border:1px solid rgba(20,214,143,.18); color:#d9fff0}
     .status.error{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.18); color:#ffd7d7}
-    .debug{display:none; margin-top:10px; color:#c7d6e8; font-size:.92rem}
-    .debug.show{display:block}
+    .source-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff; line-height:1.5}
+    .source-box.show{display:block}
+    .error-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.22); color:#ffd7d7; line-height:1.5}
+    .error-box.show{display:block}
+    .debug-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); color:#cdd8e7; line-height:1.6; white-space:pre-wrap; font-size:.9rem}
+    .debug-box.show{display:block}
     .side{display:grid; gap:18px;}
     .side-card{padding:24px;}
     .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em; color:var(--orange)}
@@ -83,10 +81,10 @@
     .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
     .result-arrow-wrap{display:none; justify-content:center; margin-top:30px; margin-bottom:12px;}
     .result-arrow-wrap.show{display:flex}
-    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); text-shadow:0 0 16px rgba(255,138,0,.35); animation:mclarenBlink 1s infinite; font-weight:900; text-align:center;}
+    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); font-weight:900; text-align:center;}
     .result-arrow .arrow-symbol{font-size:2.3rem; line-height:1;}
     .result-arrow .arrow-text{font-size:.92rem; letter-spacing:.02em; text-transform:uppercase;}
-    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none; letter-spacing:0;}
+    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none;}
     .result{margin-top:0; padding:26px;}
     .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
     .result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
@@ -103,7 +101,6 @@
     .meta-card strong{display:block; margin-bottom:6px; font-size:.92rem; color:#cfdcf0;}
     .meta-card span{color:#fff; font-weight:800; line-height:1.5;}
     .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800;}
-    @keyframes mclarenBlink{0%,100%{opacity:1; transform:translateY(0)}50%{opacity:.35; transform:translateY(4px)}}
     @media (max-width:980px){.layout,.result-grid,.meta-grid{grid-template-columns:1fr}}
     @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%; max-width:none}.tool,.side-card,.result{padding:22px}}
   </style>
@@ -144,7 +141,7 @@
               <input id="buscarLetra" type="checkbox" checked>
               <div>
                 <strong>Intentar buscar la letra automáticamente</strong>
-                <span>Si SonarIA la encuentra, la pegará automáticamente en este espacio.</span>
+                <span>Si no se encuentra la letra real, SonarIA usará un fallback inteligente y te lo avisará claramente.</span>
               </div>
             </label>
 
@@ -163,7 +160,9 @@
           </div>
 
           <div id="statusBox" class="status"></div>
-          <div id="debugBox" class="debug"></div>
+          <div id="sourceBox" class="source-box"></div>
+          <div id="errorBox" class="error-box"></div>
+          <div id="debugBox" class="debug-box"></div>
         </form>
       </section>
 
@@ -225,7 +224,7 @@
             <div class="meta-grid">
               <div class="meta-card"><strong>Riesgo</strong><span id="metaRiesgo">—</span></div>
               <div class="meta-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
-              <div class="meta-card"><strong>Letra encontrada</strong><span id="metaLetra">—</span></div>
+              <div class="meta-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
             </div>
           </div>
         </div>
@@ -237,9 +236,12 @@
 
   <script>
     const API_URL = "https://sonaria-api.onrender.com/analizar";
+
     const form = document.getElementById("analysisForm");
     const clearBtn = document.getElementById("clearBtn");
     const statusBox = document.getElementById("statusBox");
+    const sourceBox = document.getElementById("sourceBox");
+    const errorBox = document.getElementById("errorBox");
     const debugBox = document.getElementById("debugBox");
     const resultEmpty = document.getElementById("resultEmpty");
     const resultContent = document.getElementById("resultContent");
@@ -250,7 +252,7 @@
     const resultArrowWrap = document.getElementById("resultArrowWrap");
     const metaRiesgo = document.getElementById("metaRiesgo");
     const metaEdad = document.getElementById("metaEdad");
-    const metaLetra = document.getElementById("metaLetra");
+    const metaFuente = document.getElementById("metaFuente");
     const tituloInput = document.getElementById("titulo");
     const artistaInput = document.getElementById("artista");
     const textoInput = document.getElementById("texto");
@@ -259,9 +261,22 @@
       statusBox.textContent = message;
       statusBox.className = "status show " + type;
     }
-    function setDebug(message) {
-      debugBox.textContent = message;
-      debugBox.className = message ? "debug show" : "debug";
+    function setSource(message) {
+      sourceBox.textContent = message;
+      sourceBox.className = message ? "source-box show" : "source-box";
+    }
+    function setError(message) {
+      errorBox.textContent = message;
+      errorBox.className = message ? "error-box show" : "error-box";
+    }
+    function setDebug(value) {
+      if (!value) {
+        debugBox.textContent = "";
+        debugBox.className = "debug-box";
+        return;
+      }
+      debugBox.textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      debugBox.className = "debug-box show";
     }
     function resetResults() {
       resultEmpty.style.display = "block";
@@ -273,7 +288,7 @@
       riskBadge.textContent = "Esperando análisis";
       metaRiesgo.textContent = "—";
       metaEdad.textContent = "—";
-      metaLetra.textContent = "—";
+      metaFuente.textContent = "—";
     }
     function renderChips(items) {
       temasChips.innerHTML = "";
@@ -291,17 +306,6 @@
         temasChips.appendChild(chip);
       });
     }
-    function normalizeTopics(data) {
-      if (data?.temas?.themes && Array.isArray(data.temas.themes)) return data.temas.themes;
-      if (Array.isArray(data?.temas_detectados)) return data.temas_detectados;
-      return [];
-    }
-    function getValue(obj, keys, fallback = "No disponible") {
-      for (const key of keys) {
-        if (obj && obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== "") return obj[key];
-      }
-      return fallback;
-    }
     async function postJson(body) {
       const res = await fetch(API_URL, {
         method: "POST",
@@ -313,6 +317,7 @@
       try { data = JSON.parse(text); } catch {}
       return { ok: res.ok, status: res.status, text, data };
     }
+
     async function runAnalysis() {
       const titulo = tituloInput.value.trim();
       const artista = artistaInput.value.trim();
@@ -322,79 +327,108 @@
 
       if (!texto && !(titulo && artista)) {
         setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
+        setError("Falta información mínima para hacer el análisis.");
         setDebug("");
+        setSource("");
         return;
       }
 
       resetResults();
-      setStatus("Analizando canción... Si Render está dormido, esto puede tardar unos segundos.", "loading");
-      setDebug("Probando conexión con la API...");
+      setError("");
+      setSource("");
+      setDebug("");
+      setStatus("Analizando canción... Si algo falla, abajo verás una marca clara del origen del problema.", "loading");
 
       try {
-        const payloads = [
-          { titulo, artista, texto, buscar_letra: buscarLetra, contexto_escolar: contextoEscolar },
-          { texto, titulo, artista, buscar_letra: buscarLetra },
-          { texto: texto || [titulo, artista].filter(Boolean).join(" - "), buscar_letra: buscarLetra }
-        ];
+        const payload = {
+          titulo,
+          artista,
+          texto,
+          buscar_letra: buscarLetra,
+          contexto_escolar: contextoEscolar
+        };
 
-        let final = null;
-        let lastError = "";
+        const res = await postJson(payload);
 
-        for (const payload of payloads) {
-          const res = await postJson(payload);
-          if (res.ok && res.data) { final = res.data; break; }
-          lastError = "Status " + res.status + (res.text ? " | " + res.text.slice(0, 200) : "");
+        if (!res.ok || !res.data) {
+          setStatus("No se pudo completar el análisis.", "error");
+          setError("ERROR DE API: la respuesta no fue válida.");
+          setDebug({
+            http_status: res.status,
+            raw_text_preview: (res.text || "").slice(0, 500)
+          });
+          return;
         }
 
-        if (!final) throw new Error(lastError || "No hubo respuesta válida de la API.");
+        const final = res.data;
 
-        if (final.letra_usada && !textoInput.value.trim()) {
+        if (final.letra_encontrada && final.letra_usada && !textoInput.value.trim()) {
           textoInput.value = final.letra_usada;
         }
 
-        const resumen = getValue(final, ["resultado", "resumen", "summary", "orientacion", "nivel"], "Resultado disponible");
-        const justificacion = getValue(final, ["justificacion", "justificación", "reason", "explicacion", "explicación"], "Sin justificación disponible");
-        const riesgo = String(getValue(final, ["risk", "riesgo", "nivel_riesgo", "risk_score", "classification"], "Sin clasificar"));
-        const edad = String(getValue(final, ["edad_sugerida", "edad", "recommended_age"], "No especificada"));
-        const letra = getValue(final, ["letra_encontrada", "lyrics_found"], null);
-        const letraTexto = letra === true || letra === "true" ? "Sí" : letra === false || letra === "false" ? "No" : "No informado";
-
-        resumenTexto.textContent = resumen;
-        justificacionTexto.textContent = justificacion;
-        renderChips(normalizeTopics(final));
-        riskBadge.textContent = riesgo;
-        metaRiesgo.textContent = riesgo;
-        metaEdad.textContent = edad;
-        metaLetra.textContent = letraTexto;
+        resumenTexto.textContent = final.resumen || "Sin resumen";
+        justificacionTexto.textContent = final.justificacion || "Sin justificación";
+        renderChips(final.temas || []);
+        riskBadge.textContent = String(final.riesgo ?? "Sin dato");
+        metaRiesgo.textContent = String(final.riesgo ?? "—");
+        metaEdad.textContent = String(final.edad ?? "—");
+        metaFuente.textContent = final.fuente_letra || "desconocida";
 
         resultEmpty.style.display = "none";
         resultContent.style.display = "block";
         resultArrowWrap.classList.add("show");
 
+        if (final.letra_encontrada) {
+          setSource("Letra real encontrada y usada desde: " + (final.fuente_letra || "fuente externa"));
+        } else if (final.fallback_inteligente) {
+          setSource("No se encontró letra real. SonarIA usó fallback inteligente: " + (final.fuente_letra || "fallback"));
+        } else {
+          setSource("Se analizó el texto pegado manualmente.");
+        }
+
         setStatus("Análisis completado correctamente.", "success");
-        setDebug(final.fuente_letra ? "Fuente de letra: " + final.fuente_letra : "");
+        setDebug({
+          backend_version: final.backend_version || "sin versión",
+          letra_encontrada: final.letra_encontrada,
+          fuente_letra: final.fuente_letra,
+          fallback_inteligente: final.fallback_inteligente,
+          debug: final.debug || {}
+        });
+
         document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         setStatus("No se pudo completar el análisis.", "error");
-        setDebug("Detalle técnico: " + error.message);
-        console.error(error);
+        setError("ERROR DE FRONTEND O RED: revisa la conexión o el endpoint.");
+        setDebug({ exception: String(error) });
       }
     }
-    form.addEventListener("submit", async (e) => { e.preventDefault(); await runAnalysis(); });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await runAnalysis();
+    });
+
     [tituloInput, artistaInput].forEach(input => {
       input.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter") { e.preventDefault(); await runAnalysis(); }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          await runAnalysis();
+        }
       });
     });
+
     clearBtn.addEventListener("click", () => {
       form.reset();
       document.getElementById("buscarLetra").checked = true;
       document.getElementById("contextoEscolar").checked = true;
       statusBox.className = "status";
       statusBox.textContent = "";
+      setError("");
+      setSource("");
       setDebug("");
       resetResults();
     });
+
     resetResults();
   </script>
 </body>
