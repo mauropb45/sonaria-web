@@ -8,16 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
-      --text:#eef2f7; --muted:#9fb0c7; --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff;
+      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
+      --text:#eef2f7; --muted:#9fb0c7; --green:#14d68f; --orange:#ff8a00; --orange2:#ff6500; --blue:#4b82ff; --red:#ff7272;
       --shadow:0 24px 70px rgba(0,0,0,.34); --radius-xl:28px; --max:1180px;
     }
     *{box-sizing:border-box} html{scroll-behavior:smooth}
     body{
       margin:0; font-family:'Inter',sans-serif; color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
+        radial-gradient(circle at top left, rgba(255,138,0,.14), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.10), transparent 20%),
         radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
       overflow-x:hidden;
@@ -27,68 +27,93 @@
       background:
         linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+      z-index:0;
     }
+    a{color:inherit;text-decoration:none}
     .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
     .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px;}
-    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; color:inherit}
+    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; transition:transform .25s ease}
+    .brand-global:hover{transform:scale(1.03)}
     .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em;}
-    .brand-main .ia{color:var(--green);}
+    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
     .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800;}
     .hero{text-align:center; margin-top:8px; margin-bottom:28px;}
     .hero-badge{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#d8e8ff; font-weight:800; font-size:.92rem; margin-bottom:18px;}
-    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green);}
+    .hero-badge::before{content:""; width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 0 5px rgba(20,214,143,.12);}
     .hero h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.8rem); line-height:.95; letter-spacing:-.06em;}
     .hero p{max-width:860px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.08rem;}
+
     .layout{display:grid; grid-template-columns:1.08fr .92fr; gap:22px; align-items:start; margin-top:30px;}
-    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
-    .tool{padding:28px;}
+    .card{background:linear-gradient(180deg, var(--panel), var(--panel2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
+    .tool,.side-card,.result{padding:28px;}
     .tool-head{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:16px; flex-wrap:wrap;}
-    .tool-head h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
-    .tag{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.8rem; font-weight:800; white-space:nowrap;}
+    .tool-head h2,.result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
+    .tag,.risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:#dce7f6; font-size:.82rem; font-weight:800; white-space:nowrap;}
     .lead{margin:0 0 18px; color:var(--muted); line-height:1.78; font-size:1rem;}
     .form-grid{display:grid; gap:12px;}
-    .input,.textarea{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;}
-    .textarea{min-height:210px; resize:vertical;}
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .input,.textarea{
+      width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;
+      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .input:focus,.textarea:focus{
+      border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);
+    }
+    .textarea{min-height:210px; resize:vertical;}
     .switches{display:grid; gap:10px; margin-top:2px;}
     .switch{display:flex; align-items:flex-start; gap:12px; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
     .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green);}
     .switch strong{display:block; margin-bottom:4px; font-size:.98rem;}
     .switch span{display:block; color:var(--muted); line-height:1.55; font-size:.93rem;}
     .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
-    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:190px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; cursor:pointer; text-align:center;}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; min-width:180px; padding:15px 24px;
+      border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
     .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text);}
-    .status{margin-top:14px; padding:14px 16px; border-radius:16px; display:none; line-height:1.6}
-    .status.show{display:block}
+    .status,.source-box,.error-box,.debug-box{
+      display:none; margin-top:10px; padding:12px 14px; border-radius:14px; line-height:1.55;
+    }
+    .status.show,.source-box.show,.error-box.show,.debug-box.show{display:block}
     .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
     .status.success{background:rgba(20,214,143,.08); border:1px solid rgba(20,214,143,.18); color:#d9fff0}
     .status.error{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.18); color:#ffd7d7}
-    .source-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff; line-height:1.5}
-    .source-box.show{display:block}
-    .error-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.22); color:#ffd7d7; line-height:1.5}
-    .error-box.show{display:block}
-    .debug-box{display:none; margin-top:10px; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); color:#cdd8e7; line-height:1.6; white-space:pre-wrap; font-size:.9rem}
-    .debug-box.show{display:block}
+    .source-box{background:rgba(75,130,255,.08); border:1px solid rgba(75,130,255,.20); color:#dce8ff;}
+    .error-box{background:rgba(255,90,90,.08); border:1px solid rgba(255,90,90,.22); color:#ffd7d7;}
+    .debug-box{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); color:#cdd8e7; white-space:pre-wrap; font-size:.9rem}
+    .helper-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .helper-pill{
+      display:none; padding:9px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+      color:#dce7f6; font-size:.82rem; font-weight:700;
+    }
+    .helper-pill.show{display:inline-flex}
+    .helper-pill.green{border-color:rgba(20,214,143,.24); background:rgba(20,214,143,.08); color:#d9fff0}
+    .helper-pill.orange{border-color:rgba(255,138,0,.24); background:rgba(255,138,0,.08); color:#ffe0bf}
+    .helper-pill.blue{border-color:rgba(75,130,255,.24); background:rgba(75,130,255,.08); color:#dce8ff}
+
     .side{display:grid; gap:18px;}
-    .side-card{padding:24px;}
     .side-card h3{margin:0 0 10px; font-size:1.35rem; letter-spacing:-.03em; color:var(--orange)}
     .side-card p{margin:0; color:var(--muted); line-height:1.72;}
     .mini-list{margin:16px 0 0; display:grid; gap:12px;}
     .mini-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
     .mini-item strong{display:block; margin-bottom:6px;}
     .mini-item span{color:#d1dceb; line-height:1.6; font-size:.95rem;}
-    .result-arrow-wrap{display:none; justify-content:center; margin-top:30px; margin-bottom:12px;}
+
+    .result-arrow-wrap{display:none; justify-content:center; margin-top:26px; margin-bottom:12px;}
     .result-arrow-wrap.show{display:flex}
-    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); font-weight:900; text-align:center;}
+    .result-arrow{display:flex; flex-direction:column; align-items:center; gap:6px; color:var(--orange); text-align:center; font-weight:900; animation:pulseArrow 1.1s ease-in-out infinite;}
     .result-arrow .arrow-symbol{font-size:2.3rem; line-height:1;}
     .result-arrow .arrow-text{font-size:.92rem; letter-spacing:.02em; text-transform:uppercase;}
-    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none;}
-    .result{margin-top:0; padding:26px;}
+    .result-arrow .arrow-sub{max-width:720px; font-size:.95rem; line-height:1.6; color:#ffd7ad; text-transform:none; font-weight:800;}
+    @keyframes pulseArrow{0%,100%{opacity:1; transform:translateY(0)}50%{opacity:.55; transform:translateY(4px)}}
+
     .result-top{display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;}
-    .result h2{margin:0; font-size:2rem; letter-spacing:-.04em;}
-    .risk{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-weight:800; font-size:.82rem; white-space:nowrap;}
     .result-empty{color:var(--muted); line-height:1.8;}
     .result-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
     .result-box{padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
@@ -100,9 +125,15 @@
     .meta-card{padding:16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
     .meta-card strong{display:block; margin-bottom:6px; font-size:.92rem; color:#cfdcf0;}
     .meta-card span{color:#fff; font-weight:800; line-height:1.5;}
+    .stack{display:grid; gap:12px;}
     .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800;}
+
+    details{border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); padding:12px 14px;}
+    summary{cursor:pointer; font-weight:800; color:#dce7f6}
+    details pre{white-space:pre-wrap; color:#cdd8e7; font-size:.88rem; line-height:1.5; margin:10px 0 0}
+
     @media (max-width:980px){.layout,.result-grid,.meta-grid{grid-template-columns:1fr}}
-    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%; max-width:none}.tool,.side-card,.result{padding:22px}}
+    @media (max-width:720px){.container{padding:24px 16px 72px}.row{grid-template-columns:1fr}.actions{flex-direction:column}.btn{width:100%}.tool,.side-card,.result{padding:22px}}
   </style>
 </head>
 <body>
@@ -126,7 +157,7 @@
           <h2>Analizador SonarIA</h2>
           <div class="tag">Conectado a API</div>
         </div>
-        <p class="lead">Esta interfaz envía la información a tu endpoint de análisis para devolver un resultado legible, sin mostrar la documentación técnica al usuario final.</p>
+        <p class="lead">Esta interfaz busca la letra automáticamente cuando corresponde, distingue entre texto manual y texto autocompletado, y entrega una lectura pedagógica inicial lista para revisar.</p>
 
         <form id="analysisForm" class="form-grid">
           <div class="row">
@@ -136,12 +167,18 @@
 
           <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o escribe el texto que quieres analizar..."></textarea>
 
+          <div class="helper-row">
+            <div id="pillAutoLyric" class="helper-pill green">Letra autocompletada</div>
+            <div id="pillManualText" class="helper-pill blue">Texto manual detectado</div>
+            <div id="pillFallback" class="helper-pill orange">Fallback inteligente activo</div>
+          </div>
+
           <div class="switches">
             <label class="switch">
               <input id="buscarLetra" type="checkbox" checked>
               <div>
                 <strong>Intentar buscar la letra automáticamente</strong>
-                <span>Si no se encuentra la letra real, SonarIA usará un fallback inteligente y te lo avisará claramente.</span>
+                <span>Si cambias de canción y el cuadro tenía una letra autocompletada anterior, SonarIA la limpiará antes de buscar la nueva.</span>
               </div>
             </label>
 
@@ -204,19 +241,26 @@
 
       <div id="resultContent" style="display:none;">
         <div class="result-grid">
-          <div class="result-box">
-            <h4>Resumen general</h4>
-            <p id="resumenTexto">—</p>
+          <div class="stack">
+            <div class="result-box">
+              <h4>Resumen general</h4>
+              <p id="resumenTexto">—</p>
+            </div>
+            <div class="result-box">
+              <h4>Temas o señales detectadas</h4>
+              <div id="temasChips" class="chips"></div>
+            </div>
           </div>
 
-          <div class="result-box">
-            <h4>Justificación</h4>
-            <p id="justificacionTexto">—</p>
-          </div>
-
-          <div class="result-box">
-            <h4>Temas o señales detectadas</h4>
-            <div id="temasChips" class="chips"></div>
+          <div class="stack">
+            <div class="result-box">
+              <h4>Justificación</h4>
+              <p id="justificacionTexto">—</p>
+            </div>
+            <div class="result-box">
+              <h4>Enfoque sugerido</h4>
+              <p id="enfoqueTexto">—</p>
+            </div>
           </div>
 
           <div class="result-box">
@@ -227,7 +271,17 @@
               <div class="meta-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
             </div>
           </div>
+
+          <div class="result-box">
+            <h4>Observaciones pedagógicas</h4>
+            <div id="obsChips" class="chips"></div>
+          </div>
         </div>
+
+        <details style="margin-top:16px;">
+          <summary>Ver detalle técnico</summary>
+          <pre id="debugDetails">—</pre>
+        </details>
       </div>
     </section>
 
@@ -243,11 +297,14 @@
     const sourceBox = document.getElementById("sourceBox");
     const errorBox = document.getElementById("errorBox");
     const debugBox = document.getElementById("debugBox");
+    const debugDetails = document.getElementById("debugDetails");
     const resultEmpty = document.getElementById("resultEmpty");
     const resultContent = document.getElementById("resultContent");
     const resumenTexto = document.getElementById("resumenTexto");
     const justificacionTexto = document.getElementById("justificacionTexto");
+    const enfoqueTexto = document.getElementById("enfoqueTexto");
     const temasChips = document.getElementById("temasChips");
+    const obsChips = document.getElementById("obsChips");
     const riskBadge = document.getElementById("riskBadge");
     const resultArrowWrap = document.getElementById("resultArrowWrap");
     const metaRiesgo = document.getElementById("metaRiesgo");
@@ -256,6 +313,53 @@
     const tituloInput = document.getElementById("titulo");
     const artistaInput = document.getElementById("artista");
     const textoInput = document.getElementById("texto");
+    const pillAutoLyric = document.getElementById("pillAutoLyric");
+    const pillManualText = document.getElementById("pillManualText");
+    const pillFallback = document.getElementById("pillFallback");
+
+    let lastAutoFilledLyrics = "";
+    let lastAutoFillSongKey = "";
+    let lastSourceKind = "";
+
+    function songKey() {
+      return (tituloInput.value.trim().toLowerCase() + " | " + artistaInput.value.trim().toLowerCase()).trim();
+    }
+
+    function showPill(el, show) {
+      el.classList.toggle("show", !!show);
+    }
+
+    function syncPills() {
+      const text = textoInput.value.trim();
+      showPill(pillAutoLyric, !!lastAutoFilledLyrics && text === lastAutoFilledLyrics);
+      showPill(pillManualText, !!text && (!lastAutoFilledLyrics || text !== lastAutoFilledLyrics));
+      showPill(pillFallback, lastSourceKind === "fallback inteligente");
+    }
+
+    function maybeClearPreviousAutoLyrics() {
+      const currentKey = songKey();
+      const currentText = textoInput.value.trim();
+
+      if (
+        lastAutoFilledLyrics &&
+        currentText === lastAutoFilledLyrics &&
+        currentKey !== lastAutoFillSongKey
+      ) {
+        textoInput.value = "";
+        lastAutoFilledLyrics = "";
+        lastSourceKind = "";
+      }
+      syncPills();
+    }
+
+    tituloInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+    artistaInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+    textoInput.addEventListener("input", () => {
+      if (textoInput.value.trim() !== lastAutoFilledLyrics) {
+        lastSourceKind = lastSourceKind === "lyrics.ovh" ? "texto editado por usuario" : lastSourceKind;
+      }
+      syncPills();
+    });
 
     function setStatus(message, type) {
       statusBox.textContent = message;
@@ -273,10 +377,13 @@
       if (!value) {
         debugBox.textContent = "";
         debugBox.className = "debug-box";
+        debugDetails.textContent = "—";
         return;
       }
-      debugBox.textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      const rendered = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      debugBox.textContent = rendered;
       debugBox.className = "debug-box show";
+      debugDetails.textContent = rendered;
     }
     function resetResults() {
       resultEmpty.style.display = "block";
@@ -284,26 +391,28 @@
       resultArrowWrap.classList.remove("show");
       resumenTexto.textContent = "—";
       justificacionTexto.textContent = "—";
+      enfoqueTexto.textContent = "—";
       temasChips.innerHTML = "";
+      obsChips.innerHTML = "";
       riskBadge.textContent = "Esperando análisis";
       metaRiesgo.textContent = "—";
       metaEdad.textContent = "—";
       metaFuente.textContent = "—";
     }
-    function renderChips(items) {
-      temasChips.innerHTML = "";
+    function renderChips(container, items, emptyLabel) {
+      container.innerHTML = "";
       if (!items || !items.length) {
         const chip = document.createElement("div");
         chip.className = "chip";
-        chip.textContent = "Sin temas detectados";
-        temasChips.appendChild(chip);
+        chip.textContent = emptyLabel;
+        container.appendChild(chip);
         return;
       }
       items.forEach(item => {
         const chip = document.createElement("div");
         chip.className = "chip";
         chip.textContent = String(item);
-        temasChips.appendChild(chip);
+        container.appendChild(chip);
       });
     }
     async function postJson(body) {
@@ -319,9 +428,11 @@
     }
 
     async function runAnalysis() {
+      maybeClearPreviousAutoLyrics();
+
       const titulo = tituloInput.value.trim();
       const artista = artistaInput.value.trim();
-      const texto = textoInput.value.trim();
+      let texto = textoInput.value.trim();
       const buscarLetra = document.getElementById("buscarLetra").checked;
       const contextoEscolar = document.getElementById("contextoEscolar").checked;
 
@@ -337,7 +448,7 @@
       setError("");
       setSource("");
       setDebug("");
-      setStatus("Analizando canción... Si algo falla, abajo verás una marca clara del origen del problema.", "loading");
+      setStatus("Analizando canción... Si cambiaste de canción, SonarIA ya limpió cualquier letra autocompletada anterior.", "loading");
 
       try {
         const payload = {
@@ -362,28 +473,44 @@
 
         const final = res.data;
 
-        if (final.letra_encontrada && final.letra_usada && !textoInput.value.trim()) {
+        if (final.letra_encontrada && final.letra_usada) {
           textoInput.value = final.letra_usada;
+          lastAutoFilledLyrics = final.letra_usada.trim();
+          lastAutoFillSongKey = songKey();
+          lastSourceKind = "lyrics.ovh";
+        } else if (final.fallback_inteligente) {
+          lastAutoFilledLyrics = "";
+          lastSourceKind = "fallback inteligente";
+        } else if ((textoInput.value.trim().length >= 20)) {
+          lastAutoFilledLyrics = "";
+          lastSourceKind = "texto pegado por usuario";
         }
 
-        resumenTexto.textContent = final.resumen || "Sin resumen";
+        resumenTexto.textContent = final.resumen || final.resultado || "Sin resumen";
         justificacionTexto.textContent = final.justificacion || "Sin justificación";
-        renderChips(final.temas || []);
-        riskBadge.textContent = String(final.riesgo ?? "Sin dato");
-        metaRiesgo.textContent = String(final.riesgo ?? "—");
-        metaEdad.textContent = String(final.edad ?? "—");
+        enfoqueTexto.textContent = final.enfoque
+          ? `${final.enfoque.lectura_sugerida || "—"} · ${final.enfoque.uso_recomendado || "—"} · ${final.enfoque.fuente_de_sentido || "—"}`
+          : "Sin enfoque disponible";
+        renderChips(temasChips, final.temas || final.temas_detectados || [], "Sin temas detectados");
+        renderChips(obsChips, final.observaciones || [], "Sin observaciones adicionales");
+
+        riskBadge.textContent = String(final.riesgo ?? final.risk ?? "Sin dato");
+        metaRiesgo.textContent = String(final.riesgo ?? final.risk ?? "—");
+        metaEdad.textContent = String(final.edad ?? final.edad_sugerida ?? "—");
         metaFuente.textContent = final.fuente_letra || "desconocida";
 
         resultEmpty.style.display = "none";
         resultContent.style.display = "block";
         resultArrowWrap.classList.add("show");
 
-        if (final.letra_encontrada) {
-          setSource("Letra real encontrada y usada desde: " + (final.fuente_letra || "fuente externa"));
-        } else if (final.fallback_inteligente) {
-          setSource("No se encontró letra real. SonarIA usó fallback inteligente: " + (final.fuente_letra || "fallback"));
-        } else {
+        if (final.fuente_letra === "lyrics.ovh") {
+          setSource("Letra encontrada automáticamente ✔ Fuente: lyrics.ovh");
+        } else if (final.fuente_letra === "texto pegado por usuario") {
           setSource("Se analizó el texto pegado manualmente.");
+        } else if (final.fallback_inteligente) {
+          setSource("No se encontró letra real. SonarIA usó análisis inteligente para esta canción.");
+        } else {
+          setSource("Análisis realizado.");
         }
 
         setStatus("Análisis completado correctamente.", "success");
@@ -392,9 +519,12 @@
           letra_encontrada: final.letra_encontrada,
           fuente_letra: final.fuente_letra,
           fallback_inteligente: final.fallback_inteligente,
+          enfoque: final.enfoque || {},
+          observaciones: final.observaciones || [],
           debug: final.debug || {}
         });
 
+        syncPills();
         document.querySelector(".result").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         setStatus("No se pudo completar el análisis.", "error");
@@ -426,10 +556,15 @@
       setError("");
       setSource("");
       setDebug("");
+      lastAutoFilledLyrics = "";
+      lastAutoFillSongKey = "";
+      lastSourceKind = "";
       resetResults();
+      syncPills();
     });
 
     resetResults();
+    syncPills();
   </script>
 </body>
 </html>
