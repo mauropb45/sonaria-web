@@ -77,12 +77,47 @@ Cerrar sesión
 </div>
 
 <script>
-
 const API_URL = "https://sonaria-api.onrender.com/analizar";
 
 const form = document.getElementById("analysisForm");
+const clearBtn = document.getElementById("clearBtn");
 const statusBox = document.getElementById("statusBox");
+
+const tituloInput = document.getElementById("titulo");
+const artistaInput = document.getElementById("artista");
+const textoInput = document.getElementById("texto");
+const buscarLetraInput = document.getElementById("buscarLetra");
+const contextoEscolarInput = document.getElementById("contextoEscolar");
+
+const pillAutoLyric = document.getElementById("pillAutoLyric");
+const pillManualText = document.getElementById("pillManualText");
+const pillFallback = document.getElementById("pillFallback");
+
+const summaryEmpty = document.getElementById("summaryEmpty");
+const summaryContent = document.getElementById("summaryContent");
+const summaryIcon = document.getElementById("summaryIcon");
 const resultTitle = document.getElementById("resultTitle");
+const resultBadge = document.getElementById("resultBadge");
+const songMeta = document.getElementById("songMeta");
+const mainJustificacion = document.getElementById("mainJustificacion");
+
+const metaEdad = document.getElementById("metaEdad");
+const metaFuente = document.getElementById("metaFuente");
+const metaLectura = document.getElementById("metaLectura");
+
+const resumenTexto = document.getElementById("resumenTexto");
+const temasChips = document.getElementById("temasChips");
+const enfoqueTexto = document.getElementById("enfoqueTexto");
+const obsChips = document.getElementById("obsChips");
+
+const riskPercent = document.getElementById("riskPercent");
+const riskSensitive = document.getElementById("riskSensitive");
+const riskSchool = document.getElementById("riskSchool");
+const riskTotalFill = document.getElementById("riskTotalFill");
+const riskSensitiveFill = document.getElementById("riskSensitiveFill");
+const riskSchoolFill = document.getElementById("riskSchoolFill");
+
+const contextList = document.getElementById("contextList");
 
 function setStatus(msg, type){
   statusBox.textContent = msg;
@@ -94,63 +129,428 @@ function clearStatus(){
   statusBox.className = "status";
 }
 
+function showPill(el, show){
+  if(!el) return;
+  el.classList.toggle("show", !!show);
+}
+
+function toArray(value){
+  if(Array.isArray(value)) return value.filter(Boolean);
+  if(typeof value === "string" && value.trim()) {
+    return value.split(/[,;\n•-]+/).map(v => v.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function firstOf(obj, keys, fallback = ""){
+  for(const key of keys){
+    const value = obj?.[key];
+    if(value !== undefined && value !== null && value !== "") return value;
+  }
+  return fallback;
+}
+
+function clampPercent(value){
+  const n = Number(value);
+  if(Number.isNaN(n)) return 0;
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+function setMeter(textEl, fillEl, value){
+  const n = clampPercent(value);
+  textEl.textContent = n + "%";
+  fillEl.style.width = n + "%";
+}
+
+function setBadge(status){
+  const normalized = String(status || "").toLowerCase();
+
+  resultBadge.className = "badge";
+
+  if(
+    normalized.includes("no apta") ||
+    normalized.includes("no recomendable") ||
+    normalized.includes("alto riesgo")
+  ){
+    resultBadge.classList.add("red");
+    resultBadge.textContent = "No apta";
+    summaryIcon.textContent = "⛔";
+    return;
+  }
+
+  if(
+    normalized.includes("revisión") ||
+    normalized.includes("precaución") ||
+    normalized.includes("media") ||
+    normalized.includes("moderado")
+  ){
+    resultBadge.classList.add("yellow");
+    resultBadge.textContent = "Revisión docente";
+    summaryIcon.textContent = "⚠️";
+    return;
+  }
+
+  if(
+    normalized.includes("apta") ||
+    normalized.includes("bajo riesgo") ||
+    normalized.includes("recomendable")
+  ){
+    resultBadge.classList.add("green");
+    resultBadge.textContent = "Apta";
+    summaryIcon.textContent = "✅";
+    return;
+  }
+
+  resultBadge.classList.add("blue");
+  resultBadge.textContent = status || "Analizada";
+  summaryIcon.textContent = "🎵";
+}
+
+function renderChips(container, items, emptyText = "Sin datos detectados"){
+  container.innerHTML = "";
+  const arr = toArray(items);
+
+  if(!arr.length){
+    container.innerHTML = `<div class="empty">${emptyText}</div>`;
+    return;
+  }
+
+  arr.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "chip";
+    div.textContent = item;
+    container.appendChild(div);
+  });
+}
+
+function renderContexts(items){
+  contextList.innerHTML = "";
+  const arr = toArray(items);
+
+  if(!arr.length){
+    contextList.innerHTML = '<div class="empty">No se detectaron contextos adicionales.</div>';
+    return;
+  }
+
+  arr.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "context-item";
+    div.textContent = item;
+    contextList.appendChild(div);
+  });
+}
+
+function normalizeApiData(raw){
+  const d = raw || {};
+
+  const status =
+    firstOf(d, [
+      "clasificacion",
+      "veredicto",
+      "estado_general",
+      "estado",
+      "apta",
+      "resultado"
+    ], "Analizada");
+
+  const resumen =
+    firstOf(d, [
+      "resumen_pedagogico",
+      "resumen",
+      "summary",
+      "analisis",
+      "descripcion"
+    ], "No se recibió un resumen detallado.");
+
+  const justificacion =
+    firstOf(d, [
+      "justificacion",
+      "fundamentacion",
+      "motivo",
+      "explicacion"
+    ], resumen);
+
+  const edad =
+    firstOf(d, [
+      "edad_sugerida",
+      "edad_recomendada",
+      "rango_edad",
+      "edad"
+    ], "Por definir");
+
+  const fuente =
+    firstOf(d, [
+      "fuente_usada",
+      "fuente",
+      "source"
+    ], "API SonarIA");
+
+  const lectura =
+    firstOf(d, [
+      "lectura_sugerida",
+      "lectura",
+      "nivel_lectura"
+    ], "Lectura docente guiada");
+
+  const enfoque =
+    firstOf(d, [
+      "enfoque_sugerido",
+      "uso_pedagogico",
+      "enfoque",
+      "sugerencia_docente"
+    ], "Usar con mediación pedagógica según el objetivo de la clase.");
+
+  const temas =
+    firstOf(d, [
+      "temas_detectados",
+      "temas",
+      "keywords",
+      "topicos"
+    ], []);
+
+  const observaciones =
+    firstOf(d, [
+      "observaciones_pedagogicas",
+      "observaciones",
+      "alertas",
+      "recomendaciones"
+    ], []);
+
+  const contextos =
+    firstOf(d, [
+      "contextos_detectados",
+      "contextos",
+      "senales_detectadas",
+      "senales",
+      "flags"
+    ], []);
+
+  const riesgoTotal =
+    firstOf(d, [
+      "riesgo_total",
+      "riesgo",
+      "score_riesgo",
+      "risk_total"
+    ], 0);
+
+  const riesgoSensible =
+    firstOf(d, [
+      "contenido_sensible",
+      "riesgo_sensible",
+      "sensitive_content",
+      "risk_sensitive"
+    ], 0);
+
+  const riesgoEscolar =
+    firstOf(d, [
+      "uso_escolar",
+      "riesgo_escolar",
+      "school_use",
+      "risk_school"
+    ], 0);
+
+  const autocompletada =
+    Boolean(firstOf(d, ["letra_autocompletada", "auto_lyrics", "lyrics_found"], false));
+
+  const manual =
+    Boolean(textoInput.value.trim());
+
+  const fallback =
+    Boolean(firstOf(d, ["fallback", "analisis_fallback", "used_fallback"], false));
+
+  return {
+    status,
+    resumen,
+    justificacion,
+    edad,
+    fuente,
+    lectura,
+    enfoque,
+    temas: toArray(temas),
+    observaciones: toArray(observaciones),
+    contextos: toArray(contextos),
+    riesgoTotal,
+    riesgoSensible,
+    riesgoEscolar,
+    autocompletada,
+    manual,
+    fallback
+  };
+}
+
+function renderResult(raw){
+  const data = normalizeApiData(raw);
+
+  summaryEmpty.style.display = "none";
+  summaryContent.style.display = "block";
+
+  resultTitle.textContent = data.resumen.slice(0, 90) + (data.resumen.length > 90 ? "..." : "");
+  setBadge(data.status);
+
+  const titulo = tituloInput.value.trim() || "Sin título";
+  const artista = artistaInput.value.trim() || "Artista no indicado";
+  songMeta.textContent = `${titulo} · ${artista}`;
+
+  mainJustificacion.textContent = data.justificacion;
+  metaEdad.textContent = data.edad;
+  metaFuente.textContent = data.fuente;
+  metaLectura.textContent = data.lectura;
+
+  resumenTexto.textContent = data.resumen;
+  enfoqueTexto.textContent = data.enfoque;
+
+  renderChips(temasChips, data.temas, "No se detectaron temas.");
+  renderChips(obsChips, data.observaciones, "No hay observaciones adicionales.");
+  renderContexts(data.contextos);
+
+  setMeter(riskPercent, riskTotalFill, data.riesgoTotal);
+  setMeter(riskSensitive, riskSensitiveFill, data.riesgoSensible);
+  setMeter(riskSchool, riskSchoolFill, data.riesgoEscolar);
+
+  showPill(pillAutoLyric, data.autocompletada);
+  showPill(pillManualText, data.manual);
+  showPill(pillFallback, data.fallback);
+}
+
+function resetDashboard(){
+  summaryEmpty.style.display = "block";
+  summaryContent.style.display = "none";
+
+  summaryIcon.textContent = "—";
+  resultTitle.textContent = "Esperando análisis";
+  resultBadge.className = "badge blue";
+  resultBadge.textContent = "Sin datos";
+  songMeta.textContent = "—";
+  mainJustificacion.textContent = "—";
+
+  metaEdad.textContent = "—";
+  metaFuente.textContent = "—";
+  metaLectura.textContent = "—";
+
+  resumenTexto.textContent = "—";
+  enfoqueTexto.textContent = "—";
+
+  temasChips.innerHTML = "";
+  obsChips.innerHTML = "";
+  contextList.innerHTML = '<div class="empty">Cuando analices una canción, aquí aparecerán señales y observaciones en lenguaje claro.</div>';
+
+  setMeter(riskPercent, riskTotalFill, 0);
+  setMeter(riskSensitive, riskSensitiveFill, 0);
+  setMeter(riskSchool, riskSchoolFill, 0);
+
+  showPill(pillAutoLyric, false);
+  showPill(pillManualText, false);
+  showPill(pillFallback, false);
+}
+
 function clearForm(){
   form.reset();
+  buscarLetraInput.checked = true;
+  contextoEscolarInput.checked = true;
   clearStatus();
-  resultTitle.textContent = "Esperando análisis...";
+  resetDashboard();
 }
 
 async function runAnalysis(data){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data)
   });
 
   const text = await res.text();
-  let json;
+  let json = null;
 
   try{
     json = JSON.parse(text);
   }catch{
-    throw new Error("Respuesta inválida");
+    throw new Error("La API respondió en un formato no válido.");
   }
 
-  if(!res.ok) throw new Error("Error API");
+  if(!res.ok){
+    throw new Error(json?.detail || json?.error || "Error HTTP al analizar.");
+  }
 
   return json;
 }
 
-form.addEventListener("submit", async (e)=>{
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearStatus();
 
   const data = {
-    titulo:document.getElementById("titulo").value,
-    artista:document.getElementById("artista").value,
-    texto:document.getElementById("texto").value,
-    buscar_letra:true,
-    contexto_escolar:true
+    titulo: tituloInput.value.trim(),
+    artista: artistaInput.value.trim(),
+    texto: textoInput.value.trim(),
+    buscar_letra: buscarLetraInput.checked,
+    contexto_escolar: contextoEscolarInput.checked
   };
+
+  if(!data.titulo && !data.texto){
+    setStatus("Escribe al menos el título o pega la letra antes de analizar.", "error");
+    return;
+  }
 
   try{
     setStatus("Analizando canción...", "loading");
 
     const result = await runAnalysis(data);
+    console.log("Respuesta API:", result);
 
-    console.log(result);
+    renderResult(result);
+    setStatus("Análisis completado correctamente.", "success");
 
-    resultTitle.textContent = result.resumen || "Análisis completado";
-
-    setStatus("Análisis listo", "success");
-
-  }catch(err){
-    console.error(err);
-    setStatus("Error al analizar", "error");
+  }catch(error){
+    console.error(error);
+    setStatus(error.message || "Hubo un problema al analizar. Intenta nuevamente.", "error");
   }
 });
 
+clearBtn.addEventListener("click", clearForm);
+
+resetDashboard();
 </script>
+
+<!-- PROTECCIÓN DE ACCESO -->
+<script>
+const user = localStorage.getItem("sonaria_user");
+
+if(!user){
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- BOTÓN LOGOUT -->
+<button onclick="logout()" style="
+  position:absolute;
+  top:20px;
+  right:20px;
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  background:#ff4d4d;
+  color:white;
+  cursor:pointer;
+">
+Cerrar sesión
+</button>
+
+<script>
+function logout(){
+  localStorage.removeItem("sonaria_user");
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- PROTECCIÓN BOTÓN ATRÁS -->
+<script>
+window.history.pushState(null, null, window.location.href);
+window.onpopstate = function () {
+  window.history.pushState(null, null, window.location.href);
+};
+</script>
+
+</html>
 
 <!-- 🔐 PROTECCIÓN -->
 <script>
