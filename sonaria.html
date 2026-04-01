@@ -285,10 +285,111 @@ Cerrar sesión
 
     <!-- RESULTADO -->
     <main class="right-col">
-      <section class="card panel">
-        <div id="resultTitle">Esperando análisis...</div>
-      </section>
-    </main>
+
+  <!-- RESUMEN PRINCIPAL -->
+  <section class="card panel summary-card">
+    <div class="summary-icon" id="summaryIcon">—</div>
+
+    <div class="summary-main">
+      <div class="result-title">
+        <span id="resultTitle">Esperando análisis</span>
+        <span id="resultBadge" class="badge blue">Sin datos</span>
+      </div>
+
+      <div id="songMeta" class="muted">—</div>
+      <div id="mainJustificacion" class="muted">Aquí aparecerá el análisis pedagógico.</div>
+    </div>
+  </section>
+
+  <!-- MÉTRICAS -->
+  <section class="card panel">
+    <div class="mini-grid">
+      <div class="mini-card">
+        <strong>Edad sugerida</strong>
+        <span id="metaEdad">—</span>
+      </div>
+
+      <div class="mini-card">
+        <strong>Fuente</strong>
+        <span id="metaFuente">—</span>
+      </div>
+
+      <div class="mini-card">
+        <strong>Lectura</strong>
+        <span id="metaLectura">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO -->
+  <section class="cards-grid">
+
+    <div class="box">
+      <h4>Resumen pedagógico</h4>
+      <p id="resumenTexto">—</p>
+    </div>
+
+    <div class="box">
+      <h4>Enfoque sugerido</h4>
+      <p id="enfoqueTexto">—</p>
+    </div>
+
+    <div class="box">
+      <h4>Temas detectados</h4>
+      <div id="temasChips" class="chips"></div>
+    </div>
+
+    <div class="box">
+      <h4>Observaciones</h4>
+      <div id="obsChips" class="chips"></div>
+    </div>
+
+  </section>
+
+  <!-- RIESGO -->
+  <section class="card panel risk-block">
+
+    <div>
+      <div class="meter-label">
+        <span>Riesgo total</span>
+        <span id="riskPercent">0%</span>
+      </div>
+      <div class="meter-track">
+        <div id="riskTotalFill" class="meter-fill"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="meter-label">
+        <span>Contenido sensible</span>
+        <span id="riskSensitive">0%</span>
+      </div>
+      <div class="meter-track">
+        <div id="riskSensitiveFill" class="meter-fill"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="meter-label">
+        <span>Uso escolar</span>
+        <span id="riskSchool">0%</span>
+      </div>
+      <div class="meter-track">
+        <div id="riskSchoolFill" class="meter-fill"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CONTEXTO -->
+  <section class="card panel">
+    <h4>Contextos detectados</h4>
+    <div id="contextList" class="context-list">
+      <div class="empty">Aún no hay datos.</div>
+    </div>
+  </section>
+
+</main>
 
   </section>
 
