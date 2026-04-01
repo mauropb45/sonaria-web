@@ -507,6 +507,249 @@ function renderEnfoque(value){
   return "—";
 }
 
+function normalizeText(value){
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function includesAny(text, terms){
+  return terms.some(term => text.includes(term));
+}
+
+function countMatches(text, terms){
+  return terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0);
+}
+
+function evaluarPertinenciaEscolar(titulo, artista, letra){
+  const text = normalizeText(`${titulo} ${artista} ${letra}`);
+
+  const safeMetaphors = [
+    "me siento desnudo porque sabes tal como soy",
+    "me siento desnudo",
+    "tal como soy",
+    "abrir el corazon",
+    "con el alma desnuda",
+    "mi alma desnuda",
+    "quedar desnudo frente a ti",
+    "mostrarme tal como soy",
+    "i feel naked because you know me",
+    "i feel naked",
+    "just the way i am",
+    "open my heart",
+    "bare my soul",
+    "my naked soul",
+    "you know me as i am"
+  ];
+
+  const explicitSex = [
+    "quiero tocarte",
+    "quiero desnudarte",
+    "toda la noche",
+    "sexo",
+    "hacerte mia",
+    "hacerte mio",
+    "gemir",
+    "entre tus piernas",
+    "besarte el cuerpo",
+    "tocarte toda la noche",
+    "desnudarte",
+    "ardiendo de deseo",
+    "i want to touch you",
+    "i want to undress you",
+    "all night long",
+    "sex",
+    "between your legs",
+    "kiss your body",
+    "make you mine",
+    "moan",
+    "burning with desire"
+  ];
+
+  const sexualSuggestion = [
+    "tu cuerpo",
+    "tu piel",
+    "entre sabanas",
+    "en la oscuridad",
+    "deseo",
+    "tentacion",
+    "pegado a ti",
+    "muy cerca de ti",
+    "provocacion",
+    "sensual",
+    "your body",
+    "your skin",
+    "between the sheets",
+    "in the dark",
+    "desire",
+    "temptation",
+    "close to you",
+    "next to you",
+    "sensual",
+    "seduction"
+  ];
+
+  const violenceHigh = [
+    "kill","killing","murder","shoot","gun","weapon","blood","dead","die",
+    "matar","matarte","muerte","sangre","arma","disparar","cadaver",
+    "knife","knives","bullet","bullets","slaughter","violence","violent",
+    "cuchillo","balazo","bala","matarlos","asesinar"
+  ];
+
+  const selfHarm = [
+    "suicide","kill myself","i want to die","hurt myself","cut myself",
+    "quiero morir","matarme","autolesion","cortarme","suicidio"
+  ];
+
+  const drugsHard = [
+    "cocaine","heroin","meth","drug dealer","crack",
+    "cocaina","heroina","pasta base","traficante"
+  ];
+
+  const profanityStrong = [
+    "motherfucker","fuck you","fucking","fuckin","shit","bitch","asshole","bastard",
+    "puta","mierda","conchetumadre","culiao","culiao","maricon","bastardo","hijo de puta"
+  ];
+
+  const degradingOrHostile = [
+    "te odio","odio a todos","humillarte","venganza","destruirte","te hare sufrir","te voy a romper","te voy a matar",
+    "i hate you","hate everyone","humiliate you","revenge","destroy you","make you suffer","i will kill you"
+  ];
+
+  const pedagogicalThemes = [
+    "critica social","justicia","paz","igualdad","memoria","historia","identidad","sociedad","derechos","reflexion","contexto cultural",
+    "social criticism","justice","peace","equality","memory","history","identity","society","rights","reflection","cultural context"
+  ];
+
+  let riesgo = 0;
+  let razones = [];
+  let bloqueaApta = false;
+
+  const hasSafeMetaphor = includesAny(text, safeMetaphors);
+
+  const highViolenceHits = countMatches(text, violenceHigh);
+  const selfHarmHits = countMatches(text, selfHarm);
+  const hardDrugHits = countMatches(text, drugsHard);
+  const profanityHits = countMatches(text, profanityStrong);
+  const hostilityHits = countMatches(text, degradingOrHostile);
+  const explicitSexHits = hasSafeMetaphor ? 0 : countMatches(text, explicitSex);
+  const suggestiveHits = hasSafeMetaphor ? 0 : countMatches(text, sexualSuggestion);
+  const pedagogicalHits = countMatches(text, pedagogicalThemes);
+
+  if (highViolenceHits > 0) {
+    riesgo += highViolenceHits * 22;
+    razones.push("violencia explícita o confrontación grave");
+    bloqueaApta = true;
+  }
+
+  if (selfHarmHits > 0) {
+    riesgo += selfHarmHits * 35;
+    razones.push("autolesión o suicidio");
+    bloqueaApta = true;
+  }
+
+  if (hardDrugHits > 0) {
+    riesgo += hardDrugHits * 28;
+    razones.push("drogas duras");
+    bloqueaApta = true;
+  }
+
+  if (profanityHits > 0) {
+    riesgo += profanityHits * 14;
+    razones.push("groserías o lenguaje agresivo");
+  }
+
+  if (hostilityHits > 0) {
+    riesgo += hostilityHits * 18;
+    razones.push("hostilidad, amenaza o humillación");
+    bloqueaApta = true;
+  }
+
+  if (explicitSexHits > 0) {
+    riesgo += explicitSexHits * 30;
+    razones.push("contenido sexual explícito");
+    bloqueaApta = true;
+  }
+
+  if (suggestiveHits > 0) {
+    riesgo += suggestiveHits * 12;
+    razones.push("insinuación o ambigüedad sensual");
+  }
+
+  if (hasSafeMetaphor) {
+    riesgo -= 18;
+    razones.push("uso metafórico inocente detectado");
+  }
+
+  riesgo = Math.max(0, Math.min(100, riesgo));
+
+  let pertinencia = "Apta";
+  let lectura = "Lectura directa";
+  let justificacion = "No se detectan señales explícitas o implícitas incompatibles con un contexto escolar general.";
+  let valorPedagogico = pedagogicalHits > 0 ? "Alto" : "Medio";
+
+  if (bloqueaApta || riesgo >= 60) {
+    pertinencia = "No apta";
+    lectura = "Requiere exclusión general";
+    justificacion = "La letra presenta señales explícitas o implícitas incompatibles con un contexto escolar general.";
+  } else if (riesgo >= 25) {
+    pertinencia = "Revisión docente";
+    lectura = "Lectura mediada";
+    justificacion = "La letra presenta ambigüedades o señales sensibles que requieren revisión cuidadosa antes de usarse en aula.";
+  }
+
+  if (hasSafeMetaphor && riesgo < 25) {
+    pertinencia = "Apta";
+    lectura = "Lectura metafórica";
+    justificacion = "Se detecta lenguaje figurado o emocional sin evidencia suficiente de sexualidad literal o contenido impropio.";
+  }
+
+  return {
+    pertinencia,
+    riesgo,
+    riesgoSensible: Math.min(100, explicitSexHits * 30 + suggestiveHits * 12 + profanityHits * 8),
+    riesgoEscolar: Math.min(100, highViolenceHits * 25 + selfHarmHits * 35 + hardDrugHits * 28 + hostilityHits * 18),
+    justificacion,
+    lectura,
+    valorPedagogico,
+    razones: [...new Set(razones)]
+  };
+}
+
+function aplicarCalibracionEscolar(raw, titulo, artista, letra){
+  const base = { ...(raw || {}) };
+  const capa = evaluarPertinenciaEscolar(titulo, artista, letra);
+
+  base.clasificacion = capa.pertinencia;
+  base.justificacion = capa.justificacion;
+
+  if (!base.nivel_lectura && !base.lectura && !base.lectura_sugerida) {
+    base.nivel_lectura = capa.lectura;
+  }
+
+  if (!base.riesgo_total) base.riesgo_total = capa.riesgo;
+  if (!base.contenido_sensible) base.contenido_sensible = capa.riesgoSensible;
+  if (!base.uso_escolar) base.uso_escolar = capa.riesgoEscolar;
+
+  const observacionesActuales = Array.isArray(base.observaciones)
+    ? base.observaciones
+    : Array.isArray(base.observaciones_pedagogicas)
+      ? base.observaciones_pedagogicas
+      : [];
+
+  const nuevasObservaciones = [...observacionesActuales];
+
+  if (capa.valorPedagogico) {
+    nuevasObservaciones.push(`Valor pedagógico potencial: ${capa.valorPedagogico}`);
+  }
+
+  capa.razones.forEach(r => nuevasObservaciones.push(r));
+  base.observaciones = [...new Set(nuevasObservaciones)];
+
+  return base;
+}
+
 function normalizeApiData(raw){
   const d = raw || {};
 
@@ -659,8 +902,17 @@ form.addEventListener("submit", async (e) => {
 
   try {
     setStatus("Analizando canción...", "loading");
-    const result = await runAnalysis(data);
-    console.log("Respuesta API:", result);
+    const apiResult = await runAnalysis(data);
+    console.log("Respuesta API:", apiResult);
+
+    const result = aplicarCalibracionEscolar(
+      apiResult,
+      data.titulo,
+      data.artista,
+      data.texto
+    );
+
+    console.log("Resultado calibrado:", result);
     renderResult(result);
     setStatus("Análisis listo", "success");
   } catch (err) {
