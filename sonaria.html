@@ -435,4 +435,44 @@ async function runAnalysis(){
   
 
 </body>
+
+  <!-- PROTECCIÓN DE ACCESO -->
+<script>
+const user = localStorage.getItem("sonaria_user");
+
+if(!user){
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- BOTÓN LOGOUT -->
+<button onclick="logout()" style="
+  position:absolute;
+  top:20px;
+  right:20px;
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  background:#ff4d4d;
+  color:white;
+  cursor:pointer;
+">
+Cerrar sesión
+</button>
+
+<script>
+function logout(){
+  localStorage.removeItem("sonaria_user");
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- PROTECCIÓN BOTÓN ATRÁS -->
+<script>
+window.history.pushState(null, null, window.location.href);
+window.onpopstate = function () {
+  window.history.pushState(null, null, window.location.href);
+};
+</script>
+
 </html>
