@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA para colegios | MejorarIA</title>
+  <meta name="description" content="SonarIA ayuda a colegios y docentes a evaluar canciones con criterio pedagógico, visual y rápido.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#06101c;
+      --bg2:#0b1627;
+      --panel:rgba(255,255,255,.05);
+      --panel2:rgba(255,255,255,.035);
+      --line:rgba(255,255,255,.10);
+      --text:#eef2f7;
+      --muted:#a3b3c8;
+      --green:#14d68f;
+      --orange:#ff8a00;
+      --orange2:#ff6500;
+      --blue:#4b82ff;
+      --yellow:#f3c74b;
+      --red:#ff7474;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+      --radius:28px;
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.09), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+    }
+    a{text-decoration:none;color:inherit}
+    .container{
+      position:relative; z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:24px 22px 80px;
+    }
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:24px;
+    }
+    .brand{display:flex; flex-direction:column; gap:4px}
+    .brand-main{
+      margin:0;
+      font-size:clamp(2.4rem, 5vw, 4.6rem);
+      line-height:.92;
+      font-weight:900;
+      letter-spacing:-.065em;
+    }
+    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
+    .brand-sub{color:#d7fff0; font-size:1rem; font-weight:800}
+    .nav{
+      display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+      color:#dce8ff; font-weight:700; font-size:.96rem;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.02fr .98fr;
+      gap:22px;
+      align-items:center;
+      margin-top:10px;
+      margin-bottom:26px;
+    }
+    .card{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .hero-copy,.hero-demo,.section-card{padding:30px}
+    .eyebrow{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:10px 14px; border-radius:999px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#dce8ff; font-size:.9rem; font-weight:800;
+      margin-bottom:18px;
+    }
+    .eyebrow::before{
+      content:"";
+      width:8px; height:8px; border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 5px rgba(20,214,143,.12);
+    }
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(2.4rem, 5vw, 4.6rem);
+      line-height:.94;
+      letter-spacing:-.07em;
+    }
+    .hero-copy p{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.82;
+      font-size:1.06rem;
+      max-width:760px;
+    }
+    .hero-actions{
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin-top:20px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:52px;
+      padding:15px 24px;
+      border-radius:18px;
+      border:1px solid transparent;
+      font-weight:800;
+      font-size:1rem;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:linear-gradient(135deg,var(--orange),var(--orange2));
+      color:#111827;
+      box-shadow:0 12px 28px rgba(255,138,0,.28);
+    }
+    .btn-ghost{
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      border-color:var(--line);
+    }
+    .demo-top{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      margin-bottom:18px;
+    }
+    .demo-top h3{margin:0; font-size:1.35rem}
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.84rem;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dce8ff;
+    }
+    .demo-screen{
+      padding:18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.07);
+      display:grid;
+      gap:14px;
+    }
+    .traffic-row{
+      display:grid; grid-template-columns:84px 1fr; gap:14px; align-items:center;
+    }
+    .traffic-lights{
+      padding:14px; border-radius:20px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex; flex-direction:column; gap:10px; align-items:center;
+    }
+    .light{
+      width:28px; height:28px; border-radius:50%;
+      opacity:.25; background:rgba(255,255,255,.08);
+    }
+    .light.red.active{background:var(--red); opacity:1; box-shadow:0 0 18px rgba(255,116,116,.45)}
+    .light.yellow.active{background:var(--yellow); opacity:1; box-shadow:0 0 18px rgba(243,199,75,.45)}
+    .light.green.active{background:var(--green); opacity:1; box-shadow:0 0 18px rgba(20,214,143,.45)}
+    .demo-result{
+      display:grid; gap:10px;
+    }
+    .demo-result h4{
+      margin:0;
+      font-size:1.7rem;
+      letter-spacing:-.04em;
+    }
+    .demo-result p{
+      margin:0;
+      color:#d7e2f1;
+      line-height:1.72;
+    }
+    .mini-grid{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    }
+    .mini-card{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .mini-card strong{
+      display:block;
+      margin-bottom:6px;
+      color:#cfdcf0;
+      font-size:.92rem;
+    }
+    .mini-card span{font-weight:800}
+    .grid-3,.grid-2{
+      display:grid; gap:18px;
+    }
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .section{margin-top:18px}
+    .section-head{
+      margin:0 0 14px;
+      font-size:clamp(1.5rem, 2.4vw, 2.2rem);
+      letter-spacing:-.04em;
+    }
+    .section-sub{
+      margin:0 0 22px;
+      color:var(--muted);
+      line-height:1.75;
+      max-width:840px;
+    }
+    .section-card h3{
+      margin:0 0 10px;
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+    }
+    .section-card p,.section-card li{
+      color:#d7e2f1;
+      line-height:1.72;
+    }
+    .section-card ul{
+      margin:0; padding-left:18px;
+    }
+    .stats{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+      margin-top:18px;
+    }
+    .stat{
+      padding:18px; border-radius:20px;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+      text-align:center;
+    }
+    .stat strong{
+      display:block; font-size:2rem; font-weight:900; letter-spacing:-.04em; margin-bottom:6px;
+    }
+    .stat span{color:var(--muted); font-weight:700}
+    .pricing{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+    }
+    .price-card{
+      padding:28px; border-radius:26px;
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow:var(--shadow);
+    }
+    .price-card.featured{
+      border-color:rgba(255,138,0,.35);
+      box-shadow:0 24px 70px rgba(255,138,0,.12);
+    }
+    .price-card h3{margin:0 0 6px; font-size:1.35rem}
+    .price-card .price{
+      font-size:2.5rem; font-weight:900; letter-spacing:-.05em; margin:12px 0 10px;
+    }
+    .price-card .price small{
+      font-size:1rem; color:var(--muted); font-weight:700;
+    }
+    .price-card p{color:var(--muted); line-height:1.72}
+    .price-card ul{padding-left:18px; margin:16px 0 0}
+    .faq-item{
+      padding:22px; border-radius:22px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .faq-item h4{margin:0 0 10px; font-size:1.08rem}
+    .cta{
+      margin-top:22px;
+      padding:34px;
+      border-radius:30px;
+      background:
+        radial-gradient(circle at top right, rgba(255,138,0,.18), transparent 22%),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.1);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .cta h2{
+      margin:0 0 12px;
+      font-size:clamp(2rem, 4vw, 3.1rem);
+      letter-spacing:-.06em;
+    }
+    .cta p{
+      margin:0 auto 18px;
+      max-width:760px;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:1.04rem;
+    }
+    .footer{
+      margin-top:30px;
+      text-align:center;
+      color:#d7e2f1;
+      font-size:1rem;
+      font-weight:800;
+    }
+    @media (max-width:1080px){
+      .hero,.grid-3,.pricing,.grid-2,.stats,.mini-grid{grid-template-columns:1fr}
+      .traffic-row{grid-template-columns:1fr}
+      .traffic-lights{flex-direction:row; justify-content:center}
+    }
+    @media (max-width:720px){
+      .container{padding:20px 14px 60px}
+      .hero-copy,.hero-demo,.section-card,.price-card,.cta{padding:22px}
+      .nav{display:none}
+      .hero-actions{flex-direction:column}
+      .btn{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <a href="#" class="brand">
+        <h1 class="brand-main">Sonar<span class="ia">IA</span></h1>
+        <div class="brand-sub">IA aplicada a educación musical</div>
+      </a>
+      <nav class="nav">
+        <a href="#beneficios">Beneficios</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#planes">Planes</a>
+        <a href="#faq">Preguntas</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy card">
+        <div class="eyebrow">Pensada para colegios y docentes</div>
+        <h1>Evalúa canciones en minutos con criterio pedagógico claro.</h1>
+        <p>SonarIA ayuda a docentes, coordinaciones y equipos directivos a revisar repertorio musical antes de llevarlo al aula. Entrega una lectura simple, visual y útil: apta, con mediación o no recomendada, junto con señales, edad sugerida y observaciones pedagógicas.</p>
+        <p>Menos tiempo revisando letras a mano. Más tiempo planificando clases, ensayando y enseñando con confianza.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#planes">Solicitar demo institucional</a>
+          <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
+        </div>
+      </div>
+
+      <div class="hero-demo card">
+        <div class="demo-top">
+          <h3>Vista tipo producto</h3>
+          <div class="chip">Demo SonarIA</div>
+        </div>
+
+        <div class="demo-screen">
+          <div class="traffic-row">
+            <div class="traffic-lights">
+              <div class="light red"></div>
+              <div class="light yellow active"></div>
+              <div class="light green"></div>
+            </div>
+            <div class="demo-result">
+              <h4>CON MEDIACIÓN</h4>
+              <p>La canción presenta elementos sensibles que requieren contextualización docente antes de ser utilizada en aula.</p>
+            </div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <strong>Edad sugerida</strong>
+              <span>13+ con mediación</span>
+            </div>
+            <div class="mini-card">
+              <strong>Fuente</strong>
+              <span>Letra encontrada</span>
+            </div>
+            <div class="mini-card">
+              <strong>Enfoque</strong>
+              <span>Pedagógico</span>
+            </div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <strong>Resultado</strong>
+              <span>Apta / con mediación / no recomendada</span>
+            </div>
+            <div class="mini-card">
+              <strong>Semáforo</strong>
+              <span>Visual e inmediato</span>
+            </div>
+            <div class="mini-card">
+              <strong>Uso</strong>
+              <span>Rápido y claro</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="beneficios">
+      <h2 class="section-head">Qué gana un colegio con SonarIA</h2>
+      <p class="section-sub">La propuesta no es solo “analizar canciones”. Es reducir riesgo, ahorrar tiempo docente y profesionalizar la selección de repertorio dentro del establecimiento.</p>
+
+      <div class="grid-3">
+        <div class="section-card card">
+          <h3>Más seguridad pedagógica</h3>
+          <p>Antes de usar una canción en clase, el docente puede revisar si hay lenguaje explícito, temas sensibles, referencias complejas o necesidad de mediación.</p>
+        </div>
+        <div class="section-card card">
+          <h3>Menos tiempo perdido</h3>
+          <p>En vez de revisar letras a mano o improvisar criterio bajo presión, SonarIA entrega una lectura clara y rápida para tomar decisiones con más confianza.</p>
+        </div>
+        <div class="section-card card">
+          <h3>Más consistencia institucional</h3>
+          <p>Ayuda a que distintos docentes compartan una misma lógica de revisión, con un lenguaje común y un estándar más uniforme dentro del colegio.</p>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>1 min</strong>
+          <span>para una primera revisión útil</span>
+        </div>
+        <div class="stat">
+          <strong>3 estados</strong>
+          <span>apta, con mediación o no recomendada</span>
+        </div>
+        <div class="stat">
+          <strong>100%</strong>
+          <span>enfocada en uso escolar</span>
+        </div>
+        <div class="stat">
+          <strong>0 código</strong>
+          <span>visible para el usuario final</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona">
+      <h2 class="section-head">Cómo funciona en la práctica</h2>
+      <p class="section-sub">El objetivo es que cualquier docente pueda usarlo sin formación técnica. La experiencia debe sentirse tan simple como revisar un semáforo pedagógico.</p>
+
+      <div class="grid-2">
+        <div class="section-card card">
+          <h3>1. Buscar o pegar la canción</h3>
+          <p>El docente escribe el título y artista, o pega directamente la letra completa.</p>
+        </div>
+        <div class="section-card card">
+          <h3>2. SonarIA analiza</h3>
+          <p>La plataforma revisa señales relevantes para contexto escolar y organiza el resultado en una lectura pedagógica clara.</p>
+        </div>
+        <div class="section-card card">
+          <h3>3. Veredicto visual inmediato</h3>
+          <p>Entrega un estado principal con semáforo: apta, con mediación o no recomendada.</p>
+        </div>
+        <div class="section-card card">
+          <h3>4. Apoyo para la decisión docente</h3>
+          <p>Incluye edad sugerida, temas detectados, observaciones y orientación de uso en aula.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-head">Ideal para estos escenarios</h2>
+      <div class="grid-3">
+        <div class="section-card card">
+          <h3>Profesorado de Música</h3>
+          <p>Selección de repertorio, análisis previo de canciones y apoyo al diseño de clases y presentaciones.</p>
+        </div>
+        <div class="section-card card">
+          <h3>Coordinación académica</h3>
+          <p>Apoyo a lineamientos institucionales para uso de material musical en actos, talleres o actividades curriculares.</p>
+        </div>
+        <div class="section-card card">
+          <h3>Convivencia y formación</h3>
+          <p>Prevención de conflictos por contenido inapropiado y mejor mediación cuando un repertorio requiere contexto.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="planes">
+      <h2 class="section-head">Planes sugeridos para vender a colegios</h2>
+      <p class="section-sub">Aquí tienes una propuesta comercial simple para presentar el producto con claridad. Luego puedes ajustar precios, licencias o modalidad según tu estrategia.</p>
+
+      <div class="pricing">
+        <div class="price-card">
+          <h3>Plan Docente</h3>
+          <div class="price">$19 <small>/ mes</small></div>
+          <p>Para uso individual, ideal para profesores que quieren validar repertorio antes de clase.</p>
+          <ul>
+            <li>Revisión de canciones</li>
+            <li>Semáforo pedagógico</li>
+            <li>Observaciones y edad sugerida</li>
+            <li>Uso personal</li>
+          </ul>
+        </div>
+
+        <div class="price-card featured">
+          <h3>Plan Colegio</h3>
+          <div class="price">$79 <small>/ mes</small></div>
+          <p>Para establecimientos que quieren una solución institucional simple, útil y visible para varios docentes.</p>
+          <ul>
+            <li>Acceso para equipo docente</li>
+            <li>Criterio compartido de revisión</li>
+            <li>Uso en clases, talleres y actos</li>
+            <li>Demo y acompañamiento inicial</li>
+          </ul>
+        </div>
+
+        <div class="price-card">
+          <h3>Plan Red Educativa</h3>
+          <div class="price">Cotizar</div>
+          <p>Para redes de colegios, corporaciones o instituciones con varias sedes y mayor volumen de uso.</p>
+          <ul>
+            <li>Implementación a medida</li>
+            <li>Soporte ampliado</li>
+            <li>Capacitación inicial</li>
+            <li>Propuesta institucional</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <h2 class="section-head">Preguntas frecuentes</h2>
+
+      <div class="grid-2">
+        <div class="faq-item">
+          <h4>¿Reemplaza el criterio docente?</h4>
+          <p>No. SonarIA acompaña y acelera la revisión, pero la decisión final sigue estando en manos del docente o del colegio.</p>
+        </div>
+        <div class="faq-item">
+          <h4>¿Sirve solo para clases de música?</h4>
+          <p>No necesariamente. También puede apoyar talleres, actos escolares, proyectos interdisciplinarios y actividades formativas.</p>
+        </div>
+        <div class="faq-item">
+          <h4>¿Qué problema resuelve mejor?</h4>
+          <p>El principal problema que resuelve es la incertidumbre y el tiempo que implica revisar repertorio antes de usarlo con estudiantes.</p>
+        </div>
+        <div class="faq-item">
+          <h4>¿Qué hace que se vea profesional?</h4>
+          <p>La experiencia es clara, visual y útil para el usuario final. No expone detalles técnicos ni lenguaje de programación.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2>Listo para presentar SonarIA a colegios</h2>
+      <p>Esta versión está pensada para vender la idea con claridad: problema, solución, beneficios, funcionamiento y propuesta comercial. Úsala como base para tu landing institucional o demo comercial.</p>
+      <div class="hero-actions" style="justify-content:center;">
+        <a class="btn btn-primary" href="mailto:contacto@mejoraria.cl">Solicitar demo</a>
+        <a class="btn btn-ghost" href="mailto:contacto@mejoraria.cl">Pedir propuesta institucional</a>
+      </div>
+    </section>
+
+    <div class="footer">SonarIA · MauRock · Mauricio José Pinto Basso</div>
+  </div>
+</body>
+</html>
