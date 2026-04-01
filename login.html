@@ -75,4 +75,33 @@
 <form class="form"><div class="row"><input class="input" type="text" placeholder="Tu nombre"><input class="input" type="email" placeholder="Tu correo"></div><div class="row"><input class="input" type="text" placeholder="Tu asignatura"><input class="input" type="text" placeholder="Tu institución o proyecto"></div><textarea class="textarea" placeholder="¿Qué te gustaría probar o proponer para MejorarIA?"></textarea><button class="btn btn-primary" type="submit" style="width:100%;">Enviar solicitud</button></form>
 <div class="helper">¿Ya tienes cuenta? <a href="login.html">Ingresa aquí</a></div></section>
 <div class="footer">MauRock · Mauricio José Pinto Basso</div>
-</div></body></html>
+</div><!-- Google Login -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<div id="g_id_onload"
+     data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+
+<div style="display:flex; justify-content:center; margin-top:30px;">
+  <div class="g_id_signin"
+       data-type="standard"
+       data-theme="outline"
+       data-size="large"
+       data-text="continue_with"
+       data-shape="pill"
+       data-logo_alignment="left">
+  </div>
+</div>
+
+<script>
+function handleCredentialResponse(response){
+  console.log("Login Google OK");
+
+  // Guardamos sesión
+  localStorage.setItem("sonaria_user", response.credential);
+
+  // Redirigir al dashboard
+  window.location.href = "sonaria.html";
+}
+</script></body></html>
