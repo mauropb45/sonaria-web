@@ -11,7 +11,6 @@
       --bg:#06101b;
       --bg2:#0a1627;
       --panel:rgba(255,255,255,.05);
-      --panel-strong:rgba(255,255,255,.08);
       --line:rgba(255,255,255,.10);
       --text:#eef2f7;
       --muted:#9fb0c7;
@@ -57,21 +56,14 @@
       display:flex; align-items:center; justify-content:space-between; gap:16px;
       margin-bottom:18px;
     }
-    .brand{
-      display:flex; flex-direction:column; gap:4px;
-    }
+    .brand{display:flex; flex-direction:column; gap:4px}
     .brand-main{
       font-size:clamp(2.4rem, 5vw, 4rem);
       line-height:.95; font-weight:900; letter-spacing:-.06em; margin:0;
     }
     .brand-main .ia{color:var(--green)}
     .brand-sub{color:#d7fff0; font-weight:800}
-    .shell{
-      display:grid;
-      grid-template-columns:420px 1fr;
-      gap:18px;
-      align-items:start;
-    }
+    .shell{display:grid; grid-template-columns:420px 1fr; gap:18px; align-items:start}
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
       border:1px solid rgba(255,255,255,.09);
@@ -79,7 +71,7 @@
       box-shadow:var(--shadow);
     }
     .panel{padding:24px}
-    .panel h2,.panel h3{margin:0}
+    .panel h2,.panel h3,.panel h4{margin:0}
     .muted{color:var(--muted)}
     .stack{display:grid; gap:14px}
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
@@ -111,6 +103,16 @@
     .pill.green{background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24); color:#d9fff0}
     .pill.blue{background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.24); color:#dce8ff}
     .pill.orange{background:rgba(255,138,0,.1); border-color:rgba(255,138,0,.24); color:#ffe0bf}
+    .switch{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+    }
+    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green)}
+    .switch strong{display:block; margin-bottom:4px}
+    .switch span{display:block; color:var(--muted); font-size:.93rem; line-height:1.55}
     .actions{display:grid; grid-template-columns:1fr 1fr; gap:12px}
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
@@ -172,10 +174,7 @@
     .box{
       padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
     }
-    .box h4{margin:0 0 10px; font-size:1.02rem}
-    .box p{
-      margin:0; white-space:pre-wrap; line-height:1.72; color:#d7e2f1;
-    }
+    .box p{margin:0; white-space:pre-wrap; line-height:1.72; color:#d7e2f1}
     .chips{display:flex; flex-wrap:wrap; gap:8px}
     .chip{
       padding:8px 12px; border-radius:999px;
@@ -192,9 +191,7 @@
       border:1px solid rgba(255,255,255,.06);
     }
     .meter-fill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
+      height:100%; width:0%; border-radius:999px;
       background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
       transition:width .35s ease;
     }
@@ -204,21 +201,10 @@
       background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
       color:#d7e2f1; line-height:1.6;
     }
-    .empty{
-      color:var(--muted); line-height:1.8;
-    }
+    .empty{color:var(--muted); line-height:1.8}
     .logout-btn{
-      position:absolute;
-      top:20px;
-      right:20px;
-      padding:10px 16px;
-      border:none;
-      border-radius:10px;
-      background:#ff4d4d;
-      color:white;
-      cursor:pointer;
-      z-index:10;
-      font-weight:700;
+      position:absolute; top:20px; right:20px; padding:10px 16px; border:none; border-radius:10px;
+      background:#ff4d4d; color:white; cursor:pointer; z-index:10; font-weight:700;
     }
     .footer{margin-top:32px; text-align:center; color:#d7e2f1; font-size:1.02rem; font-weight:800}
     @media (max-width:1180px){
@@ -250,6 +236,9 @@
     <aside class="card panel stack">
       <div>
         <h2 style="font-size:1.8rem; letter-spacing:-.03em;">Dashboard escolar</h2>
+        <p class="muted" style="line-height:1.75; margin:10px 0 0;">
+          Evalúa pertinencia escolar priorizando contenido explícito, implícito y mediación docente.
+        </p>
       </div>
 
       <form id="analysisForm" class="stack">
@@ -266,6 +255,22 @@
           <div id="pillFallback" class="pill orange">Análisis por fallback</div>
         </div>
 
+        <label class="switch">
+          <input id="buscarLetra" type="checkbox" checked>
+          <div>
+            <strong>Buscar la letra automáticamente</strong>
+            <span>Si no pegas la letra, SonarIA intentará traerla desde la API. Sin letra completa, no declarará “Apta”.</span>
+          </div>
+        </label>
+
+        <label class="switch">
+          <input id="contextoEscolar" type="checkbox" checked>
+          <div>
+            <strong>Priorizar contexto escolar</strong>
+            <span>Da prioridad a seguridad, pertinencia educativa y detección de contenido explícito e implícito.</span>
+          </div>
+        </label>
+
         <div class="actions">
           <button id="analyzeBtn" type="submit" class="btn btn-primary">Analizar canción</button>
           <button id="clearBtn" type="button" class="btn btn-ghost">Limpiar</button>
@@ -278,7 +283,6 @@
     <main class="right-col">
       <section class="card panel summary-card">
         <div id="summaryIcon" class="summary-icon">—</div>
-
         <div class="summary-main">
           <div class="result-title">
             <span id="resultTitle">Esperando análisis</span>
@@ -292,8 +296,8 @@
       <section class="card panel">
         <div class="mini-grid">
           <div class="mini-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
-          <div class="mini-card"><strong>Fuente</strong><span id="metaFuente">—</span></div>
-          <div class="mini-card"><strong>Lectura</strong><span id="metaLectura">—</span></div>
+          <div class="mini-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
+          <div class="mini-card"><strong>Lectura sugerida</strong><span id="metaLectura">—</span></div>
         </div>
       </section>
 
@@ -344,9 +348,7 @@
 
             <div class="box">
               <h4>Contextos detectados</h4>
-              <div id="contextList" class="context-list">
-                <div class="empty">Aún no hay datos.</div>
-              </div>
+              <div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div>
             </div>
           </div>
         </section>
@@ -361,9 +363,7 @@
 const API_URL = "https://sonaria-api.onrender.com/analizar";
 
 const user = localStorage.getItem("sonaria_user");
-if (!user) {
-  window.location.href = "login.html";
-}
+if (!user) window.location.href = "login.html";
 
 function logout(){
   localStorage.removeItem("sonaria_user");
@@ -371,7 +371,7 @@ function logout(){
 }
 
 window.history.pushState(null, null, window.location.href);
-window.onpopstate = function () {
+window.onpopstate = function(){
   window.history.pushState(null, null, window.location.href);
 };
 
@@ -382,6 +382,8 @@ const statusBox = document.getElementById("statusBox");
 const tituloInput = document.getElementById("titulo");
 const artistaInput = document.getElementById("artista");
 const textoInput = document.getElementById("texto");
+const buscarLetraInput = document.getElementById("buscarLetra");
+const contextoEscolarInput = document.getElementById("contextoEscolar");
 
 const pillAutoLyric = document.getElementById("pillAutoLyric");
 const pillManualText = document.getElementById("pillManualText");
@@ -392,23 +394,19 @@ const resultTitle = document.getElementById("resultTitle");
 const resultBadge = document.getElementById("resultBadge");
 const songMeta = document.getElementById("songMeta");
 const mainJustificacion = document.getElementById("mainJustificacion");
-
 const metaEdad = document.getElementById("metaEdad");
 const metaFuente = document.getElementById("metaFuente");
 const metaLectura = document.getElementById("metaLectura");
-
 const resumenTexto = document.getElementById("resumenTexto");
 const temasChips = document.getElementById("temasChips");
 const enfoqueTexto = document.getElementById("enfoqueTexto");
 const obsChips = document.getElementById("obsChips");
-
 const riskPercent = document.getElementById("riskPercent");
 const riskSensitive = document.getElementById("riskSensitive");
 const riskSchool = document.getElementById("riskSchool");
 const riskTotalFill = document.getElementById("riskTotalFill");
 const riskSensitiveFill = document.getElementById("riskSensitiveFill");
 const riskSchoolFill = document.getElementById("riskSchoolFill");
-
 const contextList = document.getElementById("contextList");
 const summaryCard = document.querySelector(".summary-card");
 
@@ -427,19 +425,23 @@ function showPill(el, show){
   el.classList.toggle("show", !!show);
 }
 
+function stripAccents(value){
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function normalizeText(value){
+  return stripAccents(String(value || "").toLowerCase()).replace(/[^\w\s']/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function toArray(value){
   if (Array.isArray(value)) return value.filter(Boolean);
-  if (typeof value === "string" && value.trim()) {
-    return value.split(/[,;\n•]+/).map(v => v.trim()).filter(Boolean);
-  }
-  if (value && typeof value === "object") {
-    return Object.values(value).flatMap(v => Array.isArray(v) ? v : [v]).filter(Boolean).map(v => String(v));
-  }
+  if (typeof value === "string" && value.trim()) return value.split(/[,;\n•]+/).map(v => v.trim()).filter(Boolean);
+  if (value && typeof value === "object") return Object.values(value).flat().filter(Boolean).map(v => String(v));
   return [];
 }
 
 function firstOf(obj, keys, fallback = ""){
-  for (const key of keys) {
+  for (const key of keys){
     const value = obj?.[key];
     if (value !== undefined && value !== null && value !== "") return value;
   }
@@ -461,12 +463,10 @@ function setMeter(textEl, fillEl, value){
 function renderChips(container, items, emptyText){
   container.innerHTML = "";
   const arr = toArray(items);
-
-  if (!arr.length) {
+  if (!arr.length){
     container.innerHTML = `<div class="empty">${emptyText}</div>`;
     return;
   }
-
   arr.forEach(item => {
     const div = document.createElement("div");
     div.className = "chip";
@@ -478,12 +478,10 @@ function renderChips(container, items, emptyText){
 function renderContexts(items){
   contextList.innerHTML = "";
   const arr = toArray(items);
-
-  if (!arr.length) {
+  if (!arr.length){
     contextList.innerHTML = '<div class="empty">No se detectaron contextos relevantes.</div>';
     return;
   }
-
   arr.forEach(item => {
     const div = document.createElement("div");
     div.className = "context-item";
@@ -496,263 +494,50 @@ function renderEnfoque(value){
   if (typeof value === "string") return value || "—";
   if (Array.isArray(value)) return value.filter(Boolean).join(" · ") || "—";
   if (value && typeof value === "object") {
-    return (
-      value.texto ||
-      value.descripcion ||
-      value.recomendacion ||
-      Object.values(value).filter(Boolean).join(" · ") ||
-      "—"
-    );
+    return value.texto || value.descripcion || value.recomendacion || Object.values(value).filter(Boolean).join(" · ") || "—";
   }
   return "—";
 }
 
-function normalizeText(value){
-  return String(value || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+const SAFE_REPLACEMENTS = {
+  "fuck": ["hey", "wow", "oh", "no"],
+  "fucking": ["really", "super", "very", "so very"],
+  "fuckin": ["really", "super", "very"],
+  "fuckin'": ["really", "super", "very"],
+  "motherfucker": ["troublemaker", "bad fellow", "rough person"],
+  "shit": ["rayos", "caray", "vaya", "ups"],
+  "bitch": ["chica", "persona", "amiga"],
+  "damn": ["rayos", "vaya", "uy"],
+  "asshole": ["pesado", "grosero", "terco"],
+  "puta": ["pucha", "rayos", "caray"],
+  "mierda": ["rayos", "caray", "vaya"],
+  "culiao": ["amigo", "compadre", "colega"],
+  "ctm": ["oh no", "rayos", "uy no"],
+  "conchetumare": ["caramba", "rayos", "vaya"],
+  "weon": ["amigo", "compa", "colega"],
+  "weón": ["amigo", "compa", "colega"],
+  "carajo": ["caray", "rayos", "vaya"],
+  "coño": ["caray", "rayos", "vaya"],
+  "pendejo": ["niño", "chico", "joven"],
+  "puto": ["duro", "serio", "frío"]
+};
+
+function vowelGroupsCount(word){
+  const groups = stripAccents(String(word || "").toLowerCase()).match(/[aeiouy]+/g);
+  return Math.max(1, groups ? groups.length : 0);
 }
 
-function includesAny(text, terms){
-  return terms.some(term => text.includes(term));
-}
-
-function countMatches(text, terms){
-  return terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0);
-}
-
-function evaluarPertinenciaEscolar(titulo, artista, letra){
-  const text = normalizeText(`${titulo} ${artista} ${letra}`);
-
-  const safeMetaphors = [
-    "me siento desnudo porque sabes tal como soy",
-    "me siento desnudo",
-    "tal como soy",
-    "abrir el corazon",
-    "con el alma desnuda",
-    "mi alma desnuda",
-    "quedar desnudo frente a ti",
-    "mostrarme tal como soy",
-    "i feel naked because you know me",
-    "i feel naked",
-    "just the way i am",
-    "open my heart",
-    "bare my soul",
-    "my naked soul",
-    "you know me as i am"
-  ];
-
-  const explicitSex = [
-    "quiero tocarte",
-    "quiero desnudarte",
-    "toda la noche",
-    "sexo",
-    "hacerte mia",
-    "hacerte mio",
-    "gemir",
-    "entre tus piernas",
-    "besarte el cuerpo",
-    "tocarte toda la noche",
-    "desnudarte",
-    "ardiendo de deseo",
-    "i want to touch you",
-    "i want to undress you",
-    "all night long",
-    "sex",
-    "between your legs",
-    "kiss your body",
-    "make you mine",
-    "moan",
-    "burning with desire"
-  ];
-
-  const sexualSuggestion = [
-    "tu cuerpo",
-    "tu piel",
-    "entre sabanas",
-    "en la oscuridad",
-    "deseo",
-    "tentacion",
-    "pegado a ti",
-    "muy cerca de ti",
-    "provocacion",
-    "sensual",
-    "your body",
-    "your skin",
-    "between the sheets",
-    "in the dark",
-    "desire",
-    "temptation",
-    "close to you",
-    "next to you",
-    "sensual",
-    "seduction"
-  ];
-
-  const violenceHigh = [
-    "kill","killing","murder","shoot","gun","weapon","blood","dead","die",
-    "matar","matarte","muerte","sangre","arma","disparar","cadaver",
-    "knife","knives","bullet","bullets","slaughter","violence","violent",
-    "cuchillo","balazo","bala","matarlos","asesinar"
-  ];
-
-  const selfHarm = [
-    "suicide","kill myself","i want to die","hurt myself","cut myself",
-    "quiero morir","matarme","autolesion","cortarme","suicidio"
-  ];
-
-  const drugsHard = [
-    "cocaine","heroin","meth","drug dealer","crack",
-    "cocaina","heroina","pasta base","traficante"
-  ];
-
-  const profanityStrong = [
-    "motherfucker","fuck you","fucking","fuckin","shit","bitch","asshole","bastard",
-    "puta","mierda","conchetumadre","culiao","culiao","maricon","bastardo","hijo de puta"
-  ];
-
-  const degradingOrHostile = [
-    "te odio","odio a todos","humillarte","venganza","destruirte","te hare sufrir","te voy a romper","te voy a matar",
-    "i hate you","hate everyone","humiliate you","revenge","destroy you","make you suffer","i will kill you"
-  ];
-
-  const pedagogicalThemes = [
-    "critica social","justicia","paz","igualdad","memoria","historia","identidad","sociedad","derechos","reflexion","contexto cultural",
-    "social criticism","justice","peace","equality","memory","history","identity","society","rights","reflection","cultural context"
-  ];
-
-  let riesgo = 0;
-  let razones = [];
-  let bloqueaApta = false;
-
-  const hasSafeMetaphor = includesAny(text, safeMetaphors);
-
-  const highViolenceHits = countMatches(text, violenceHigh);
-  const selfHarmHits = countMatches(text, selfHarm);
-  const hardDrugHits = countMatches(text, drugsHard);
-  const profanityHits = countMatches(text, profanityStrong);
-  const hostilityHits = countMatches(text, degradingOrHostile);
-  const explicitSexHits = hasSafeMetaphor ? 0 : countMatches(text, explicitSex);
-  const suggestiveHits = hasSafeMetaphor ? 0 : countMatches(text, sexualSuggestion);
-  const pedagogicalHits = countMatches(text, pedagogicalThemes);
-
-  if (highViolenceHits > 0) {
-    riesgo += highViolenceHits * 22;
-    razones.push("violencia explícita o confrontación grave");
-    bloqueaApta = true;
-  }
-
-  if (selfHarmHits > 0) {
-    riesgo += selfHarmHits * 35;
-    razones.push("autolesión o suicidio");
-    bloqueaApta = true;
-  }
-
-  if (hardDrugHits > 0) {
-    riesgo += hardDrugHits * 28;
-    razones.push("drogas duras");
-    bloqueaApta = true;
-  }
-
-  if (profanityHits > 0) {
-    riesgo += profanityHits * 14;
-    razones.push("groserías o lenguaje agresivo");
-  }
-
-  if (hostilityHits > 0) {
-    riesgo += hostilityHits * 18;
-    razones.push("hostilidad, amenaza o humillación");
-    bloqueaApta = true;
-  }
-
-  if (explicitSexHits > 0) {
-    riesgo += explicitSexHits * 30;
-    razones.push("contenido sexual explícito");
-    bloqueaApta = true;
-  }
-
-  if (suggestiveHits > 0) {
-    riesgo += suggestiveHits * 12;
-    razones.push("insinuación o ambigüedad sensual");
-  }
-
-  if (hasSafeMetaphor) {
-    riesgo -= 18;
-    razones.push("uso metafórico inocente detectado");
-  }
-
-  riesgo = Math.max(0, Math.min(100, riesgo));
-
-  let pertinencia = "Apta";
-  let lectura = "Lectura directa";
-  let justificacion = "No se detectan señales explícitas o implícitas incompatibles con un contexto escolar general.";
-  let valorPedagogico = pedagogicalHits > 0 ? "Alto" : "Medio";
-
-  if (bloqueaApta || riesgo >= 60) {
-    pertinencia = "No apta";
-    lectura = "Requiere exclusión general";
-    justificacion = "La letra presenta señales explícitas o implícitas incompatibles con un contexto escolar general.";
-  } else if (riesgo >= 25) {
-    pertinencia = "Revisión docente";
-    lectura = "Lectura mediada";
-    justificacion = "La letra presenta ambigüedades o señales sensibles que requieren revisión cuidadosa antes de usarse en aula.";
-  }
-
-  if (hasSafeMetaphor && riesgo < 25) {
-    pertinencia = "Apta";
-    lectura = "Lectura metafórica";
-    justificacion = "Se detecta lenguaje figurado o emocional sin evidencia suficiente de sexualidad literal o contenido impropio.";
-  }
-
-  return {
-    pertinencia,
-    riesgo,
-    riesgoSensible: Math.min(100, explicitSexHits * 30 + suggestiveHits * 12 + profanityHits * 8),
-    riesgoEscolar: Math.min(100, highViolenceHits * 25 + selfHarmHits * 35 + hardDrugHits * 28 + hostilityHits * 18),
-    justificacion,
-    lectura,
-    valorPedagogico,
-    razones: [...new Set(razones)]
-  };
-}
-
-function aplicarCalibracionEscolar(raw, titulo, artista, letra){
-  const base = { ...(raw || {}) };
-  const capa = evaluarPertinenciaEscolar(titulo, artista, letra);
-
-  base.clasificacion = capa.pertinencia;
-  base.justificacion = capa.justificacion;
-
-  if (!base.nivel_lectura && !base.lectura && !base.lectura_sugerida) {
-    base.nivel_lectura = capa.lectura;
-  }
-
-  if (!base.riesgo_total) base.riesgo_total = capa.riesgo;
-  if (!base.contenido_sensible) base.contenido_sensible = capa.riesgoSensible;
-  if (!base.uso_escolar) base.uso_escolar = capa.riesgoEscolar;
-
-  const observacionesActuales = Array.isArray(base.observaciones)
-    ? base.observaciones
-    : Array.isArray(base.observaciones_pedagogicas)
-      ? base.observaciones_pedagogicas
-      : [];
-
-  const nuevasObservaciones = [...observacionesActuales];
-
-  if (capa.valorPedagogico) {
-    nuevasObservaciones.push(`Valor pedagógico potencial: ${capa.valorPedagogico}`);
-  }
-
-  capa.razones.forEach(r => nuevasObservaciones.push(r));
-  base.observaciones = [...new Set(nuevasObservaciones)];
-
-  return base;
+function pickBestSchoolReplacement(badWord){
+  const base = normalizeText(badWord);
+  const options = SAFE_REPLACEMENTS[base] || SAFE_REPLACEMENTS[base.replace(/'/g, "")] || ["[revisar]"];
+  const badMeter = vowelGroupsCount(base);
+  return options
+    .map(opt => ({ opt, score: Math.abs(vowelGroupsCount(opt) - badMeter) - (normalizeText(opt).startsWith(base.charAt(0)) ? 0.15 : 0) }))
+    .sort((a,b) => a.score - b.score)[0].opt;
 }
 
 function normalizeApiData(raw){
   const d = raw || {};
-
   return {
     clasificacion: firstOf(d, ["clasificacion", "veredicto", "estado_general", "estado", "resultado"], "Resultado listo"),
     justificacion: firstOf(d, ["justificacion", "fundamentacion", "motivo", "explicacion"], ""),
@@ -772,10 +557,259 @@ function normalizeApiData(raw){
   };
 }
 
+function inferSongTheme(lyrics, extraText = ""){
+  const raw = String(lyrics || "");
+  const txt = normalizeText(raw + "\n" + String(extraText || ""));
+  const groups = [
+    {
+      theme: "romance / deseo",
+      educ: "emociones y relaciones",
+      explicitLabel: "referencias afectivas o íntimas directas",
+      implicitLabel: "relación afectiva o intimidad sugerida",
+      patterns: ["kiss","touch","body","desire","sexo","besar","cuerpo","naked","bed","lips","amor","corazon"]
+    },
+    {
+      theme: "vulnerabilidad emocional / nostalgia",
+      educ: "emociones",
+      explicitLabel: "menciones directas a tristeza, pérdida o soledad",
+      implicitLabel: "dependencia emocional, pérdida o añoranza",
+      patterns: ["alone","cry","lonely","llorar","solo","nostalgia","miss you","extraño","shadow","far away"]
+    },
+    {
+      theme: "consumo de alcohol o drogas",
+      educ: "análisis crítico",
+      explicitLabel: "menciones directas a alcohol o drogas",
+      implicitLabel: "posible glamurización o normalización del consumo",
+      patterns: ["beer","vodka","drunk","weed","cocaine","marihuana","alcohol","whisky"]
+    },
+    {
+      theme: "violencia",
+      educ: "convivencia y reflexión",
+      explicitLabel: "menciones directas a violencia",
+      implicitLabel: "agresión o amenaza sugerida",
+      patterns: ["kill","gun","blood","matar","arma","sangre","shoot"]
+    },
+    {
+      theme: "fiesta / vida nocturna",
+      educ: "contexto cultural",
+      explicitLabel: "menciones directas a fiesta o vida nocturna",
+      implicitLabel: "búsqueda de evasión o celebración",
+      patterns: ["dance","party","bailar","fiesta","night","club"]
+    },
+    {
+      theme: "protesta social",
+      educ: "análisis crítico",
+      explicitLabel: "crítica social o política explícita",
+      implicitLabel: "cuestionamiento a poder, autoridad o sistema",
+      patterns: ["power","authority","control","system","fight the power","government","law","state"]
+    }
+  ];
+  const themes = [];
+  const educational = [];
+  const implicit = [];
+  groups.forEach(g => {
+    if (g.patterns.some(p => txt.includes(normalizeText(p)))) {
+      themes.push(g.theme);
+      educational.push(g.educ);
+      implicit.push(g.implicitLabel);
+    }
+  });
+  return {
+    themes: [...new Set(themes)],
+    educational: [...new Set(educational)],
+    implicit: [...new Set(implicit)]
+  };
+}
+
+function evaluateSchoolSuitability(titulo, artista, letra){
+  const text = normalizeText(`${titulo} ${artista} ${letra}`);
+  const rawLetter = normalizeText(letra);
+
+  const safeMetaphors = [
+    "me siento desnudo porque sabes tal como soy",
+    "me siento desnudo",
+    "tal como soy",
+    "abrir el corazon",
+    "con el alma desnuda",
+    "mi alma desnuda",
+    "quedar desnudo frente a ti",
+    "mostrarme tal como soy",
+    "i feel naked because you know me",
+    "you know me as i am",
+    "bare soul",
+    "open heart"
+  ];
+
+  const explicitSex = [
+    "quiero tocarte","quiero desnudarte","toda la noche","sexo","hacerte mia","hacerte mio","gemir",
+    "entre tus piernas","besarte el cuerpo","tocarte toda la noche","desnudarte","ardiendo de deseo",
+    "i want to touch you","undress you","all night long","moan","between your legs","kiss your body"
+  ];
+
+  const sexualSuggestion = [
+    "tu cuerpo","tu piel","entre sabanas","en la oscuridad","deseo","tentacion","pegado a ti",
+    "muy cerca de ti","provocacion","sensual","your body","your skin","in the dark","desire","temptation"
+  ];
+
+  const violenceHigh = [
+    "kill","killing","murder","shoot","gun","weapon","blood","dead","die","matar","matarte",
+    "muerte","sangre","arma","disparar","cadaver"
+  ];
+
+  const selfHarm = [
+    "suicide","kill myself","quiero morir","matarme","autolesion","cortarme"
+  ];
+
+  const drugsHard = [
+    "cocaine","heroin","meth","drug dealer","cocaina","heroina","pasta base"
+  ];
+
+  const profanityStrong = [
+    "motherfucker","fuck you","fucking","puta","mierda","conchetumadre","culiao","maricon","bastard",
+    "shit","bitch","asshole","damn","ctm","weon","coño","carajo"
+  ];
+
+  const degradingOrHostile = [
+    "te odio","odio a todos","humillarte","venganza","destruirte","te hare sufrir","te voy a romper",
+    "te voy a matar","i hate you","revenge","destroy you","make you suffer"
+  ];
+
+  const pedagogicalThemes = [
+    "critica social","justicia","paz","igualdad","memoria","historia","identidad","sociedad","derechos",
+    "reflexion","contexto cultural","power","authority","control","system","government","law","state"
+  ];
+
+  const hasSafeMetaphor = safeMetaphors.some(term => text.includes(normalizeText(term)));
+  const countMatches = terms => terms.reduce((acc, term) => acc + (text.includes(normalizeText(term)) ? 1 : 0), 0);
+
+  const highViolenceHits = countMatches(violenceHigh);
+  const selfHarmHits = countMatches(selfHarm);
+  const hardDrugHits = countMatches(drugsHard);
+  const profanityHits = countMatches(profanityStrong);
+  const hostilityHits = countMatches(degradingOrHostile);
+  const explicitSexHits = hasSafeMetaphor ? 0 : countMatches(explicitSex);
+  const suggestiveHits = hasSafeMetaphor ? 0 : countMatches(sexualSuggestion);
+  const pedagogicalHits = countMatches(pedagogicalThemes);
+
+  let riesgo = 0;
+  const reasons = [];
+  let blocksApta = false;
+
+  if (highViolenceHits > 0){ riesgo += highViolenceHits * 22; reasons.push("violencia explícita o confrontación grave"); blocksApta = true; }
+  if (selfHarmHits > 0){ riesgo += selfHarmHits * 35; reasons.push("autolesión o suicidio"); blocksApta = true; }
+  if (hardDrugHits > 0){ riesgo += hardDrugHits * 28; reasons.push("drogas duras"); blocksApta = true; }
+  if (profanityHits > 0){ riesgo += profanityHits * 14; reasons.push("groserías o lenguaje agresivo"); }
+  if (hostilityHits > 0){ riesgo += hostilityHits * 18; reasons.push("hostilidad, amenaza o humillación"); blocksApta = true; }
+  if (explicitSexHits > 0){ riesgo += explicitSexHits * 30; reasons.push("contenido sexual explícito"); blocksApta = true; }
+  if (suggestiveHits > 0){ riesgo += suggestiveHits * 12; reasons.push("insinuación o ambigüedad sensual"); }
+  if (hasSafeMetaphor){ riesgo -= 18; reasons.push("uso metafórico inocente detectado"); }
+
+  riesgo = Math.max(0, Math.min(100, riesgo));
+
+  let pertinencia = "Apta";
+  let lectura = "Lectura directa";
+  let justificacion = "No se detectan señales explícitas o implícitas incompatibles con un contexto escolar general.";
+  let valorPedagogico = pedagogicalHits > 0 ? "Alto" : "Medio";
+  let edad = "6+";
+
+  if (!rawLetter || rawLetter.length < 30){
+    pertinencia = "Revisión docente";
+    lectura = "Información insuficiente";
+    justificacion = "No se proporcionó la letra completa. El análisis basado solo en título y artista no es suficiente para determinar pertinencia escolar.";
+    riesgo = Math.max(riesgo, 20);
+    edad = "12+";
+  } else if (blocksApta || riesgo >= 60) {
+    pertinencia = "No apta";
+    lectura = "Requiere exclusión general";
+    justificacion = "La letra presenta señales explícitas o implícitas incompatibles con un contexto escolar general.";
+    edad = "16+";
+  } else if (riesgo >= 25) {
+    pertinencia = "Revisión docente";
+    lectura = "Lectura mediada";
+    justificacion = "La letra presenta ambigüedades o señales sensibles que requieren revisión cuidadosa antes de usarse en aula.";
+    edad = "12+";
+  }
+
+  if (hasSafeMetaphor && riesgo < 25 && rawLetter.length >= 30){
+    pertinencia = "Apta";
+    lectura = "Lectura metafórica";
+    justificacion = "Se detecta lenguaje figurado o emocional sin evidencia suficiente de sexualidad literal o contenido impropio.";
+  }
+
+  const themePack = inferSongTheme(letra, "");
+  return {
+    pertinencia,
+    riesgo,
+    riesgoSensible: Math.min(100, explicitSexHits * 30 + suggestiveHits * 12 + profanityHits * 8),
+    riesgoEscolar: Math.min(100, highViolenceHits * 25 + selfHarmHits * 35 + hardDrugHits * 28 + hostilityHits * 18),
+    justificacion,
+    lectura,
+    valorPedagogico,
+    edad,
+    razones: [...new Set(reasons)],
+    temas: themePack.themes,
+    enfoque: [...themePack.educational, ...themePack.implicit]
+  };
+}
+
+function applySchoolCalibration(raw, titulo, artista, letra){
+  const base = { ...(raw || {}) };
+  const layer = evaluateSchoolSuitability(titulo, artista, letra);
+
+  base.clasificacion = layer.pertinencia;
+  base.justificacion = layer.justificacion;
+  base.edad_sugerida = layer.edad;
+  if (!base.nivel_lectura && !base.lectura && !base.lectura_sugerida) base.nivel_lectura = layer.lectura;
+  base.riesgo_total = layer.riesgo;
+  base.contenido_sensible = layer.riesgoSensible;
+  base.uso_escolar = layer.riesgoEscolar;
+
+  const currentObs = Array.isArray(base.observaciones)
+    ? base.observaciones
+    : Array.isArray(base.observaciones_pedagogicas)
+      ? base.observaciones_pedagogicas
+      : [];
+
+  const mergedObs = [...currentObs];
+  mergedObs.push(`Valor pedagógico potencial: ${layer.valorPedagogico}`);
+  layer.razones.forEach(r => mergedObs.push(r));
+  base.observaciones = [...new Set(mergedObs)];
+
+  const apiThemes = toArray(base.temas || base.temas_detectados);
+  base.temas = [...new Set([...apiThemes, ...toArray(layer.temas)])];
+
+  if (!base.enfoque && !base.enfoque_sugerido && layer.enfoque?.length) {
+    base.enfoque = layer.enfoque.join(" · ");
+  }
+
+  return base;
+}
+
+function buildSchoolFriendlySuggestions(contexts){
+  const suggestions = [];
+  (contexts || []).forEach(ctx => {
+    let cleanCtx = String(ctx || "");
+    if (cleanCtx.toLowerCase().startsWith("linea ")) {
+      const parts = cleanCtx.split(": ", 2);
+      if (parts.length === 2) cleanCtx = parts[1];
+    }
+    let replaced = cleanCtx;
+    let hit = false;
+    Object.keys(SAFE_REPLACEMENTS).sort((a,b) => b.length - a.length).forEach(prof => {
+      const pat = new RegExp(`(^|[^A-Za-z0-9])${prof.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9])`, 'ig');
+      if (pat.test(replaced)) {
+        replaced = replaced.replace(pat, (m, g1='') => `${g1}${pickBestSchoolReplacement(prof)}`);
+        hit = true;
+      }
+    });
+    if (hit && replaced !== cleanCtx) suggestions.push(`${cleanCtx} → ${replaced}`);
+  });
+  return suggestions.slice(0, 10);
+}
+
 function applyClassificationUI(clasificacion){
   resultBadge.className = "badge";
   summaryCard.style.boxShadow = "";
-
   if ((clasificacion || "").includes("No apta")) {
     resultBadge.classList.add("red");
     resultBadge.textContent = "No apta";
@@ -792,36 +826,25 @@ function applyClassificationUI(clasificacion){
   }
 }
 
-function renderResult(raw){
+function renderResult(raw, originalData){
   const result = normalizeApiData(raw);
-
   resultTitle.textContent = result.clasificacion || "Resultado listo";
   applyClassificationUI(result.clasificacion);
-
-  songMeta.textContent = `${tituloInput.value || "Sin título"} · ${artistaInput.value || "Artista no indicado"}`;
-
-  mainJustificacion.textContent =
-    result.justificacion ||
-    result.resumen ||
-    "Aquí aparecerá el análisis pedagógico.";
-
+  songMeta.textContent = `${originalData.titulo || "Sin título"} · ${originalData.artista || "Artista no indicado"}`;
+  mainJustificacion.textContent = result.justificacion || result.resumen || "Aquí aparecerá el análisis pedagógico.";
   metaEdad.textContent = result.edad || "—";
-  metaFuente.textContent = result.fuente || "—";
+  metaFuente.textContent = result.fuente || (result.autocompletada ? "API + autocompletado" : "API SonarIA");
   metaLectura.textContent = result.lectura || "—";
-
   resumenTexto.textContent = result.resumen || "—";
   enfoqueTexto.textContent = renderEnfoque(result.enfoque);
-
   renderChips(temasChips, result.temas, "No se detectaron temas.");
   renderChips(obsChips, result.observaciones, "Sin observaciones adicionales.");
   renderContexts(result.contexto);
-
   setMeter(riskPercent, riskTotalFill, result.riesgoTotal);
   setMeter(riskSensitive, riskSensitiveFill, result.riesgoSensible);
   setMeter(riskSchool, riskSchoolFill, result.riesgoEscolar);
-
   showPill(pillAutoLyric, result.autocompletada);
-  showPill(pillManualText, Boolean(textoInput.value.trim()));
+  showPill(pillManualText, Boolean(originalData.texto.trim()));
   showPill(pillFallback, result.fallback);
 }
 
@@ -833,22 +856,17 @@ function resetDashboard(){
   summaryCard.style.boxShadow = "";
   songMeta.textContent = "—";
   mainJustificacion.textContent = "Aquí aparecerá el análisis pedagógico.";
-
   metaEdad.textContent = "—";
   metaFuente.textContent = "—";
   metaLectura.textContent = "—";
-
   resumenTexto.textContent = "—";
   enfoqueTexto.textContent = "—";
-
   temasChips.innerHTML = '<div class="empty">Sin datos.</div>';
   obsChips.innerHTML = '<div class="empty">Sin datos.</div>';
   contextList.innerHTML = '<div class="empty">Aún no hay datos.</div>';
-
   setMeter(riskPercent, riskTotalFill, 0);
   setMeter(riskSensitive, riskSensitiveFill, 0);
   setMeter(riskSchool, riskSchoolFill, 0);
-
   showPill(pillAutoLyric, false);
   showPill(pillManualText, false);
   showPill(pillFallback, false);
@@ -856,6 +874,8 @@ function resetDashboard(){
 
 function clearForm(){
   form.reset();
+  buscarLetraInput.checked = true;
+  contextoEscolarInput.checked = true;
   clearStatus();
   resetDashboard();
 }
@@ -869,7 +889,6 @@ async function runAnalysis(data){
 
   const text = await res.text();
   let json = null;
-
   try {
     json = JSON.parse(text);
   } catch {
@@ -891,8 +910,8 @@ form.addEventListener("submit", async (e) => {
     titulo: tituloInput.value.trim(),
     artista: artistaInput.value.trim(),
     texto: textoInput.value.trim(),
-    buscar_letra: true,
-    contexto_escolar: true
+    buscar_letra: buscarLetraInput.checked,
+    contexto_escolar: contextoEscolarInput.checked
   };
 
   if (!data.titulo && !data.texto) {
@@ -905,15 +924,18 @@ form.addEventListener("submit", async (e) => {
     const apiResult = await runAnalysis(data);
     console.log("Respuesta API:", apiResult);
 
-    const result = aplicarCalibracionEscolar(
-      apiResult,
-      data.titulo,
-      data.artista,
-      data.texto
-    );
+    const calibrated = applySchoolCalibration(apiResult, data.titulo, data.artista, data.texto);
 
-    console.log("Resultado calibrado:", result);
-    renderResult(result);
+    const extraContexts = [];
+    if (!data.texto.trim()) {
+      extraContexts.push("No se proporcionó letra completa: se bloquea la clasificación Apta por falta de evidencia textual.");
+    }
+    const suggestions = buildSchoolFriendlySuggestions(toArray(calibrated.observaciones));
+    suggestions.forEach(s => extraContexts.push(`Sugerencia escolar: ${s}`));
+
+    calibrated.contexto = [...new Set([...toArray(calibrated.contexto), ...extraContexts])];
+
+    renderResult(calibrated, data);
     setStatus("Análisis listo", "success");
   } catch (err) {
     console.error(err);
@@ -922,7 +944,6 @@ form.addEventListener("submit", async (e) => {
 });
 
 clearBtn.addEventListener("click", clearForm);
-
 resetDashboard();
 </script>
 
