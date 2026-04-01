@@ -374,366 +374,397 @@
   </div>
 
   <script>
-    const API_URL = "https://sonaria-api.onrender.com/analizar";
+  const API_URL = "https://sonaria-api.onrender.com/analizar";
 
-    const form = document.getElementById("analysisForm");
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const statusBox = document.getElementById("statusBox");
-    let loadingInterval = null;
+  const form = document.getElementById("analysisForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const statusBox = document.getElementById("statusBox");
+  const resultSection = document.getElementById("resultSection");
 
-    const tituloInput = document.getElementById("titulo");
-    const artistaInput = document.getElementById("artista");
-    const textoInput = document.getElementById("texto");
+  const tituloInput = document.getElementById("titulo");
+  const artistaInput = document.getElementById("artista");
+  const textoInput = document.getElementById("texto");
 
-    const pillAutoLyric = document.getElementById("pillAutoLyric");
-    const pillManualText = document.getElementById("pillManualText");
-    const pillFallback = document.getElementById("pillFallback");
+  const pillAutoLyric = document.getElementById("pillAutoLyric");
+  const pillManualText = document.getElementById("pillManualText");
+  const pillFallback = document.getElementById("pillFallback");
 
-    const summaryEmpty = document.getElementById("summaryEmpty");
-    const summaryContent = document.getElementById("summaryContent");
-    const summaryIcon = document.getElementById("summaryIcon");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultBadge = document.getElementById("resultBadge");
-    const songMeta = document.getElementById("songMeta");
-    const mainJustificacion = document.getElementById("mainJustificacion");
+  const resultEmpty = document.getElementById("resultEmpty");
+  const resultContent = document.getElementById("resultContent");
+  const summaryIcon = document.getElementById("summaryIcon");
+  const resultTitle = document.getElementById("resultTitle");
+  const riskBadge = document.getElementById("riskBadge");
+  const songMeta = document.getElementById("songMeta");
+  const mainJustificacion = document.getElementById("mainJustificacion");
+  const metaEdad = document.getElementById("metaEdad");
+  const metaFuente = document.getElementById("metaFuente");
+  const metaLectura = document.getElementById("metaLectura");
+  const resumenTexto = document.getElementById("resumenTexto");
+  const enfoqueTexto = document.getElementById("enfoqueTexto");
+  const temasChips = document.getElementById("temasChips");
+  const obsChips = document.getElementById("obsChips");
+  const contextList = document.getElementById("contextList");
 
-    const metaEdad = document.getElementById("metaEdad");
-    const metaFuente = document.getElementById("metaFuente");
-    const metaLectura = document.getElementById("metaLectura");
-    const resumenTexto = document.getElementById("resumenTexto");
-    const enfoqueTexto = document.getElementById("enfoqueTexto");
-    const temasChips = document.getElementById("temasChips");
-    const obsChips = document.getElementById("obsChips");
-    const contextList = document.getElementById("contextList");
+  const riskGeneralText = document.getElementById("riskGeneralText");
+  const riskSensitiveText = document.getElementById("riskSensitiveText");
+  const riskSchoolText = document.getElementById("riskSchoolText");
+  const riskGeneralFill = document.getElementById("riskGeneralFill");
+  const riskSensitiveFill = document.getElementById("riskSensitiveFill");
+  const riskSchoolFill = document.getElementById("riskSchoolFill");
 
-    const riskPercent = document.getElementById("riskPercent");
-    const riskSensitive = document.getElementById("riskSensitive");
-    const riskSchool = document.getElementById("riskSchool");
-    const riskTotalFill = document.getElementById("riskTotalFill");
-    const riskSensitiveFill = document.getElementById("riskSensitiveFill");
-    const riskSchoolFill = document.getElementById("riskSchoolFill");
+  const lightRed = document.getElementById("lightRed");
+  const lightYellow = document.getElementById("lightYellow");
+  const lightGreen = document.getElementById("lightGreen");
 
-    let lastAutoFilledLyrics = "";
-    let lastAutoFillSongKey = "";
-    let lastSourceKind = "";
+  let lastAutoFilledLyrics = "";
+  let lastAutoFillSongKey = "";
+  let lastSourceKind = "";
+  let loadingInterval = null;
+  const loadingBase = "SonarIA está analizando para ti";
 
-    function songKey(){
-      return (tituloInput.value.trim().toLowerCase() + " | " + artistaInput.value.trim().toLowerCase()).trim();
-    }
+  function songKey() {
+    return (tituloInput.value.trim().toLowerCase() + " | " + artistaInput.value.trim().toLowerCase()).trim();
+  }
 
-    function clamp(n, min, max){
-      return Math.max(min, Math.min(max, n));
-    }
+  function showPill(el, show) {
+    el.classList.toggle("show", !!show);
+  }
 
-    function showPill(el, show){
-      el.classList.toggle("show", !!show);
-    }
+  function syncPills() {
+    const text = textoInput.value.trim();
+    showPill(pillAutoLyric, !!lastAutoFilledLyrics && text === lastAutoFilledLyrics);
+    showPill(pillManualText, !!text && (!lastAutoFilledLyrics || text !== lastAutoFilledLyrics));
+    showPill(pillFallback, lastSourceKind === "fallback inteligente");
+  }
 
-    function syncPills(){
-      const text = textoInput.value.trim();
-      showPill(pillAutoLyric, !!lastAutoFilledLyrics && text === lastAutoFilledLyrics);
-      showPill(pillManualText, !!text && (!lastAutoFilledLyrics || text !== lastAutoFilledLyrics));
-      showPill(pillFallback, lastSourceKind === "fallback inteligente");
-    }
+  function maybeClearPreviousAutoLyrics() {
+    const currentKey = songKey();
+    const currentText = textoInput.value.trim();
 
-    function maybeClearPreviousAutoLyrics(){
-      const currentKey = songKey();
-      const currentText = textoInput.value.trim();
-      if (lastAutoFilledLyrics && currentText === lastAutoFilledLyrics && currentKey !== lastAutoFillSongKey){
-        textoInput.value = "";
-        lastAutoFilledLyrics = "";
-        lastSourceKind = "";
-      }
-      syncPills();
-    }
-
-    tituloInput.addEventListener("input", maybeClearPreviousAutoLyrics);
-    artistaInput.addEventListener("input", maybeClearPreviousAutoLyrics);
-    textoInput.addEventListener("input", () => {
-      if (textoInput.value.trim() !== lastAutoFilledLyrics && lastSourceKind === "lyrics.ovh"){
-        lastSourceKind = "texto editado por usuario";
-      }
-      syncPills();
-    });
-
-    function stopLoadingAnimation(){
-      if (loadingInterval){
-        clearInterval(loadingInterval);
-        loadingInterval = null;
-      }
-    }
-
-    function startLoadingAnimation(){
-      stopLoadingAnimation();
-      let dots = 0;
-      const base = "SonarIA está analizando para ti";
-      statusBox.className = "status show loading";
-      statusBox.textContent = base;
-      loadingInterval = setInterval(() => {
-        dots = (dots + 1) % 4;
-        statusBox.textContent = base + ".".repeat(dots);
-      }, 450);
-    }
-
-    function setStatus(message, type){
-      stopLoadingAnimation();
-      statusBox.textContent = message;
-      statusBox.className = "status show " + type;
-    }
-
-    function clearStatus(){
-      stopLoadingAnimation();
-      statusBox.textContent = "";
-      statusBox.className = "status";
-    }
-
-    function resetResults(){
-      summaryEmpty.style.display = "block";
-      summaryContent.style.display = "none";
-      summaryIcon.textContent = "—";
-      resultTitle.textContent = "Esperando análisis";
-      resultBadge.textContent = "Sin datos";
-      resultBadge.className = "badge blue";
-      songMeta.textContent = "—";
-      mainJustificacion.textContent = "—";
-      metaEdad.textContent = "—";
-      metaFuente.textContent = "—";
-      metaLectura.textContent = "—";
-      resumenTexto.textContent = "—";
-      enfoqueTexto.textContent = "—";
-      temasChips.innerHTML = "";
-      obsChips.innerHTML = "";
-      contextList.innerHTML = '<div class="empty">Cuando analices una canción, aquí aparecerán señales y observaciones en lenguaje claro.</div>';
-      setMeter(riskTotalFill, riskPercent, 0);
-      setMeter(riskSensitiveFill, riskSensitive, 0);
-      setMeter(riskSchoolFill, riskSchool, 0);
-    }
-
-    function setMeter(fillEl, labelEl, value){
-      const clean = clamp(Math.round(Number(value) || 0), 0, 100);
-      fillEl.style.width = clean + "%";
-      labelEl.textContent = clean + "%";
-    }
-
-    function renderChips(container, items, fallbackText){
-      container.innerHTML = "";
-      const arr = Array.isArray(items) ? items : [];
-      if (!arr.length){
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = fallbackText;
-        container.appendChild(chip);
-        return;
-      }
-      arr.forEach(item => {
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = String(item);
-        container.appendChild(chip);
-      });
-    }
-
-    function renderContext(items){
-      contextList.innerHTML = "";
-      const arr = Array.isArray(items) ? items.filter(Boolean) : [];
-      if (!arr.length){
-        contextList.innerHTML = '<div class="empty">No se detectaron observaciones adicionales para mostrar.</div>';
-        return;
-      }
-      arr.forEach(item => {
-        const box = document.createElement("div");
-        box.className = "context-item";
-        box.textContent = String(item);
-        contextList.appendChild(box);
-      });
-    }
-
-    function classifyResult(text){
-      const base = String(text || "").toLowerCase();
-      if (base.includes("no recomendada") || base.includes("contenido sensible") || base.includes("no apta")) {
-        return { emoji:"🔴", badge:"No apta / sensible", badgeClass:"badge red" };
-      }
-      if (base.includes("mediación") || base.includes("criterio") || base.includes("revisar")) {
-        return { emoji:"🟡", badge:"Con mediación", badgeClass:"badge yellow" };
-      }
-      return { emoji:"🟢", badge:"Apta", badgeClass:"badge green" };
-    }
-
-    function setTraffic(risk){
-      const red = document.getElementById("lightRed");
-      const yellow = document.getElementById("lightYellow");
-      const green = document.getElementById("lightGreen");
-      [red, yellow, green].forEach(el => {
-        el.style.opacity = ".28";
-        el.style.boxShadow = "none";
-      });
-      if (risk > 35){
-        red.style.background = "var(--red)";
-        red.style.opacity = "1";
-        red.style.boxShadow = "0 0 18px rgba(255,107,107,.45)";
-      } else if (risk > 8){
-        yellow.style.background = "var(--yellow)";
-        yellow.style.opacity = "1";
-        yellow.style.boxShadow = "0 0 18px rgba(247,185,68,.45)";
-      } else {
-        green.style.background = "var(--green)";
-        green.style.opacity = "1";
-        green.style.boxShadow = "0 0 18px rgba(25,210,141,.45)";
-      }
-    }
-
-    function inferFriendlyObservations(final){
-      const obs = [];
-      if (Array.isArray(final.observaciones)) {
-        obs.push(...final.observaciones);
-      }
-      if (final.fuente_letra === "lyrics.ovh") {
-        obs.unshift("Letra encontrada automáticamente desde lyrics.ovh.");
-      } else if (final.fuente_letra === "texto pegado por usuario") {
-        obs.unshift("Se analizó el texto pegado manualmente.");
-      } else if (final.fallback_inteligente) {
-        obs.unshift("No se encontró la letra completa y se usó una lectura orientativa según título y artista.");
-      }
-      return [...new Set(obs)];
-    }
-
-    async function postJson(body){
-      const res = await fetch(API_URL, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify(body)
-      });
-      const text = await res.text();
-      let data = null;
-      try { data = JSON.parse(text); } catch {}
-      return { ok:res.ok, status:res.status, data, text };
-    }
-
-    async function runAnalysis(){
-      maybeClearPreviousAutoLyrics();
-
-      const titulo = tituloInput.value.trim();
-      const artista = artistaInput.value.trim();
-      let texto = textoInput.value.trim();
-      const buscarLetra = document.getElementById("buscarLetra").checked;
-      const contextoEscolar = document.getElementById("contextoEscolar").checked;
-
-      if (!texto && !(titulo && artista)){
-        setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
-        return;
-      }
-
-      analyzeBtn.disabled = true;
-      analyzeBtn.style.opacity = ".75";
-      startLoadingAnimation();
-      document.getElementById("resultSection").scrollIntoView({ behavior: "smooth", block: "start" });
-
-      try{
-        const payload = {
-          titulo,
-          artista,
-          texto,
-          buscar_letra: buscarLetra,
-          contexto_escolar: contextoEscolar
-        };
-
-        const res = await postJson(payload);
-
-        if (!res.ok || !res.data){
-          throw new Error("Respuesta inválida del servidor.");
-        }
-
-        const final = res.data;
-
-        if (final.letra_encontrada && final.letra_usada){
-          textoInput.value = final.letra_usada;
-          lastAutoFilledLyrics = final.letra_usada.trim();
-          lastAutoFillSongKey = songKey();
-          lastSourceKind = "lyrics.ovh";
-        } else if (final.fallback_inteligente){
-          lastAutoFilledLyrics = "";
-          lastSourceKind = "fallback inteligente";
-        } else if (textoInput.value.trim().length >= 20){
-          lastAutoFilledLyrics = "";
-          lastSourceKind = "texto pegado por usuario";
-        }
-
-        const resumen = final.resumen || final.resultado || "Sin resumen";
-        const justificacion = final.justificacion || "Sin justificación";
-        const riesgo = clamp(Number(final.riesgo ?? final.risk ?? 0), 0, 100);
-        const clas = classifyResult(resumen);
-        const enfoque = final.enfoque || {};
-        const friendlyObs = inferFriendlyObservations(final);
-        const sensitive = clamp(riesgo + (friendlyObs.length * 4), 0, 100);
-        const school = 100 - riesgo;
-
-        summaryEmpty.style.display = "none";
-        summaryContent.style.display = "block";
-
-        summaryIcon.textContent = clas.emoji;
-        resultTitle.textContent = resumen;
-        resultBadge.textContent = clas.badge;
-        resultBadge.className = clas.badgeClass;
-        songMeta.textContent = [titulo || "Canción sin título", artista || "Artista no indicado"].join(" — ");
-        mainJustificacion.textContent = justificacion;
-
-        metaEdad.textContent = final.edad || final.edad_sugerida || "—";
-        metaFuente.textContent = final.fuente_letra || "desconocida";
-        metaLectura.textContent = enfoque.lectura_sugerida || "pedagógica";
-        resumenTexto.textContent = resumen;
-        enfoqueTexto.textContent =
-          `${enfoque.lectura_sugerida || "—"} · ${enfoque.uso_recomendado || "—"} · ${enfoque.fuente_de_sentido || "—"}`;
-
-        renderChips(temasChips, final.temas || final.temas_detectados || [], "Sin temas detectados");
-        renderChips(obsChips, final.observaciones || [], "Sin observaciones adicionales");
-        renderContext(friendlyObs);
-
-        setMeter(riskTotalFill, riskPercent, riesgo);
-        setMeter(riskSensitiveFill, riskSensitive, sensitive);
-        setMeter(riskSchoolFill, riskSchool, school);
-        setTraffic(riesgo);
-
-        setStatus("Análisis completado correctamente.", "success");
-        document.getElementById("resultSection").scrollIntoView({ behavior: "smooth", block: "start" });
-        syncPills();
-      } catch (error){
-        setStatus("No se pudo completar el análisis. Revisa la conexión o el backend.", "error");
-      } finally {
-        stopLoadingAnimation();
-        analyzeBtn.disabled = false;
-        analyzeBtn.style.opacity = "1";
-      }
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      await runAnalysis();
-    });
-
-    [tituloInput, artistaInput].forEach(input => {
-      input.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter"){
-          e.preventDefault();
-          await runAnalysis();
-        }
-      });
-    });
-
-    clearBtn.addEventListener("click", () => {
-      form.reset();
-      document.getElementById("buscarLetra").checked = true;
-      document.getElementById("contextoEscolar").checked = true;
+    if (
+      lastAutoFilledLyrics &&
+      currentText === lastAutoFilledLyrics &&
+      currentKey !== lastAutoFillSongKey
+    ) {
+      textoInput.value = "";
       lastAutoFilledLyrics = "";
-      lastAutoFillSongKey = "";
       lastSourceKind = "";
-      clearStatus();
-      resetResults();
-      syncPills();
+    }
+
+    syncPills();
+  }
+
+  tituloInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+  artistaInput.addEventListener("input", maybeClearPreviousAutoLyrics);
+  textoInput.addEventListener("input", () => {
+    if (textoInput.value.trim() !== lastAutoFilledLyrics && lastSourceKind === "lyrics.ovh") {
+      lastSourceKind = "texto editado por usuario";
+    }
+    syncPills();
+  });
+
+  function stopLoadingAnimation() {
+    if (loadingInterval) {
+      clearInterval(loadingInterval);
+      loadingInterval = null;
+    }
+  }
+
+  function startLoadingAnimation() {
+    stopLoadingAnimation();
+    let dots = 0;
+    statusBox.className = "status show loading";
+    statusBox.textContent = loadingBase;
+
+    loadingInterval = setInterval(() => {
+      dots = (dots + 1) % 4;
+      statusBox.textContent = loadingBase + ".".repeat(dots);
+    }, 450);
+  }
+
+  function clearStatus() {
+    stopLoadingAnimation();
+    statusBox.textContent = "";
+    statusBox.className = "status";
+  }
+
+  function setStatus(message, type) {
+    stopLoadingAnimation();
+    statusBox.textContent = message;
+    statusBox.className = "status show " + type;
+  }
+
+  function setBar(fillEl, labelEl, value) {
+    const clean = Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
+    fillEl.style.width = clean + "%";
+    labelEl.textContent = clean + "%";
+  }
+
+  function clearLights() {
+    lightRed.className = "light";
+    lightYellow.className = "light";
+    lightGreen.className = "light";
+  }
+
+  function setTraffic(riesgo) {
+    clearLights();
+
+    if (riesgo > 35) {
+      lightRed.className = "light active red";
+    } else if (riesgo > 8) {
+      lightYellow.className = "light active yellow";
+    } else {
+      lightGreen.className = "light active green";
+    }
+  }
+
+  function resetResults() {
+    resultEmpty.style.display = "block";
+    resultContent.style.display = "none";
+    summaryIcon.textContent = "—";
+    resultTitle.textContent = "Esperando análisis";
+    riskBadge.textContent = "Sin análisis";
+    riskBadge.className = "risk-tag";
+    songMeta.textContent = "—";
+    mainJustificacion.textContent = "—";
+    metaEdad.textContent = "—";
+    metaFuente.textContent = "—";
+    metaLectura.textContent = "—";
+    resumenTexto.textContent = "—";
+    enfoqueTexto.textContent = "—";
+    temasChips.innerHTML = "";
+    obsChips.innerHTML = "";
+    contextList.innerHTML = '<div class="context-item">Aquí aparecerán observaciones útiles, sin detalles técnicos ni código.</div>';
+    setBar(riskGeneralFill, riskGeneralText, 0);
+    setBar(riskSensitiveFill, riskSensitiveText, 0);
+    setBar(riskSchoolFill, riskSchoolText, 0);
+    clearLights();
+  }
+
+  function renderChips(container, items, emptyLabel) {
+    container.innerHTML = "";
+
+    if (!items || !items.length) {
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = emptyLabel;
+      container.appendChild(chip);
+      return;
+    }
+
+    items.forEach(item => {
+      const chip = document.createElement("div");
+      chip.className = "chip";
+      chip.textContent = String(item);
+      container.appendChild(chip);
+    });
+  }
+
+  function renderContext(items) {
+    contextList.innerHTML = "";
+
+    if (!items || !items.length) {
+      contextList.innerHTML = '<div class="context-item">No se detectaron observaciones adicionales.</div>';
+      return;
+    }
+
+    items.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "context-item";
+      div.textContent = String(item);
+      contextList.appendChild(div);
+    });
+  }
+
+  function friendlySourceLabel(source) {
+    if (source === "lyrics.ovh") return "lyrics.ovh";
+    if (source === "texto pegado por usuario") return "Texto manual";
+    if (source === "fallback inteligente") return "Lectura orientativa";
+    return source || "—";
+  }
+
+  function classifyResult(resumen, riesgo) {
+    const lower = String(resumen || "").toLowerCase();
+
+    if (lower.includes("no recomendada") || lower.includes("contenido sensible") || riesgo > 35) {
+      return { icon: "🔴", badge: "No recomendada sin mediación" };
+    }
+
+    if (lower.includes("mediación") || lower.includes("criterio") || riesgo > 8) {
+      return { icon: "🟡", badge: "Requiere mediación docente" };
+    }
+
+    return { icon: "🟢", badge: "Apta para contexto escolar" };
+  }
+
+  function buildFriendlyObservations(final) {
+    const obs = [];
+
+    if (Array.isArray(final.observaciones)) {
+      final.observaciones.forEach(o => obs.push(String(o)));
+    }
+
+    if (final.fuente_letra === "lyrics.ovh") {
+      obs.unshift("La letra fue encontrada automáticamente.");
+    } else if (final.fuente_letra === "texto pegado por usuario") {
+      obs.unshift("Se analizó la letra pegada manualmente.");
+    } else if (final.fallback_inteligente) {
+      obs.unshift("No se encontró la letra completa y se realizó una lectura orientativa según título y artista.");
+    }
+
+    return [...new Set(obs)];
+  }
+
+  async function postJson(body) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
     });
 
+    const text = await res.text();
+    let data = null;
+
+    try {
+      data = JSON.parse(text);
+    } catch {}
+
+    return { ok: res.ok, status: res.status, text, data };
+  }
+
+  async function runAnalysis() {
+    maybeClearPreviousAutoLyrics();
+
+    const titulo = tituloInput.value.trim();
+    const artista = artistaInput.value.trim();
+    const texto = textoInput.value.trim();
+    const buscarLetra = document.getElementById("buscarLetra").checked;
+    const contextoEscolar = document.getElementById("contextoEscolar").checked;
+
+    clearStatus();
+
+    if (!texto && !(titulo && artista)) {
+      setStatus("Ingresa la letra completa o al menos título y artista para analizar.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = ".75";
+    startLoadingAnimation();
+
+    resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    try {
+      const payload = {
+        titulo,
+        artista,
+        texto,
+        buscar_letra: buscarLetra,
+        contexto_escolar: contextoEscolar
+      };
+
+      const res = await postJson(payload);
+
+      if (!res.ok || !res.data) {
+        throw new Error("La respuesta del servidor no fue válida.");
+      }
+
+      const final = res.data;
+
+      if (final.letra_encontrada && final.letra_usada) {
+        textoInput.value = final.letra_usada;
+        lastAutoFilledLyrics = final.letra_usada.trim();
+        lastAutoFillSongKey = songKey();
+        lastSourceKind = "lyrics.ovh";
+      } else if (final.fallback_inteligente) {
+        lastAutoFilledLyrics = "";
+        lastSourceKind = "fallback inteligente";
+      } else if (textoInput.value.trim().length >= 20) {
+        lastAutoFilledLyrics = "";
+        lastSourceKind = "texto pegado por usuario";
+      }
+
+      const resumen = final.resumen || final.resultado || "Sin resumen";
+      const justificacion = final.justificacion || "Sin justificación";
+      const riesgo = Number(final.riesgo ?? final.risk ?? 0);
+      const edad = String(final.edad ?? final.edad_sugerida ?? "—");
+      const enfoque = final.enfoque || {};
+      const clas = classifyResult(resumen, riesgo);
+      const temas = final.temas || final.temas_detectados || [];
+      const observaciones = final.observaciones || [];
+      const sensitive = Math.max(0, Math.min(100, Math.round(riesgo + (temas.length * 4))));
+      const school = Math.max(0, 100 - Math.round(riesgo));
+      const friendlyObs = buildFriendlyObservations(final);
+
+      resultEmpty.style.display = "none";
+      resultContent.style.display = "block";
+
+      summaryIcon.textContent = clas.icon;
+      resultTitle.textContent = resumen;
+      riskBadge.textContent = clas.badge;
+      songMeta.textContent = [titulo || "Canción sin título", artista || "Artista no indicado"].join(" — ");
+      mainJustificacion.textContent = justificacion;
+
+      metaEdad.textContent = edad;
+      metaFuente.textContent = friendlySourceLabel(final.fuente_letra);
+      metaLectura.textContent = enfoque.lectura_sugerida || "pedagógica";
+
+      resumenTexto.textContent = resumen;
+      enfoqueTexto.textContent = `${enfoque.lectura_sugerida || "—"} · ${enfoque.uso_recomendado || "—"} · ${enfoque.fuente_de_sentido || "—"}`;
+
+      renderChips(temasChips, temas, "Sin temas detectados");
+      renderChips(obsChips, observaciones, "Sin observaciones adicionales");
+      renderContext(friendlyObs);
+
+      setBar(riskGeneralFill, riskGeneralText, riesgo);
+      setBar(riskSensitiveFill, riskSensitiveText, sensitive);
+      setBar(riskSchoolFill, riskSchoolText, school);
+      setTraffic(riesgo);
+
+      clearStatus();
+      setStatus("Análisis completado correctamente.", "success");
+      resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      syncPills();
+    } catch (error) {
+      setStatus("No se pudo completar el análisis. Revisa la conexión o el backend.", "error");
+      console.error("Error en SonarIA:", error);
+    } finally {
+      stopLoadingAnimation();
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await runAnalysis();
+  });
+
+  [tituloInput, artistaInput].forEach(input => {
+    input.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        await runAnalysis();
+      }
+    });
+  });
+
+  clearBtn.addEventListener("click", () => {
+    form.reset();
+    document.getElementById("buscarLetra").checked = true;
+    document.getElementById("contextoEscolar").checked = true;
+    clearStatus();
+    lastAutoFilledLyrics = "";
+    lastAutoFillSongKey = "";
+    lastSourceKind = "";
     resetResults();
     syncPills();
-  </script>
+  });
+
+  resetResults();
+  syncPills();
+</script>
+
 </body>
 </html>
