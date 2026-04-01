@@ -1,549 +1,241 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Dashboard escolar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarIA | Dashboard escolar</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
- <style>
-    :root{
-      --bg:#06101b;
-      --bg2:#0a1627;
-      --panel:rgba(255,255,255,.05);
-      --panel-strong:rgba(255,255,255,.08);
-      --line:rgba(255,255,255,.10);
-      --text:#eef2f7;
-      --muted:#9fb0c7;
-      --blue:#4b82ff;
-      --green:#19d28d;
-      --yellow:#f7b944;
-      --red:#ff6b6b;
-      --orange:#ff8a00;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-      --radius:24px;
-      --max:1380px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-    }
-    body::before{
-      content:"";
-      position:fixed; inset:0; pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-    }
-    a{color:inherit;text-decoration:none}
-    .container{
-      position:relative; z-index:1;
-      max-width:var(--max);
-      margin:0 auto;
-      padding:24px 22px 70px;
-    }
-    .header{
-      display:flex; align-items:center; justify-content:space-between; gap:16px;
-      margin-bottom:18px;
-    }
-    .brand{
-      display:flex; flex-direction:column; gap:4px;
-    }
-    .brand-main{
-      font-size:clamp(2.4rem, 5vw, 4rem);
-      line-height:.95; font-weight:900; letter-spacing:-.06em; margin:0;
-    }
-    .brand-main .ia{color:var(--green)}
-    .brand-sub{color:#d7fff0; font-weight:800}
-    .shell{
-      display:grid;
-      grid-template-columns:420px 1fr;
-      gap:18px;
-      align-items:start;
-    }
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-    .panel{padding:24px}
-    .panel h2,.panel h3{margin:0}
-    .muted{color:var(--muted)}
-    .stack{display:grid; gap:14px}
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .input,.textarea,.select{
-      width:100%;
-      padding:15px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font:inherit;
-      outline:none;
-      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .input:focus,.textarea:focus,.select:focus{
-      border-color:rgba(75,130,255,.38);
-      background:rgba(255,255,255,.07);
-      box-shadow:0 0 0 4px rgba(75,130,255,.10);
-    }
-    .textarea{min-height:200px; resize:vertical}
-    .helper-row{display:flex; gap:8px; flex-wrap:wrap}
-    .pill{
-      display:none; align-items:center; padding:8px 12px; border-radius:999px;
-      font-size:.82rem; font-weight:800;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-    }
-    .pill.show{display:inline-flex}
-    .pill.green{background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24); color:#d9fff0}
-    .pill.blue{background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.24); color:#dce8ff}
-    .pill.orange{background:rgba(255,138,0,.1); border-color:rgba(255,138,0,.24); color:#ffe0bf}
-    .switch{
-      display:flex; gap:12px; align-items:flex-start;
-      padding:14px 16px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-    }
-    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green)}
-    .switch strong{display:block; margin-bottom:4px}
-    .switch span{display:block; color:var(--muted); font-size:.93rem; line-height:1.55}
-    .actions{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-height:50px; padding:14px 18px; border:none; cursor:pointer;
-      border-radius:18px; font:inherit; font-weight:800;
-      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      background:linear-gradient(135deg,var(--orange),#ff6700);
-      color:#111827;
-      box-shadow:0 12px 28px rgba(255,138,0,.28);
-    }
-    .btn-ghost{
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-    .status{
-      display:none;
-      padding:12px 14px; border-radius:14px; line-height:1.55;
-      font-size:.95rem;
-    }
-    .status.show{display:block}
-    .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
-    .status.success{background:rgba(25,210,141,.08); border:1px solid rgba(25,210,141,.18); color:#d9fff0}
-    .status.error{background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.18); color:#ffd7d7}
-    .right-col{display:grid; gap:18px}
-    .summary-card{
-      display:grid; grid-template-columns:110px 1fr; gap:16px; align-items:center;
-    }
-    .summary-icon{
-      width:96px; height:96px; border-radius:26px; display:flex; align-items:center; justify-content:center;
-      font-size:3rem; font-weight:900;
-      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09);
-    }
-    .summary-main{display:grid; gap:8px}
-    .result-title{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-      font-size:clamp(1.35rem, 2.2vw, 2rem); font-weight:900; letter-spacing:-.03em;
-    }
-    .badge{
-      padding:8px 12px; border-radius:999px; font-size:.85rem; font-weight:800;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-    }
-    .badge.green{color:#d9fff0; background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24)}
-    .badge.yellow{color:#fff1cc; background:rgba(247,185,68,.12); border-color:rgba(247,185,68,.26)}
-    .badge.red{color:#ffd9d9; background:rgba(255,107,107,.12); border-color:rgba(255,107,107,.26)}
-    .badge.blue{color:#dce8ff; background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.22)}
-    .cards-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:18px}
-    .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    .mini-card{
-      padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
-    }
-    .mini-card strong{display:block; margin-bottom:6px; color:#cfdcf0; font-size:.92rem}
-    .mini-card span{font-weight:800}
-    .box{
-      padding:18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
-    }
-    .box h4{margin:0 0 10px; font-size:1.02rem}
-    .box p{
-      margin:0; white-space:pre-wrap; line-height:1.72; color:#d7e2f1;
-    }
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      padding:8px 12px; border-radius:999px;
-      font-size:.88rem; font-weight:700;
-      color:#dce8ff;
-      background:rgba(75,130,255,.1);
-      border:1px solid rgba(75,130,255,.2);
-    }
-    .risk-block{display:grid; gap:12px}
-    .meter-label{display:flex; justify-content:space-between; gap:12px; font-size:.93rem; color:#d7e2f1}
-    .meter-track{
-      width:100%; height:11px; border-radius:999px; overflow:hidden;
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.06);
-    }
-    .meter-fill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
-      transition:width .35s ease;
-    }
-    .context-list{display:grid; gap:10px}
-    .context-item{
-      padding:14px 16px; border-radius:16px;
-      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
-      color:#d7e2f1; line-height:1.6;
-    }
-    .empty{
-      color:var(--muted); line-height:1.8;
-    }
-    .footer{margin-top:32px; text-align:center; color:#d7e2f1; font-size:1.02rem; font-weight:800}
-    @media (max-width:1180px){
-      .shell{grid-template-columns:1fr}
-      .cards-grid,.mini-grid{grid-template-columns:1fr}
-    }
-    @media (max-width:720px){
-      .container{padding:18px 14px 56px}
-      .row,.actions{grid-template-columns:1fr}
-      .summary-card{grid-template-columns:1fr}
-      .summary-icon{width:72px;height:72px;border-radius:20px}
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background: radial-gradient(circle at top left, #0b1623, #020617);
+  color:#fff;
+}
+
+.container{
+  display:flex;
+  gap:30px;
+  padding:40px;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  padding:20px;
+  backdrop-filter:blur(10px);
+}
+
+.left{
+  width:350px;
+}
+
+.right{
+  flex:1;
+}
+
+input, textarea{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-bottom:10px;
+  background:#111;
+  color:#fff;
+}
+
+button{
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.primary{
+  background:#ff8000;
+}
+
+.secondary{
+  background:#333;
+}
+
+.badge{
+  padding:4px 10px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+.green{background:#00d084;}
+.yellow{background:#facc15;}
+.red{background:#ff4d4d;}
+
+.chip{
+  display:inline-block;
+  background:#1e293b;
+  padding:5px 10px;
+  border-radius:10px;
+  margin:5px;
+}
+
+.empty{
+  opacity:.6;
+}
+</style>
 </head>
 
 <body>
 
-<!-- 🔐 BOTÓN LOGOUT -->
-<button onclick="logout()" style="
-  position:absolute;
-  top:20px;
-  right:20px;
-  padding:10px 16px;
-  border:none;
-  border-radius:10px;
-  background:#ff4d4d;
-  color:white;
-  cursor:pointer;
-">
-Cerrar sesión
-</button>
-
 <div class="container">
-  <header class="header">
-    <a href="index.html" class="brand">
-      <h1 class="brand-main">Sonar<span class="ia">IA</span></h1>
-      <div class="brand-sub">Evaluador pedagógico musical</div>
-    </a>
-  </header>
 
-  <section class="shell">
+<!-- LEFT -->
+<div class="card left">
+  <h2>Dashboard escolar</h2>
 
-    <!-- PANEL -->
-    <aside class="card panel stack">
+  <input id="titulo" placeholder="Título">
+  <input id="artista" placeholder="Artista">
+  <textarea id="texto" placeholder="Letra..."></textarea>
 
-      <h2 style="font-size:1.8rem;">Dashboard escolar</h2>
+  <button class="primary" onclick="analizar()">Analizar canción</button>
+</div>
 
-      <form id="analysisForm" class="stack">
+<!-- RIGHT -->
+<div class="right">
 
-        <div class="row">
-          <input id="titulo" class="input" placeholder="Título de la canción">
-          <input id="artista" class="input" placeholder="Artista">
-        </div>
+  <div class="card summary-card">
+    <div id="summaryIcon">—</div>
+    <h2 id="resultTitle">Esperando análisis</h2>
+    <span id="resultBadge" class="badge">Sin datos</span>
+    <p id="songMeta">—</p>
+  </div>
 
-        <textarea id="texto" class="textarea" placeholder="Pega la letra..."></textarea>
+  <div class="card">
+    <p><b>Edad:</b> <span id="metaEdad">—</span></p>
+    <p><b>Fuente:</b> <span id="metaFuente">—</span></p>
+    <p><b>Lectura:</b> <span id="metaLectura">—</span></p>
+  </div>
 
-        <div class="actions">
-          <button type="submit" class="btn btn-primary">Analizar canción</button>
-          <button type="button" onclick="clearForm()" class="btn btn-ghost">Limpiar</button>
-        </div>
+  <div class="card">
+    <h4>Resumen</h4>
+    <p id="resumenTexto">—</p>
+  </div>
 
-        <div id="statusBox" class="status"></div>
+  <div class="card">
+    <h4>Enfoque</h4>
+    <p id="enfoqueTexto">—</p>
+  </div>
 
-      </form>
+  <div class="card">
+    <h4>Temas</h4>
+    <div id="temasChips"></div>
+  </div>
 
-    </aside>
+  <div class="card">
+    <h4>Observaciones</h4>
+    <div id="obsChips"></div>
+  </div>
 
-    <!-- RESULTADO -->
-    <main class="right-col">
+  <div class="card">
+    <h4>Contexto</h4>
+    <div id="contextList"></div>
+  </div>
 
-  <!-- RESUMEN PRINCIPAL -->
-  <section class="card panel summary-card">
-    <div class="summary-icon" id="summaryIcon">—</div>
+</div>
 
-    <div class="summary-main">
-      <div class="result-title">
-        <span id="resultTitle">Esperando análisis</span>
-        <span id="resultBadge" class="badge blue">Sin datos</span>
-      </div>
-
-      <div id="songMeta" class="muted">—</div>
-      <div id="mainJustificacion" class="muted">Aquí aparecerá el análisis pedagógico.</div>
-    </div>
-  </section>
-
-  <!-- MÉTRICAS -->
-  <section class="card panel">
-    <div class="mini-grid">
-      <div class="mini-card">
-        <strong>Edad sugerida</strong>
-        <span id="metaEdad">—</span>
-      </div>
-
-      <div class="mini-card">
-        <strong>Fuente</strong>
-        <span id="metaFuente">—</span>
-      </div>
-
-      <div class="mini-card">
-        <strong>Lectura</strong>
-        <span id="metaLectura">—</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTENIDO -->
-  <section class="cards-grid">
-
-    <div class="box">
-      <h4>Resumen pedagógico</h4>
-      <p id="resumenTexto">—</p>
-    </div>
-
-    <div class="box">
-      <h4>Enfoque sugerido</h4>
-      <p id="enfoqueTexto">—</p>
-    </div>
-
-    <div class="box">
-      <h4>Temas detectados</h4>
-      <div id="temasChips" class="chips"></div>
-    </div>
-
-    <div class="box">
-      <h4>Observaciones</h4>
-      <div id="obsChips" class="chips"></div>
-    </div>
-
-  </section>
-
-  <!-- RIESGO -->
-  <section class="card panel risk-block">
-
-    <div>
-      <div class="meter-label">
-        <span>Riesgo total</span>
-        <span id="riskPercent">0%</span>
-      </div>
-      <div class="meter-track">
-        <div id="riskTotalFill" class="meter-fill"></div>
-      </div>
-    </div>
-
-    <div>
-      <div class="meter-label">
-        <span>Contenido sensible</span>
-        <span id="riskSensitive">0%</span>
-      </div>
-      <div class="meter-track">
-        <div id="riskSensitiveFill" class="meter-fill"></div>
-      </div>
-    </div>
-
-    <div>
-      <div class="meter-label">
-        <span>Uso escolar</span>
-        <span id="riskSchool">0%</span>
-      </div>
-      <div class="meter-track">
-        <div id="riskSchoolFill" class="meter-fill"></div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- CONTEXTO -->
-  <section class="card panel">
-    <h4>Contextos detectados</h4>
-    <div id="contextList" class="context-list">
-      <div class="empty">Aún no hay datos.</div>
-    </div>
-  </section>
-
-</main>
-
-  </section>
-
-  <div class="footer">MauRock · Mauricio José Pinto Basso</div>
 </div>
 
 <script>
-...
-</script>
-
-<script>
-...
-</script>
-
-<script>
-...
-</script>
-<script>
 const API_URL = "https://sonaria-api.onrender.com/analizar";
 
-/* LOGIN SIMPLE */
-const user = localStorage.getItem("sonaria_user");
-if (!user) window.location.href = "login.html";
+async function analizar(){
 
-function logout(){
-  localStorage.removeItem("sonaria_user");
-  window.location.href = "login.html";
-}
+  const data = {
+    titulo:document.getElementById("titulo").value,
+    artista:document.getElementById("artista").value,
+    texto:document.getElementById("texto").value,
+    buscar_letra:true,
+    contexto_escolar:true
+  };
 
-/* ELEMENTOS */
-const form = document.getElementById("analysisForm");
-const statusBox = document.getElementById("statusBox");
-
-const tituloInput = document.getElementById("titulo");
-const artistaInput = document.getElementById("artista");
-const textoInput = document.getElementById("texto");
-
-const resultTitle = document.getElementById("resultTitle");
-
-/* STATUS */
-function setStatus(msg, type){
-  if(!statusBox) return;
-  statusBox.textContent = msg;
-  statusBox.className = "status show " + type;
-}
-
-function clearStatus(){
-  if(!statusBox) return;
-  statusBox.textContent = "";
-  statusBox.className = "status";
-}
-
-/* API */
-async function runAnalysis(data){
   const res = await fetch(API_URL,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(data)
   });
 
-  const json = await res.json();
+  const result = await res.json();
 
-  if(!res.ok) throw new Error("Error API");
+  // TITLE
+  resultTitle.textContent = result.clasificacion || "Resultado";
 
-  return json;
-}
+  // BADGE
+  const badge = document.getElementById("resultBadge");
+  badge.textContent = result.clasificacion;
 
-/* EVENTO */
-form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-
-  const data = {
-    titulo:tituloInput.value,
-    artista:artistaInput.value,
-    texto:textoInput.value,
-    buscar_letra:true,
-    contexto_escolar:true
-  };
-
-  try{
-    setStatus("Analizando canción...", "loading");
-
-    const result = await runAnalysis(data);
-
-    console.log(result);
-
-    // TÍTULO PRINCIPAL
-resultTitle.textContent = result.clasificacion || "Resultado";
-
-// BADGE
-const badge = document.getElementById("resultBadge");
-badge.textContent = result.clasificacion || "Sin datos";
-
-if(result.clasificacion?.includes("Apta")){
-  badge.className = "badge green";
-}else if(result.clasificacion?.includes("Revisión")){
-  badge.className = "badge yellow";
-}else{
-  badge.className = "badge red";
-}
-
-// METADATA
-document.getElementById("metaEdad").textContent = result.edad_sugerida || "—";
-document.getElementById("metaFuente").textContent = result.fuente || "—";
-document.getElementById("metaLectura").textContent = result.nivel_lectura || "—";
-
-// TEXTOS
-document.getElementById("resumenTexto").textContent = result.resumen || "—";
-document.getElementById("enfoqueTexto").textContent = result.enfoque || "—";
-
-// TEMAS
-const temasContainer = document.getElementById("temasChips");
-temasContainer.innerHTML = "";
-(result.temas || []).forEach(t=>{
-  const chip = document.createElement("span");
-  chip.className = "chip";
-  chip.textContent = t;
-  temasContainer.appendChild(chip);
-});
-
-// OBSERVACIONES
-const obsContainer = document.getElementById("obsChips");
-obsContainer.innerHTML = "";
-(result.observaciones || []).forEach(o=>{
-  const chip = document.createElement("span");
-  chip.className = "chip";
-  chip.textContent = o;
-  obsContainer.appendChild(chip);
-});
-
-// RIESGO
-const total = result.riesgo_total || 0;
-document.getElementById("riskPercent").textContent = total + "%";
-document.getElementById("riskTotalFill").style.width = total + "%";
-
-// CONTEXTO
-const contextList = document.getElementById("contextList");
-contextList.innerHTML = "";
-
-(result.contexto || []).forEach(c=>{
-  const div = document.createElement("div");
-  div.className = "context-item";
-  div.textContent = c;
-  contextList.appendChild(div);
-});
-
-    setStatus("Análisis listo", "success");
-
-  }catch(err){
-    console.error(err);
-    setStatus("Error al analizar", "error");
+  if(result.clasificacion?.includes("Apta")){
+    badge.className="badge green";
+  }else if(result.clasificacion?.includes("Revisión")){
+    badge.className="badge yellow";
+  }else{
+    badge.className="badge red";
   }
-});
+
+  // ICON
+  const summaryCard = document.querySelector(".summary-card");
+
+  if(result.clasificacion?.includes("No apta")){
+    summaryIcon.textContent="⛔";
+    summaryCard.style.boxShadow="0 0 20px red";
+  }else if(result.clasificacion?.includes("Apta")){
+    summaryIcon.textContent="✅";
+  }else{
+    summaryIcon.textContent="⚠️";
+  }
+
+  // META SONG
+  songMeta.textContent = `${data.titulo} · ${data.artista}`;
+
+  // META
+  metaEdad.textContent = result.edad_sugerida || "—";
+  metaFuente.textContent = result.fuente || "—";
+  metaLectura.textContent = result.nivel_lectura || "—";
+
+  // TEXT
+  resumenTexto.textContent = result.resumen || "—";
+  enfoqueTexto.textContent = result.enfoque || "—";
+
+  // TEMAS
+  temasChips.innerHTML="";
+  (result.temas||[]).forEach(t=>{
+    temasChips.innerHTML+=`<span class="chip">${t}</span>`;
+  });
+
+  if((result.temas||[]).length===0){
+    temasChips.innerHTML='<div class="empty">No se detectaron temas</div>';
+  }
+
+  // OBS
+  obsChips.innerHTML="";
+  (result.observaciones||[]).forEach(o=>{
+    obsChips.innerHTML+=`<span class="chip">${o}</span>`;
+  });
+
+  if((result.observaciones||[]).length===0){
+    obsChips.innerHTML='<div class="empty">Sin observaciones</div>';
+  }
+
+  // CONTEXTO
+  contextList.innerHTML="";
+  (result.contexto||[]).forEach(c=>{
+    contextList.innerHTML+=`<div>${c}</div>`;
+  });
+
+  if((result.contexto||[]).length===0){
+    contextList.innerHTML='<div class="empty">Sin contexto</div>';
+  }
+}
 </script>
-  
+
 </body>
 </html>
