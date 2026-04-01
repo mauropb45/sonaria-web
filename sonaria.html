@@ -476,7 +476,65 @@ form.addEventListener("submit", async (e)=>{
 
     console.log(result);
 
-    resultTitle.textContent = result.resumen || "Análisis completado";
+    // TÍTULO PRINCIPAL
+resultTitle.textContent = result.clasificacion || "Resultado";
+
+// BADGE
+const badge = document.getElementById("resultBadge");
+badge.textContent = result.clasificacion || "Sin datos";
+
+if(result.clasificacion?.includes("Apta")){
+  badge.className = "badge green";
+}else if(result.clasificacion?.includes("Revisión")){
+  badge.className = "badge yellow";
+}else{
+  badge.className = "badge red";
+}
+
+// METADATA
+document.getElementById("metaEdad").textContent = result.edad_sugerida || "—";
+document.getElementById("metaFuente").textContent = result.fuente || "—";
+document.getElementById("metaLectura").textContent = result.nivel_lectura || "—";
+
+// TEXTOS
+document.getElementById("resumenTexto").textContent = result.resumen || "—";
+document.getElementById("enfoqueTexto").textContent = result.enfoque || "—";
+
+// TEMAS
+const temasContainer = document.getElementById("temasChips");
+temasContainer.innerHTML = "";
+(result.temas || []).forEach(t=>{
+  const chip = document.createElement("span");
+  chip.className = "chip";
+  chip.textContent = t;
+  temasContainer.appendChild(chip);
+});
+
+// OBSERVACIONES
+const obsContainer = document.getElementById("obsChips");
+obsContainer.innerHTML = "";
+(result.observaciones || []).forEach(o=>{
+  const chip = document.createElement("span");
+  chip.className = "chip";
+  chip.textContent = o;
+  obsContainer.appendChild(chip);
+});
+
+// RIESGO
+const total = result.riesgo_total || 0;
+document.getElementById("riskPercent").textContent = total + "%";
+document.getElementById("riskTotalFill").style.width = total + "%";
+
+// CONTEXTO
+const contextList = document.getElementById("contextList");
+contextList.innerHTML = "";
+
+(result.contexto || []).forEach(c=>{
+  const div = document.createElement("div");
+  div.className = "context-item";
+  div.textContent = c;
+  contextList.appendChild(div);
+});
 
     setStatus("Análisis listo", "success");
 
