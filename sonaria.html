@@ -4,258 +4,192 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Dashboard escolar</title>
-  <meta name="description" content="SonarIA - Evaluador pedagógico musical escolar.">
+  <meta name="description" content="SonarIA - Evaluador pedagógico musical.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#06101b;
-      --bg2:#0a1627;
-      --panel:rgba(255,255,255,.05);
-      --panel-2:rgba(255,255,255,.035);
-      --line:rgba(255,255,255,.10);
-      --text:#eef2f7;
-      --muted:#9fb0c7;
-      --blue:#4b82ff;
-      --green:#19d28d;
-      --yellow:#f7b944;
-      --red:#ff6b6b;
-      --orange:#ff8a00;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-      --radius:24px;
-      --max:1400px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-    }
-    body::before{
-      content:"";
-      position:fixed; inset:0; pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-    }
-    a{color:inherit;text-decoration:none}
+    :root{--bg:#06101b;--bg2:#0a1627;--text:#eef2f7;--muted:#9fb0c7;--blue:#4b82ff;--green:#19d28d;--yellow:#f7b944;--red:#ff6b6b;--orange:#ff8a00;--shadow:0 24px 70px rgba(0,0,0,.34);--radius:22px;--max:1380px}
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:
+      radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+      radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
+      radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+      linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px;mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%)}
     .container{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:24px 22px 70px}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-    .brand{display:flex;flex-direction:column;gap:4px}
     .brand-main{font-size:clamp(2.4rem,5vw,4rem);line-height:.95;font-weight:900;letter-spacing:-.06em;margin:0}
-    .brand-main .ia{color:var(--green)}
-    .brand-sub{color:#d7fff0;font-weight:800}
+    .ia{color:var(--green)} .brand-sub{color:#d7fff0;font-weight:800}
     .shell{display:grid;grid-template-columns:420px 1fr;gap:18px;align-items:start}
     .card{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .panel{padding:24px}
-    .muted{color:var(--muted)}
-    .stack{display:grid;gap:14px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .input,.textarea,.select{width:100%;padding:15px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:var(--text);font:inherit;outline:none;transition:border-color .2s ease, box-shadow .2s ease, background .2s ease}
+    .panel{padding:22px}.muted{color:var(--muted)} .stack{display:grid;gap:14px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .input,.textarea,.select{width:100%;padding:15px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:var(--text);font:inherit;outline:none;transition:.2s}
     .input:focus,.textarea:focus,.select:focus{border-color:rgba(75,130,255,.38);background:rgba(255,255,255,.07);box-shadow:0 0 0 4px rgba(75,130,255,.10)}
     .textarea{min-height:150px;resize:vertical}
-    .helper-row{display:flex;gap:8px;flex-wrap:wrap}
-    .pill{display:none;align-items:center;padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
-    .pill.show{display:inline-flex}.pill.green{background:rgba(25,210,141,.1);border-color:rgba(25,210,141,.24);color:#d9fff0}.pill.blue{background:rgba(75,130,255,.1);border-color:rgba(75,130,255,.24);color:#dce8ff}.pill.orange{background:rgba(255,138,0,.1);border-color:rgba(255,138,0,.24);color:#ffe0bf}
     .switch{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
     .switch input{margin-top:3px;transform:scale(1.15);accent-color:var(--green)}
     .switch strong{display:block;margin-bottom:4px}.switch span{display:block;color:var(--muted);font-size:.93rem;line-height:1.55}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini-actions button{min-height:42px;font-size:.9rem}
-    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:14px 18px;border:none;cursor:pointer;border-radius:18px;font:inherit;font-weight:800;transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease}
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),#ff6700);color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
-    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line)}
-    .btn-soft{background:rgba(255,255,255,.06);color:#e8eef8;border:1px solid rgba(255,255,255,.08)}
-    .status{display:none;padding:12px 14px;border-radius:14px;line-height:1.55;font-size:.95rem}
-    .status.show{display:block}.status.loading{background:rgba(255,138,0,.08);border:1px solid rgba(255,138,0,.18);color:#ffe0bf}.status.success{background:rgba(25,210,141,.08);border:1px solid rgba(25,210,141,.18);color:#d9fff0}.status.error{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.18);color:#ffd7d7}
-    .right-col{display:grid;gap:18px}.summary-card{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;transition:box-shadow .25s ease, border-color .25s ease}
+    .tiny-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 18px;border:none;cursor:pointer;border-radius:18px;font:inherit;font-weight:800;transition:.18s}
+    .btn:hover{transform:translateY(-1px)} .btn-primary{background:linear-gradient(135deg,var(--orange),#ff6700);color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
+    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.10)}
+    .status{display:none;padding:12px 14px;border-radius:14px;line-height:1.55;font-size:.95rem}.status.show{display:block}
+    .status.loading{background:rgba(255,138,0,.08);border:1px solid rgba(255,138,0,.18);color:#ffe0bf}
+    .status.success{background:rgba(25,210,141,.08);border:1px solid rgba(25,210,141,.18);color:#d9fff0}
+    .status.error{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.18);color:#ffd7d7}
+    .right-col{display:grid;gap:18px}
+    .summary-card{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;transition:box-shadow .25s ease,border-color .25s ease}
     .summary-icon{width:96px;height:96px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}
-    .summary-main{display:grid;gap:8px}.result-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:clamp(1.35rem,2.2vw,2rem);font-weight:900;letter-spacing:-.03em}
+    .summary-main{display:grid;gap:8px}
+    .result-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:clamp(1.35rem,2.2vw,2rem);font-weight:900;letter-spacing:-.03em}
     .badge{padding:8px 12px;border-radius:999px;font-size:.85rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05)}
     .badge.green{color:#d9fff0;background:rgba(25,210,141,.1);border-color:rgba(25,210,141,.24)}
     .badge.yellow{color:#fff1cc;background:rgba(247,185,68,.12);border-color:rgba(247,185,68,.26)}
     .badge.red{color:#ffd9d9;background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.26)}
     .badge.blue{color:#dce8ff;background:rgba(75,130,255,.1);border-color:rgba(75,130,255,.22)}
-    .cards-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-    .mini-card strong{display:block;margin-bottom:6px;color:#cfdcf0;font-size:.92rem}.mini-card span{font-weight:800}
-    .box{padding:18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-    .box h4{margin:0 0 10px;font-size:1.02rem}.box p{margin:0;white-space:pre-wrap;line-height:1.72;color:#d7e2f1}
-    .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:8px 12px;border-radius:999px;font-size:.88rem;font-weight:700;color:#dce8ff;background:rgba(75,130,255,.1);border:1px solid rgba(75,130,255,.2)}
-    .risk-block{display:grid;gap:12px}.meter-label{display:flex;justify-content:space-between;gap:12px;font-size:.93rem;color:#d7e2f1}.meter-track{width:100%;height:11px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06)}
+    .cards-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .mini-card,.box{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)} .mini-card strong,.box h4{display:block;margin-bottom:6px}
+    .box p{margin:0;white-space:pre-wrap;line-height:1.7;color:#d7e2f1} .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 12px;border-radius:999px;font-size:.84rem;font-weight:700;color:#dce8ff;background:rgba(75,130,255,.1);border:1px solid rgba(75,130,255,.2)}
+    .risk-block{display:grid;gap:12px}.meter-label{display:flex;justify-content:space-between;gap:12px;font-size:.93rem;color:#d7e2f1}
+    .meter-track{width:100%;height:11px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06)}
     .meter-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .35s ease}
     .context-list{display:grid;gap:10px}.context-item{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:#d7e2f1;line-height:1.6}
-    .empty{color:var(--muted);line-height:1.8}.logout-btn{position:absolute;top:20px;right:20px;padding:10px 16px;border:none;border-radius:10px;background:#ff4d4d;color:white;cursor:pointer;z-index:10;font-weight:700}
-    .footer{margin-top:10px;text-align:center;color:#d7e2f1;font-size:1.02rem;font-weight:800}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(3,7,18,.72);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
-    .modal-backdrop.show{display:flex}.modal-card{width:min(980px,100%);max-height:90vh;overflow:auto;background:linear-gradient(180deg, rgba(19,34,59,.98), rgba(12,22,38,.98));border:1px solid rgba(255,255,255,.09);border-radius:24px;box-shadow:var(--shadow);padding:22px}
-    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.modal-head h3{margin:0;font-size:1.35rem}.modal-actions{display:flex;gap:10px;flex-wrap:wrap}.modal-body{color:#d7e2f1;line-height:1.72;white-space:pre-wrap}
-    .two-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.lyrics-panel{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);max-height:60vh;overflow:auto;white-space:pre-wrap;line-height:1.7}
-    .muted-small{font-size:.88rem;color:var(--muted)}
-    @media (max-width:1180px){.shell{grid-template-columns:1fr}.cards-grid,.mini-grid,.two-cols,.actions,.mini-actions{grid-template-columns:1fr}}
-    @media (max-width:720px){.container{padding:18px 14px 56px}.row{grid-template-columns:1fr}.summary-card{grid-template-columns:1fr}.summary-icon{width:72px;height:72px;border-radius:20px}.logout-btn{top:14px;right:14px}}
+    .empty{color:var(--muted);line-height:1.8}.pill{display:none;align-items:center;padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
+    .pill.show{display:inline-flex}.pill.green{background:rgba(25,210,141,.1);border-color:rgba(25,210,141,.24);color:#d9fff0}.pill.blue{background:rgba(75,130,255,.1);border-color:rgba(75,130,255,.24);color:#dce8ff}.pill.orange{background:rgba(255,138,0,.1);border-color:rgba(255,138,0,.24);color:#ffe0bf}
+    .helper-row{display:flex;gap:8px;flex-wrap:wrap}.logout-btn{position:absolute;top:20px;right:20px;padding:10px 16px;border:none;border-radius:10px;background:#ff4d4d;color:white;cursor:pointer;z-index:10;font-weight:700}
+    .footer{margin-top:32px;text-align:center;color:#d7e2f1;font-size:1.02rem;font-weight:800}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+    .modal-backdrop.show{display:flex}.modal{width:min(1100px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(180deg, rgba(16,24,39,.98), rgba(10,22,39,.98));border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.45);padding:18px}
+    .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.modal-title{font-size:1.15rem;font-weight:800}
+    .close-btn{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 12px;cursor:pointer}
+    .two-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.lyrics-panel{min-height:420px;padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);white-space:pre-wrap;line-height:1.7}
+    @media (max-width:1180px){.shell{grid-template-columns:1fr}.cards-grid,.mini-grid,.two-cols,.tiny-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.container{padding:18px 14px 56px}.row,.actions{grid-template-columns:1fr}.summary-card{grid-template-columns:1fr}.summary-icon{width:72px;height:72px;border-radius:20px}.logout-btn{top:14px;right:14px}}
   </style>
 </head>
 <body>
-  <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
-  <div class="container">
-    <header class="header">
-      <a href="index.html" class="brand">
-        <h1 class="brand-main">Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical</div>
-      </a>
-    </header>
+<button onclick="logout()" class="logout-btn">Cerrar sesión</button>
+<div class="container">
+  <header class="header">
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <h1 class="brand-main">Sonar<span class="ia">IA</span></h1>
+      <div class="brand-sub">Evaluador pedagógico musical</div>
+    </a>
+  </header>
 
-    <section class="shell">
-      <aside class="card panel stack">
-        <div>
-          <h2 style="font-size:1.8rem; letter-spacing:-.03em; margin:0 0 10px;">Dashboard escolar</h2>
-          <p class="muted" style="line-height:1.75; margin:0;">Evalúa pertinencia escolar priorizando contenido explícito, implícito, mediación docente y vínculo curricular MINEDUC.</p>
+  <section class="shell">
+    <aside class="card panel stack">
+      <div><h2 style="font-size:1.8rem;letter-spacing:-.03em;margin:0">Dashboard escolar</h2><div class="muted" style="margin-top:8px;line-height:1.6">Evalúa pertinencia escolar priorizando contenido explícito, implícito, mediación docente y vínculo curricular MINEDUC.</div></div>
+
+      <form id="analysisForm" class="stack">
+        <div class="row">
+          <input id="titulo" class="input" type="text" placeholder="Título de la canción">
+          <input id="artista" class="input" type="text" placeholder="Artista">
         </div>
 
-        <form id="analysisForm" class="stack">
-          <div class="row">
-            <input id="titulo" class="input" type="text" placeholder="Título de la canción">
-            <input id="artista" class="input" type="text" placeholder="Artista">
+        <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o deja que SonarIA la busque automáticamente..."></textarea>
+
+        <label class="switch">
+          <input id="buscarLetra" type="checkbox" checked>
+          <span><strong>Buscar la letra automáticamente</strong>Si no pegas la letra, SonarIA intentará traerla desde la API. Sin letra completa, no declarará “Apta”.</span>
+        </label>
+
+        <label class="switch">
+          <input id="contextoEscolar" type="checkbox" checked>
+          <span><strong>Priorizar contexto escolar</strong>Da prioridad a seguridad, pertinencia educativa y detección de contenido explícito e implícito.</span>
+        </label>
+
+        <div class="tiny-grid">
+          <button type="button" class="btn btn-ghost" id="coursesBtn">🧑‍🏫 Mis cursos</button>
+          <button type="button" class="btn btn-ghost" id="youtubeBtn">▶️ Buscar en YouTube</button>
+          <button type="button" class="btn btn-ghost" id="explicitBtn">🚫 Contexto explícito</button>
+          <button type="button" class="btn btn-ghost" id="translateBtn">🌐 Traducción</button>
+        </div>
+
+        <div class="actions">
+          <button id="analyzeBtn" type="submit" class="btn btn-primary">Analizar canción</button>
+          <button id="clearBtn" type="button" class="btn btn-ghost">Limpiar</button>
+        </div>
+
+        <div id="statusBox" class="status"></div>
+        <div class="helper-row">
+          <div id="pillAutoLyric" class="pill green">Letra autocompletada</div>
+          <div id="pillManualText" class="pill blue">Texto manual detectado</div>
+          <div id="pillFallback" class="pill orange">Análisis por fallback</div>
+        </div>
+      </form>
+    </aside>
+
+    <main class="right-col">
+      <section class="card panel summary-card">
+        <div id="summaryIcon" class="summary-icon">—</div>
+        <div class="summary-main">
+          <div class="result-title">
+            <span id="resultTitle">Esperando análisis</span>
+            <span id="resultBadge" class="badge blue">Sin datos</span>
           </div>
+          <div id="songMeta" class="muted">—</div>
+          <div id="mainJustificacion" style="line-height:1.75;color:#d7e2f1;">Aquí aparecerá el análisis pedagógico.</div>
+        </div>
+      </section>
 
-          <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o deja que SonarIA la busque automáticamente..."></textarea>
+      <section class="card panel">
+        <div class="mini-grid">
+          <div class="mini-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
+          <div class="mini-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
+          <div class="mini-card"><strong>Lectura sugerida</strong><span id="metaLectura">—</span></div>
+        </div>
+      </section>
 
-          <div class="helper-row">
-            <div id="pillAutoLyric" class="pill green">Letra autocompletada</div>
-            <div id="pillManualText" class="pill blue">Texto manual detectado</div>
-            <div id="pillFallback" class="pill orange">Análisis por fallback</div>
-          </div>
-
-          <label class="switch">
-            <input id="buscarLetra" type="checkbox" checked>
-            <div>
-              <strong>Buscar la letra automáticamente</strong>
-              <span>Si no pegas la letra, SonarIA intentará traerla desde la API. Sin letra completa, no declarará “Apta”.</span>
-            </div>
-          </label>
-
-          <label class="switch">
-            <input id="contextoEscolar" type="checkbox" checked>
-            <div>
-              <strong>Priorizar contexto escolar</strong>
-              <span>Da prioridad a seguridad, pertinencia educativa y detección de contenido explícito e implícito.</span>
-            </div>
-          </label>
-
-          <div class="mini-actions">
-            <button type="button" class="btn btn-soft" id="coursesBtn">🧑‍🏫 Mis cursos</button>
-            <button type="button" class="btn btn-soft" id="youtubeBtn">▶️ Buscar en YouTube</button>
-            <button type="button" class="btn btn-soft" id="explicitBtn">🚫 Contexto explícito</button>
-            <button type="button" class="btn btn-soft" id="translateBtn">🌐 Traducción</button>
-          </div>
-
-          <div class="actions">
-            <button id="analyzeBtn" type="submit" class="btn btn-primary">Analizar canción</button>
-            <button id="clearBtn" type="button" class="btn btn-ghost">Limpiar</button>
-          </div>
-
-          <div id="statusBox" class="status"></div>
-        </form>
-      </aside>
-
-      <main class="right-col">
-        <section class="card panel summary-card">
-          <div id="summaryIcon" class="summary-icon">—</div>
-          <div class="summary-main">
-            <div class="result-title">
-              <span id="resultTitle">Esperando análisis</span>
-              <span id="resultBadge" class="badge blue">Sin datos</span>
-            </div>
-            <div id="songMeta" class="muted">—</div>
-            <div id="mainJustificacion" style="line-height:1.75; color:#d7e2f1;">Aquí aparecerá el análisis pedagógico.</div>
+      <section class="cards-grid">
+        <section class="card panel">
+          <div class="stack">
+            <div class="box"><h4>Resumen pedagógico</h4><p id="resumenTexto">—</p></div>
+            <div class="box"><h4>Temas detectados</h4><div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div></div>
+            <div class="box"><h4>Enfoque sugerido</h4><p id="enfoqueTexto">—</p></div>
+            <div class="box"><h4>Observaciones pedagógicas</h4><div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div></div>
+            <div class="box"><h4>Actividades sugeridas</h4><p id="actividadesTexto">Selecciona tus cursos y analiza una canción para generar actividades.</p></div>
+            <div class="box"><h4>Match curricular MINEDUC</h4><p id="curriculumTexto">Selecciona tus cursos en “Mis cursos”.</p></div>
           </div>
         </section>
 
         <section class="card panel">
-          <div class="mini-grid">
-            <div class="mini-card"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
-            <div class="mini-card"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
-            <div class="mini-card"><strong>Lectura sugerida</strong><span id="metaLectura">—</span></div>
+          <div class="stack">
+            <div class="box">
+              <h4>Semáforo</h4>
+              <div class="risk-block">
+                <div><div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div><div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div></div>
+                <div><div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div><div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div></div>
+                <div><div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div><div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div></div>
+              </div>
+            </div>
+            <div class="box"><h4>Contextos detectados</h4><div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div></div>
+            <div class="box"><h4>Mis cursos activos</h4><div id="coursesList" class="context-list"><div class="empty">No has seleccionado cursos.</div></div></div>
           </div>
         </section>
+      </section>
+    </main>
+  </section>
+  <div class="footer">MauRock · Mauricio José Pinto Basso</div>
+</div>
 
-        <section class="cards-grid">
-          <section class="card panel">
-            <div class="stack">
-              <div class="box"><h4>Resumen pedagógico</h4><p id="resumenTexto">—</p></div>
-              <div class="box"><h4>Temas detectados</h4><div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div></div>
-              <div class="box"><h4>Enfoque sugerido</h4><p id="enfoqueTexto">—</p></div>
-              <div class="box"><h4>Observaciones pedagógicas</h4><div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div></div>
-              <div class="box"><h4>Actividades sugeridas</h4><p id="activitiesText">Selecciona tus cursos y analiza una canción para generar actividades.</p></div>
-              <div class="box"><h4>Match curricular MINEDUC</h4><p id="curriculumText">Selecciona tus cursos en “Mis cursos”.</p></div>
-            </div>
-          </section>
-
-          <section class="card panel">
-            <div class="stack">
-              <div class="box">
-                <h4>Semáforo</h4>
-                <div class="risk-block">
-                  <div><div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div><div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div></div>
-                  <div><div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div><div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div></div>
-                  <div><div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div><div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div></div>
-                </div>
-              </div>
-              <div class="box"><h4>Contextos detectados</h4><div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div></div>
-              <div class="box"><h4>Mis cursos activos</h4><div id="coursesList" class="context-list"><div class="empty">No has seleccionado cursos.</div></div></div>
-            </div>
-          </section>
-        </section>
-
-        <div class="footer">MauRock · Mauricio José Pinto Basso</div>
-      </main>
-    </section>
-  </div>
-
-  <div id="modal" class="modal-backdrop">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="modalTitle">Detalle</h3>
-        <div class="modal-actions">
-          <button class="btn btn-ghost" id="modalCloseBtn" type="button">Cerrar</button>
-        </div>
-      </div>
-      <div id="modalBody" class="modal-body"></div>
+<div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Detalle</div>
+      <button class="close-btn" id="closeModalBtn">Cerrar</button>
     </div>
+    <div id="modalBody"></div>
   </div>
+</div>
 
 <script>
 const API_URL = "https://sonaria-api.onrender.com/analizar";
-const COURSE_STORAGE_KEY = "sonaria_courses";
-const user = localStorage.getItem("sonaria_user");
-if (!user) window.location.href = "login.html";
-function logout(){ localStorage.removeItem("sonaria_user"); window.location.href = "login.html"; }
-window.history.pushState(null, null, window.location.href);
-window.onpopstate = function () { window.history.pushState(null, null, window.location.href); };
-
-const OA_DB = {
-  "1": [{code:"OA 1", text:"Expresar sensaciones e ideas a partir de la audición y la interpretación musical."},{code:"OA 3", text:"Escuchar música y describir elementos como pulso, intensidad y carácter."}],
-  "2": [{code:"OA 1", text:"Expresar emociones e imágenes a partir de experiencias musicales."},{code:"OA 4", text:"Reconocer contrastes sonoros y usos expresivos en canciones."}],
-  "3": [{code:"OA 2", text:"Escuchar obras y canciones identificando rasgos expresivos y contextos."},{code:"OA 5", text:"Relacionar música con experiencias y emociones personales."}],
-  "4": [{code:"OA 2", text:"Analizar elementos del lenguaje musical en canciones y obras."},{code:"OA 6", text:"Apreciar manifestaciones musicales en su contexto cultural."}],
-  "5": [{code:"OA 2", text:"Analizar música en relación con su función y contexto cultural."},{code:"OA 4", text:"Reflexionar sobre el mensaje y la intención expresiva en canciones."}],
-  "6": [{code:"OA 2", text:"Apreciar y analizar música considerando estructura, función y contexto."},{code:"OA 5", text:"Argumentar opiniones sobre repertorios musicales y sus mensajes."}],
-  "7": [{code:"OA 1", text:"Analizar repertorios musicales considerando identidad, contexto y propósito."},{code:"OA 3", text:"Reflexionar críticamente sobre mensajes musicales y su impacto."}],
-  "8": [{code:"OA 2", text:"Interpretar críticamente letras y discursos musicales en distintos contextos."},{code:"OA 4", text:"Relacionar música con fenómenos sociales, culturales e históricos."}],
-  "1M": [{code:"OA 1", text:"Analizar manifestaciones musicales y su relación con identidad, sociedad y cultura."},{code:"OA 3", text:"Debatir críticamente sobre mensajes presentes en repertorios musicales."}],
-  "2M": [{code:"OA 2", text:"Evaluar discursos y sentidos en canciones de distintos géneros y épocas."},{code:"OA 4", text:"Relacionar repertorios con contextos históricos, políticos y culturales."}],
-  "3M": [{code:"OA 1", text:"Analizar repertorios desde una perspectiva estética, social y cultural."}],
-  "4M": [{code:"OA 1", text:"Valorar críticamente repertorios musicales considerando sus contextos de producción y recepción."}]
-};
+const STORAGE_COURSES = "sonaria_courses";
 
 const form = document.getElementById("analysisForm");
 const clearBtn = document.getElementById("clearBtn");
@@ -265,10 +199,6 @@ const artistaInput = document.getElementById("artista");
 const textoInput = document.getElementById("texto");
 const buscarLetraInput = document.getElementById("buscarLetra");
 const contextoEscolarInput = document.getElementById("contextoEscolar");
-const coursesBtn = document.getElementById("coursesBtn");
-const youtubeBtn = document.getElementById("youtubeBtn");
-const explicitBtn = document.getElementById("explicitBtn");
-const translateBtn = document.getElementById("translateBtn");
 const pillAutoLyric = document.getElementById("pillAutoLyric");
 const pillManualText = document.getElementById("pillManualText");
 const pillFallback = document.getElementById("pillFallback");
@@ -284,9 +214,8 @@ const resumenTexto = document.getElementById("resumenTexto");
 const temasChips = document.getElementById("temasChips");
 const enfoqueTexto = document.getElementById("enfoqueTexto");
 const obsChips = document.getElementById("obsChips");
-const activitiesText = document.getElementById("activitiesText");
-const curriculumText = document.getElementById("curriculumText");
-const coursesList = document.getElementById("coursesList");
+const actividadesTexto = document.getElementById("actividadesTexto");
+const curriculumTexto = document.getElementById("curriculumTexto");
 const riskPercent = document.getElementById("riskPercent");
 const riskSensitive = document.getElementById("riskSensitive");
 const riskSchool = document.getElementById("riskSchool");
@@ -294,291 +223,129 @@ const riskTotalFill = document.getElementById("riskTotalFill");
 const riskSensitiveFill = document.getElementById("riskSensitiveFill");
 const riskSchoolFill = document.getElementById("riskSchoolFill");
 const contextList = document.getElementById("contextList");
+const coursesList = document.getElementById("coursesList");
 const summaryCard = document.querySelector(".summary-card");
-const modal = document.getElementById("modal");
+const modalBackdrop = document.getElementById("modalBackdrop");
 const modalTitle = document.getElementById("modalTitle");
 const modalBody = document.getElementById("modalBody");
-const modalCloseBtn = document.getElementById("modalCloseBtn");
-let lastRawResult = null;
-let lastNormalized = null;
-let lastExplicitContexts = [];
+const closeModalBtn = document.getElementById("closeModalBtn");
+
+let lastResult = null;
+let userCourses = JSON.parse(localStorage.getItem(STORAGE_COURSES) || "[]");
+
+const user = localStorage.getItem("sonaria_user");
+if (!user) window.location.href = "login.html";
+function logout(){ localStorage.removeItem("sonaria_user"); window.location.href="login.html"; }
+window.history.pushState(null, null, window.location.href);
+window.onpopstate = function () { window.history.pushState(null, null, window.location.href); };
 
 function setStatus(msg, type){ statusBox.textContent = msg; statusBox.className = "status show " + type; }
 function clearStatus(){ statusBox.textContent = ""; statusBox.className = "status"; }
 function showPill(el, show){ if(el) el.classList.toggle("show", !!show); }
-function normalizeText(v){ return String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
-function firstOf(obj, keys, fallback=""){ for(const key of keys){ const value = obj?.[key]; if(value !== undefined && value !== null && value !== "") return value; } return fallback; }
+function toArray(value){ if(Array.isArray(value)) return value.filter(Boolean); if(typeof value==="string"&&value.trim()) return value.split(/[,;\n•]+/).map(v=>v.trim()).filter(Boolean); if(value&&typeof value==="object") return Object.values(value).flat().filter(Boolean).map(v=>String(v)); return []; }
 function clampPercent(value){ const n = Number(value); if(Number.isNaN(n)) return 0; return Math.max(0, Math.min(100, Math.round(n))); }
-function setMeter(textEl, fillEl, value){ const n = clampPercent(value); textEl.textContent = n + "%"; fillEl.style.width = n + "%"; }
-function toArray(value){ if(Array.isArray(value)) return value.filter(Boolean).map(v=>String(v)); if(typeof value === "string" && value.trim()) return value.split(/[,;\n•]+/).map(v=>v.trim()).filter(Boolean); if(value && typeof value === "object") return Object.values(value).flat().filter(Boolean).map(v=>String(v)); return []; }
-function escapeHtml(str){ return String(str||"").replace(/[&<>\"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
-function showModal(title, html){ modalTitle.textContent = title; modalBody.innerHTML = html; modal.classList.add("show"); }
-function closeModal(){ modal.classList.remove("show"); }
-modalCloseBtn.addEventListener("click", closeModal); modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+function setMeter(textEl, fillEl, value){ const n=clampPercent(value); textEl.textContent=n+"%"; fillEl.style.width=n+"%"; }
+function escapeHtml(str){ return String(str||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-function getSavedCourses(){ try{ const parsed = JSON.parse(localStorage.getItem(COURSE_STORAGE_KEY) || "[]"); return Array.isArray(parsed) ? parsed : []; }catch{ return []; } }
-function saveCourses(courses){ localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courses)); renderCoursesList(); }
-function renderCoursesList(){ const courses = getSavedCourses(); if(!courses.length){ coursesList.innerHTML = '<div class="empty">No has seleccionado cursos.</div>'; return; } coursesList.innerHTML = ''; courses.forEach(c => { const div = document.createElement('div'); div.className = 'context-item'; div.textContent = c + '°' ; if(c.includes('M')) div.textContent = c; coursesList.appendChild(div); }); }
-function openCoursesSelector(){
-  const order = ["1","2","3","4","5","6","7","8","1M","2M","3M","4M"];
-  const current = new Set(getSavedCourses());
-  const boxes = order.map(c => `<label class="context-item" style="display:flex;align-items:center;gap:10px;"><input type="checkbox" value="${c}" ${current.has(c)?'checked':''}> <span>${c.includes('M')?c:c+'° básico'}</span></label>`).join('');
-  showModal('Mis cursos', `<div class="stack"><div class="muted-small">Selecciona los cursos a los que haces clases. SonarIA usará esto para sugerir actividades y match curricular.</div><div class="stack">${boxes}</div><div class="modal-actions"><button class="btn btn-primary" id="saveCoursesInline">Guardar cursos</button></div></div>`);
-  document.getElementById('saveCoursesInline').onclick = ()=>{ const selected = [...modalBody.querySelectorAll('input[type="checkbox"]:checked')].map(x=>x.value); saveCourses(selected); closeModal(); setStatus('Cursos guardados correctamente.', 'success'); if(lastNormalized) renderCurriculumAndActivities(lastNormalized); };
-}
-
-function includesAny(text, terms){ return terms.some(term => text.includes(term)); }
-function countMatches(text, terms){ return terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0); }
-
-function evaluarPertinenciaEscolar(titulo, artista, letra){
-  const text = normalizeText(`${titulo} ${artista} ${letra}`);
-  const safeMetaphors = [
-    "me siento desnudo porque sabes tal como soy","me siento desnudo","tal como soy","con el alma desnuda","mi alma desnuda","open my heart","bare my soul","as i am"
-  ];
-  const explicitSex = ["quiero tocarte","quiero desnudarte","sexo","sex","gemir","moan","between your legs","entre tus piernas","desnudarte","naked in bed","make love all night","touch your body","fuck me","fucking you","besarte el cuerpo"];
-  const sexualSuggestion = ["tu cuerpo","your body","tu piel","your skin","desire","deseo","tentacion","seduce","sabanas","bed","lips","kiss me slowly"];
-  const violenceHigh = ["kill","killing","murder","shoot","gun","weapon","blood","dead","die","matar","matarte","muerte","sangre","arma","disparar","cadaver"];
-  const selfHarm = ["suicide","kill myself","quiero morir","matarme","autolesion","cut myself","self harm"];
-  const drugsHard = ["cocaine","heroin","meth","drug dealer","cocaina","heroina","pasta base"];
-  const profanityStrong = ["motherfucker","fuck you","fucking","puta","mierda","conchetumadre","culiao","bitch","shit","asshole","bastard"];
-  const degradingOrHostile = ["te odio","odio a todos","humillarte","venganza","destruirte","te hare sufrir","te voy a matar","i hate you","revenge","destroy you"];
-  const pedagogicalThemes = ["critica social","justice","igualdad","memoria","historia","identity","society","rights","reflection","contexto cultural","power","authority","love","heart","memory","remember"];
-  let riesgo = 0; const razones = []; let bloqueaApta = false;
-  const hasSafeMetaphor = includesAny(text, safeMetaphors);
-  const highViolenceHits = countMatches(text, violenceHigh);
-  const selfHarmHits = countMatches(text, selfHarm);
-  const hardDrugHits = countMatches(text, drugsHard);
-  const profanityHits = countMatches(text, profanityStrong);
-  const hostilityHits = countMatches(text, degradingOrHostile);
-  const explicitSexHits = hasSafeMetaphor ? 0 : countMatches(text, explicitSex);
-  const suggestiveHits = hasSafeMetaphor ? 0 : countMatches(text, sexualSuggestion);
-  const pedagogicalHits = countMatches(text, pedagogicalThemes);
-  if(highViolenceHits > 0){ riesgo += highViolenceHits * 22; razones.push("violencia explícita o confrontación grave"); bloqueaApta = true; }
-  if(selfHarmHits > 0){ riesgo += selfHarmHits * 35; razones.push("autolesión o suicidio"); bloqueaApta = true; }
-  if(hardDrugHits > 0){ riesgo += hardDrugHits * 28; razones.push("drogas duras"); bloqueaApta = true; }
-  if(profanityHits > 0){ riesgo += profanityHits * 14; razones.push("groserías o lenguaje agresivo"); }
-  if(hostilityHits > 0){ riesgo += hostilityHits * 18; razones.push("hostilidad, amenaza o humillación"); bloqueaApta = true; }
-  if(explicitSexHits > 0){ riesgo += explicitSexHits * 30; razones.push("contenido sexual explícito"); bloqueaApta = true; }
-  if(suggestiveHits > 0){ riesgo += suggestiveHits * 12; razones.push("insinuación o ambigüedad sensual"); }
-  if(hasSafeMetaphor){ riesgo -= 18; razones.push("uso metafórico inocente detectado"); }
-  riesgo = Math.max(0, Math.min(100, riesgo));
-  let pertinencia = "Apta"; let lectura = "Lectura directa"; let justificacion = "No se detectan señales explícitas o implícitas incompatibles con un contexto escolar general."; let valorPedagogico = pedagogicalHits > 0 ? "Alto" : "Medio";
-  if(bloqueaApta || riesgo >= 60){ pertinencia = "No apta"; lectura = "Requiere exclusión general"; justificacion = "La letra presenta señales explícitas o implícitas incompatibles con un contexto escolar general."; }
-  else if(riesgo >= 25){ pertinencia = "Revisión docente"; lectura = "Lectura mediada"; justificacion = "La letra presenta ambigüedades o señales sensibles que requieren revisión cuidadosa antes de usarse en aula."; }
-  if(hasSafeMetaphor && riesgo < 25){ pertinencia = "Apta"; lectura = "Lectura metafórica"; justificacion = "Se detecta lenguaje figurado o emocional sin evidencia suficiente de sexualidad literal o contenido impropio."; }
-  return { pertinencia, riesgo, riesgoSensible: Math.min(100, explicitSexHits*30 + suggestiveHits*12 + profanityHits*8), riesgoEscolar: Math.min(100, highViolenceHits*25 + selfHarmHits*35 + hardDrugHits*28 + hostilityHits*18), justificacion, lectura, valorPedagogico, razones:[...new Set(razones)] };
-}
-
-function getExplicitContexts(lyrics){
-  const text = String(lyrics || "");
-  const patterns = [
-    {type:"Grosería", re:/\b(fuck|fucking|shit|bitch|motherfucker|puta|mierda|culiao|conchetumadre)\b/gi},
-    {type:"Violencia", re:/\b(kill|killing|murder|gun|weapon|blood|matar|muerte|arma|sangre|disparar)\b/gi},
-    {type:"Sexual", re:/\b(sex|sexo|naked|desnudo|desnuda|body|cuerpo|desnudarte|touch your body|entre tus piernas)\b/gi},
-    {type:"Drogas", re:/\b(cocaine|heroin|meth|cocaina|heroina|weed|marihuana)\b/gi}
-  ];
-  const lines = text.split(/\n+/); const out = [];
-  lines.forEach((line, idx) => {
-    patterns.forEach(p => {
-      if(p.re.test(line)) out.push({ type:p.type, context:`Línea ${idx+1}: ${line.trim()}` });
-      p.re.lastIndex = 0;
-    });
+function renderCoursesSidebar(){
+  coursesList.innerHTML = "";
+  if(!userCourses.length){ coursesList.innerHTML = '<div class="empty">No has seleccionado cursos.</div>'; return; }
+  userCourses.forEach(c=>{
+    const div=document.createElement("div"); div.className="context-item"; div.textContent=c; coursesList.appendChild(div);
   });
-  return out.slice(0, 30);
 }
 
-function renderEnfoque(value){ if(typeof value === 'string') return value || '—'; if(Array.isArray(value)) return value.filter(Boolean).join(' · ') || '—'; if(value && typeof value === 'object') return value.texto || value.descripcion || value.recomendacion || Object.values(value).filter(Boolean).join(' · ') || '—'; return '—'; }
-function renderChips(container, items, emptyText){ container.innerHTML = ''; const arr = toArray(items); if(!arr.length){ container.innerHTML = `<div class="empty">${emptyText}</div>`; return; } arr.forEach(item=>{ const div=document.createElement('div'); div.className='chip'; div.textContent=item; container.appendChild(div); }); }
-function renderContexts(items){ contextList.innerHTML = ''; const arr = toArray(items); if(!arr.length){ contextList.innerHTML = '<div class="empty">No se detectaron contextos relevantes.</div>'; return; } arr.forEach(item=>{ const div=document.createElement('div'); div.className='context-item'; div.textContent=item; contextList.appendChild(div); }); }
-
-function normalizeApiData(raw){
-  const d = raw || {};
-  return {
-    clasificacion: firstOf(d, ['clasificacion','veredicto','estado_general','estado','resultado'], 'Resultado listo'),
-    justificacion: firstOf(d, ['justificacion','fundamentacion','motivo','explicacion'], ''),
-    resumen: firstOf(d, ['resumen','resumen_pedagogico','summary','analisis'], 'Sin resumen disponible.'),
-    edad: firstOf(d, ['edad_sugerida','edad_recomendada','rango_edad','edad'], '—'),
-    fuente: firstOf(d, ['fuente','fuente_usada','source'], '—'),
-    lectura: firstOf(d, ['nivel_lectura','lectura','lectura_sugerida'], '—'),
-    enfoque: firstOf(d, ['enfoque','enfoque_sugerido','uso_pedagogico','sugerencia_docente'], '—'),
-    temas: firstOf(d, ['temas','temas_detectados','keywords','topicos'], []),
-    observaciones: firstOf(d, ['observaciones','observaciones_pedagogicas','alertas','recomendaciones'], []),
-    contexto: firstOf(d, ['contexto','contextos','contextos_detectados','senales','flags'], []),
-    riesgoTotal: firstOf(d, ['riesgo_total','riesgo','score_riesgo','risk_total'], 0),
-    riesgoSensible: firstOf(d, ['contenido_sensible','riesgo_sensible','sensitive_content','risk_sensitive'], 0),
-    riesgoEscolar: firstOf(d, ['uso_escolar','riesgo_escolar','school_use','risk_school'], 0),
-    autocompletada: Boolean(firstOf(d, ['letra_autocompletada','auto_lyrics','lyrics_found'], false)),
-    fallback: Boolean(firstOf(d, ['fallback','analisis_fallback','used_fallback'], false))
-  };
+function renderChips(container, items, emptyText){
+  container.innerHTML = "";
+  const arr = toArray(items);
+  if(!arr.length){ container.innerHTML = `<div class="empty">${emptyText}</div>`; return; }
+  arr.forEach(item => { const div=document.createElement("div"); div.className="chip"; div.textContent=item; container.appendChild(div); });
 }
 
-function aplicarCalibracionEscolar(raw, titulo, artista, letra){
-  const base = { ...(raw || {}) };
-  const texto = String(letra || '').trim();
-  const capa = evaluarPertinenciaEscolar(titulo, artista, texto);
-  if(texto.length < 30){
-    base.clasificacion = 'Revisión docente';
-    base.justificacion = 'No se proporcionó la letra completa. El análisis basado solo en título y artista no es suficiente para determinar pertinencia escolar.';
-    base.nivel_lectura = 'Información insuficiente';
-    base.riesgo_total = Math.max(Number(base.riesgo_total || 0), 20);
-    base.contenido_sensible = Number(base.contenido_sensible || 0);
-    base.uso_escolar = Number(base.uso_escolar || 0);
-    const observ = toArray(base.observaciones || base.observaciones_pedagogicas || []);
-    observ.push('No se proporcionó letra completa: se bloquea la clasificación Apta por falta de evidencia textual.');
-    base.observaciones = [...new Set(observ)];
-    base.contexto = [...new Set([...(toArray(base.contexto || base.contextos || [])), 'No se proporcionó letra completa: se bloquea la clasificación Apta por falta de evidencia textual.'])];
-    return base;
+function renderContexts(items){
+  contextList.innerHTML = "";
+  const arr = toArray(items);
+  if(!arr.length){ contextList.innerHTML = '<div class="empty">No se detectaron contextos relevantes.</div>'; return; }
+  arr.forEach(item=>{ const div=document.createElement("div"); div.className="context-item"; div.textContent=item; contextList.appendChild(div); });
+}
+
+function renderEnfoque(value){
+  if(typeof value === "string") return value || "—";
+  if(Array.isArray(value)) return value.filter(Boolean).join(" · ") || "—";
+  if(value && typeof value === "object"){
+    return [value.lectura_sugerida, value.uso_recomendado, value.fuente_de_sentido].filter(Boolean).join(" · ") || "—";
   }
-  base.clasificacion = capa.pertinencia;
-  base.justificacion = capa.justificacion;
-  if (!base.nivel_lectura && !base.lectura && !base.lectura_sugerida) base.nivel_lectura = capa.lectura;
-  base.riesgo_total = Math.max(Number(base.riesgo_total || 0), capa.riesgo);
-  base.contenido_sensible = Math.max(Number(base.contenido_sensible || 0), capa.riesgoSensible);
-  base.uso_escolar = Math.max(Number(base.uso_escolar || 0), capa.riesgoEscolar);
-  const observacionesActuales = toArray(base.observaciones || base.observaciones_pedagogicas || []);
-  const nuevasObservaciones = [...observacionesActuales, `Valor pedagógico potencial: ${capa.valorPedagogico}`, ...capa.razones];
-  base.observaciones = [...new Set(nuevasObservaciones)];
-  const temas = toArray(base.temas || base.temas_detectados || []);
-  if(!temas.length) base.temas = inferPedagogicalTopics(texto);
-  if(!base.enfoque) base.enfoque = { texto: [ ...(base.temas || []), texto.length > 20 ? 'letra real' : 'sin letra real' ].join(' · ') };
-  base.contexto = [...new Set([...(toArray(base.contexto || base.contextos || [])), ...capa.razones])];
-  return base;
-}
-
-function inferPedagogicalTopics(lyrics){
-  const txt = normalizeText(lyrics || '');
-  const rules = {
-    'protesta social':['power','authority','control','system','fight the power','protest','society'],
-    'racismo':['race','cross burning','burn crosses','racism'],
-    'política':['government','law','state','power','politica'],
-    'amor':['love','heart','baby','kiss','amor'],
-    'nostalgia':['remember','memories','yesterday','nostalgia'],
-    'rebeldía':['rage','against','fight','fuck','rebellion'],
-    'emociones / identidad':['feel','identity','alone','self','sad','hope'],
-    'contexto cultural':['culture','history','social','sociedad','cultural']
-  };
-  const detected = [];
-  Object.entries(rules).forEach(([topic, words])=>{ if(words.some(w => txt.includes(normalizeText(w)))) detected.push(topic); });
-  return [...new Set(detected.length ? detected : ['expresión emocional general'])];
-}
-
-function recommendCourseByMineduc(edad, clasificacion, topics){
-  const selected = getSavedCourses();
-  if(!selected.length) return { course:'', oa:null, hits:[], alternatives:[] };
-  const minLevel = ({'6+':1,'10+':5,'12+':7,'15+':8,'16+':9})[edad] || 1;
-  function courseLevel(c){ if(/^\d+$/.test(c)) return Number(c); if(c==='1M') return 9; if(c==='2M') return 10; if(c==='3M') return 11; if(c==='4M') return 12; return 99; }
-  const eligible = selected.filter(c => courseLevel(c) >= minLevel);
-  const pool = eligible.length ? eligible : selected;
-  const focus = new Set(toArray(topics).map(normalizeText));
-  let best = null;
-  const scored = [];
-  pool.forEach(course => {
-    (OA_DB[course] || []).forEach(oa => {
-      const t = normalizeText(oa.text);
-      let score = 0; const hits = [];
-      focus.forEach(topic => { if(t.includes(topic.split(' / ')[0])) { score += 2; hits.push(topic); } });
-      if((clasificacion || '').includes('Revisión')) score += 1;
-      if(/contexto|cultural|social|mensaje|analizar|crit/i.test(oa.text)) score += 1;
-      const row = { course, oa, hits:[...new Set(hits)], score };
-      scored.push(row);
-      if(!best || row.score > best.score) best = row;
-    });
-  });
-  const alternatives = scored.filter(x => !best || !(x.course===best.course && x.oa.code===best.oa.code)).sort((a,b)=>b.score-a.score).slice(0,3);
-  return { course: best?.course || '', oa: best?.oa || null, hits: best?.hits || [], alternatives };
-}
-
-function buildActivities(clasificacion, edad, reco, title, artist, topics){
-  if((clasificacion || '').includes('No apta')) return 'La canción fue clasificada como NO APTA. No se recomienda su uso general en aula. Solo podría analizarse en contextos muy específicos, con estudiantes mayores y mediación experta.';
-  const topicList = toArray(topics);
-  const courseText = reco.course ? `Curso sugerido: ${reco.course}.` : 'Sin curso sugerido porque no has seleccionado cursos.';
-  const topicText = topicList.length ? `Temas: ${topicList.join(', ')}.` : 'Temas generales de expresión y escucha musical.';
-  if((clasificacion || '').includes('Revisión')){
-    return `${courseText}\n${topicText}\n\n1) Escucha guiada con foco en mensaje, lenguaje y contexto.\n2) Debate docente: ¿qué elementos requieren mediación?\n3) Analizar por qué la obra podría ser sensible en contexto escolar.\n4) Reescribir o adaptar fragmentos hacia una versión escolar.`;
-  }
-  return `${courseText}\n${topicText}\n\n1) Escucha activa: identificar emoción principal, pulso y carácter.\n2) Conversación guiada sobre el mensaje de la letra.\n3) Relacionar la canción con contexto cultural o experiencias personales.\n4) Actividad creativa: ilustrar, reescribir o musicalizar un fragmento.`;
-}
-
-function buildCurriculumText(reco){
-  if(!reco.course) return 'Selecciona tus cursos en “Mis cursos”.';
-  if(!reco.oa) return `Curso sugerido: ${reco.course}. No encontré un OA suficientemente cercano.`;
-  const alt = reco.alternatives.length ? '\n\nAlternativas:\n' + reco.alternatives.map(a=>`• ${a.course} — ${a.oa.code}: ${a.oa.text}`).join('\n') : '';
-  return `Curso sugerido: ${reco.course}\nOA: ${reco.oa.code}\n${reco.oa.text}${alt}`;
+  return "—";
 }
 
 function applyClassificationUI(clasificacion){
-  resultBadge.className = 'badge'; summaryCard.style.boxShadow = '';
-  if((clasificacion || '').includes('No apta')){ resultBadge.classList.add('red'); resultBadge.textContent='No apta'; summaryIcon.textContent='⛔'; summaryCard.style.boxShadow='0 0 0 1px rgba(255,107,107,.35), 0 20px 50px rgba(255,107,107,.12)'; }
-  else if((clasificacion || '').includes('Apta')){ resultBadge.classList.add('green'); resultBadge.textContent='Apta'; summaryIcon.textContent='✅'; }
-  else { resultBadge.classList.add('yellow'); resultBadge.textContent='Revisión'; summaryIcon.textContent='⚠️'; }
-}
-
-function renderCurriculumAndActivities(result){
-  const reco = recommendCourseByMineduc(result.edad || '6+', result.clasificacion || '', result.temas || []);
-  activitiesText.textContent = buildActivities(result.clasificacion, result.edad, reco, tituloInput.value, artistaInput.value, result.temas || []);
-  curriculumText.textContent = buildCurriculumText(reco);
-}
-
-function renderResult(raw){
-  lastRawResult = raw;
-  const result = normalizeApiData(raw);
-  lastNormalized = result;
-  resultTitle.textContent = result.clasificacion || 'Resultado listo';
-  applyClassificationUI(result.clasificacion);
-  songMeta.textContent = `${tituloInput.value || 'Sin título'} · ${artistaInput.value || 'Artista no indicado'}`;
-  mainJustificacion.textContent = raw.justificacion || result.justificacion || result.resumen || 'Aquí aparecerá el análisis pedagógico.';
-  metaEdad.textContent = result.edad || '—'; metaFuente.textContent = result.fuente || '—'; metaLectura.textContent = result.lectura || '—';
-  resumenTexto.textContent = result.resumen || '—'; enfoqueTexto.textContent = renderEnfoque(result.enfoque);
-  renderChips(temasChips, result.temas, 'No se detectaron temas.');
-  renderChips(obsChips, result.observaciones, 'Sin observaciones adicionales.');
-  renderContexts(result.contexto);
-  setMeter(riskPercent, riskTotalFill, result.riesgoTotal);
-  setMeter(riskSensitive, riskSensitiveFill, result.riesgoSensible);
-  setMeter(riskSchool, riskSchoolFill, result.riesgoEscolar);
-
-  let letraDevuelta = raw?.letra_encontrada || raw?.lyrics_found_text || raw?.lyrics || raw?.letra || '';
-  if(typeof letraDevuelta !== 'string'){
-    if(Array.isArray(letraDevuelta)) letraDevuelta = letraDevuelta.join('\n');
-    else if(letraDevuelta && typeof letraDevuelta === 'object') letraDevuelta = JSON.stringify(letraDevuelta, null, 2);
-    else letraDevuelta = '';
+  resultBadge.className = "badge";
+  summaryCard.style.boxShadow = "";
+  if((clasificacion||"").includes("No apta")){
+    resultBadge.classList.add("red"); resultBadge.textContent = "No apta"; summaryIcon.textContent = "⛔";
+    summaryCard.style.boxShadow = "0 0 0 1px rgba(255,107,107,.35), 0 20px 50px rgba(255,107,107,.12)";
+  }else if((clasificacion||"").includes("Apta con mediación")){
+    resultBadge.classList.add("yellow"); resultBadge.textContent = "Mediación"; summaryIcon.textContent = "⚠️";
+  }else if((clasificacion||"").includes("Apta")){
+    resultBadge.classList.add("green"); resultBadge.textContent = "Apta"; summaryIcon.textContent = "✅";
+  }else{
+    resultBadge.classList.add("yellow"); resultBadge.textContent = "Revisión"; summaryIcon.textContent = "⚠️";
   }
-  const textoLimpio = String(letraDevuelta || '').trim();
-  if(textoLimpio.length > 0 && !textoInput.value.trim()) textoInput.value = textoLimpio;
-
-  const hayTextoManual = Boolean(textoInput.value.trim());
-  const huboAutocompletado = Boolean(result.autocompletada || textoLimpio.length > 0);
-  showPill(pillAutoLyric, huboAutocompletado && !hayTextoManual);
-  showPill(pillManualText, hayTextoManual);
-  showPill(pillFallback, result.fallback);
-
-  lastExplicitContexts = getExplicitContexts(textoInput.value || textoLimpio);
-  renderCurriculumAndActivities({ ...result, clasificacion: raw.clasificacion || result.clasificacion, edad: result.edad, temas: toArray(result.temas) });
 }
 
 function resetDashboard(){
-  resultTitle.textContent='Esperando análisis'; resultBadge.className='badge blue'; resultBadge.textContent='Sin datos'; summaryIcon.textContent='—'; summaryCard.style.boxShadow=''; songMeta.textContent='—'; mainJustificacion.textContent='Aquí aparecerá el análisis pedagógico.';
-  metaEdad.textContent='—'; metaFuente.textContent='—'; metaLectura.textContent='—'; resumenTexto.textContent='—'; enfoqueTexto.textContent='—';
-  temasChips.innerHTML='<div class="empty">Sin datos.</div>'; obsChips.innerHTML='<div class="empty">Sin datos.</div>'; contextList.innerHTML='<div class="empty">Aún no hay datos.</div>';
-  activitiesText.textContent='Selecciona tus cursos y analiza una canción para generar actividades.'; curriculumText.textContent='Selecciona tus cursos en “Mis cursos”.';
-  setMeter(riskPercent, riskTotalFill, 0); setMeter(riskSensitive, riskSensitiveFill, 0); setMeter(riskSchool, riskSchoolFill, 0);
+  resultTitle.textContent = "Esperando análisis";
+  resultBadge.className = "badge blue"; resultBadge.textContent = "Sin datos";
+  summaryIcon.textContent = "—"; summaryCard.style.boxShadow = "";
+  songMeta.textContent = "—"; mainJustificacion.textContent = "Aquí aparecerá el análisis pedagógico.";
+  metaEdad.textContent = "—"; metaFuente.textContent = "—"; metaLectura.textContent = "—";
+  resumenTexto.textContent = "—"; enfoqueTexto.textContent = "—";
+  temasChips.innerHTML = '<div class="empty">Sin datos.</div>';
+  obsChips.innerHTML = '<div class="empty">Sin datos.</div>';
+  actividadesTexto.textContent = "Selecciona tus cursos y analiza una canción para generar actividades.";
+  curriculumTexto.textContent = "Selecciona tus cursos en “Mis cursos”.";
+  contextList.innerHTML = '<div class="empty">Aún no hay datos.</div>';
+  setMeter(riskPercent, riskTotalFill, 0);
+  setMeter(riskSensitive, riskSensitiveFill, 0);
+  setMeter(riskSchool, riskSchoolFill, 0);
   showPill(pillAutoLyric, false); showPill(pillManualText, false); showPill(pillFallback, false);
-  lastRawResult = null; lastNormalized = null; lastExplicitContexts = [];
+  lastResult = null;
+  renderCoursesSidebar();
 }
 
-function clearForm(){ form.reset(); clearStatus(); resetDashboard(); }
+function clearForm(){ form.reset(); buscarLetraInput.checked = true; contextoEscolarInput.checked = true; clearStatus(); resetDashboard(); }
+
+function showModal(title, html){
+  modalTitle.textContent = title;
+  modalBody.innerHTML = html;
+  modalBackdrop.classList.add("show");
+}
+function closeModal(){ modalBackdrop.classList.remove("show"); }
+closeModalBtn.addEventListener("click", closeModal);
+modalBackdrop.addEventListener("click", e=>{ if(e.target===modalBackdrop) closeModal(); });
 
 async function runAnalysis(data){
-  const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
-  const text = await res.text(); let json = null;
-  try{ json = JSON.parse(text); } catch { throw new Error('La API respondió en un formato no válido.'); }
-  if(!res.ok) throw new Error(json?.detail || json?.error || 'Error HTTP al analizar.');
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data)
+  });
+  const text = await res.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch { throw new Error("La API respondió en un formato no válido."); }
+  if(!res.ok) throw new Error(json?.detail || json?.error || "Error HTTP al analizar.");
   return json;
 }
 
 async function translateToSpanish(text){
-  const clean = String(text || '').trim(); if(!clean) return '';
-  const chunks = []; let current='';
-  clean.split(/\n/).forEach(line => { if((current + '\n' + line).length > 900){ chunks.push(current); current = line; } else { current += (current ? '\n' : '') + line; } });
+  const clean = String(text || "").trim();
+  if(!clean) return "";
+  const chunks = [];
+  let current = "";
+  clean.split(/\n/).forEach(line => {
+    if((current + "\n" + line).length > 900){ chunks.push(current); current = line; }
+    else current += (current ? "\n" : "") + line;
+  });
   if(current) chunks.push(current);
   const out = [];
   for(const chunk of chunks){
@@ -587,7 +354,7 @@ async function translateToSpanish(text){
       const res = await fetch(url); const data = await res.json();
       const translated = Array.isArray(data?.[0]) ? data[0].map(x => x?.[0] || '').join('') : '';
       out.push(translated || '');
-    } catch { out.push('No fue posible traducir este bloque automáticamente.'); }
+    }catch{ out.push('No fue posible traducir este bloque automáticamente.'); }
   }
   return out.join('\n');
 }
@@ -595,56 +362,115 @@ async function translateToSpanish(text){
 function openTranslationModal(){
   const lyrics = textoInput.value.trim();
   if(!lyrics){ setStatus('Primero pega o recupera una letra para traducir.', 'error'); return; }
-  showModal('Traducción de la letra', `<div class="two-cols"><div><div class="muted-small">Original</div><div class="lyrics-panel" id="lyricsOrig">${escapeHtml(lyrics)}</div></div><div><div class="muted-small">Español</div><div class="lyrics-panel" id="lyricsTrans">Traduciendo...</div></div></div>`);
+  showModal('Traducción de la letra', `<div class="two-cols"><div class="lyrics-panel"><strong>Original</strong><div id="lyricsOrig">${escapeHtml(lyrics)}</div></div><div class="lyrics-panel"><strong>Español</strong><div id="lyricsTrans">Traduciendo...</div></div></div>`);
   translateToSpanish(lyrics).then(tr => { const el = document.getElementById('lyricsTrans'); if(el) el.textContent = tr || 'No fue posible traducir.'; });
 }
 
 function openExplicitContextModal(){
-  if(!lastExplicitContexts.length){ showModal('Contexto explícito', '<div class="empty">No se detectaron palabras o expresiones sensibles en la letra disponible.</div>'); return; }
-  const html = `<div class="stack">${lastExplicitContexts.map(item => `<div class="context-item"><strong>${escapeHtml(item.type)}</strong><br>${escapeHtml(item.context)}</div>`).join('')}</div>`;
-  showModal('Palabras explícitas y su contexto', html);
+  const arr = toArray(lastResult?.contextos_detectados || lastResult?.contexto);
+  if(!arr.length){ showModal('Contexto explícito', '<div class="empty">No se detectaron palabras o expresiones sensibles en la letra disponible.</div>'); return; }
+  showModal('Contexto explícito', `<div class="stack">${arr.map(x => `<div class="context-item">${escapeHtml(x)}</div>`).join('')}</div>`);
 }
 
-function openYouTubeSearch(){
-  const titulo = (tituloInput.value || '').trim();
-  const artista = (artistaInput.value || '').trim();
-  if(!titulo){ setStatus('Escribe al menos el título para buscar en YouTube.', 'error'); return; }
+function openCoursesModal(){
+  const options = ["1°","2°","3°","4°","5°","6°","7°","8°","1M","2M","3M","4M"];
+  showModal('Mis cursos', `<div class="stack">
+    <div class="muted">Selecciona los cursos a los que haces clases para que SonarIA proponga actividades y match curricular.</div>
+    <div class="tiny-grid">${options.map(c => `<label class="switch"><input type="checkbox" class="course-check" value="${c}" ${userCourses.includes(c) ? 'checked' : ''}><span><strong>${c}</strong></span></label>`).join('')}</div>
+    <button class="btn btn-primary" id="saveCoursesBtn">Guardar cursos</button>
+  </div>`);
+  document.getElementById("saveCoursesBtn").addEventListener("click", () => {
+    userCourses = Array.from(document.querySelectorAll(".course-check:checked")).map(x => x.value);
+    localStorage.setItem(STORAGE_COURSES, JSON.stringify(userCourses));
+    renderCoursesSidebar();
+    closeModal();
+    if(lastResult) renderResult(lastResult);
+  });
+}
+
+function openYoutubeSearch(){
+  const titulo = tituloInput.value.trim();
+  const artista = artistaInput.value.trim();
+  if(!titulo){ setStatus("Escribe al menos el título de la canción.", "error"); return; }
   const query = encodeURIComponent(`${titulo} ${artista} lyrics`);
   window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
 }
 
-coursesBtn.addEventListener('click', openCoursesSelector);
-youtubeBtn.addEventListener('click', openYouTubeSearch);
-translateBtn.addEventListener('click', openTranslationModal);
-explicitBtn.addEventListener('click', openExplicitContextModal);
+function renderResult(raw){
+  lastResult = raw;
+  const clasificacion = raw?.clasificacion || raw?.resultado || raw?.resumen || "Resultado listo";
+  resultTitle.textContent = clasificacion;
+  applyClassificationUI(clasificacion);
+  songMeta.textContent = `${tituloInput.value || "Sin título"} · ${artistaInput.value || "Artista no indicado"}`;
+  mainJustificacion.textContent = raw?.justificacion || raw?.resumen || "Aquí aparecerá el análisis pedagógico.";
+  metaEdad.textContent = raw?.edad_sugerida || raw?.edad || "—";
+  metaFuente.textContent = raw?.fuente || raw?.fuente_letra || "—";
+  metaLectura.textContent = raw?.enfoque?.lectura_sugerida || "—";
+  resumenTexto.textContent = raw?.resumen || raw?.resultado || "—";
+  enfoqueTexto.textContent = renderEnfoque(raw?.enfoque);
+  renderChips(temasChips, raw?.temas_detectados || raw?.temas, "No se detectaron temas.");
+  renderChips(obsChips, raw?.observaciones, "Sin observaciones adicionales.");
+  renderContexts(raw?.contextos_detectados || raw?.contexto);
+  actividadesTexto.textContent = toArray(raw?.actividades).join("\n\n") || "No hay actividades sugeridas.";
+  curriculumTexto.textContent = raw?.match_curricular || "Sin match curricular.";
+  setMeter(riskPercent, riskTotalFill, raw?.riesgo_total ?? raw?.riesgo ?? raw?.risk ?? 0);
+  setMeter(riskSensitive, riskSensitiveFill, raw?.contenido_sensible ?? 0);
+  setMeter(riskSchool, riskSchoolFill, raw?.uso_escolar ?? 0);
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault(); clearStatus();
-  const data = { titulo: tituloInput.value.trim(), artista: artistaInput.value.trim(), texto: textoInput.value.trim(), buscar_letra: buscarLetraInput.checked, contexto_escolar: contextoEscolarInput.checked };
-  if(!data.titulo && !data.texto){ setStatus('Escribe al menos el título o pega la letra antes de analizar.', 'error'); return; }
+  let letraRecuperada = raw?.letra_usada || raw?.lyrics || raw?.letra || "";
+  if(typeof letraRecuperada !== "string"){
+    if(Array.isArray(letraRecuperada)) letraRecuperada = letraRecuperada.join("\n");
+    else if(letraRecuperada && typeof letraRecuperada === "object") letraRecuperada = JSON.stringify(letraRecuperada, null, 2);
+    else letraRecuperada = "";
+  }
+  const textoLimpio = String(letraRecuperada || "").trim();
+  if(textoLimpio.length > 0 && !textoInput.value.trim()){
+    textoInput.value = textoLimpio;
+  }
+
+  showPill(pillAutoLyric, !!textoLimpio && !Boolean(form.dataset.manualText === "1"));
+  showPill(pillManualText, Boolean(form.dataset.manualText === "1"));
+  showPill(pillFallback, !!raw?.fallback_inteligente);
+  renderCoursesSidebar();
+}
+
+textoInput.addEventListener("input", ()=>{ form.dataset.manualText = textoInput.value.trim() ? "1" : "0"; });
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearStatus();
+  const manualText = textoInput.value.trim();
+  form.dataset.manualText = manualText ? "1" : "0";
+
+  const data = {
+    titulo: tituloInput.value.trim(),
+    artista: artistaInput.value.trim(),
+    texto: manualText,
+    buscar_letra: buscarLetraInput.checked,
+    contexto_escolar: contextoEscolarInput.checked,
+    cursos: userCourses
+  };
+
+  if(!data.titulo && !data.texto){ setStatus("Escribe al menos el título o pega la letra antes de analizar.", "error"); return; }
+
   try{
-    setStatus('Analizando canción...', 'loading');
+    setStatus("Analizando canción...", "loading");
     const apiResult = await runAnalysis(data);
-    console.log('API RESULT:', apiResult);
-
-    let letraRecuperada = apiResult?.letra_encontrada || apiResult?.lyrics_found_text || apiResult?.lyrics || apiResult?.letra || '';
-    if(typeof letraRecuperada !== 'string'){
-      if(Array.isArray(letraRecuperada)) letraRecuperada = letraRecuperada.join('\n');
-      else if(letraRecuperada && typeof letraRecuperada === 'object') letraRecuperada = JSON.stringify(letraRecuperada, null, 2);
-      else letraRecuperada = '';
-    }
-    const textoLimpio = String(letraRecuperada || '').trim();
-    if(!data.texto && textoLimpio.length > 0){ data.texto = textoLimpio; textoInput.value = textoLimpio; }
-
-    const result = aplicarCalibracionEscolar(apiResult, data.titulo, data.artista, data.texto);
-    console.log('RESULTADO CALIBRADO:', result);
-    renderResult(result);
-    setStatus('Análisis listo', 'success');
-  }catch(err){ console.error(err); setStatus(err.message || 'Hubo un problema al analizar.', 'error'); }
+    console.log("API RESULT:", apiResult);
+    renderResult(apiResult);
+    setStatus("Análisis listo", "success");
+  }catch(err){
+    console.error(err);
+    setStatus(err.message || "Hubo un problema al analizar.", "error");
+  }
 });
 
-clearBtn.addEventListener('click', clearForm);
-renderCoursesList();
+clearBtn.addEventListener("click", clearForm);
+document.getElementById("translateBtn").addEventListener("click", openTranslationModal);
+document.getElementById("explicitBtn").addEventListener("click", openExplicitContextModal);
+document.getElementById("coursesBtn").addEventListener("click", openCoursesModal);
+document.getElementById("youtubeBtn").addEventListener("click", openYoutubeSearch);
+
 resetDashboard();
 </script>
 </body>
