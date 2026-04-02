@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso | MejorarIA</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+<meta name="description" content="Accede a SonarIA dentro de MejorarIA para probar la herramienta.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#050b14;
@@ -14,7 +13,7 @@
   --text:#f5f7fb;
   --muted:#9eafc8;
   --line:rgba(255,255,255,.08);
-
+  --f1-blue:#3b82f6;
   --mclaren:#ff8000;
   --mclaren2:#ff5a00;
 }
@@ -22,128 +21,281 @@
 body{
   margin:0;
   font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,var(--bg),var(--bg2));
   color:var(--text);
-  height:100vh;
-  display:flex;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(59,130,246,.12), transparent 20%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  overflow:hidden;
 }
-
-/* LAYOUT */
+.stage{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1.04fr .96fr;
+  position:relative;
+}
+.bg{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg, rgba(5,11,20,.86) 0%, rgba(5,11,20,.76) 34%, rgba(5,11,20,.58) 55%, rgba(5,11,20,.82) 100%),
+    url('images/sonaria-login-bg.jpg') center center / cover no-repeat;
+  z-index:0;
+}
+.fallback-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at right center, rgba(255,128,0,.12), transparent 18%),
+    radial-gradient(circle at left top, rgba(59,130,246,.12), transparent 18%);
+  z-index:0;
+}
+.home-btn{
+  position:absolute;
+  top:20px;
+  right:20px;
+  z-index:3;
+  min-height:46px;
+  padding:0 18px;
+  border:none;
+  border-radius:16px;
+  background:rgba(255,255,255,.08);
+  color:var(--text);
+  border:1px solid var(--line);
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .18s ease, background .18s ease;
+}
+.home-btn:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.12);
+}
 .left, .right{
-  flex:1;
+  position:relative;
+  z-index:2;
   display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:60px;
-}
-
-/* LEFT */
-.left{
-  background:radial-gradient(circle at top left, rgba(255,128,0,.2), transparent);
-}
-.left h1{
-  font-size:2.5rem;
-}
-.left p{
-  color:var(--muted);
-  max-width:400px;
-}
-
-/* RIGHT */
-.right{
   align-items:center;
+  padding:52px;
 }
-.box{
+.left{justify-content:flex-start}
+.right{justify-content:center}
+.copy{
+  max-width:520px;
+  animation:fadeUp .9s ease both;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(59,130,246,.12);
+  border:1px solid rgba(59,130,246,.22);
+  color:#dce8ff;
+  font-size:.84rem;
+  font-weight:800;
+  margin-bottom:14px;
+}
+.copy h1{
+  margin:0 0 12px;
+  font-size:clamp(2.4rem,4vw,3.5rem);
+  line-height:.94;
+  letter-spacing:-.06em;
+}
+.copy p{
+  margin:0 0 12px;
+  color:var(--muted);
+  line-height:1.84;
+  font-size:1.04rem;
+}
+.benefits{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+.benefit{
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+}
+.benefit strong{
+  display:block;
+  margin-bottom:4px;
+}
+.panel{
   width:100%;
-  max-width:380px;
+  max-width:420px;
+  padding:26px;
+  border-radius:26px;
+  background:linear-gradient(180deg, rgba(8,18,36,.78), rgba(8,18,36,.68));
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 24px 70px rgba(0,0,0,.40);
+  animation:fadeUp .95s ease both .08s;
 }
-
-/* INPUTS */
+.brand{
+  font-size:2rem;
+  font-weight:900;
+  letter-spacing:-1px;
+  line-height:1;
+  margin-bottom:4px;
+}
+.brand span{
+  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.sub{
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:18px;
+}
+.google-btn, .primary-btn{
+  width:100%;
+  min-height:50px;
+  border:none;
+  border-radius:16px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:800;
+}
+.google-btn{
+  background:white;
+  color:#111827;
+  margin-bottom:10px;
+}
+.google-note{
+  color:var(--muted);
+  font-size:.85rem;
+  margin-bottom:14px;
+  text-align:center;
+}
+.divider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--muted);
+  font-size:.9rem;
+  margin:14px 0;
+}
+.divider::before,.divider::after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:rgba(255,255,255,.10);
+}
 input{
   width:100%;
-  padding:12px;
+  min-height:48px;
+  padding:12px 14px;
   margin-bottom:12px;
-  border-radius:10px;
+  border-radius:14px;
   border:1px solid var(--line);
   background:rgba(255,255,255,.05);
   color:white;
+  font:inherit;
+  outline:none;
 }
-
-/* BUTTONS */
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  font-weight:700;
-  cursor:pointer;
+input:focus{
+  border-color:rgba(59,130,246,.32);
+  box-shadow:0 0 0 4px rgba(59,130,246,.10);
 }
-.primary{
+.primary-btn{
   background:linear-gradient(135deg,var(--mclaren),var(--mclaren2));
-  color:#111;
+  color:#101418;
+  box-shadow:0 14px 34px rgba(255,128,0,.24);
 }
-.google{
-  background:white;
-  color:#111;
-  margin-bottom:10px;
-}
-
 .small{
   text-align:center;
-  font-size:.9rem;
+  font-size:.92rem;
   color:var(--muted);
-  margin-top:10px;
+  margin-top:12px;
+  line-height:1.7;
 }
-
-/* MOBILE */
-@media(max-width:800px){
-  body{flex-direction:column}
-  .left{padding:30px}
-  .right{padding:30px}
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(24px)}
+  to{opacity:1; transform:translateY(0)}
+}
+@media(max-width:980px){
+  .stage{grid-template-columns:1fr}
+  .left{display:none}
+  .right{padding:24px}
+  .home-btn{top:14px; right:14px}
 }
 </style>
 </head>
-
 <body>
+  <div class="bg"></div>
+  <div class="fallback-overlay"></div>
 
-<!-- LEFT -->
-<div class="left">
-  <h1>Estás a un paso de entrar a SonarIA</h1>
+  <button class="home-btn" onclick="window.location.href='index.html'">MejorarIA</button>
 
-  <p>
-    Podrás analizar canciones, evaluar su contenido y tomar mejores decisiones
-    para el aula.
-  </p>
+  <div class="stage">
+    <div class="left">
+      <div class="copy">
+        <div class="eyebrow">🎧 Acceso a SonarIA dentro de MejorarIA</div>
+        <h1>Estás a un paso de entrar a SonarIA.</h1>
+        <p>
+          Este acceso existe para que pruebes la herramienta dentro del entorno de MejorarIA.
+          No es un paso innecesario: te permitirá entrar a tu versión de prueba y comenzar a usarla con sentido.
+        </p>
+        <p>
+          Podrás analizar canciones, revisar lenguaje y contenido, y tomar decisiones más seguras para el aula.
+        </p>
 
-  <p>
-    Tendrás acceso a una versión de prueba antes de decidir.
-  </p>
-</div>
-
-<!-- RIGHT -->
-<div class="right">
-  <div class="box">
-
-    <button class="google">Continuar con Google</button>
-
-    <input type="email" placeholder="Correo">
-    <input type="password" placeholder="Contraseña">
-
-    <button class="primary" onclick="login()">Ingresar</button>
-
-    <div class="small">
-      Accederás a SonarIA dentro de MejorarIA
+        <div class="benefits">
+          <div class="benefit">
+            <strong>Prueba antes de decidir</strong>
+            <span style="color:var(--muted); line-height:1.72;">La idea es que puedas experimentar el valor real de la herramienta antes de pensar en compra.</span>
+          </div>
+          <div class="benefit">
+            <strong>Acceso simple y claro</strong>
+            <span style="color:var(--muted); line-height:1.72;">Una vez dentro, entrarás directamente a SonarIA, no a pasos intermedios que compliquen la experiencia.</span>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <div class="right">
+      <div class="panel">
+        <div class="brand">Mejorar<span>IA</span></div>
+        <div class="sub">Ingresa para acceder a SonarIA dentro de la plataforma.</div>
+
+        <button class="google-btn" onclick="loginGoogle()">Continuar con Google</button>
+        <div class="google-note">Recomendado para acceso rápido y seguro</div>
+
+        <div class="divider">o ingresa manualmente</div>
+
+        <input type="email" placeholder="Correo">
+        <input type="password" placeholder="Contraseña">
+
+        <button class="primary-btn" id="loginBtn" onclick="loginManual()">Ingresar</button>
+
+        <div class="small">
+          Entrarás directamente a SonarIA dentro de MejorarIA.
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
 <script>
-function login(){
+function loginManual(){
+  const btn = document.getElementById("loginBtn");
+  btn.innerText = "Entrando...";
+  setTimeout(()=>{
+    localStorage.setItem("mejoraria_user", "true");
+    localStorage.setItem("sonaria_user", "true");
+    window.location.href = "panel.html";
+  }, 700);
+}
+
+function loginGoogle(){
   localStorage.setItem("mejoraria_user", "true");
+  localStorage.setItem("sonaria_user", "true");
   window.location.href = "panel.html";
 }
 </script>
-
 </body>
 </html>
