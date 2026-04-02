@@ -1,82 +1,149 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ingresar | MejorarIA</title>
-<meta name="description" content="Ingresa a MejorarIA para acceder a SonarIA y futuras herramientas.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#07111d; --bg2:#0b1626; --panel:rgba(255,255,255,.05); --panel-2:rgba(255,255,255,.035); --line:rgba(255,255,255,.10);
-      --text:#eef2f7; --muted:#9fb0c7; --muted-2:#8396af;
-      --green:#14d68f; --orange:#ff8a00; --orange-2:#ff6500; --blue:#4b82ff; --blue-soft:rgba(75,130,255,.12);
-      --shadow:0 24px 70px rgba(0,0,0,.34); --shadow-soft:0 14px 34px rgba(0,0,0,.22);
-      --radius-xl:28px; --radius-lg:22px; --max:1180px;
-    }
-    *{box-sizing:border-box} html{scroll-behavior:smooth}
-    body{
-      margin:0; font-family:'Inter',sans-serif; color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.15), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.12), transparent 20%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      overflow-x:hidden;
-    }
-    body::before{
-      content:""; position:fixed; inset:0; pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%); z-index:0;
-    }
-    a{color:inherit; text-decoration:none}
-    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:28px 22px 90px;}
-    .header{display:flex; justify-content:center; align-items:center; margin-bottom:24px; animation:fadeIn .8s ease;}
-    .brand-global{display:flex; flex-direction:column; align-items:center; text-align:center; text-decoration:none; transition:transform .25s ease; position:relative;}
-    .brand-global:hover{transform:scale(1.05)}
-    .brand-global::after{content:""; position:absolute; inset:-10px; border-radius:20px; background:radial-gradient(circle, rgba(20,214,143,.25), transparent 70%); opacity:0; transition:opacity .3s ease; z-index:-1;}
-    .brand-global:hover::after{opacity:1}
-    .brand-main{margin:0; font-size:clamp(3.3rem, 8vw, 6rem); line-height:.92; font-weight:900; letter-spacing:-.065em; text-wrap:balance;}
-    .brand-main .ia{color:var(--green); text-shadow:0 0 22px rgba(20,214,143,.35);}
-    .brand-sub{margin-top:8px; color:#d7fff0; font-size:clamp(1rem, 2.2vw, 1.35rem); font-weight:800; letter-spacing:-.02em;}
-    .btn{display:inline-flex; align-items:center; justify-content:center; min-width:210px; padding:15px 24px; border-radius:18px; border:1px solid transparent; font-weight:800; font-size:1rem; transition:transform .2s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease; cursor:pointer; text-align:center; backdrop-filter:blur(10px);}
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange-2)); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
-    .btn-primary:hover{box-shadow:0 18px 38px rgba(255,138,0,.34)}
-    .btn-ghost{background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--text); box-shadow:0 10px 24px rgba(0,0,0,.12);}
-    .btn-ghost:hover{background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.14)}
-    .card{background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius-xl); box-shadow:var(--shadow);}
-    .footer{margin-top:48px; text-align:center; color:#d7e2f1; font-size:1.18rem; font-weight:800; line-height:1.8; letter-spacing:-.01em; opacity:.98;}
-    @keyframes fadeIn{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
-    @media (max-width:720px){.container{padding:24px 16px 72px}.btn{width:100%; max-width:340px}}
-  </style>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso | MejorarIA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-.layout{display:grid; grid-template-columns:1.05fr .95fr; gap:24px; align-items:start; margin-top:14px}
-.welcome{padding:34px}
-.welcome h1{margin:0 0 14px; font-size:clamp(2.5rem, 6vw, 4.6rem); line-height:.95; font-weight:900; letter-spacing:-.06em}
-.welcome p{margin:0; color:var(--muted); font-size:1.1rem; line-height:1.8}
-.benefits{margin-top:26px; display:grid; gap:16px}
-.benefit{padding:22px; border-radius:20px; background:linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid rgba(255,255,255,.09); box-shadow:var(--shadow-soft)}
-.benefit h3{margin:0 0 8px; font-size:1.25rem} .benefit p{margin:0; color:#d1dceb; line-height:1.7}
-.form-box{padding:28px} .form-box h2{margin:0 0 10px; font-size:2rem; letter-spacing:-.04em} .form-box p{margin:0 0 20px; color:var(--muted); line-height:1.7}
-.form{display:grid; gap:12px}
-.input{width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09); background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease}
-.input:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10)}
-.input::placeholder{color:#8ea3bf} .helper{margin-top:14px; text-align:center; color:var(--muted-2); line-height:1.6} .helper a{color:#d7fff0; font-weight:700}
-@media (max-width:980px){.layout{grid-template-columns:1fr}}
-</style></head>
-<body><div class="container">
+:root{
+  --bg:#050b14;
+  --bg2:#081224;
+  --text:#f5f7fb;
+  --muted:#9eafc8;
+  --line:rgba(255,255,255,.08);
 
-    <div class="header">
-      <a href="index.html" class="brand-global">
-        <div class="brand-main">Mejorar<span class="ia">IA</span></div>
-        <div class="brand-sub">IA aplicada a educación musical</div>
-      </a>
+  --mclaren:#ff8000;
+  --mclaren2:#ff5a00;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+  color:var(--text);
+  height:100vh;
+  display:flex;
+}
+
+/* LAYOUT */
+.left, .right{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:60px;
+}
+
+/* LEFT */
+.left{
+  background:radial-gradient(circle at top left, rgba(255,128,0,.2), transparent);
+}
+.left h1{
+  font-size:2.5rem;
+}
+.left p{
+  color:var(--muted);
+  max-width:400px;
+}
+
+/* RIGHT */
+.right{
+  align-items:center;
+}
+.box{
+  width:100%;
+  max-width:380px;
+}
+
+/* INPUTS */
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  color:white;
+}
+
+/* BUTTONS */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.primary{
+  background:linear-gradient(135deg,var(--mclaren),var(--mclaren2));
+  color:#111;
+}
+.google{
+  background:white;
+  color:#111;
+  margin-bottom:10px;
+}
+
+.small{
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
+  margin-top:10px;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  body{flex-direction:column}
+  .left{padding:30px}
+  .right{padding:30px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <h1>Estás a un paso de entrar a SonarIA</h1>
+
+  <p>
+    Podrás analizar canciones, evaluar su contenido y tomar mejores decisiones
+    para el aula.
+  </p>
+
+  <p>
+    Tendrás acceso a una versión de prueba antes de decidir.
+  </p>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="box">
+
+    <button class="google">Continuar con Google</button>
+
+    <input type="email" placeholder="Correo">
+    <input type="password" placeholder="Contraseña">
+
+    <button class="primary" onclick="login()">Ingresar</button>
+
+    <div class="small">
+      Accederás a SonarIA dentro de MejorarIA
     </div>
 
-<div class="layout">
-<section class="welcome card"><h1>Ingresa a tu espacio</h1><p>Accede a SonarIA y a futuras herramientas de MejorarIA para continuar tu trabajo con una experiencia más clara, organizada y conectada.</p>
-<div class="benefits"><div class="benefit"><h3>Historial personal</h3><p>Cada docente podrá revisar sus análisis, observaciones y avances dentro de un espacio propio.</p></div><div class="benefit"><h3>SonarIA conectado</h3><p>Guarda resultados, observaciones y decisiones pedagógicas asociadas a tu cuenta.</p></div><div class="benefit"><h3>Crecimiento por etapas</h3><p>La plataforma irá incorporando nuevas herramientas para repertorio, práctica y apoyo docente.</p></div></div></section>
-<section class="form-box card"><h2>Iniciar sesión</h2><p>Entra con tu correo para seguir explorando MejorarIA.</p><form class="form"><input class="input" type="email" placeholder="Tu correo"><input class="input" type="password" placeholder="Tu contraseña"><button class="btn btn-primary" type="submit" style="width:100%;">Ingresar</button><a href="register.html" class="btn btn-ghost" style="width:100%;">Crear cuenta</a></form><div class="helper">¿Aún no tienes acceso? <a href="register.html">Solicítalo aquí</a></div></section>
-</div><div class="footer">MauRock · Mauricio José Pinto Basso</div>
-</div></body></html>
+  </div>
+</div>
+
+<script>
+function login(){
+  localStorage.setItem("mejoraria_user", "true");
+  window.location.href = "panel.html";
+}
+</script>
+
+</body>
+</html>
