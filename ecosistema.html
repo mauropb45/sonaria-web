@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre nosotros | MejorarIA</title>
+<meta name="description" content="Conoce cómo nace MejorarIA, qué la hace distinta y descubre contenido breve útil para docentes.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050b14;
+  --bg2:#081224;
+  --text:#f5f7fb;
+  --muted:#9eafc8;
+  --line:rgba(255,255,255,.08);
+  --f1-red:#e10600;
+  --f1-blue:#3b82f6;
+  --f1-purple:#6d28d9;
+  --mclaren:#ff8000;
+  --mclaren2:#ff5a00;
+  --radius:26px;
+  --shadow:0 24px 70px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(59,130,246,.10), transparent 20%),
+    radial-gradient(circle at bottom right, rgba(225,6,0,.08), transparent 18%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px);
+  background-size:36px 36px;
+  mask-image:linear-gradient(to bottom, rgba(255,255,255,.30), transparent 80%);
+}
+.container{
+  max-width:1180px;
+  margin:auto;
+  padding:22px 20px 80px;
+  position:relative;
+  z-index:1;
+}
+.logo-link{text-decoration:none;color:inherit}
+.logo-wrap{display:flex; flex-direction:column; gap:2px}
+.logo{
+  font-size:2.7rem;
+  font-weight:900;
+  letter-spacing:-1.4px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.logo span{
+  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.logo-sub{
+  font-size:.82rem;
+  color:var(--muted);
+  font-weight:700;
+  letter-spacing:.02em;
+}
+.nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:32px;
+}
+.nav-actions{display:flex; gap:10px; flex-wrap:wrap}
+.btn{
+  min-height:48px;
+  padding:0 18px;
+  border:none;
+  border-radius:16px;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn-ghost{
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  border:1px solid var(--line);
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--mclaren),var(--mclaren2));
+  color:#101418;
+  box-shadow:0 14px 34px rgba(255,128,0,.24);
+}
+.btn-f1{
+  background:linear-gradient(135deg,var(--f1-purple),var(--f1-blue));
+  color:white;
+  box-shadow:0 14px 34px rgba(59,130,246,.18);
+}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.hero{
+  padding:30px;
+  margin-bottom:20px;
+}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  gap:8px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(59,130,246,.12);
+  border:1px solid rgba(59,130,246,.22);
+  color:#dce8ff;
+  font-size:.85rem;
+  font-weight:800;
+  margin-bottom:14px;
+}
+.hero h1{
+  margin:0 0 10px;
+  font-size:clamp(2.8rem,5vw,4.4rem);
+  line-height:.92;
+  letter-spacing:-.07em;
+}
+.hero p{
+  margin:0;
+  max-width:900px;
+  color:var(--muted);
+  line-height:1.84;
+  font-size:1.06rem;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.panel{
+  padding:24px;
+}
+.panel h2{
+  margin:0 0 10px;
+  font-size:1.55rem;
+  letter-spacing:-.04em;
+}
+.panel p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.8;
+}
+.pill-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.pill{
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:800;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+}
+.pill.sonaria{
+  background:rgba(255,128,0,.12);
+  border-color:rgba(255,128,0,.22);
+  color:#ffe4c7;
+}
+.pill.future{
+  background:rgba(59,130,246,.10);
+  border-color:rgba(59,130,246,.22);
+  color:#dce8ff;
+}
+.live-grid{
+  display:grid;
+  gap:12px;
+  margin-top:8px;
+}
+.live-item{
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:14px 16px;
+}
+.live-item strong{
+  display:block;
+  margin-bottom:6px;
+}
+.live-item span{
+  color:var(--muted);
+  line-height:1.7;
+}
+.tip-card{
+  background:
+    linear-gradient(135deg, rgba(225,6,0,.10), rgba(109,40,217,.10), rgba(59,130,246,.10)),
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+}
+.mosaic{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
+.small-card{
+  padding:24px;
+}
+.small-card h3{
+  margin:0 0 10px;
+  font-size:1.32rem;
+  letter-spacing:-.03em;
+}
+.small-card p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.78;
+}
+.cta{
+  margin-top:20px;
+  padding:28px;
+  text-align:center;
+}
+.cta h2{
+  margin:0 0 10px;
+  font-size:2rem;
+  letter-spacing:-.04em;
+}
+.cta p{
+  margin:0 0 16px;
+  color:var(--muted);
+  line-height:1.78;
+}
+.cta-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.footer{
+  text-align:center;
+  margin-top:28px;
+  color:#d7e2f1;
+  font-weight:800;
+}
+.footer small{
+  display:block;
+  margin-top:8px;
+  color:var(--muted);
+  font-weight:500;
+}
+@media(max-width:960px){
+  .grid,.mosaic{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .container{padding:18px 14px 56px}
+  .nav{flex-direction:column; align-items:stretch}
+  .nav-actions{width:100%}
+  .nav-actions .btn{width:100%}
+  .hero,.panel,.small-card,.cta{padding:20px}
+  .logo{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="nav">
+    <a href="index.html" class="logo-link">
+      <div class="logo-wrap">
+        <div class="logo">Mejorar<span>IA</span></div>
+        <div class="logo-sub">Ecosistema de asistentes para docentes</div>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="window.location.href='index.html'">Home</button>
+      <button class="btn btn-primary" onclick="window.location.href='login.html'">Entrar a SonarIA</button>
+    </div>
+  </div>
+
+  <section class="card hero">
+    <div class="eyebrow">🧭 Sobre nosotros</div>
+    <h1>Una plataforma que nace desde una necesidad docente real.</h1>
+    <p>
+      MejorarIA nació desde una dificultad concreta vivida en aula: escoger canciones adecuadas para distintos cursos y contextos escolares.
+      Ese origen marca todo el proyecto. No buscamos construir herramientas por moda, sino desarrollar soluciones útiles, sobrias y realmente pedagógicas,
+      co-construidas desde necesidades reales de docentes reales.
+    </p>
+  </section>
+
+  <section class="grid">
+    <div class="card panel">
+      <h2>Qué la hace distinta</h2>
+      <p>
+        MejorarIA parte desde la práctica docente real. La IA aquí no reemplaza al profesor: lo ayuda a decidir con más claridad,
+        más rapidez y mejor criterio pedagógico. El punto de partida no es la tecnología, sino el problema concreto.
+      </p>
+    </div>
+
+    <div class="card panel">
+      <h2>Cómo entrarás</h2>
+      <p>
+        Desde aquí puedes iniciar sesión o registrarte para entrar a SonarIA dentro de MejorarIA.
+        Ese paso no busca agregar fricción, sino darte acceso a la prueba y preparar una experiencia más clara dentro de la herramienta.
+      </p>
+    </div>
+  </section>
+
+  <section style="margin-top:20px;" class="grid">
+    <div class="card panel">
+      <h2>Hoy en MejorarIA</h2>
+      <div class="pill-row">
+        <span class="pill sonaria">SonarIA · disponible</span>
+        <span class="pill future">Plataforma en construcción</span>
+      </div>
+
+      <div class="live-grid" id="liveBoard">
+        <div class="live-item">
+          <strong>🎧 Tip docente</strong>
+          <span id="tipText">Parte la clase con una pregunta breve antes de mostrar contenido. Eso aumenta atención y participación.</span>
+        </div>
+        <div class="live-item">
+          <strong>📅 Efeméride</strong>
+          <span id="efemerideText">Hoy puedes vincular tu clase con un hito cultural o musical relevante y usarlo como puerta de entrada al contenido.</span>
+        </div>
+        <div class="live-item">
+          <strong>🧠 Inicio de clase</strong>
+          <span id="inicioText">Prueba un inicio de 2 minutos: una imagen, una frase o una pregunta que conecte lo previo con el objetivo del día.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card panel tip-card">
+      <h2>Un espacio más vivo para docentes</h2>
+      <p>
+        Esta página busca acompañar, no solo presentar. Por eso “Hoy en MejorarIA” puede ir creciendo con efemérides, ideas breves,
+        noticias útiles para el trabajo docente y pequeños disparadores que ayuden a iniciar clases con intención.
+      </p>
+    </div>
+  </section>
+
+  <section class="mosaic">
+    <div class="card small-card">
+      <h3>Cómo nació SonarIA</h3>
+      <p>
+        SonarIA surgió al enfrentar una necesidad muy concreta: revisar letras, palabras, mensajes implícitos y pertinencia escolar antes de usar una canción en clase.
+        Lo que antes exigía tiempo, intuición y revisión manual, ahora puede analizarse con una herramienta diseñada para apoyar ese criterio.
+      </p>
+    </div>
+
+    <div class="card small-card">
+      <h3>Hacia dónde puede crecer MejorarIA</h3>
+      <p>
+        Su origen está en la música, pero su lógica no depende de una sola asignatura. La proyección es crecer con nuevas herramientas cuando aparezcan necesidades reales,
+        repetidas y suficientemente claras como para justificar una solución bien hecha.
+      </p>
+    </div>
+  </section>
+
+  <section class="card cta">
+    <h2>Explora o conversemos</h2>
+    <p>
+      Puedes entrar a SonarIA, conocer mejor la plataforma o contarnos una necesidad concreta de tu asignatura.
+    </p>
+
+    <div class="cta-actions">
+      <button class="btn btn-primary" onclick="window.location.href='login.html'">Probar SonarIA</button>
+      <button class="btn btn-f1" onclick="window.location.href='contacto.html'">Contáctanos</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    MejorarIA · Sobre nosotros
+    <small>Una plataforma que quiere crecer con sentido, no solo crecer por crecer.</small>
+  </div>
+</div>
+
+<script>
+const tips = [
+  "Evita comenzar la clase explicando todo: una pregunta breve puede activar mejor la atención inicial.",
+  "Si usas una canción o texto, anticipa el foco de lectura antes de mostrar el material.",
+  "Una consigna clara al inicio reduce más ruido que una explicación larga a mitad de clase.",
+  "Antes de pasar contenido, conecta con algo que el curso ya sabe o ya sintió."
+];
+
+const efemerides = [
+  "Hoy puedes usar una efeméride cultural, científica o artística como puente hacia el contenido de tu clase.",
+  "Una fecha relevante del día puede servir como disparador para abrir conversación y contexto.",
+  "Busca un hito breve del día y conviértelo en pregunta: eso hace que la efeméride se vuelva pedagógica."
+];
+
+const inicios = [
+  "Prueba un inicio de 2 minutos con imagen, frase o pregunta para instalar el objetivo de la clase.",
+  "Empieza con una micro-decision del curso: observar, comparar o anticipar. Eso activa participación.",
+  "Un buen inicio no necesita ser largo; necesita ser claro y conectado con lo que vendrá."
+];
+
+function pick(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+document.getElementById("tipText").textContent = pick(tips);
+document.getElementById("efemerideText").textContent = pick(efemerides);
+document.getElementById("inicioText").textContent = pick(inicios);
+</script>
+</body>
+</html>
