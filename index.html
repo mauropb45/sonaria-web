@@ -325,6 +325,21 @@ a{text-decoration:none;color:inherit}
   color:var(--muted);
   line-height:1.68;
 }
+.video-shell{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#000;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.video-shell iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
 .cta{
   display:grid;
   grid-template-columns:1.1fr .9fr;
@@ -551,22 +566,17 @@ a{text-decoration:none;color:inherit}
 
     <div id="video-demo" class="card feature-card">
       <div class="section-title" style="margin:0 0 12px;">
-        <h2 style="font-size:1.7rem;">Acercamiento visual</h2>
+        <h2 style="font-size:1.7rem;">Conoce SonarIA en acción</h2>
       </div>
 
-      <div class="feature-item" style="padding:0; overflow:hidden;">
-        <div style="padding:18px 18px 0;">
-          <strong>SonarIA, evaluador pedagógico musical</strong>
-          <span>Menos tiempo planificando. Más tiempo enseñando.</span>
-        </div>
-        <div style="padding:18px;">
-          <div style="aspect-ratio:16/9; border-radius:18px; overflow:hidden; background:rgba(0,0,0,.28); border:1px solid var(--line); display:flex; align-items:center; justify-content:center;">
-            <div style="text-align:center; color:#d7e2f1;">
-              <div style="font-size:3rem; margin-bottom:8px;">▶</div>
-              <div>Integra aquí tu video o demo visual</div>
-            </div>
-          </div>
-        </div>
+      <div class="video-shell">
+        <iframe
+          src="https://www.youtube.com/embed/aD6MUQl0ajI"
+          title="Video demo SonarIA"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
       </div>
     </div>
   </section>
@@ -603,7 +613,7 @@ a{text-decoration:none;color:inherit}
       <input id="contactEmail" type="email" placeholder="Tu correo">
       <textarea id="contactNeed" rows="6" placeholder="¿Qué problema docente quieres resolver? ¿En qué asignatura o contexto ocurre?"></textarea>
 
-      <button class="btn btn-purple" onclick="sendIdea()">Enviar solicitud</button>
+      <button class="btn btn-primary" onclick="sendIdea()">Enviar solicitud</button>
       <div id="contactMsg" class="contact-msg"></div>
     </div>
   </section>
