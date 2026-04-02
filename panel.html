@@ -1,799 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Dashboard escolar</title>
-  <meta name="description" content="SonarIA - Evaluador pedagógico musical" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#07111d;
-      --bg2:#0b1627;
-      --panel:rgba(255,255,255,.05);
-      --panel2:rgba(255,255,255,.04);
-      --line:rgba(255,255,255,.08);
-      --text:#eef3fb;
-      --muted:#9cafc8;
-      --green:#19d28d;
-      --yellow:#f4b63f;
-      --red:#ff6b6b;
-      --blue:#4b82ff;
-      --orange:#ff8a00;
-      --shadow:0 24px 64px rgba(0,0,0,.32);
-      --radius:22px;
-      --max:1380px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.12), transparent 18%),
-        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 20%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.10), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-    }
-    body::before{
-      content:"";
-      position:fixed; inset:0; pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.016) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.016) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.4), transparent 80%);
-    }
-    .container{max-width:var(--max); margin:0 auto; padding:26px 22px 56px; position:relative; z-index:1}
-    .topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px}
-    .brand{text-decoration:none; color:inherit}
-    .brand h1{margin:0; font-size:clamp(2.3rem,5vw,4rem); line-height:.95; letter-spacing:-.06em; font-weight:900}
-    .brand .ia{color:var(--green)}
-    .brand .sub{margin-top:4px; color:#d7fff0; font-weight:800}
-    .logout{
-      border:none; border-radius:12px; padding:10px 16px; cursor:pointer;
-      background:#ff5a5a; color:#fff; font-weight:800;
-    }
-    .layout{display:grid; grid-template-columns:420px 1fr; gap:18px; align-items:start}
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-    .panel{padding:22px}
-    .title{margin:0 0 8px; font-size:1.8rem; letter-spacing:-.03em}
-    .muted{color:var(--muted); line-height:1.65}
-    .stack{display:grid; gap:14px}
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .input,.textarea{
-      width:100%; border:none; outline:none; border-radius:16px;
-      padding:14px 15px; background:rgba(255,255,255,.05);
-      color:var(--text); font:inherit; border:1px solid rgba(255,255,255,.08);
-    }
-    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.35); box-shadow:0 0 0 4px rgba(75,130,255,.10)}
-    .textarea{min-height:176px; resize:vertical}
-    .switch{
-      display:flex; gap:12px; align-items:flex-start; padding:14px 15px;
-      border-radius:16px; background:var(--panel2); border:1px solid var(--line)
-    }
-    .switch input{margin-top:3px; accent-color:var(--green); transform:scale(1.15)}
-    .switch strong{display:block; margin-bottom:3px}
-    .switch span{display:block; color:var(--muted); font-size:.92rem; line-height:1.55}
-    .actions,.mini-actions{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .btn{
-      min-height:48px; border:none; border-radius:16px; cursor:pointer;
-      font:inherit; font-weight:800; transition:.18s transform ease,.18s opacity ease;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .primary{background:linear-gradient(135deg,var(--orange),#ff6900); color:#0f172a}
-    .ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line)}
-    .small{min-height:42px; font-size:.92rem}
-    .status{display:none; padding:12px 14px; border-radius:14px; font-size:.95rem; line-height:1.55}
-    .status.show{display:block}
-    .status.loading{background:rgba(255,138,0,.09); border:1px solid rgba(255,138,0,.2); color:#ffe0bf}
-    .status.success{background:rgba(25,210,141,.08); border:1px solid rgba(25,210,141,.2); color:#d9fff0}
-    .status.error{background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.2); color:#ffd7d7}
-    .pill-wrap{display:flex; gap:8px; flex-wrap:wrap}
-    .pill{display:none; padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:800; border:1px solid var(--line)}
-    .pill.show{display:inline-flex}
-    .pill.green{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.22)}
-    .pill.blue{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
-    .pill.orange{background:rgba(255,138,0,.11); color:#ffe0bf; border-color:rgba(255,138,0,.22)}
-    .right{display:grid; gap:18px}
-    .summary{display:grid; grid-template-columns:108px 1fr; gap:16px; align-items:center; transition:box-shadow .2s ease}
-    .icon{
-      width:92px; height:92px; border-radius:24px; display:flex; align-items:center; justify-content:center;
-      font-size:2.9rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)
-    }
-    .result-line{display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:clamp(1.3rem,2.2vw,2rem); font-weight:900; letter-spacing:-.03em}
-    .badge{padding:8px 12px; border-radius:999px; font-size:.84rem; font-weight:800; border:1px solid var(--line)}
-    .badge.green{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.22)}
-    .badge.yellow{background:rgba(244,182,63,.11); color:#fff0c8; border-color:rgba(244,182,63,.24)}
-    .badge.red{background:rgba(255,107,107,.12); color:#ffd9d9; border-color:rgba(255,107,107,.25)}
-    .badge.blue{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
-    .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    .mini,.box{
-      background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:16px
-    }
-    .mini strong,.box h4{display:block; margin:0 0 8px; color:#d9e4f6; font-size:.92rem}
-    .mini span{font-weight:800}
-    .grid-two{display:grid; grid-template-columns:1.08fr .92fr; gap:18px}
-    .stack-tight{display:grid; gap:12px}
-    .box p{margin:0; line-height:1.72; white-space:pre-wrap; color:#d7e2f1}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      padding:8px 12px; border-radius:999px; font-size:.86rem; font-weight:700;
-      background:rgba(75,130,255,.11); color:#dce8ff; border:1px solid rgba(75,130,255,.22)
-    }
-    .empty{color:var(--muted); line-height:1.7}
-    .meter-block{display:grid; gap:12px}
-    .meter-label{display:flex; justify-content:space-between; gap:12px; font-size:.93rem}
-    .meter-track{
-      width:100%; height:11px; border-radius:999px; overflow:hidden;
-      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06)
-    }
-    .meter-fill{
-      width:0%; height:100%; border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
-      transition:width .28s ease
-    }
-    .context-list{display:grid; gap:10px}
-    .context-item{
-      background:var(--panel2); border:1px solid var(--line); border-radius:16px;
-      padding:14px 15px; line-height:1.62; color:#d7e2f1
-    }
-    .modal-backdrop{
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center;
-      padding:20px; background:rgba(0,0,0,.58); z-index:50
-    }
-    .modal-backdrop.show{display:flex}
-    .modal{
-      width:min(1050px,95vw); max-height:88vh; overflow:auto;
-      background:linear-gradient(180deg, rgba(11,20,35,.98), rgba(8,17,31,.98));
-      border:1px solid rgba(255,255,255,.12); border-radius:24px; box-shadow:var(--shadow); padding:22px
-    }
-    .modal h3{margin:0 0 8px}
-    .modal-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-    .modal-panel{background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:14px}
-    .modal-panel pre{margin:0; white-space:pre-wrap; font-family:inherit; line-height:1.65}
-    .course-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px}
-    .course-item{padding:10px 12px; border-radius:14px; background:var(--panel2); border:1px solid var(--line)}
-    .course-item label{display:flex; gap:8px; align-items:center; cursor:pointer}
-    .footer{margin-top:28px; text-align:center; color:#d7e2f1; font-weight:800}
-    @media (max-width:1180px){.layout,.grid-two,.mini-grid,.modal-grid,.course-grid{grid-template-columns:1fr}}
-    @media (max-width:720px){
-      .container{padding:18px 14px 50px}
-      .row,.actions,.mini-actions{grid-template-columns:1fr}
-      .summary{grid-template-columns:1fr}
-      .icon{width:72px; height:72px; border-radius:20px}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SonarIA | Panel docente</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:#0b1220;
+  color:#fff;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px;
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#111827;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+input{
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  width:100%;
+  margin-bottom:10px;
+  background:#1f2937;
+  color:#fff;
+}
+
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+.historial-item{
+  background:#1f2937;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.tag{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:12px;
+  margin-top:6px;
+}
+
+.apta{
+  background:#065f46;
+}
+
+.no-apta{
+  background:#7f1d1d;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+@media(max-width:768px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
 </head>
+
 <body>
+
 <div class="container">
-  <div class="topbar">
-    <a href="index.html" class="brand">
-      <h1>Sonar<span class="ia">IA</span></h1>
-      <div class="sub">Evaluador pedagógico musical</div>
-    </a>
-    <button class="logout" onclick="logout()">Cerrar sesión</button>
-  </div>
 
-  <section class="layout">
-    <aside class="card panel stack">
-      <div>
-        <h2 class="title">Dashboard escolar</h2>
-        <div class="muted">Evalúa pertinencia escolar, contenido explícito e implícito, y decide con mejor criterio pedagógico.</div>
-      </div>
+<h1>🎧 SonarIA Pro — Panel Docente</h1>
 
-      <form id="analysisForm" class="stack">
-        <div class="row">
-          <input id="titulo" class="input" type="text" placeholder="Título de la canción">
-          <input id="artista" class="input" type="text" placeholder="Artista">
-        </div>
+<div class="card">
+  <h2>🔍 Analizar canción</h2>
+  
+  <input id="titulo" placeholder="Título de la canción">
+  <input id="artista" placeholder="Artista">
 
-        <textarea id="texto" class="textarea" placeholder="Pega la letra completa o deja que SonarIA la busque automáticamente..."></textarea>
+  <button onclick="analizar()">Analizar</button>
 
-        <div class="pill-wrap">
-          <div id="pillAutoLyric" class="pill green">Letra autocompletada</div>
-          <div id="pillManualText" class="pill blue">Texto manual detectado</div>
-          <div id="pillFallback" class="pill orange">Análisis por fallback</div>
-        </div>
-
-        <div class="switch">
-          <input id="buscarLetra" type="checkbox" checked>
-          <div>
-            <strong>Buscar la letra automáticamente</strong>
-            <span>Si no pegas la letra, SonarIA intentará traerla desde la API. Sin letra suficiente, no declarará “Apta”.</span>
-          </div>
-        </div>
-
-        <div class="switch">
-          <input id="contextoEscolar" type="checkbox" checked>
-          <div>
-            <strong>Priorizar contexto escolar</strong>
-            <span>Da prioridad a seguridad, pertinencia educativa y detección de contenido explícito e implícito.</span>
-          </div>
-        </div>
-
-        <div class="mini-actions">
-          <button type="button" class="btn ghost small" id="btnCursos">🧑‍🏫 Mis cursos</button>
-          <button type="button" class="btn ghost small" id="btnYoutube">▶ Buscar en YouTube</button>
-          <button type="button" class="btn ghost small" id="btnContexto">🚫 Contexto explícito</button>
-          <button type="button" class="btn ghost small" id="btnTraducir">🌐 Traducción</button>
-        </div>
-
-        <div class="actions">
-          <button class="btn primary" type="submit">Analizar canción</button>
-          <button class="btn ghost" type="button" id="clearBtn">Limpiar</button>
-        </div>
-
-        <div id="statusBox" class="status"></div>
-      </form>
-    </aside>
-
-    <main class="right">
-      <section class="card panel summary" id="summaryCard">
-        <div class="icon" id="summaryIcon">—</div>
-        <div>
-          <div class="result-line">
-            <span id="resultTitle">Esperando análisis</span>
-            <span id="resultBadge" class="badge blue">Sin datos</span>
-          </div>
-          <div id="songMeta" class="muted" style="margin-top:6px">—</div>
-          <div id="mainJustificacion" style="margin-top:8px; line-height:1.72; color:#d7e2f1">Aquí aparecerá el análisis pedagógico.</div>
-        </div>
-      </section>
-
-      <section class="card panel">
-        <div class="mini-grid">
-          <div class="mini"><strong>Edad sugerida</strong><span id="metaEdad">—</span></div>
-          <div class="mini"><strong>Fuente usada</strong><span id="metaFuente">—</span></div>
-          <div class="mini"><strong>Lectura sugerida</strong><span id="metaLectura">—</span></div>
-        </div>
-      </section>
-
-      <section class="grid-two">
-        <section class="card panel">
-          <div class="stack-tight">
-            <div class="box"><h4>Resumen pedagógico</h4><p id="resumenTexto">—</p></div>
-            <div class="box"><h4>Temas detectados</h4><div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div></div>
-            <div class="box"><h4>Enfoque sugerido</h4><p id="enfoqueTexto">—</p></div>
-            <div class="box"><h4>Observaciones pedagógicas</h4><div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div></div>
-            <div class="box"><h4>Actividades sugeridas</h4><p id="actividadesTexto">Selecciona tus cursos y analiza una canción para generar actividades.</p></div>
-            <div class="box"><h4>Match curricular MINEDUC</h4><p id="oaTexto">Selecciona tus cursos en “Mis cursos”.</p></div>
-          </div>
-        </section>
-
-        <section class="card panel">
-          <div class="stack-tight">
-            <div class="box">
-              <h4>Semáforo</h4>
-              <div class="meter-block">
-                <div>
-                  <div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div>
-                  <div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div>
-                </div>
-                <div>
-                  <div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div>
-                  <div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div>
-                </div>
-                <div>
-                  <div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div>
-                  <div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div>
-                </div>
-              </div>
-            </div>
-            <div class="box"><h4>Contextos detectados</h4><div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div></div>
-            <div class="box"><h4>Mis cursos activos</h4><p id="cursosTexto">No has seleccionado cursos.</p></div>
-          </div>
-        </section>
-      </section>
-    </main>
-  </section>
-
-  <div class="footer">MauRock · Mauricio José Pinto Basso</div>
+  <div id="resultado" style="margin-top:20px;"></div>
 </div>
 
-<div id="modalBackdrop" class="modal-backdrop">
-  <div class="modal">
-    <h3 id="modalTitle">Detalle</h3>
-    <div id="modalBody"></div>
-    <div style="margin-top:14px"><button class="btn ghost small" onclick="closeModal()">Cerrar</button></div>
-  </div>
+<div class="grid">
+
+<div class="card">
+  <h2>🕒 Historial</h2>
+  <div id="historial"></div>
 </div>
 
-<div id="coursesBackdrop" class="modal-backdrop">
-  <div class="modal">
-    <h3>Mis cursos</h3>
-    <div class="muted">Selecciona los cursos para sugerir actividades y un match curricular más útil.</div>
-    <div class="course-grid" id="coursesGrid"></div>
-    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
-      <button class="btn primary small" id="saveCoursesBtn">Guardar cursos</button>
-      <button class="btn ghost small" onclick="closeCoursesModal()">Cerrar</button>
-    </div>
-  </div>
+<div class="card">
+  <h2>📊 Insights docentes</h2>
+  <div id="insights"></div>
+</div>
+
+</div>
+
 </div>
 
 <script>
-const API_URL = "https://sonaria-api.onrender.com/analizar";
-const user = localStorage.getItem("sonaria_user");
-if (!user) window.location.href = "login.html";
-function logout(){ localStorage.removeItem("sonaria_user"); window.location.href = "login.html"; }
 
-const MINEDUC_DB = {
-  "1° básico":[
-    {oa:"OA 1", text:"Expresar sensaciones, emociones e ideas que les sugiere la música escuchada, usando diversos medios expresivos.", tags:["emociones","expresión","sensaciones","imágenes"]},
-    {oa:"OA 3", text:"Escuchar música en forma abundante de diversos contextos y culturas, poniendo énfasis en el disfrute y la percepción sonora.", tags:["escucha","apreciación","contexto cultural"]}
-  ],
-  "2° básico":[
-    {oa:"OA 2", text:"Expresar emociones e imágenes surgidas a partir de la audición musical y comentar sus ideas con respeto.", tags:["emociones","expresión","imágenes","comentario"]},
-    {oa:"OA 4", text:"Reconocer contrastes y recursos del lenguaje musical en obras escuchadas.", tags:["análisis","lenguaje musical","contraste"]}
-  ],
-  "3° básico":[
-    {oa:"OA 1", text:"Describir experiencias musicales y reconocer elementos del lenguaje musical en obras escuchadas e interpretadas.", tags:["lenguaje musical","análisis","experiencia musical"]},
-    {oa:"OA 4", text:"Relacionar música con ideas, emociones y escenas de la vida cotidiana.", tags:["emociones","contexto","vida cotidiana"]}
-  ],
-  "4° básico":[
-    {oa:"OA 2", text:"Relacionar música con emociones, contextos y significados presentes en diversas obras.", tags:["emociones","contexto","significado","apreciación"]},
-    {oa:"OA 5", text:"Reflexionar sobre la función de la música en distintos contextos de la vida.", tags:["función social","contexto cultural","sociedad"]}
-  ],
-  "5° básico":[
-    {oa:"OA 3", text:"Analizar música en relación con su contexto cultural y social, identificando intenciones y funciones.", tags:["crítica social","contexto cultural","sociedad","función social"]},
-    {oa:"OA 6", text:"Expresar opiniones fundamentadas sobre obras musicales usando vocabulario adecuado.", tags:["opinión","argumentación","análisis"]}
-  ],
-  "6° básico":[
-    {oa:"OA 4", text:"Escuchar, comparar y fundamentar preferencias musicales en relación con contextos y características de las obras.", tags:["comparación","argumentación","contexto cultural","apreciación"]},
-    {oa:"OA 5", text:"Reconocer relaciones entre música, identidad y pertenencia cultural.", tags:["identidad","cultura","sociedad"]}
-  ],
-  "7° básico":[
-    {oa:"OA 2", text:"Analizar repertorios considerando mensaje, función, contexto y recursos expresivos.", tags:["crítica social","mensaje","contexto cultural","análisis","función social"]},
-    {oa:"OA 4", text:"Reflexionar sobre cómo la música comunica posturas, emociones e identidades.", tags:["identidad","emociones","mensaje","sociedad"]}
-  ],
-  "8° básico":[
-    {oa:"OA 3", text:"Reflexionar críticamente sobre música, identidad, sociedad y cultura, fundamentando opiniones.", tags:["crítica social","identidad","sociedad","cultura","argumentación"]},
-    {oa:"OA 5", text:"Relacionar obras musicales con sus contextos históricos, culturales y sociales.", tags:["contexto cultural","historia","sociedad","análisis contextual"]}
-  ],
-  "1° medio":[
-    {oa:"OA 1", text:"Analizar obras musicales desde una perspectiva expresiva, cultural y crítica.", tags:["crítica social","análisis","contexto cultural","expresión","mensaje"]},
-    {oa:"OA 3", text:"Argumentar juicios estéticos y valóricos sobre repertorios diversos.", tags:["argumentación","valoración","juicio crítico"]}
-  ],
-  "2° medio":[
-    {oa:"OA 2", text:"Interpretar relaciones entre música, contexto, identidad y sentido social.", tags:["identidad","sociedad","contexto cultural","sentido social"]},
-    {oa:"OA 4", text:"Evaluar críticamente repertorios considerando sus propósitos y efectos comunicativos.", tags:["análisis crítico","mensaje","efecto comunicativo"]}
-  ],
-  "3° medio":[
-    {oa:"OA 1", text:"Profundizar el análisis musical y su vínculo con identidad, cultura y sociedad.", tags:["identidad","cultura","sociedad","análisis"]},
-    {oa:"OA 2", text:"Desarrollar proyectos o discusiones musicales con enfoque reflexivo y contextual.", tags:["proyecto","reflexión","contexto cultural","argumentación"]}
-  ],
-  "4° medio":[
-    {oa:"OA 2", text:"Evaluar críticamente repertorios en relación con contextos, audiencias y problemáticas contemporáneas.", tags:["crítica social","audiencias","problemas contemporáneos","análisis crítico"]},
-    {oa:"OA 3", text:"Relacionar música con ciudadanía, memoria, identidad y cultura.", tags:["ciudadanía","memoria","identidad","cultura","sociedad"]}
-  ]
-};
-const COURSES = Object.keys(MINEDUC_DB);
+const API = "https://sonaria-api.onrender.com";
 
-const form = document.getElementById("analysisForm");
-const tituloInput = document.getElementById("titulo");
-const artistaInput = document.getElementById("artista");
-const textoInput = document.getElementById("texto");
-const buscarLetraInput = document.getElementById("buscarLetra");
-const contextoEscolarInput = document.getElementById("contextoEscolar");
-const clearBtn = document.getElementById("clearBtn");
-const statusBox = document.getElementById("statusBox");
-const resultTitle = document.getElementById("resultTitle");
-const resultBadge = document.getElementById("resultBadge");
-const summaryIcon = document.getElementById("summaryIcon");
-const songMeta = document.getElementById("songMeta");
-const mainJustificacion = document.getElementById("mainJustificacion");
-const metaEdad = document.getElementById("metaEdad");
-const metaFuente = document.getElementById("metaFuente");
-const metaLectura = document.getElementById("metaLectura");
-const resumenTexto = document.getElementById("resumenTexto");
-const temasChips = document.getElementById("temasChips");
-const enfoqueTexto = document.getElementById("enfoqueTexto");
-const obsChips = document.getElementById("obsChips");
-const actividadesTexto = document.getElementById("actividadesTexto");
-const oaTexto = document.getElementById("oaTexto");
-const riskPercent = document.getElementById("riskPercent");
-const riskSensitive = document.getElementById("riskSensitive");
-const riskSchool = document.getElementById("riskSchool");
-const riskTotalFill = document.getElementById("riskTotalFill");
-const riskSensitiveFill = document.getElementById("riskSensitiveFill");
-const riskSchoolFill = document.getElementById("riskSchoolFill");
-const contextList = document.getElementById("contextList");
-const cursosTexto = document.getElementById("cursosTexto");
-const pillAutoLyric = document.getElementById("pillAutoLyric");
-const pillManualText = document.getElementById("pillManualText");
-const pillFallback = document.getElementById("pillFallback");
-const summaryCard = document.getElementById("summaryCard");
-const modalBackdrop = document.getElementById("modalBackdrop");
-const modalTitle = document.getElementById("modalTitle");
-const modalBody = document.getElementById("modalBody");
-const coursesBackdrop = document.getElementById("coursesBackdrop");
-const coursesGrid = document.getElementById("coursesGrid");
+async function analizar(){
+  const titulo = document.getElementById("titulo").value;
+  const artista = document.getElementById("artista").value;
 
-let lastAnalysis = null;
-let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || "[]");
-let lastSearchSignature = "";
-let lastAutoLyrics = "";
-let lastInputWasManual = false;
-
-function buildSignature(t,a){return `${String(t||"").trim().toLowerCase()}::${String(a||"").trim().toLowerCase()}`;}
-function setStatus(msg,type){ statusBox.textContent = msg; statusBox.className = "status show " + type; }
-function clearStatus(){ statusBox.textContent = ""; statusBox.className = "status"; }
-function showPill(el, show){ el.classList.toggle("show", !!show); }
-function firstOf(obj, keys, fallback=""){ for(const k of keys){ const v=obj?.[k]; if(v!==undefined && v!==null && v!=="") return v; } return fallback; }
-function toArray(v){
-  if(Array.isArray(v)) return v.filter(Boolean);
-  if(typeof v === "string" && v.trim()) return v.split(/[,;\n•]+/).map(x=>x.trim()).filter(Boolean);
-  return [];
-}
-function escapeHtml(str){ return String(str||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function renderChips(container, items, empty){
-  container.innerHTML = "";
-  const arr = toArray(items);
-  if(!arr.length){ container.innerHTML = `<div class="empty">${empty}</div>`; return; }
-  arr.forEach(item => {
-    const d = document.createElement("div");
-    d.className = "chip";
-    d.textContent = item;
-    container.appendChild(d);
-  });
-}
-function renderContexts(items){
-  contextList.innerHTML = "";
-  const arr = toArray(items);
-  if(!arr.length){ contextList.innerHTML = '<div class="empty">No se detectaron contextos relevantes.</div>'; return; }
-  arr.forEach(item => {
-    const d = document.createElement("div");
-    d.className = "context-item";
-    d.textContent = item;
-    contextList.appendChild(d);
-  });
-}
-function setMeter(el, fill, value){
-  const n = Math.max(0, Math.min(100, Math.round(Number(value)||0)));
-  el.textContent = n + "%";
-  fill.style.width = n + "%";
-}
-function applyUIClass(clasificacion){
-  const c = String(clasificacion||"");
-  resultBadge.className = "badge";
-  summaryCard.style.boxShadow = "";
-  if(c.includes("No")){
-    resultBadge.classList.add("red"); resultBadge.textContent = "No apta"; summaryIcon.textContent = "⛔";
-    summaryCard.style.boxShadow = "0 0 0 1px rgba(255,107,107,.30), 0 20px 50px rgba(255,107,107,.10)";
-  }else if(c.includes("Apta")){
-    resultBadge.classList.add("green"); resultBadge.textContent = "Apta"; summaryIcon.textContent = "✅";
-  }else{
-    resultBadge.classList.add("yellow"); resultBadge.textContent = "Revisión"; summaryIcon.textContent = "⚠️";
-  }
-}
-function normalizeApiData(raw){
-  return {
-    clasificacion:firstOf(raw,["clasificacion","resultado","resumen"],"Resultado listo"),
-    justificacion:firstOf(raw,["justificacion"],""),
-    resumen:firstOf(raw,["resumen","resultado"],"Sin resumen disponible."),
-    edad:firstOf(raw,["edad_sugerida","edad"],"—"),
-    fuente:firstOf(raw,["fuente_letra","fuente"],"—"),
-    lectura:firstOf(raw,["nivel_lectura","lectura_sugerida","lectura"],"—"),
-    enfoque:firstOf(raw,["enfoque"],"—"),
-    temas:firstOf(raw,["temas","temas_detectados"],[]),
-    observaciones:firstOf(raw,["observaciones"],[]),
-    contextos:firstOf(raw,["contextos_detectados","contextos","contexto"],[]),
-    riesgoTotal:firstOf(raw,["riesgo_total","riesgo"],0),
-    riesgoSensible:firstOf(raw,["contenido_sensible"],0),
-    riesgoEscolar:firstOf(raw,["uso_escolar"],0),
-    letra:firstOf(raw,["lyrics","letra_usada","letra"],""),
-    letraEncontrada:Boolean(firstOf(raw,["letra_encontrada"],false)),
-    fallback:Boolean(firstOf(raw,["fallback_inteligente"],false))
-  };
-}
-function normalizeThemeLabel(label){
-  return String(label || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-}
-function expandThemeTags(temas){
-  const joined = temas.map(normalizeThemeLabel).join(" | ");
-  const tags = new Set();
-  if (joined.includes("emoc")) tags.add("emociones");
-  if (joined.includes("ident")) tags.add("identidad");
-  if (joined.includes("critica")) tags.add("crítica social");
-  if (joined.includes("social")) tags.add("sociedad");
-  if (joined.includes("contexto")) tags.add("contexto cultural");
-  if (joined.includes("cultural")) tags.add("contexto cultural");
-  if (joined.includes("utopia") || joined.includes("reflexion")) tags.add("mensaje");
-  if (joined.includes("violencia")) tags.add("mensaje");
-  if (joined.includes("expres")) tags.add("expresión");
-  if (joined.includes("fiesta") || joined.includes("vida social")) tags.add("sociedad");
-  if (joined.includes("lenguaje")) tags.add("lenguaje musical");
-  if (joined.includes("historia")) tags.add("historia");
-  if (joined.includes("ciudadania")) tags.add("ciudadanía");
-  if (joined.includes("memoria")) tags.add("memoria");
-  if (joined.includes("analisis")) tags.add("análisis");
-  if (joined.includes("argument")) tags.add("argumentación");
-  if (joined.includes("cultura")) tags.add("cultura");
-  if (!tags.size && temas.length) {
-    tags.add("análisis");
-    tags.add("mensaje");
-  }
-  return [...tags];
-}
-function scoreOA(oa, expandedTags, raw){
-  let score = 0;
-  const oaTags = (oa.tags || []).map(normalizeThemeLabel);
-  expandedTags.forEach(tag => {
-    if (oaTags.includes(normalizeThemeLabel(tag))) score += 3;
-  });
-  const clasificacion = normalizeThemeLabel(raw.clasificacion || raw.resultado || "");
-  if (clasificacion.includes("revision") || clasificacion.includes("mediacion")) {
-    if (oaTags.includes("argumentación")) score += 2;
-    if (oaTags.includes("análisis crítico")) score += 2;
-  }
-  if ((raw.riesgo_total || raw.riesgo || 0) >= 20) {
-    if (oaTags.includes("mensaje")) score += 1;
-    if (oaTags.includes("análisis")) score += 1;
-  }
-  return score;
-}
-function matchOAPro(raw, selectedCourses){
-  const temas = toArray(raw.temas || raw.temas_detectados);
-  const expandedTags = expandThemeTags(temas);
-  if (!selectedCourses.length) return { bestCourse:null, bestOA:null, expandedTags };
-  let bestCourse = null, bestOA = null, bestScore = -1;
-  selectedCourses.forEach(course => {
-    const oas = MINEDUC_DB[course] || [];
-    oas.forEach(oa => {
-      const score = scoreOA(oa, expandedTags, raw);
-      if (score > bestScore) {
-        bestScore = score;
-        bestCourse = course;
-        bestOA = oa;
-      }
-    });
-  });
-  return { bestCourse, bestOA, expandedTags };
-}
-function generateActivities(raw){
-  const temas = toArray(raw.temas || raw.temas_detectados);
-  const match = matchOAPro(raw, selectedCourses);
-  if (!selectedCourses.length || !match.bestCourse || !match.bestOA){
-    return {
-      actividades:
-`Sin curso sugerido porque no has seleccionado cursos o no hay match suficiente.
-
-Temas detectados: ${temas.join(", ") || "análisis general"}.
-
-1) Escucha guiada con foco en mensaje, lenguaje y contexto.
-2) Distinguir contenido explícito, implícito y metáforas.
-3) Justificar si requiere mediación docente.
-4) Elaborar una adaptación escolar o comentario crítico.`,
-      oa: 'Selecciona tus cursos en “Mis cursos”.'
-    };
-  }
-  const curso = match.bestCourse;
-  const oa = match.bestOA;
-  const tags = match.expandedTags;
-  const actividades = [];
-  if (tags.includes("emociones") || tags.includes("identidad")) actividades.push("• Identificar emociones, voces o identidades presentes en la letra y justificar con evidencias.");
-  if (tags.includes("crítica social") || tags.includes("sociedad") || tags.includes("contexto cultural")) actividades.push("• Debatir qué visión de sociedad o contexto cultural propone la canción.");
-  if (tags.includes("mensaje")) actividades.push("• Analizar el mensaje central y distinguir si se comunica de forma explícita o implícita.");
-  if (tags.includes("argumentación")) actividades.push("• Escribir una opinión fundamentada sobre la pertinencia escolar de la canción.");
-  if (tags.includes("lenguaje musical")) actividades.push("• Relacionar elementos del lenguaje musical con el sentido expresivo del texto.");
-  if (tags.includes("historia") || tags.includes("memoria") || tags.includes("ciudadanía")) actividades.push("• Vincular la canción con procesos históricos, memoria o ciudadanía según corresponda.");
-  if (!actividades.length) {
-    actividades.push("• Escucha guiada e identificación del mensaje principal.");
-    actividades.push("• Distinguir contenido explícito, implícito y metáforas.");
-    actividades.push("• Elaborar una versión comentada o adaptación escolar.");
-  }
-  return {
-    actividades:
-`Curso sugerido: ${curso}
-OA sugerido: ${oa.oa}
-${oa.text}
-
-Tags pedagógicos detectados: ${tags.join(", ") || "análisis general"}
-
-Actividades:
-${actividades.join("\n")}`,
-    oa: `${curso} · ${oa.oa}\n${oa.text}`
-  };
-}
-function updateCoursesText(){ cursosTexto.textContent = selectedCourses.length ? selectedCourses.join(", ") : "No has seleccionado cursos."; }
-function openModal(title, html){ modalTitle.textContent = title; modalBody.innerHTML = html; modalBackdrop.classList.add("show"); }
-function closeModal(){ modalBackdrop.classList.remove("show"); }
-modalBackdrop.addEventListener("click", e => { if(e.target === modalBackdrop) closeModal(); });
-
-function buildCoursesModal(){
-  coursesGrid.innerHTML = "";
-  COURSES.forEach(course => {
-    const div = document.createElement("div");
-    div.className = "course-item";
-    div.innerHTML = `<label><input type="checkbox" value="${escapeHtml(course)}" ${selectedCourses.includes(course) ? "checked" : ""}> ${escapeHtml(course)}</label>`;
-    coursesGrid.appendChild(div);
-  });
-}
-function openCoursesModal(){ buildCoursesModal(); coursesBackdrop.classList.add("show"); }
-function closeCoursesModal(){ coursesBackdrop.classList.remove("show"); }
-coursesBackdrop.addEventListener("click", e => { if(e.target === coursesBackdrop) closeCoursesModal(); });
-document.getElementById("saveCoursesBtn").addEventListener("click", () => {
-  selectedCourses = [...coursesGrid.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value);
-  localStorage.setItem("sonaria_courses", JSON.stringify(selectedCourses));
-  updateCoursesText();
-  if(lastAnalysis){
-    const plan = generateActivities(lastAnalysis.raw);
-    actividadesTexto.textContent = plan.actividades;
-    oaTexto.textContent = plan.oa;
-  }
-  closeCoursesModal();
-});
-document.getElementById("btnCursos").addEventListener("click", openCoursesModal);
-document.getElementById("btnYoutube").addEventListener("click", () => {
-  const q = encodeURIComponent(`${tituloInput.value||""} ${artistaInput.value||""} lyrics`);
-  window.open(`https://www.youtube.com/results?search_query=${q}`, "_blank");
-});
-document.getElementById("btnContexto").addEventListener("click", () => {
-  const raw = lastAnalysis?.raw || {};
-  openModal("Contexto explícito", `
-    <div class="modal-grid">
-      <div class="modal-panel"><strong>Observaciones</strong><pre>${escapeHtml((toArray(raw.observaciones).join("\n• ") || "No hay observaciones disponibles.").replace(/^/,"• "))}</pre></div>
-      <div class="modal-panel"><strong>Contextos detectados</strong><pre>${escapeHtml((toArray(raw.contextos_detectados || raw.contextos || raw.contexto).join("\n• ") || "No hay contextos disponibles.").replace(/^/,"• "))}</pre></div>
-    </div>
-  `);
-});
-async function translateText(text){
-  const clean = String(text||"").trim();
-  if(!clean) return "";
-  try{
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=es&dt=t&q=' + encodeURIComponent(clean);
-    const res = await fetch(url);
-    const data = await res.json();
-    return Array.isArray(data?.[0]) ? data[0].map(x => x?.[0] || "").join("") : "";
-  }catch{
-    return "No fue posible traducir automáticamente.";
-  }
-}
-document.getElementById("btnTraducir").addEventListener("click", async () => {
-  const lyrics = textoInput.value.trim();
-  if(!lyrics){ setStatus("Primero pega o recupera una letra para traducir.", "error"); return; }
-  openModal("Traducción de la letra", `<div class="modal-grid"><div class="modal-panel"><strong>Original</strong><pre>${escapeHtml(lyrics)}</pre></div><div class="modal-panel" id="translatedPanel"><strong>Español</strong><pre>Traduciendo...</pre></div></div>`);
-  const tr = await translateText(lyrics);
-  document.getElementById("translatedPanel").innerHTML = `<strong>Español</strong><pre>${escapeHtml(tr || "No fue posible traducir.")}</pre>`;
-});
-
-function render(raw){
-  const data = normalizeApiData(raw);
-  resultTitle.textContent = data.clasificacion;
-  applyUIClass(data.clasificacion);
-  songMeta.textContent = `${tituloInput.value || "Sin título"} · ${artistaInput.value || "Artista no indicado"}`;
-  mainJustificacion.textContent = data.justificacion || data.resumen;
-  metaEdad.textContent = data.edad;
-  metaFuente.textContent = data.fuente;
-  metaLectura.textContent = data.lectura;
-  resumenTexto.textContent = data.resumen;
-  enfoqueTexto.textContent = typeof data.enfoque === "object" ? Object.values(data.enfoque).filter(Boolean).join(" · ") : (data.enfoque || "—");
-  renderChips(temasChips, data.temas, "Sin temas detectados.");
-  renderChips(obsChips, data.observaciones, "Sin observaciones.");
-  renderContexts(data.contextos);
-  setMeter(riskPercent, riskTotalFill, data.riesgoTotal);
-  setMeter(riskSensitive, riskSensitiveFill, data.riesgoSensible);
-  setMeter(riskSchool, riskSchoolFill, data.riesgoEscolar);
-  showPill(pillAutoLyric, data.letraEncontrada && !lastInputWasManual);
-  showPill(pillManualText, lastInputWasManual);
-  showPill(pillFallback, data.fallback);
-  const plan = generateActivities(raw);
-  actividadesTexto.textContent = plan.actividades;
-  oaTexto.textContent = plan.oa;
-  lastAnalysis = { raw };
-  updateCoursesText();
-}
-function resetView(){
-  resultTitle.textContent = "Esperando análisis";
-  resultBadge.className = "badge blue";
-  resultBadge.textContent = "Sin datos";
-  summaryIcon.textContent = "—";
-  summaryCard.style.boxShadow = "";
-  songMeta.textContent = "—";
-  mainJustificacion.textContent = "Aquí aparecerá el análisis pedagógico.";
-  metaEdad.textContent = "—";
-  metaFuente.textContent = "—";
-  metaLectura.textContent = "—";
-  resumenTexto.textContent = "—";
-  enfoqueTexto.textContent = "—";
-  temasChips.innerHTML = '<div class="empty">Sin datos.</div>';
-  obsChips.innerHTML = '<div class="empty">Sin datos.</div>';
-  contextList.innerHTML = '<div class="empty">Aún no hay datos.</div>';
-  actividadesTexto.textContent = "Selecciona tus cursos y analiza una canción para generar actividades.";
-  oaTexto.textContent = 'Selecciona tus cursos en “Mis cursos”.';
-  setMeter(riskPercent, riskTotalFill, 0);
-  setMeter(riskSensitive, riskSensitiveFill, 0);
-  setMeter(riskSchool, riskSchoolFill, 0);
-  showPill(pillAutoLyric,false);
-  showPill(pillManualText,false);
-  showPill(pillFallback,false);
-  lastAnalysis = null;
-  lastAutoLyrics = "";
-  lastInputWasManual = false;
-}
-clearBtn.addEventListener("click", () => {
-  form.reset();
-  buscarLetraInput.checked = true;
-  contextoEscolarInput.checked = true;
-  clearStatus();
-  lastSearchSignature = "";
-  resetView();
-});
-
-async function runAnalysis(payload){
-  const res = await fetch(API_URL,{
+  const res = await fetch(API + "/analizar", {
     method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(payload)
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({ titulo, artista })
   });
-  const text = await res.text();
-  let json = {};
-  try{ json = JSON.parse(text); }catch{ throw new Error("La API respondió en un formato no válido."); }
-  if(!res.ok) throw new Error(json?.detail || json?.error || "Error HTTP al analizar.");
-  return json;
+
+  const data = await res.json();
+
+  mostrarResultado(data);
+  cargarHistorial();
 }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  clearStatus();
+function mostrarResultado(data){
+  const div = document.getElementById("resultado");
 
-  const signature = buildSignature(tituloInput.value, artistaInput.value);
-  let textoManual = textoInput.value.trim();
+  let estado = data.apta ? "apta" : "no-apta";
+  let textoEstado = data.apta ? "Apta para clase" : "Requiere supervisión docente";
 
-  if(signature !== lastSearchSignature && textoManual === lastAutoLyrics){
-    textoManual = "";
-    textoInput.value = "";
-  }
+  div.innerHTML = `
+    <div class="historial-item">
+      <strong>${data.titulo} - ${data.artista}</strong><br>
+      <span class="tag ${estado}">${textoEstado}</span>
+      <p>${data.justificacion || ""}</p>
+    </div>
+  `;
+}
 
-  lastInputWasManual = !!textoManual;
+async function cargarHistorial(){
+  const res = await fetch(API + "/historial");
+  const data = await res.json();
 
-  const payload = {
-    titulo: tituloInput.value.trim(),
-    artista: artistaInput.value.trim(),
-    texto: textoManual,
-    buscar_letra: buscarLetraInput.checked,
-    contexto_escolar: contextoEscolarInput.checked
-  };
+  const cont = document.getElementById("historial");
+  cont.innerHTML = "";
 
-  if(!payload.titulo && !payload.texto){
-    setStatus("Escribe al menos el título o pega la letra antes de analizar.", "error");
+  if(data.items.length === 0){
+    cont.innerHTML = "Aún no hay canciones analizadas";
     return;
   }
 
-  try{
-    setStatus("Analizando canción...", "loading");
-    const data = await runAnalysis(payload);
-    const normalized = normalizeApiData(data);
+  data.items.reverse().slice(0,10).forEach(item => {
 
-    if(normalized.letra && normalized.letra.trim().length > 40 && !textoManual){
-      lastAutoLyrics = normalized.letra.trim();
-      textoInput.value = lastAutoLyrics;
-    }else if(textoManual){
-      lastAutoLyrics = "";
-    }
+    let estado = item.apta ? "apta" : "no-apta";
+    let textoEstado = item.apta ? "Apta" : "Supervisión";
 
-    lastSearchSignature = signature;
-    render(data);
-    setStatus("Análisis listo", "success");
-  }catch(err){
-    console.error(err);
-    setStatus(err.message || "Hubo un problema al analizar.", "error");
+    const div = document.createElement("div");
+    div.className = "historial-item";
+
+    div.innerHTML = `
+      <strong>${item.titulo}</strong> - ${item.artista}<br>
+      <span class="tag ${estado}">${textoEstado}</span>
+      <br><br>
+      <button onclick="reanalizar('${item.titulo}','${item.artista}')">
+        Reutilizar
+      </button>
+    `;
+
+    cont.appendChild(div);
+  });
+
+  generarInsights(data.items);
+}
+
+function reanalizar(titulo, artista){
+  document.getElementById("titulo").value = titulo;
+  document.getElementById("artista").value = artista;
+}
+
+function generarInsights(items){
+
+  const div = document.getElementById("insights");
+
+  if(items.length === 0){
+    div.innerHTML = "Sin datos aún";
+    return;
   }
-});
 
-updateCoursesText();
-resetView();
+  let aptas = items.filter(i=>i.apta).length;
+  let noAptas = items.length - aptas;
+
+  div.innerHTML = `
+    <p>🎵 Canciones analizadas: <strong>${items.length}</strong></p>
+    <p>✅ Aptas: ${aptas}</p>
+    <p>⚠️ Requieren supervisión: ${noAptas}</p>
+  `;
+}
+
+cargarHistorial();
+
 </script>
+
 </body>
 </html>
