@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MejorarIA | Dashboard</title>
+  <meta name="description" content="MejorarIA - Ecosistema de asistentes para docentes" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07111d;
+      --bg2:#0b1627;
+      --panel:rgba(255,255,255,.05);
+      --panel2:rgba(255,255,255,.04);
+      --line:rgba(255,255,255,.08);
+      --text:#eef3fb;
+      --muted:#9cafc8;
+      --green:#19d28d;
+      --yellow:#f4b63f;
+      --red:#ff6b6b;
+      --blue:#4b82ff;
+      --orange:#ff8a00;
+      --purple:#8b5cf6;
+      --shadow:0 24px 64px rgba(0,0,0,.32);
+      --radius:24px;
+      --max:1380px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.12), transparent 18%),
+        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.10), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      min-height:100vh;
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:0; pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.016) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.016) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.4), transparent 80%);
+    }
+    .container{max-width:var(--max); margin:0 auto; padding:26px 22px 64px; position:relative; z-index:1}
+    .topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:22px}
+    .brand{text-decoration:none; color:inherit}
+    .brand h1{margin:0; font-size:clamp(2.2rem,5vw,4rem); line-height:.95; letter-spacing:-.06em; font-weight:900}
+    .brand .ia{color:var(--green)}
+    .brand .sub{margin-top:6px; color:#d7fff0; font-weight:800}
+    .top-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      min-height:46px; border:none; border-radius:16px; cursor:pointer;
+      font:inherit; font-weight:800; transition:.18s transform ease,.18s opacity ease;
+      padding:0 16px;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),#ff6900); color:#0f172a}
+    .btn-ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line)}
+    .btn-purple{background:linear-gradient(135deg,#8b5cf6,#6d28d9); color:white}
+    .hero{display:grid; grid-template-columns:1.15fr .85fr; gap:18px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{padding:24px}
+    .eyebrow{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px;
+      border-radius:999px; background:rgba(75,130,255,.1); color:#dce8ff;
+      border:1px solid rgba(75,130,255,.22); font-size:.85rem; font-weight:800;
+      margin-bottom:14px;
+    }
+    .hero h2{
+      margin:0 0 10px;
+      font-size:clamp(2rem,4vw,3.4rem);
+      line-height:.98;
+      letter-spacing:-.06em;
+    }
+    .muted{color:var(--muted); line-height:1.7}
+    .hero-copy{display:grid; gap:18px}
+    .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+    .stat{
+      background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:16px;
+    }
+    .stat strong{display:block; font-size:1.5rem; margin-bottom:6px}
+    .hero-side{display:grid; gap:12px}
+    .mini-card{
+      background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:16px;
+    }
+    .mini-card h4{margin:0 0 8px; font-size:1rem}
+    .pill-row{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{
+      padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:800; border:1px solid var(--line);
+      background:rgba(255,255,255,.04)
+    }
+    .pill.green{background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24); color:#d9fff0}
+    .pill.yellow{background:rgba(244,182,63,.12); border-color:rgba(244,182,63,.24); color:#fff0c8}
+    .pill.purple{background:rgba(139,92,246,.12); border-color:rgba(139,92,246,.24); color:#efe5ff}
+    .section-title{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; margin:18px 0 0;
+    }
+    .section-title h3{margin:0; font-size:1.6rem; letter-spacing:-.03em}
+    .products{
+      display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:16px;
+    }
+    .product-card{
+      position:relative; overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px; box-shadow:var(--shadow); padding:22px;
+      display:grid; gap:16px;
+    }
+    .product-card::after{
+      content:""; position:absolute; inset:auto -50px -50px auto; width:160px; height:160px;
+      background:radial-gradient(circle, rgba(255,255,255,.12), transparent 65%);
+      pointer-events:none;
+    }
+    .product-top{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+    .product-icon{
+      width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+      font-size:1.8rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)
+    }
+    .badge{
+      padding:8px 12px; border-radius:999px; font-size:.8rem; font-weight:800; border:1px solid var(--line)
+    }
+    .badge.green{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.24)}
+    .badge.yellow{background:rgba(244,182,63,.12); color:#fff0c8; border-color:rgba(244,182,63,.24)}
+    .badge.purple{background:rgba(139,92,246,.12); color:#efe5ff; border-color:rgba(139,92,246,.24)}
+    .product-card h4{margin:0; font-size:1.45rem; letter-spacing:-.03em}
+    .product-card p{margin:0; color:#d7e2f1; line-height:1.72}
+    .product-meta{display:flex; flex-wrap:wrap; gap:8px}
+    .product-actions{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:auto}
+    .feature-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px}
+    .feature-list{display:grid; gap:12px; margin-top:12px}
+    .feature-item{
+      background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:14px 16px;
+    }
+    .feature-item strong{display:block; margin-bottom:6px}
+    .timeline{display:grid; gap:12px}
+    .timeline-item{display:grid; grid-template-columns:22px 1fr; gap:12px; align-items:start}
+    .timeline-dot{
+      width:14px; height:14px; border-radius:999px; margin-top:5px;
+      background:linear-gradient(135deg,var(--blue),var(--green));
+      box-shadow:0 0 0 5px rgba(75,130,255,.12);
+    }
+    .cta{margin-top:18px; display:grid; grid-template-columns:1.15fr .85fr; gap:18px}
+    .big-cta{
+      background:linear-gradient(135deg, rgba(255,138,0,.14), rgba(139,92,246,.12), rgba(25,210,141,.10));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:26px; padding:24px; box-shadow:var(--shadow);
+    }
+    .big-cta h3{margin:0 0 10px; font-size:1.8rem; letter-spacing:-.03em}
+    .contact-box{display:grid; gap:12px}
+    .contact-box textarea, .contact-box input{
+      width:100%; border:none; outline:none; border-radius:16px;
+      padding:14px 15px; background:rgba(255,255,255,.05);
+      color:var(--text); font:inherit; border:1px solid rgba(255,255,255,.08);
+    }
+    .footer{
+      margin-top:28px; text-align:center; color:#d7e2f1; font-weight:800;
+    }
+    .footer small{display:block; color:var(--muted); margin-top:8px; font-weight:500}
+    @media (max-width:1180px){
+      .hero,.products,.feature-grid,.cta,.stats{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .container{padding:18px 14px 52px}
+      .product-actions{grid-template-columns:1fr}
+      .topbar{align-items:stretch; flex-direction:column}
+      .top-actions{width:100%}
+      .top-actions .btn{width:100%}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <a href="index.html" class="brand">
+      <h1>Mejorar<span class="ia">IA</span></h1>
+      <div class="sub">Ecosistema de asistentes para docentes</div>
+    </a>
+
+    <div class="top-actions">
+      <button class="btn btn-ghost" onclick="window.location.href='contacto.html'">Contacto</button>
+      <button class="btn btn-ghost" onclick="window.location.href='planes.html'">Planes</button>
+      <button class="btn btn-primary" onclick="logout()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="card panel hero-copy">
+      <div class="eyebrow">🧠 Plataforma docente en evolución</div>
+      <div>
+        <h2>Herramientas que nacen desde el aula y crecen contigo.</h2>
+        <div class="muted">
+          MejorarIA comenzó desde la educación musical, resolviendo dificultades reales del trabajo docente.
+          Hoy incluye productos especializados como SonarIA y EnsayarIA, y está pensada para crecer hacia otras asignaturas y nuevas soluciones pedagógicas.
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>2</strong>
+          <div class="muted">productos activos o en desarrollo</div>
+        </div>
+        <div class="stat">
+          <strong>∞</strong>
+          <div class="muted">posibilidades de nuevas soluciones</div>
+        </div>
+        <div class="stat">
+          <strong>1</strong>
+          <div class="muted">misión: mejorar decisiones docentes</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="window.location.href='panel.html'">Ir a SonarIA</button>
+        <button class="btn btn-purple" onclick="document.getElementById('co-creacion').scrollIntoView({behavior:'smooth'})">Construir solución contigo</button>
+      </div>
+    </div>
+
+    <div class="card panel hero-side">
+      <div class="mini-card">
+        <h4>Hoy en MejorarIA</h4>
+        <div class="pill-row">
+          <span class="pill green">SonarIA · activo</span>
+          <span class="pill yellow">EnsayarIA · en desarrollo</span>
+          <span class="pill purple">Nuevos verticales · próximos</span>
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <h4>Propuesta de valor</h4>
+        <div class="muted">
+          No solo ofrecemos herramientas. Diseñamos soluciones junto a docentes cuando la necesidad aún no existe en el mercado.
+        </div>
+      </div>
+
+      <div class="mini-card">
+        <h4>Ideal para</h4>
+        <div class="muted">
+          Profesores que planifican mejor, toman decisiones pedagógicas con evidencia y quieren ahorrar tiempo sin perder criterio profesional.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top:18px">
+    <div class="section-title">
+      <h3>Tus herramientas</h3>
+      <div class="muted">Un solo acceso para entrar a todo tu ecosistema</div>
+    </div>
+
+    <div class="products">
+      <article class="product-card">
+        <div class="product-top">
+          <div class="product-icon">🎧</div>
+          <span class="badge green">Disponible</span>
+        </div>
+
+        <div>
+          <h4>SonarIA</h4>
+          <p>Analiza canciones, detecta contenido explícito e implícito, sugiere mediación docente, propone actividades y hace match curricular para decisiones más claras en educación musical.</p>
+        </div>
+
+        <div class="product-meta">
+          <span class="pill">Análisis pedagógico</span>
+          <span class="pill">OA MINEDUC</span>
+          <span class="pill">Historial con SQL</span>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn btn-primary" onclick="window.location.href='panel.html'">Entrar</button>
+          <button class="btn btn-ghost" onclick="window.location.href='planes.html'">Ver plan</button>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="product-top">
+          <div class="product-icon">🎼</div>
+          <span class="badge yellow">En desarrollo</span>
+        </div>
+
+        <div>
+          <h4>EnsayarIA</h4>
+          <p>Asistente pensado para apoyar el proceso de ensayo, práctica y preparación musical con foco en seguimiento, mejora continua y acompañamiento pedagógico.</p>
+        </div>
+
+        <div class="product-meta">
+          <span class="pill">Práctica guiada</span>
+          <span class="pill">Seguimiento</span>
+          <span class="pill">Feedback futuro</span>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn btn-ghost" onclick="alert('EnsayarIA está en desarrollo. Muy pronto estará disponible.')">Ver estado</button>
+          <button class="btn btn-purple" onclick="document.getElementById('co-creacion').scrollIntoView({behavior:'smooth'})">Quiero acceso</button>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="product-top">
+          <div class="product-icon">🧩</div>
+          <span class="badge purple">Co-creación</span>
+        </div>
+
+        <div>
+          <h4>Nueva solución docente</h4>
+          <p>Si tu asignatura o contexto necesita algo distinto, MejorarIA puede diseñar contigo una herramienta específica para tu realidad educativa.</p>
+        </div>
+
+        <div class="product-meta">
+          <span class="pill">Solución a medida</span>
+          <span class="pill">Diseño con docentes</span>
+          <span class="pill">Escalable</span>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn btn-purple" onclick="document.getElementById('co-creacion').scrollIntoView({behavior:'smooth'})">Solicitar</button>
+          <button class="btn btn-ghost" onclick="window.location.href='contacto.html'">Contactar</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="feature-grid">
+    <div class="card panel">
+      <div class="section-title">
+        <h3>Qué hace distinto a MejorarIA</h3>
+      </div>
+      <div class="feature-list">
+        <div class="feature-item">
+          <strong>Nace desde una necesidad real docente</strong>
+          <div class="muted">No parte desde una moda tecnológica, sino desde problemas concretos del aula y la planificación.</div>
+        </div>
+        <div class="feature-item">
+          <strong>Te ayuda a decidir, no solo a automatizar</strong>
+          <div class="muted">La IA apoya el criterio profesional, no reemplaza el juicio pedagógico del profesor.</div>
+        </div>
+        <div class="feature-item">
+          <strong>Crece por verticales, no por improvisación</strong>
+          <div class="muted">Hoy empieza en música, pero la arquitectura está pensada para expandirse a otras asignaturas.</div>
+        </div>
+        <div class="feature-item">
+          <strong>Puede construir nuevas herramientas contigo</strong>
+          <div class="muted">Si no existe la solución que necesitas, MejorarIA puede desarrollarla junto a ti.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card panel">
+      <div class="section-title">
+        <h3>Ruta de crecimiento</h3>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <strong>Fase 1 · Educación musical</strong>
+            <div class="muted">SonarIA y EnsayarIA como primera validación desde experiencia real en aula.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <strong>Fase 2 · Historial y decisiones basadas en datos</strong>
+            <div class="muted">Persistencia con SQL, seguimiento de uso y panel más inteligente para docentes.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div>
+            <strong>Fase 3 · Nuevas asignaturas</strong>
+            <div class="muted">Herramientas creadas junto a otros profesores según necesidades reales.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="co-creacion" class="cta">
+    <div class="big-cta">
+      <h3>Creamos soluciones contigo</h3>
+      <div class="muted">
+        Cada docente enfrenta desafíos distintos. Si necesitas una herramienta específica para tu realidad,
+        podemos diseñarla juntos. MejorarIA no solo ofrece productos: construye soluciones reales para el aula.
+      </div>
+
+      <div class="feature-list" style="margin-top:16px">
+        <div class="feature-item">
+          <strong>Cuéntanos tu problema docente</strong>
+          <div class="muted">Puede transformarse en la próxima herramienta de MejorarIA.</div>
+        </div>
+        <div class="feature-item">
+          <strong>Trabajamos sobre casos concretos</strong>
+          <div class="muted">Asignatura, curso, tipo de evaluación, planificación o decisiones pedagógicas complejas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card panel contact-box">
+      <div>
+        <h3 style="margin:0 0 8px; font-size:1.5rem; letter-spacing:-.03em">Quiero una solución a medida</h3>
+        <div class="muted">Déjanos una idea breve y te contactamos para explorarla contigo.</div>
+      </div>
+
+      <input id="contactName" type="text" placeholder="Tu nombre">
+      <input id="contactEmail" type="email" placeholder="Tu correo">
+      <textarea id="contactNeed" rows="6" placeholder="¿Qué problema docente quieres resolver? ¿En qué asignatura o contexto ocurre?"></textarea>
+
+      <button class="btn btn-purple" onclick="sendIdea()">Enviar solicitud</button>
+      <div id="contactMsg" class="muted"></div>
+    </div>
+  </section>
+
+  <div class="footer">
+    MejorarIA · Ecosistema de asistentes para docentes
+    <small>Hoy parte desde educación musical. Mañana puede acompañar a muchas más áreas del trabajo docente.</small>
+  </div>
+</div>
+
+<script>
+function logout(){
+  localStorage.removeItem("sonaria_user");
+  localStorage.removeItem("mejoraria_user");
+  window.location.href = "login.html";
+}
+
+function sendIdea(){
+  const name = document.getElementById("contactName").value.trim();
+  const email = document.getElementById("contactEmail").value.trim();
+  const need = document.getElementById("contactNeed").value.trim();
+  const msg = document.getElementById("contactMsg");
+
+  if(!name || !email || !need){
+    msg.textContent = "Completa nombre, correo y necesidad antes de enviar.";
+    return;
+  }
+
+  msg.textContent = "Gracias. Tu solicitud quedó registrada para contacto y co-creación.";
+}
+</script>
+</body>
+</html>
