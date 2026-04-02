@@ -7,114 +7,96 @@
   <meta name="description" content="SonarIA - Evaluador pedagógico musical" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#06101b; --bg2:#0a1627; --line:rgba(255,255,255,.10); --text:#eef2f7; --muted:#9fb0c7;
-      --blue:#4b82ff; --green:#19d28d; --yellow:#f7b944; --red:#ff6b6b; --orange:#ff8a00;
-      --shadow:0 24px 70px rgba(0,0,0,.34); --radius:22px; --max:1420px;
-    }
+    :root{--bg:#06101b;--bg2:#0a1627;--line:rgba(255,255,255,.10);--text:#eef2f7;--muted:#9fb0c7;--blue:#4b82ff;--green:#19d28d;--yellow:#f7b944;--red:#ff6b6b;--orange:#ff8a00;--shadow:0 24px 70px rgba(0,0,0,.34);--radius:22px;--max:1420px}
     *{box-sizing:border-box}
-    body{
-      margin:0; font-family:'Inter',sans-serif; color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.11), transparent 18%),
-        radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.11), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-    }
-    body::before{
-      content:""; position:fixed; inset:0; pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-    }
-    .container{position:relative; z-index:1; max-width:var(--max); margin:0 auto; padding:24px 22px 70px;}
-    .header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;}
-    .brand{display:flex; flex-direction:column; gap:4px; text-decoration:none; color:inherit}
-    .brand-main{font-size:clamp(2.35rem, 5vw, 4rem); line-height:.95; font-weight:900; letter-spacing:-.06em; margin:0;}
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:
+      radial-gradient(circle at top left, rgba(255,138,0,.11), transparent 18%),
+      radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 18%),
+      radial-gradient(circle at bottom right, rgba(75,130,255,.11), transparent 18%),
+      linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%)}
+    .container{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:24px 22px 70px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .brand{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit}
+    .brand-main{font-size:clamp(2.35rem, 5vw, 4rem);line-height:.95;font-weight:900;letter-spacing:-.06em;margin:0}
     .brand-main .ia{color:var(--green)}
-    .brand-sub{color:#d7fff0; font-weight:800}
-    .logout-btn{position:absolute; top:22px; right:22px; padding:10px 16px; border:none; border-radius:10px; background:#ff4d4d; color:white; cursor:pointer; z-index:3; font-weight:700;}
-    .shell{display:grid; grid-template-columns:440px 1fr; gap:18px; align-items:start;}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.09); border-radius:var(--radius); box-shadow:var(--shadow);}
+    .brand-sub{color:#d7fff0;font-weight:800}
+    .logout-btn{position:absolute;top:22px;right:22px;padding:10px 16px;border:none;border-radius:10px;background:#ff4d4d;color:white;cursor:pointer;z-index:3;font-weight:700}
+    .shell{display:grid;grid-template-columns:440px 1fr;gap:18px;align-items:start}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:var(--shadow)}
     .panel{padding:24px}
-    .stack{display:grid; gap:14px}
-    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .input,.textarea{
-      width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.05); color:var(--text); font:inherit; outline:none;
-      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.38); background:rgba(255,255,255,.07); box-shadow:0 0 0 4px rgba(75,130,255,.10);}
-    .textarea{min-height:170px; resize:vertical}
-    .switch{display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .switch input{margin-top:3px; transform:scale(1.15); accent-color:var(--green)}
-    .switch strong{display:block; margin-bottom:4px}
-    .switch span{display:block; color:var(--muted); font-size:.93rem; line-height:1.55}
-    .helper-row{display:flex; gap:8px; flex-wrap:wrap}
-    .pill{display:none; align-items:center; padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:800; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04);}
+    .stack{display:grid;gap:14px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .input,.textarea{width:100%;padding:15px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:var(--text);font:inherit;outline:none;transition:border-color .2s ease, box-shadow .2s ease, background .2s ease}
+    .input:focus,.textarea:focus{border-color:rgba(75,130,255,.38);background:rgba(255,255,255,.07);box-shadow:0 0 0 4px rgba(75,130,255,.10)}
+    .textarea{min-height:170px;resize:vertical}
+    .switch{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .switch input{margin-top:3px;transform:scale(1.15);accent-color:var(--green)}
+    .switch strong{display:block;margin-bottom:4px}
+    .switch span{display:block;color:var(--muted);font-size:.93rem;line-height:1.55}
+    .helper-row{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{display:none;align-items:center;padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04)}
     .pill.show{display:inline-flex}
-    .pill.green{background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24); color:#d9fff0}
-    .pill.blue{background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.24); color:#dce8ff}
-    .pill.orange{background:rgba(255,138,0,.1); border-color:rgba(255,138,0,.24); color:#ffe0bf}
-    .actions,.actions-small{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .btn{display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:14px 18px; border:none; cursor:pointer; border-radius:18px; font:inherit; font-weight:800; transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;}
+    .pill.green{background:rgba(25,210,141,.1);border-color:rgba(25,210,141,.24);color:#d9fff0}
+    .pill.blue{background:rgba(75,130,255,.1);border-color:rgba(75,130,255,.24);color:#dce8ff}
+    .pill.orange{background:rgba(255,138,0,.1);border-color:rgba(255,138,0,.24);color:#ffe0bf}
+    .actions,.actions-small{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 18px;border:none;cursor:pointer;border-radius:18px;font:inherit;font-weight:800;transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease}
     .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),#ff6700); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.28);}
-    .btn-ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line);}
-    .btn-mini{min-height:42px; padding:10px 14px; border-radius:14px; font-size:.92rem;}
-    .status{display:none; padding:12px 14px; border-radius:14px; line-height:1.55; font-size:.95rem;}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),#ff6700);color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
+    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line)}
+    .btn-mini{min-height:42px;padding:10px 14px;border-radius:14px;font-size:.92rem}
+    .status{display:none;padding:12px 14px;border-radius:14px;line-height:1.55;font-size:.95rem}
     .status.show{display:block}
-    .status.loading{background:rgba(255,138,0,.08); border:1px solid rgba(255,138,0,.18); color:#ffe0bf}
-    .status.success{background:rgba(25,210,141,.08); border:1px solid rgba(25,210,141,.18); color:#d9fff0}
-    .status.error{background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.18); color:#ffd7d7}
-    .right-col{display:grid; gap:18px}
-    .summary-card{display:grid; grid-template-columns:110px 1fr; gap:16px; align-items:center; transition:box-shadow .25s ease;}
-    .summary-icon{width:96px; height:96px; border-radius:26px; display:flex; align-items:center; justify-content:center; font-size:3rem; font-weight:900; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09);}
-    .summary-main{display:grid; gap:8px}
-    .result-title{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:clamp(1.35rem, 2.2vw, 2rem); font-weight:900; letter-spacing:-.03em;}
-    .badge{padding:8px 12px; border-radius:999px; font-size:.85rem; font-weight:800; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.05);}
-    .badge.green{color:#d9fff0; background:rgba(25,210,141,.1); border-color:rgba(25,210,141,.24)}
-    .badge.yellow{color:#fff1cc; background:rgba(247,185,68,.12); border-color:rgba(247,185,68,.26)}
-    .badge.red{color:#ffd9d9; background:rgba(255,107,107,.12); border-color:rgba(255,107,107,.26)}
-    .badge.blue{color:#dce8ff; background:rgba(75,130,255,.1); border-color:rgba(75,130,255,.22)}
-    .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    .mini-card,.box{padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);}
-    .mini-card strong,.box h4{display:block; margin:0 0 6px; color:#cfdcf0; font-size:.92rem}
+    .status.loading{background:rgba(255,138,0,.08);border:1px solid rgba(255,138,0,.18);color:#ffe0bf}
+    .status.success{background:rgba(25,210,141,.08);border:1px solid rgba(25,210,141,.18);color:#d9fff0}
+    .status.error{background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.18);color:#ffd7d7}
+    .right-col{display:grid;gap:18px}
+    .summary-card{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;transition:box-shadow .25s ease}
+    .summary-icon{width:96px;height:96px;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:900;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}
+    .summary-main{display:grid;gap:8px}
+    .result-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:clamp(1.35rem, 2.2vw, 2rem);font-weight:900;letter-spacing:-.03em}
+    .badge{padding:8px 12px;border-radius:999px;font-size:.85rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05)}
+    .badge.green{color:#d9fff0;background:rgba(25,210,141,.1);border-color:rgba(25,210,141,.24)}
+    .badge.yellow{color:#fff1cc;background:rgba(247,185,68,.12);border-color:rgba(247,185,68,.26)}
+    .badge.red{color:#ffd9d9;background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.26)}
+    .badge.blue{color:#dce8ff;background:rgba(75,130,255,.1);border-color:rgba(75,130,255,.22)}
+    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .mini-card,.box{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .mini-card strong,.box h4{display:block;margin:0 0 6px;color:#cfdcf0;font-size:.92rem}
     .mini-card span{font-weight:800}
-    .box p{margin:0; white-space:pre-wrap; line-height:1.72; color:#d7e2f1}
-    .cards-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:18px}
-    .stack-tight{display:grid; gap:12px}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{padding:8px 12px; border-radius:999px; font-size:.88rem; font-weight:700; color:#dce8ff; background:rgba(75,130,255,.1); border:1px solid rgba(75,130,255,.2);}
-    .risk-block{display:grid; gap:12px}
-    .meter-label{display:flex; justify-content:space-between; gap:12px; font-size:.93rem; color:#d7e2f1}
-    .meter-track{width:100%; height:11px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06);}
-    .meter-fill{height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,var(--green),var(--yellow),var(--red)); transition:width .35s ease;}
-    .context-list{display:grid; gap:10px}
-    .context-item{padding:14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); color:#d7e2f1; line-height:1.6;}
-    .empty{color:var(--muted); line-height:1.7}
-    .footer{margin-top:28px; text-align:center; color:#d7e2f1; font-size:1.02rem; font-weight:800}
-    .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:20; padding:20px;}
+    .box p{margin:0;white-space:pre-wrap;line-height:1.72;color:#d7e2f1}
+    .cards-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+    .stack-tight{display:grid;gap:12px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 12px;border-radius:999px;font-size:.88rem;font-weight:700;color:#dce8ff;background:rgba(75,130,255,.1);border:1px solid rgba(75,130,255,.2)}
+    .risk-block{display:grid;gap:12px}
+    .meter-label{display:flex;justify-content:space-between;gap:12px;font-size:.93rem;color:#d7e2f1}
+    .meter-track{width:100%;height:11px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06)}
+    .meter-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .35s ease}
+    .context-list{display:grid;gap:10px}
+    .context-item{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:#d7e2f1;line-height:1.6}
+    .empty{color:var(--muted);line-height:1.7}
+    .footer{margin-top:28px;text-align:center;color:#d7e2f1;font-size:1.02rem;font-weight:800}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
     .modal-backdrop.show{display:flex}
-    .modal{width:min(1100px, 95vw); max-height:88vh; overflow:auto; background:linear-gradient(180deg, rgba(11,20,35,.98), rgba(8,17,31,.98)); border:1px solid rgba(255,255,255,.12); border-radius:24px; box-shadow:var(--shadow); padding:22px;}
-    .modal h3{margin:0 0 8px; font-size:1.4rem}
-    .modal-tools{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
-    .lyrics-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-    .lyrics-panel{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:14px}
-    .lyrics-panel pre{white-space:pre-wrap; font-family:inherit; line-height:1.65; margin:0}
-    .course-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px}
-    .course-item{padding:10px 12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08)}
-    .course-item label{display:flex; gap:8px; align-items:center; cursor:pointer}
+    .modal{width:min(1100px,95vw);max-height:88vh;overflow:auto;background:linear-gradient(180deg, rgba(11,20,35,.98), rgba(8,17,31,.98));border:1px solid rgba(255,255,255,.12);border-radius:24px;box-shadow:var(--shadow);padding:22px}
+    .modal h3{margin:0 0 8px;font-size:1.4rem}
+    .modal-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .lyrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .lyrics-panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px}
+    .lyrics-panel pre{white-space:pre-wrap;font-family:inherit;line-height:1.65;margin:0}
+    .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+    .course-item{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .course-item label{display:flex;gap:8px;align-items:center;cursor:pointer}
     @media (max-width:1180px){.shell,.cards-grid,.mini-grid,.lyrics-grid,.course-grid{grid-template-columns:1fr}}
     @media (max-width:720px){.container{padding:18px 14px 56px}.row,.actions,.actions-small{grid-template-columns:1fr}.summary-card{grid-template-columns:1fr}.summary-icon{width:72px;height:72px;border-radius:20px}.logout-btn{top:14px;right:14px}}
   </style>
 </head>
 <body>
 <button onclick="logout()" class="logout-btn">Cerrar sesión</button>
-
 <div class="container">
   <header class="header">
     <a href="index.html" class="brand">
@@ -127,9 +109,7 @@
     <aside class="card panel stack">
       <div>
         <h2 style="font-size:1.8rem; letter-spacing:-.03em; margin:0 0 8px;">Dashboard escolar</h2>
-        <div style="color:var(--muted); line-height:1.7; font-size:.95rem;">
-          Evalúa pertinencia escolar priorizando contenido explícito, implícito, mediación docente y vínculo curricular MINEDUC.
-        </div>
+        <div style="color:var(--muted); line-height:1.7; font-size:.95rem;">Evalúa pertinencia escolar priorizando contenido explícito, implícito, mediación docente y vínculo curricular MINEDUC.</div>
       </div>
 
       <form id="analysisForm" class="stack">
@@ -137,7 +117,6 @@
           <input id="titulo" class="input" type="text" placeholder="Título de la canción">
           <input id="artista" class="input" type="text" placeholder="Artista">
         </div>
-
         <textarea id="texto" class="textarea" placeholder="Pega aquí la letra completa o deja que SonarIA la busque automáticamente..."></textarea>
 
         <div class="helper-row">
@@ -202,35 +181,12 @@
       <section class="cards-grid">
         <section class="card panel">
           <div class="stack-tight">
-            <div class="box">
-              <h4>Resumen pedagógico</h4>
-              <p id="resumenTexto">—</p>
-            </div>
-
-            <div class="box">
-              <h4>Temas detectados</h4>
-              <div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div>
-            </div>
-
-            <div class="box">
-              <h4>Enfoque sugerido</h4>
-              <p id="enfoqueTexto">—</p>
-            </div>
-
-            <div class="box">
-              <h4>Observaciones pedagógicas</h4>
-              <div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div>
-            </div>
-
-            <div class="box">
-              <h4>Actividades sugeridas</h4>
-              <p id="actividadesTexto">Selecciona tus cursos y analiza una canción para generar actividades.</p>
-            </div>
-
-            <div class="box">
-              <h4>Match curricular MINEDUC</h4>
-              <p id="oaTexto">Selecciona tus cursos en “Mis cursos”.</p>
-            </div>
+            <div class="box"><h4>Resumen pedagógico</h4><p id="resumenTexto">—</p></div>
+            <div class="box"><h4>Temas detectados</h4><div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div></div>
+            <div class="box"><h4>Enfoque sugerido</h4><p id="enfoqueTexto">—</p></div>
+            <div class="box"><h4>Observaciones pedagógicas</h4><div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div></div>
+            <div class="box"><h4>Actividades sugeridas</h4><p id="actividadesTexto">Selecciona tus cursos y analiza una canción para generar actividades.</p></div>
+            <div class="box"><h4>Match curricular MINEDUC</h4><p id="oaTexto">Selecciona tus cursos en “Mis cursos”.</p></div>
           </div>
         </section>
 
@@ -239,71 +195,31 @@
             <div class="box">
               <h4>Semáforo</h4>
               <div class="risk-block">
-                <div>
-                  <div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div>
-                  <div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div>
-                </div>
-                <div>
-                  <div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div>
-                  <div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div>
-                </div>
-                <div>
-                  <div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div>
-                  <div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div>
-                </div>
+                <div><div class="meter-label"><span>Riesgo total</span><strong id="riskPercent">0%</strong></div><div class="meter-track"><div id="riskTotalFill" class="meter-fill"></div></div></div>
+                <div><div class="meter-label"><span>Contenido sensible</span><strong id="riskSensitive">0%</strong></div><div class="meter-track"><div id="riskSensitiveFill" class="meter-fill"></div></div></div>
+                <div><div class="meter-label"><span>Uso escolar</span><strong id="riskSchool">0%</strong></div><div class="meter-track"><div id="riskSchoolFill" class="meter-fill"></div></div></div>
               </div>
             </div>
-
-            <div class="box">
-              <h4>Contextos detectados</h4>
-              <div id="contextList" class="context-list">
-                <div class="empty">Aún no hay datos.</div>
-              </div>
-            </div>
-
-            <div class="box">
-              <h4>Mis cursos activos</h4>
-              <p id="cursosTexto">No has seleccionado cursos.</p>
-            </div>
+            <div class="box"><h4>Contextos detectados</h4><div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div></div>
+            <div class="box"><h4>Mis cursos activos</h4><p id="cursosTexto">No has seleccionado cursos.</p></div>
           </div>
         </section>
       </section>
     </main>
   </section>
-
   <div class="footer">MauRock · Mauricio José Pinto Basso</div>
 </div>
 
-<div id="modalBackdrop" class="modal-backdrop">
-  <div class="modal">
-    <h3 id="modalTitle">Modal</h3>
-    <div id="modalBody"></div>
-    <div class="modal-tools">
-      <button class="btn btn-ghost btn-mini" onclick="closeModal()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<div id="coursesBackdrop" class="modal-backdrop">
-  <div class="modal">
-    <h3>Mis cursos</h3>
-    <div style="color:var(--muted); line-height:1.7;">Selecciona los cursos a los que haces clases para sugerir actividades y un match curricular más útil.</div>
-    <div class="course-grid" id="coursesGrid"></div>
-    <div class="modal-tools">
-      <button class="btn btn-primary btn-mini" id="saveCoursesBtn">Guardar cursos</button>
-      <button class="btn btn-ghost btn-mini" onclick="closeCoursesModal()">Cerrar</button>
-    </div>
-  </div>
-</div>
+<div id="modalBackdrop" class="modal-backdrop"><div class="modal"><h3 id="modalTitle">Modal</h3><div id="modalBody"></div><div class="modal-tools"><button class="btn btn-ghost btn-mini" onclick="closeModal()">Cerrar</button></div></div></div>
+<div id="coursesBackdrop" class="modal-backdrop"><div class="modal"><h3>Mis cursos</h3><div style="color:var(--muted); line-height:1.7;">Selecciona los cursos a los que haces clases para sugerir actividades y un match curricular más útil.</div><div class="course-grid" id="coursesGrid"></div><div class="modal-tools"><button class="btn btn-primary btn-mini" id="saveCoursesBtn">Guardar cursos</button><button class="btn btn-ghost btn-mini" onclick="closeCoursesModal()">Cerrar</button></div></div></div>
 
 <script>
 const API_URL = "https://sonaria-api.onrender.com/analizar";
 const user = localStorage.getItem("sonaria_user");
 if (!user) window.location.href = "login.html";
-
 function logout(){ localStorage.removeItem("sonaria_user"); window.location.href = "login.html"; }
 window.history.pushState(null, null, window.location.href);
-window.onpopstate = function () { window.history.pushState(null, null, window.location.href); };
+window.onpopstate = function(){ window.history.pushState(null, null, window.location.href); };
 
 const MINEDUC_DB = {
   "1° básico":[{oa:"OA 1",text:"Expresar sensaciones, emociones e ideas al escuchar música."},{oa:"OA 3",text:"Escuchar y reconocer cualidades del sonido y elementos básicos."}],
@@ -364,6 +280,13 @@ const coursesGrid = document.getElementById("coursesGrid");
 let lastAnalysis = null;
 let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || "[]");
 let letraRecuperada = "";
+let lyricsOrigin = "none";
+let lastSearchSignature = "";
+let textareaDirtyAfterAutofill = false;
+
+textoInput.addEventListener("input", () => {
+  if (lyricsOrigin === "auto") textareaDirtyAfterAutofill = true;
+});
 
 function setStatus(msg, type){ statusBox.textContent = msg; statusBox.className = "status show " + type; }
 function clearStatus(){ statusBox.textContent = ""; statusBox.className = "status"; }
@@ -374,10 +297,7 @@ function toArray(value){
   if (value && typeof value === "object") return Object.values(value).flat().filter(Boolean).map(v => String(v));
   return [];
 }
-function firstOf(obj, keys, fallback = ""){
-  for (const key of keys){ const value = obj?.[key]; if (value !== undefined && value !== null && value !== "") return value; }
-  return fallback;
-}
+function firstOf(obj, keys, fallback = ""){ for (const key of keys){ const value = obj?.[key]; if (value !== undefined && value !== null && value !== "") return value; } return fallback; }
 function clampPercent(value){ const n = Number(value); if (Number.isNaN(n)) return 0; return Math.max(0, Math.min(100, Math.round(n))); }
 function setMeter(textEl, fillEl, value){ const n = clampPercent(value); textEl.textContent = n + "%"; fillEl.style.width = n + "%"; }
 function escapeHtml(str){ return String(str || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -402,6 +322,7 @@ function renderEnfoque(value){
 function normalizeTextLite(value){ return String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
 function includesAny(text, terms){ return terms.some(term => text.includes(term)); }
 function countMatches(text, terms){ return terms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0); }
+function buildSignature(title, artist){ return `${String(title||"").trim().toLowerCase()}::${String(artist||"").trim().toLowerCase()}`; }
 
 function evaluarPertinenciaEscolar(titulo, artista, letra){
   const text = normalizeTextLite(`${titulo} ${artista} ${letra}`);
@@ -413,7 +334,6 @@ function evaluarPertinenciaEscolar(titulo, artista, letra){
   const drugsHard = ["cocaine","heroin","meth","drug dealer","cocaina","heroina","pasta base"];
   const profanityStrong = ["motherfucker","fuck you","fucking","puta","mierda","conchetumadre","culiao","maricon","bastard"];
   const degradingOrHostile = ["te odio","odio a todos","humillarte","venganza","destruirte","te hare sufrir","te voy a romper","te voy a matar"];
-
   let riesgo = 0, razones = [], bloqueaApta = false;
   const hasSafeMetaphor = includesAny(text, safeMetaphors);
   const highViolenceHits = countMatches(text, violenceHigh);
@@ -423,7 +343,6 @@ function evaluarPertinenciaEscolar(titulo, artista, letra){
   const hostilityHits = countMatches(text, degradingOrHostile);
   const explicitSexHits = hasSafeMetaphor ? 0 : countMatches(text, explicitSex);
   const suggestiveHits = hasSafeMetaphor ? 0 : countMatches(text, sexualSuggestion);
-
   if (highViolenceHits > 0){ riesgo += highViolenceHits * 22; razones.push("violencia explícita o confrontación grave"); bloqueaApta = true; }
   if (selfHarmHits > 0){ riesgo += selfHarmHits * 35; razones.push("autolesión o suicidio"); bloqueaApta = true; }
   if (hardDrugHits > 0){ riesgo += hardDrugHits * 28; razones.push("drogas duras"); bloqueaApta = true; }
@@ -432,14 +351,38 @@ function evaluarPertinenciaEscolar(titulo, artista, letra){
   if (explicitSexHits > 0){ riesgo += explicitSexHits * 30; razones.push("contenido sexual explícito"); bloqueaApta = true; }
   if (suggestiveHits > 0){ riesgo += suggestiveHits * 12; razones.push("insinuación o ambigüedad sensual"); }
   if (hasSafeMetaphor){ riesgo -= 18; razones.push("uso metafórico inocente detectado"); }
-
   riesgo = Math.max(0, Math.min(100, riesgo));
   let pertinencia = "Apta", lectura = "Lectura directa", justificacion = "No se detectan señales explícitas o implícitas incompatibles con un contexto escolar general.";
   if (bloqueaApta || riesgo >= 60){ pertinencia = "No apta"; lectura = "Requiere exclusión general"; justificacion = "La letra presenta señales explícitas o implícitas incompatibles con un contexto escolar general."; }
   else if (riesgo >= 25){ pertinencia = "Revisión docente"; lectura = "Lectura mediada"; justificacion = "La letra presenta ambigüedades o señales sensibles que requieren revisión cuidadosa antes de usarse en aula."; }
   if (hasSafeMetaphor && riesgo < 25){ pertinencia = "Apta"; lectura = "Lectura metafórica"; justificacion = "Se detecta lenguaje figurado o emocional sin evidencia suficiente de sexualidad literal o contenido impropio."; }
-
   return { pertinencia, riesgo, riesgoSensible: Math.min(100, explicitSexHits * 30 + suggestiveHits * 12 + profanityHits * 8), riesgoEscolar: Math.min(100, highViolenceHits * 25 + selfHarmHits * 35 + hardDrugHits * 28 + hostilityHits * 18), justificacion, lectura, razones:[...new Set(razones)] };
+}
+
+function buildSupervisionArgument(raw, adjusted, usedLyrics){
+  const reasons = toArray(adjusted.observaciones || raw.observaciones || []);
+  const contexts = toArray(adjusted.contextos_detectados || raw.contextos_detectados || raw.contexto || []);
+  const themes = toArray(raw.temas || raw.temas_detectados || []);
+  const lines = [];
+
+  if ((adjusted.clasificacion || "").includes("Revisión")){
+    lines.push("Se sugiere supervisión docente porque la canción no es claramente apta ni claramente descartable para aula general.");
+    if (reasons.length) lines.push("Señales a revisar: " + reasons.join(", ") + ".");
+    if (contexts.length) lines.push("Contexto detectado: " + contexts.join(", ") + ".");
+    if (themes.length) lines.push("Valor pedagógico potencial: " + themes.join(", ") + ".");
+    lines.push("La recomendación es que el docente decida según edad del curso, objetivo pedagógico, madurez del grupo y nivel de mediación disponible.");
+  } else if ((adjusted.clasificacion || "").includes("No apta")){
+    lines.push("Se desaconseja su uso escolar general porque hay señales incompatibles con un entorno de aula común.");
+    if (reasons.length) lines.push("Señales críticas: " + reasons.join(", ") + ".");
+  } else {
+    lines.push("La canción puede usarse en aula porque no se detectan señales incompatibles dominantes y el contenido se interpreta como pedagógicamente trabajable.");
+  }
+
+  if (!String(usedLyrics || "").trim()){
+    lines.push("No hubo letra suficiente como evidencia textual completa.");
+  }
+
+  return lines.join(" ");
 }
 
 function aplicarCalibracionEscolar(raw, titulo, artista, letra){
@@ -454,6 +397,7 @@ function aplicarCalibracionEscolar(raw, titulo, artista, letra){
     base.nivel_lectura = "Información insuficiente";
     base.riesgo_total = Math.max(Number(base.riesgo_total || base.riesgo || 0), 20);
     base.contextos_detectados = ["No se proporcionó letra completa: se bloquea la clasificación Apta por falta de evidencia textual."];
+    base.observaciones = [...new Set([...toArray(base.observaciones), "Se requiere supervisión docente porque falta evidencia textual completa para validar pertinencia escolar."])];
     return base;
   }
   base.clasificacion = capa.pertinencia;
@@ -476,36 +420,16 @@ function applyClassificationUI(clasificacion){
   else if (c.includes("Apta")){ resultBadge.classList.add("green"); resultBadge.textContent = "Apta"; summaryIcon.textContent = "✅"; }
   else { resultBadge.classList.add("yellow"); resultBadge.textContent = "Revisión"; summaryIcon.textContent = "⚠️"; }
 }
-
 function normalizeApiData(raw){
   const d = raw || {};
-  return {
-    clasificacion: firstOf(d, ["clasificacion", "resultado", "resumen"], "Resultado listo"),
-    justificacion: firstOf(d, ["justificacion"], ""),
-    resumen: firstOf(d, ["resumen", "resultado"], "Sin resumen disponible."),
-    edad: firstOf(d, ["edad_sugerida", "edad"], "—"),
-    fuente: firstOf(d, ["fuente_letra", "fuente", "source"], "—"),
-    lectura: firstOf(d, ["nivel_lectura", "lectura", "lectura_sugerida"], "—"),
-    enfoque: firstOf(d, ["enfoque"], "—"),
-    temas: firstOf(d, ["temas", "temas_detectados"], []),
-    observaciones: firstOf(d, ["observaciones", "observaciones_pedagogicas"], []),
-    contexto: firstOf(d, ["contexto", "contextos", "contextos_detectados"], []),
-    riesgoTotal: firstOf(d, ["riesgo_total", "riesgo", "risk"], 0),
-    riesgoSensible: firstOf(d, ["contenido_sensible"], 0),
-    riesgoEscolar: firstOf(d, ["uso_escolar"], 0),
-    autocompletada: Boolean(firstOf(d, ["letra_encontrada"], false)),
-    fallback: Boolean(firstOf(d, ["fallback_inteligente"], false))
-  };
+  return { clasificacion:firstOf(d,["clasificacion","resultado","resumen"],"Resultado listo"), justificacion:firstOf(d,["justificacion"],""), resumen:firstOf(d,["resumen","resultado"],"Sin resumen disponible."), edad:firstOf(d,["edad_sugerida","edad"],"—"), fuente:firstOf(d,["fuente_letra","fuente","source"],"—"), lectura:firstOf(d,["nivel_lectura","lectura","lectura_sugerida"],"—"), enfoque:firstOf(d,["enfoque"],"—"), temas:firstOf(d,["temas","temas_detectados"],[]), observaciones:firstOf(d,["observaciones","observaciones_pedagogicas"],[]), contexto:firstOf(d,["contexto","contextos","contextos_detectados"],[]), riesgoTotal:firstOf(d,["riesgo_total","riesgo","risk"],0), riesgoSensible:firstOf(d,["contenido_sensible"],0), riesgoEscolar:firstOf(d,["uso_escolar"],0), autocompletada:Boolean(firstOf(d,["letra_encontrada"],false)), fallback:Boolean(firstOf(d,["fallback_inteligente"],false)) };
 }
 
 function generateActivities(analysis){
   const temas = toArray(analysis.temas || analysis.temas_detectados);
   const courses = selectedCourses;
   if (!courses.length){
-    return {
-      actividades: "Sin curso sugerido porque no has seleccionado cursos.\n\nTemas: " + (temas.join(", ") || "análisis general") + ".\n\n1) Escucha guiada con foco en mensaje, lenguaje y contexto.\n2) Debate docente: ¿qué elementos requieren mediación?\n3) Analizar por qué la obra podría ser sensible en contexto escolar.\n4) Reescribir o adaptar fragmentos hacia una versión escolar.",
-      oaText: 'Selecciona tus cursos en “Mis cursos”.'
-    };
+    return { actividades:"Sin curso sugerido porque no has seleccionado cursos.\n\nTemas: " + (temas.join(", ") || "análisis general") + ".\n\n1) Escucha guiada con foco en mensaje, lenguaje y contexto.\n2) Debate docente: ¿qué elementos requieren mediación?\n3) Analizar por qué la obra podría ser sensible en contexto escolar.\n4) Reescribir o adaptar fragmentos hacia una versión escolar.", oaText:'Selecciona tus cursos en “Mis cursos”.' };
   }
   const joined = normalizeTextLite(temas.join(" "));
   let preferred = courses[0];
@@ -519,10 +443,7 @@ function generateActivities(analysis){
   if (joined.includes("social") || joined.includes("critica") || joined.includes("utopia")){ actividades.push("• Debatir qué visión de sociedad transmite la canción."); actividades.push("• Relacionar la letra con ciudadanía, convivencia o contexto histórico."); }
   if (joined.includes("fiesta") || joined.includes("vida social")){ actividades.push("• Analizar cómo ritmo y vocabulario construyen un contexto social o festivo."); }
   if (!actividades.length){ actividades = ["• Escucha guiada e identificación del mensaje principal.","• Distinguir contenido explícito, implícito y metáforas.","• Elaborar una versión comentada o adaptación escolar."]; }
-  return {
-    actividades: [`Curso sugerido: ${preferred}`, `OA sugerido: ${oa ? oa.oa : "—"}`, oa ? oa.text : "Sin OA disponible.", "", "Actividades:", ...actividades].join("\n"),
-    oaText: oa ? `${preferred} · ${oa.oa}\n${oa.text}` : "Sin OA disponible."
-  };
+  return { actividades:[`Curso sugerido: ${preferred}`,`OA sugerido: ${oa ? oa.oa : "—"}`,oa ? oa.text : "Sin OA disponible.","","Actividades:",...actividades].join("\n"), oaText:oa ? `${preferred} · ${oa.oa}\n${oa.text}` : "Sin OA disponible." };
 }
 
 function renderResult(raw){
@@ -542,10 +463,8 @@ function renderResult(raw){
   setMeter(riskPercent, riskTotalFill, result.riesgoTotal);
   setMeter(riskSensitive, riskSensitiveFill, result.riesgoSensible);
   setMeter(riskSchool, riskSchoolFill, result.riesgoEscolar);
-  const hayTextoManual = Boolean(textoInput.value.trim());
-  const huboAutocompletado = Boolean(result.autocompletada || letraRecuperada);
-  showPill(pillAutoLyric, huboAutocompletado && !hayTextoManual);
-  showPill(pillManualText, hayTextoManual);
+  showPill(pillAutoLyric, result.autocompletada);
+  showPill(pillManualText, lyricsOrigin === "manual");
   showPill(pillFallback, result.fallback);
   const plan = generateActivities(raw);
   actividadesTexto.textContent = plan.actividades;
@@ -564,10 +483,9 @@ function resetDashboard(){
   oaTexto.textContent = 'Selecciona tus cursos en “Mis cursos”.';
   setMeter(riskPercent, riskTotalFill, 0); setMeter(riskSensitive, riskSensitiveFill, 0); setMeter(riskSchool, riskSchoolFill, 0);
   showPill(pillAutoLyric, false); showPill(pillManualText, false); showPill(pillFallback, false);
-  lastAnalysis = null; letraRecuperada = ""; updateCoursesText();
+  lastAnalysis = null; letraRecuperada = ""; lyricsOrigin = "none"; textareaDirtyAfterAutofill = false; updateCoursesText();
 }
-
-function clearForm(){ form.reset(); buscarLetraInput.checked = true; contextoEscolarInput.checked = true; clearStatus(); resetDashboard(); }
+function clearForm(){ form.reset(); buscarLetraInput.checked = true; contextoEscolarInput.checked = true; clearStatus(); resetDashboard(); lastSearchSignature = ""; }
 
 async function runAnalysis(data){
   const res = await fetch(API_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) });
@@ -581,7 +499,6 @@ async function runAnalysis(data){
 function openModal(title, html){ modalTitle.textContent = title; modalBody.innerHTML = html; modalBackdrop.classList.add("show"); }
 function closeModal(){ modalBackdrop.classList.remove("show"); }
 modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
-
 function updateCoursesText(){ cursosTexto.textContent = selectedCourses.length ? selectedCourses.join(", ") : "No has seleccionado cursos."; }
 function buildCoursesModal(){
   coursesGrid.innerHTML = "";
@@ -602,7 +519,6 @@ document.getElementById("saveCoursesBtn").addEventListener("click", () => {
   if (lastAnalysis){ const plan = generateActivities(lastAnalysis.raw); actividadesTexto.textContent = plan.actividades; oaTexto.textContent = plan.oaText; }
   closeCoursesModal();
 });
-
 document.getElementById("btnCursos").addEventListener("click", openCoursesModal);
 document.getElementById("btnYoutube").addEventListener("click", () => {
   const q = encodeURIComponent(`${tituloInput.value || ""} ${artistaInput.value || ""} lyrics`);
@@ -614,14 +530,8 @@ document.getElementById("btnContexto").addEventListener("click", () => {
   const ctx = toArray(raw.contextos_detectados || raw.contexto || raw.contextos);
   const html = `
     <div class="stack-tight">
-      <div class="lyrics-panel">
-        <strong>Observaciones sensibles</strong>
-        <pre>${escapeHtml((obs.length ? obs : ["No se detectaron palabras o expresiones sensibles en la letra disponible."]).join("\n• ").replace(/^/,'• '))}</pre>
-      </div>
-      <div class="lyrics-panel">
-        <strong>Contextos detectados</strong>
-        <pre>${escapeHtml((ctx.length ? ctx : ["No hay contextos disponibles."]).join("\n• ").replace(/^/,'• '))}</pre>
-      </div>
+      <div class="lyrics-panel"><strong>Observaciones sensibles</strong><pre>${escapeHtml((obs.length ? obs : ["No se detectaron palabras o expresiones sensibles en la letra disponible."]).join("\n• ").replace(/^/,'• '))}</pre></div>
+      <div class="lyrics-panel"><strong>Contextos detectados</strong><pre>${escapeHtml((ctx.length ? ctx : ["No hay contextos disponibles."]).join("\n• ").replace(/^/,'• '))}</pre></div>
     </div>`;
   openModal("Contexto explícito", html);
 });
@@ -659,13 +569,24 @@ document.getElementById("btnTraducir").addEventListener("click", async () => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearStatus();
-  letraRecuperada = "";
-  if (typeof textoInput.value !== "string") textoInput.value = "";
+
+  const currentSignature = buildSignature(tituloInput.value, artistaInput.value);
+
+  // si la letra visible era autocompletada para otra canción y el usuario no la editó, no la reutilizamos
+  if (lyricsOrigin === "auto" && currentSignature !== lastSearchSignature && !textareaDirtyAfterAutofill){
+    textoInput.value = "";
+    letraRecuperada = "";
+  }
+
+  let textoParaEnviar = textoInput.value.trim();
+  if (buscarLetraInput.checked && lyricsOrigin === "auto" && currentSignature !== lastSearchSignature && !textareaDirtyAfterAutofill){
+    textoParaEnviar = "";
+  }
 
   const data = {
     titulo: tituloInput.value.trim(),
     artista: artistaInput.value.trim(),
-    texto: textoInput.value.trim(),
+    texto: textoParaEnviar,
     buscar_letra: buscarLetraInput.checked,
     contexto_escolar: contextoEscolarInput.checked
   };
@@ -674,7 +595,6 @@ form.addEventListener("submit", async (e) => {
   try{
     setStatus("Analizando canción...", "loading");
     const apiResult = await runAnalysis(data);
-    console.log("API RESULT:", apiResult);
 
     let letraRec = apiResult?.letra_usada || apiResult?.lyrics || apiResult?.letra || "";
     if (typeof letraRec !== "string"){
@@ -683,22 +603,36 @@ form.addEventListener("submit", async (e) => {
       else letraRec = "";
     }
 
-    if (letraRec && letraRec.trim().length > 50){
-      letraRecuperada = letraRec.trim();
-      if (!data.texto.trim()) textoInput.value = letraRecuperada;
-      data.texto = letraRecuperada;
+    const nuevaLetra = letraRec && letraRec.trim().length > 50 ? letraRec.trim() : "";
+
+    if (nuevaLetra){
+      letraRecuperada = nuevaLetra;
+      if (!data.texto) textoInput.value = nuevaLetra;
+      data.texto = nuevaLetra;
+      lyricsOrigin = "auto";
+      textareaDirtyAfterAutofill = false;
+    } else if (textoParaEnviar){
+      lyricsOrigin = "manual";
     } else {
       letraRecuperada = "";
+      lyricsOrigin = "none";
     }
 
     const adjusted = aplicarCalibracionEscolar(apiResult, data.titulo, data.artista, data.texto);
     adjusted.contextos_detectados = toArray(adjusted.contextos_detectados || adjusted.contexto || adjusted.contextos);
     adjusted.observaciones = toArray(adjusted.observaciones || adjusted.observaciones_pedagogicas);
 
+    const supervisionArgument = buildSupervisionArgument(apiResult, adjusted, data.texto);
+    if (supervisionArgument){
+      adjusted.justificacion = supervisionArgument;
+      adjusted.observaciones = [...new Set([...(adjusted.observaciones || []), supervisionArgument])];
+    }
+
     lastAnalysis = { raw: adjusted };
+    lastSearchSignature = currentSignature;
     renderResult(adjusted);
     setStatus("Análisis listo", "success");
-  }catch(err){
+  } catch(err){
     console.error(err);
     setStatus(err.message || "Hubo un problema al analizar.", "error");
   }
