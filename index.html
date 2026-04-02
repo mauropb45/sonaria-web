@@ -137,12 +137,12 @@ body::before{
 }
 .hero{
   display:grid;
-  grid-template-columns:1.05fr .95fr;
+  grid-template-columns:1.15fr .85fr;
   gap:20px;
   margin-bottom:22px;
 }
 .hero-main{
-  padding:28px;
+  padding:30px;
   display:grid;
   gap:18px;
 }
@@ -183,17 +183,28 @@ body::before{
 }
 .stat strong{display:block; font-size:1.6rem; margin-bottom:6px}
 .stat span{color:var(--muted); line-height:1.6; font-size:.94rem}
-.hero-side{display:grid; gap:14px}
-.side-box{padding:20px}
-.side-box h3{margin:0 0 8px; font-size:1.06rem}
-.side-box p{margin:0; color:var(--muted); line-height:1.72}
-.pill-row{display:flex; gap:8px; flex-wrap:wrap}
-.pill{
-  padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:800;
-  border:1px solid var(--line); background:rgba(255,255,255,.04);
+.hero-side{
+  display:grid;
+  gap:16px;
 }
-.pill.sonaria{background:rgba(255,128,0,.12); border-color:rgba(255,128,0,.22); color:#ffe4c7}
-.pill.future{background:rgba(59,130,246,.10); border-color:rgba(59,130,246,.22); color:#dce8ff}
+.mini-panel{
+  padding:22px;
+}
+.mini-panel h3{
+  margin:0 0 8px;
+  font-size:1.12rem;
+}
+.mini-panel p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.74;
+}
+.mini-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
 .section{margin-bottom:22px}
 .section-head{
   display:flex; justify-content:space-between; align-items:end; gap:12px; margin-bottom:14px;
@@ -254,7 +265,7 @@ body::before{
   .nav{flex-direction:column; align-items:stretch}
   .nav-actions{width:100%}
   .nav-actions .btn{width:100%}
-  .hero-main,.side-box,.sonaria-card,.video-card,.info-card,.cta-card,.cta-final{padding:20px}
+  .hero-main,.mini-panel,.sonaria-card,.video-card,.info-card,.cta-card,.cta-final{padding:20px}
   .logo{font-size:2.2rem}
   .hero h1{font-size:2.6rem}
 }
@@ -272,7 +283,7 @@ body::before{
 
     <div class="nav-actions">
       <button class="btn btn-ghost reveal reveal-delay-1" onclick="document.getElementById('sonaria').scrollIntoView({behavior:'smooth'})">SonarIA</button>
-      <button class="btn btn-ghost reveal reveal-delay-2" onclick="document.getElementById('solucion').scrollIntoView({behavior:'smooth'})">Nuestra propuesta</button>
+      <button class="btn btn-ghost reveal reveal-delay-2" onclick="window.location.href='ecosistema.html'">Sobre nosotros</button>
       <button class="btn btn-primary reveal reveal-delay-3" onclick="goLogin()">Iniciar sesión / registrarse</button>
     </div>
   </div>
@@ -304,33 +315,29 @@ body::before{
 
       <div class="hero-cta">
         <button class="btn btn-primary" onclick="goLogin()">Probar SonarIA</button>
-        <button class="btn btn-f1" onclick="document.getElementById('solucion').scrollIntoView({behavior:'smooth'})">Ver propuesta</button>
+        <button class="btn btn-f1" onclick="window.location.href='ecosistema.html'">Conocer MejorarIA</button>
       </div>
     </div>
 
     <div class="hero-side">
-      <div class="card side-box reveal reveal-delay-1">
-        <h3>Hoy en MejorarIA</h3>
-        <div class="pill-row">
-          <span class="pill sonaria">SonarIA · disponible</span>
-          <span class="pill future">Plataforma en construcción</span>
+      <div class="card mini-panel reveal reveal-delay-1">
+        <h3>Más que una herramienta puntual</h3>
+        <p>
+          SonarIA es el primer producto de MejorarIA. Detrás hay una visión de largo plazo: crear soluciones útiles, sobrias y realmente pedagógicas.
+        </p>
+        <div class="mini-actions">
+          <button class="btn btn-ghost" onclick="window.location.href='ecosistema.html'">Ver sobre nosotros</button>
         </div>
       </div>
 
-      <div class="card side-box reveal reveal-delay-2">
-        <h3>Qué la hace distinta</h3>
+      <div class="card mini-panel reveal reveal-delay-2">
+        <h3>¿Buscas una solución para tu asignatura?</h3>
         <p>
-          No parte desde una moda tecnológica, sino desde la práctica real del aula. La IA aquí no reemplaza al docente:
-          lo ayuda a decidir con más claridad y menos fricción.
+          Si tienes una necesidad concreta en tu práctica docente, podemos explorarla contigo y convertirla en una propuesta real.
         </p>
-      </div>
-
-      <div class="card side-box reveal reveal-delay-3">
-        <h3>Cómo entrarás</h3>
-        <p>
-          Desde aquí pasarás a iniciar sesión o registrarte para entrar a SonarIA dentro de MejorarIA.
-          Ese paso existe para darte acceso a tu prueba, no para ponerte una barrera innecesaria.
-        </p>
+        <div class="mini-actions">
+          <button class="btn btn-f1" onclick="window.location.href='contacto.html'">Contáctanos</button>
+        </div>
       </div>
     </div>
   </section>
@@ -420,13 +427,13 @@ body::before{
             <span>Hoy el producto real es SonarIA. El crecimiento futuro dependerá de necesidades concretas y trabajo serio de desarrollo.</span>
           </div>
           <div class="item">
-            <strong>¿Buscas una solución para tu asignatura?</strong>
-            <span>Si existe una necesidad clara, podemos explorarla contigo y convertirla en una herramienta útil.</span>
+            <strong>Explora la página sobre nosotros</strong>
+            <span>Ahí encontrarás visión, tips breves, efemérides y un espacio más vivo para acompañar a docentes.</span>
           </div>
         </div>
 
         <div style="margin-top:16px;">
-          <button class="btn btn-f1" onclick="window.location.href='contacto.html'">¿Buscas una solución para tu asignatura? Contáctanos</button>
+          <button class="btn btn-f1" onclick="window.location.href='ecosistema.html'">Ir a sobre nosotros</button>
         </div>
       </div>
     </div>
