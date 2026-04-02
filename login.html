@@ -50,28 +50,35 @@ body{
     radial-gradient(circle at left top, rgba(59,130,246,.12), transparent 18%);
   z-index:0;
 }
-.home-btn{
+.home-link{
   position:absolute;
   top:20px;
-  right:20px;
+  left:20px;
   z-index:3;
-  min-height:46px;
-  padding:0 18px;
-  border:none;
-  border-radius:16px;
-  background:rgba(255,255,255,.08);
-  color:var(--text);
-  border:1px solid var(--line);
-  font:inherit;
-  font-weight:800;
-  cursor:pointer;
-  transition:transform .18s ease, background .18s ease;
+  text-decoration:none;
+  color:inherit;
 }
-.home-btn:hover{
-  transform:translateY(-1px);
-  background:rgba(255,255,255,.12);
+.logo-wrap{display:flex; flex-direction:column; gap:2px}
+.logo{
+  font-size:2.25rem;
+  font-weight:900;
+  letter-spacing:-1.2px;
+  line-height:1;
+  display:flex;
+  gap:6px;
+  align-items:center;
 }
-.left, .right{
+.logo span{
+  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.logo-sub{
+  color:var(--muted);
+  font-size:.76rem;
+  font-weight:700;
+}
+.left,.right{
   position:relative;
   z-index:2;
   display:flex;
@@ -109,21 +116,14 @@ body{
   line-height:1.84;
   font-size:1.04rem;
 }
-.benefits{
-  display:grid;
-  gap:10px;
-  margin-top:18px;
-}
+.benefits{display:grid; gap:10px; margin-top:18px}
 .benefit{
   padding:14px 16px;
   border-radius:18px;
   background:rgba(255,255,255,.05);
   border:1px solid var(--line);
 }
-.benefit strong{
-  display:block;
-  margin-bottom:4px;
-}
+.benefit strong{display:block; margin-bottom:4px}
 .panel{
   width:100%;
   max-width:420px;
@@ -147,12 +147,8 @@ body{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.sub{
-  color:var(--muted);
-  line-height:1.7;
-  margin-bottom:18px;
-}
-.google-btn, .primary-btn{
+.sub{color:var(--muted); line-height:1.7; margin-bottom:18px}
+.google-btn,.primary-btn{
   width:100%;
   min-height:50px;
   border:none;
@@ -222,7 +218,7 @@ input:focus{
   .stage{grid-template-columns:1fr}
   .left{display:none}
   .right{padding:24px}
-  .home-btn{top:14px; right:14px}
+  .home-link{top:14px; left:14px}
 }
 </style>
 </head>
@@ -230,7 +226,12 @@ input:focus{
   <div class="bg"></div>
   <div class="fallback-overlay"></div>
 
-  <button class="home-btn" onclick="window.location.href='index.html'">MejorarIA</button>
+  <a href="index.html" class="home-link">
+    <div class="logo-wrap">
+      <div class="logo">Mejorar<span>IA</span></div>
+      <div class="logo-sub">Volver al home</div>
+    </div>
+  </a>
 
   <div class="stage">
     <div class="left">
