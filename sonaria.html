@@ -8,28 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#07111d;
-      --bg2:#0b1627;
-      --panel:rgba(255,255,255,.05);
-      --panel2:rgba(255,255,255,.04);
-      --line:rgba(255,255,255,.08);
-      --text:#eef3fb;
-      --muted:#9cafc8;
-      --green:#19d28d;
-      --yellow:#f4b63f;
-      --red:#ff6b6b;
-      --blue:#4b82ff;
-      --orange:#ff8a00;
-      --shadow:0 24px 64px rgba(0,0,0,.32);
-      --radius:22px;
-      --max:1380px;
+      --bg:#07111d; --bg2:#0b1627; --panel:rgba(255,255,255,.05); --panel2:rgba(255,255,255,.04);
+      --line:rgba(255,255,255,.08); --text:#eef3fb; --muted:#9cafc8; --green:#19d28d; --yellow:#f4b63f;
+      --red:#ff6b6b; --blue:#4b82ff; --orange:#ff8a00; --shadow:0 24px 64px rgba(0,0,0,.32); --radius:22px; --max:1380px;
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
     body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
       background:
         radial-gradient(circle at top left, rgba(255,138,0,.12), transparent 18%),
         radial-gradient(circle at top right, rgba(25,210,141,.08), transparent 20%),
@@ -38,62 +23,40 @@
       min-height:100vh;
     }
     body::before{
-      content:"";
-      position:fixed; inset:0; pointer-events:none;
+      content:""; position:fixed; inset:0; pointer-events:none;
       background:
         linear-gradient(rgba(255,255,255,.016) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.016) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.4), transparent 80%);
+      background-size:38px 38px; mask-image:linear-gradient(to bottom, rgba(255,255,255,.4), transparent 80%);
     }
     .container{max-width:var(--max); margin:0 auto; padding:26px 22px 56px; position:relative; z-index:1}
     .topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px}
     .brand{text-decoration:none; color:inherit}
     .brand h1{margin:0; font-size:clamp(2.3rem,5vw,4rem); line-height:.95; letter-spacing:-.06em; font-weight:900}
-    .brand .ia{color:var(--green)}
-    .brand .sub{margin-top:4px; color:#d7fff0; font-weight:800}
-    .logout{
-      border:none; border-radius:12px; padding:10px 16px; cursor:pointer;
-      background:#ff5a5a; color:#fff; font-weight:800;
-    }
+    .brand .ia{color:var(--green)} .brand .sub{margin-top:4px; color:#d7fff0; font-weight:800}
+    .logout{border:none; border-radius:12px; padding:10px 16px; cursor:pointer; background:#ff5a5a; color:#fff; font-weight:800;}
     .layout{display:grid; grid-template-columns:420px 1fr; gap:18px; align-items:start}
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow);}
     .panel{padding:22px}
     .title{margin:0 0 8px; font-size:1.8rem; letter-spacing:-.03em}
     .muted{color:var(--muted); line-height:1.65}
     .stack{display:grid; gap:14px}
     .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .input,.textarea{
-      width:100%; border:none; outline:none; border-radius:16px;
-      padding:14px 15px; background:rgba(255,255,255,.05);
-      color:var(--text); font:inherit; border:1px solid rgba(255,255,255,.08);
-    }
+    .input,.textarea{width:100%; border:none; outline:none; border-radius:16px; padding:14px 15px; background:rgba(255,255,255,.05); color:var(--text); font:inherit; border:1px solid rgba(255,255,255,.08);}
     .input:focus,.textarea:focus{border-color:rgba(75,130,255,.35); box-shadow:0 0 0 4px rgba(75,130,255,.10)}
     .textarea{min-height:176px; resize:vertical}
-    .switch{
-      display:flex; gap:12px; align-items:flex-start; padding:14px 15px;
-      border-radius:16px; background:var(--panel2); border:1px solid var(--line)
-    }
+    .switch{display:flex; gap:12px; align-items:flex-start; padding:14px 15px; border-radius:16px; background:var(--panel2); border:1px solid var(--line)}
     .switch input{margin-top:3px; accent-color:var(--green); transform:scale(1.15)}
     .switch strong{display:block; margin-bottom:3px}
     .switch span{display:block; color:var(--muted); font-size:.92rem; line-height:1.55}
     .actions,.mini-actions{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-    .btn{
-      min-height:48px; border:none; border-radius:16px; cursor:pointer;
-      font:inherit; font-weight:800; transition:.18s transform ease,.18s opacity ease;
-    }
+    .btn{min-height:48px; border:none; border-radius:16px; cursor:pointer; font:inherit; font-weight:800; transition:.18s transform ease,.18s opacity ease;}
     .btn:hover{transform:translateY(-1px)}
     .primary{background:linear-gradient(135deg,var(--orange),#ff6900); color:#0f172a}
     .ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line)}
     .small{min-height:42px; font-size:.92rem}
     .status{display:none; padding:12px 14px; border-radius:14px; font-size:.95rem; line-height:1.55}
-    .status.show{display:block}
-    .status.loading{background:rgba(255,138,0,.09); border:1px solid rgba(255,138,0,.2); color:#ffe0bf}
+    .status.show{display:block} .status.loading{background:rgba(255,138,0,.09); border:1px solid rgba(255,138,0,.2); color:#ffe0bf}
     .status.success{background:rgba(25,210,141,.08); border:1px solid rgba(25,210,141,.2); color:#d9fff0}
     .status.error{background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.2); color:#ffd7d7}
     .pill-wrap{display:flex; gap:8px; flex-wrap:wrap}
@@ -103,11 +66,8 @@
     .pill.blue{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
     .pill.orange{background:rgba(255,138,0,.11); color:#ffe0bf; border-color:rgba(255,138,0,.22)}
     .right{display:grid; gap:18px}
-    .summary{display:grid; grid-template-columns:108px 1fr; gap:16px; align-items:center; transition:box-shadow .2s ease}
-    .icon{
-      width:92px; height:92px; border-radius:24px; display:flex; align-items:center; justify-content:center;
-      font-size:2.9rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)
-    }
+    .summary{display:grid; grid-template-columns:108px 1fr; gap:16px; align-items:center}
+    .icon{width:92px; height:92px; border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:2.9rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)}
     .result-line{display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:clamp(1.3rem,2.2vw,2rem); font-weight:900; letter-spacing:-.03em}
     .badge{padding:8px 12px; border-radius:999px; font-size:.84rem; font-weight:800; border:1px solid var(--line)}
     .badge.green{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.22)}
@@ -115,64 +75,31 @@
     .badge.red{background:rgba(255,107,107,.12); color:#ffd9d9; border-color:rgba(255,107,107,.25)}
     .badge.blue{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
     .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    .mini,.box{
-      background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:16px
-    }
+    .mini,.box{background:var(--panel2); border:1px solid var(--line); border-radius:18px; padding:16px}
     .mini strong,.box h4{display:block; margin:0 0 8px; color:#d9e4f6; font-size:.92rem}
     .mini span{font-weight:800}
     .grid-two{display:grid; grid-template-columns:1.08fr .92fr; gap:18px}
     .stack-tight{display:grid; gap:12px}
     .box p{margin:0; line-height:1.72; white-space:pre-wrap; color:#d7e2f1}
     .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      padding:8px 12px; border-radius:999px; font-size:.86rem; font-weight:700;
-      background:rgba(75,130,255,.11); color:#dce8ff; border:1px solid rgba(75,130,255,.22)
-    }
+    .chip{padding:8px 12px; border-radius:999px; font-size:.86rem; font-weight:700; background:rgba(75,130,255,.11); color:#dce8ff; border:1px solid rgba(75,130,255,.22)}
     .empty{color:var(--muted); line-height:1.7}
     .meter-block{display:grid; gap:12px}
     .meter-label{display:flex; justify-content:space-between; gap:12px; font-size:.93rem}
-    .meter-track{
-      width:100%; height:11px; border-radius:999px; overflow:hidden;
-      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06)
-    }
-    .meter-fill{
-      width:0%; height:100%; border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
-      transition:width .28s ease
-    }
+    .meter-track{width:100%; height:11px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.06)}
+    .meter-fill{width:0%; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--green),var(--yellow),var(--red)); transition:width .28s ease}
     .context-list{display:grid; gap:10px}
-    .context-item{
-      background:var(--panel2); border:1px solid var(--line); border-radius:16px;
-      padding:14px 15px; line-height:1.62; color:#d7e2f1
-    }
-    .course-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px}
-    .course-item{padding:10px 12px; border-radius:14px; background:var(--panel2); border:1px solid var(--line)}
-    .course-item label{display:flex; gap:8px; align-items:center; cursor:pointer}
+    .context-item{background:var(--panel2); border:1px solid var(--line); border-radius:16px; padding:14px 15px; line-height:1.62; color:#d7e2f1}
     .footer{margin-top:28px; text-align:center; color:#d7e2f1; font-weight:800}
-    .user-strip{
-      display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px;
-    }
-    .user-box{
-      display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
-      padding:16px 18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;
-      box-shadow:var(--shadow);
-    }
+    .user-strip{display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px;}
+    .user-box{display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; padding:16px 18px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035)); border:1px solid rgba(255,255,255,.08); border-radius:20px; box-shadow:var(--shadow);}
     .user-meta{display:flex; gap:14px; align-items:flex-start}
-    .avatar{
-      width:54px; height:54px; border-radius:16px; display:flex; align-items:center; justify-content:center;
-      background:rgba(25,210,141,.12); border:1px solid rgba(25,210,141,.22); font-size:1.35rem; font-weight:900;
-    }
+    .avatar{width:54px; height:54px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:rgba(25,210,141,.12); border:1px solid rgba(25,210,141,.22); font-size:1.35rem; font-weight:900;}
     .user-name{font-size:1.02rem; font-weight:800}
     .user-email{color:var(--muted); font-size:.92rem; margin-top:3px}
     .trial-copy{margin-top:6px; color:#dce8ff; line-height:1.65}
     .trial-mini{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-    .trial-pill,.history-tag{
-      display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px;
-      font-size:.83rem; font-weight:800; border:1px solid var(--line);
-    }
+    .trial-pill,.history-tag{display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; font-size:.83rem; font-weight:800; border:1px solid var(--line);}
     .trial-pill.info{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
     .trial-pill.success{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.22)}
     .trial-pill.warn{background:rgba(255,138,0,.11); color:#ffe0bf; border-color:rgba(255,138,0,.22)}
@@ -180,37 +107,19 @@
     .upgrade-box h3{margin:0; font-size:1.08rem}
     .upgrade-box p{margin:0; color:var(--muted); line-height:1.65}
     .history-list{display:grid; gap:10px}
-    .history-item{
-      display:grid; gap:6px; padding:12px 13px; border-radius:16px;
-      background:var(--panel2); border:1px solid var(--line); cursor:pointer;
-    }
+    .history-item{display:grid; gap:6px; padding:12px 13px; border-radius:16px; background:var(--panel2); border:1px solid var(--line); cursor:pointer}
     .history-item:hover{border-color:rgba(75,130,255,.28)}
     .history-item strong{font-size:.95rem}
     .history-item span{color:var(--muted); font-size:.88rem; line-height:1.5}
     .history-item .history-row{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
     .history-empty{color:var(--muted); line-height:1.7}
-    .principle-banner{
-      margin:18px 0;
-      padding:18px 20px;
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(75,130,255,.10), rgba(25,210,141,.08));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:var(--shadow);
-    }
+    .principle-banner{margin:18px 0; padding:18px 20px; border-radius:20px; background:linear-gradient(180deg, rgba(75,130,255,.10), rgba(25,210,141,.08)); border:1px solid rgba(255,255,255,.10); box-shadow:var(--shadow);}
     .principle-banner strong{display:block; margin-bottom:8px; font-size:1rem; color:#eef7ff}
     .principle-banner p{margin:0; color:#dbe8f8; line-height:1.7}
-    .legal-note{
-      margin-top:18px; padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08); color:#cdd9ea; line-height:1.68; font-size:.95rem;
-    }
+    .legal-note{margin-top:18px; padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:#cdd9ea; line-height:1.68; font-size:.95rem;}
     .legal-note strong{color:#f3f7fc}
-    @media (max-width:1180px){.layout,.grid-two,.mini-grid,.course-grid,.user-strip{grid-template-columns:1fr}}
-    @media (max-width:720px){
-      .container{padding:18px 14px 50px}
-      .row,.actions,.mini-actions{grid-template-columns:1fr}
-      .summary{grid-template-columns:1fr}
-      .icon{width:72px; height:72px; border-radius:20px}
-    }
+    @media (max-width:1180px){.layout,.grid-two,.mini-grid,.user-strip{grid-template-columns:1fr}}
+    @media (max-width:720px){.container{padding:18px 14px 50px}.row,.actions,.mini-actions{grid-template-columns:1fr}.summary{grid-template-columns:1fr}.icon{width:72px; height:72px; border-radius:20px}}
   </style>
 </head>
 <body>
@@ -292,10 +201,10 @@
         </div>
 
         <div class="mini-actions">
-          <button type="button" class="btn ghost small" id="btnCursos">🧑‍🏫 Mis cursos</button>
           <button type="button" class="btn ghost small" id="btnYoutube">▶ Buscar en YouTube</button>
-          <button type="button" class="btn ghost small" id="btnContexto">🚫 Contexto explícito</button>
           <button type="button" class="btn ghost small" id="btnTraducir">🌐 Traducción</button>
+          <button type="button" class="btn ghost small" id="btnContexto">🚫 Contexto explícito</button>
+          <button type="button" class="btn ghost small" id="btnCursos">🧑‍🏫 Mis cursos</button>
         </div>
 
         <div class="actions">
@@ -308,7 +217,7 @@
     </aside>
 
     <main class="right">
-      <section class="card panel summary" id="summaryCard">
+      <section class="card panel summary">
         <div class="icon" id="summaryIcon">—</div>
         <div>
           <div class="result-line">
@@ -342,8 +251,6 @@
             <div class="box"><h4>Temas detectados</h4><div id="temasChips" class="chips"><div class="empty">Sin datos.</div></div></div>
             <div class="box"><h4>Enfoque sugerido</h4><p id="enfoqueTexto">—</p></div>
             <div class="box"><h4>Observaciones pedagógicas</h4><div id="obsChips" class="chips"><div class="empty">Sin datos.</div></div></div>
-            <div class="box"><h4>Actividades sugeridas</h4><p id="actividadesTexto">Selecciona tus cursos y analiza una canción para generar actividades.</p></div>
-            <div class="box"><h4>Match curricular MINEDUC</h4><p id="oaTexto">Selecciona tus cursos en “Mis cursos”.</p></div>
           </div>
         </section>
 
@@ -367,7 +274,6 @@
               </div>
             </div>
             <div class="box"><h4>Contextos detectados</h4><div id="contextList" class="context-list"><div class="empty">Aún no hay datos.</div></div></div>
-            <div class="box"><h4>Mis cursos activos</h4><p id="cursosTexto">No has seleccionado cursos.</p></div>
           </div>
         </section>
       </section>
@@ -389,12 +295,11 @@ const authUserRaw = localStorage.getItem("mejoraria_user");
 const authToken = localStorage.getItem("mejoraria_token");
 if (!authUserRaw || !authToken) window.location.href = "login.html";
 let user = JSON.parse(authUserRaw || "{}");
+let MAX_ANALISIS_GRATIS = 2;
 
-const MAX_ANALISIS_GRATIS = 2;
-const userKey = user.email || user.id || "usuario_demo";
-const usageKey = `sonaria_usage_${userKey}`;
-const historyKey = `sonaria_history_${userKey}`;
-
+function escapeHtml(text){
+  return String(text || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
 function logout(){
   localStorage.removeItem("mejoraria_user");
   localStorage.removeItem("mejoraria_token");
@@ -402,15 +307,14 @@ function logout(){
   localStorage.removeItem("mejoraria_logout_message");
   window.location.href = "login.html";
 }
-
 function forceRelogin(message){
   localStorage.removeItem("mejoraria_user");
   localStorage.removeItem("mejoraria_token");
   localStorage.removeItem("mejoraria_plan");
   localStorage.setItem("mejoraria_logout_message", message || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
+  alert(message || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
   window.location.href = "login.html";
 }
-
 async function syncSessionWithBackend(){
   try{
     const res = await fetch(API_BASE + "/me", {
@@ -422,34 +326,43 @@ async function syncSessionWithBackend(){
       forceRelogin(data.detail || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
       return false;
     }
-
     if(!res.ok) throw new Error("Sesión expirada");
 
     const data = await res.json();
     user = data.user || user;
+    if(user.plan === "pro"){
+      MAX_ANALISIS_GRATIS = 999999;
+    }else{
+      MAX_ANALISIS_GRATIS = 2;
+    }
     localStorage.setItem("mejoraria_user", JSON.stringify(user));
+    localStorage.setItem("mejoraria_plan", JSON.stringify({ plan: user.plan || "free" }));
     return true;
   }catch(error){
     forceRelogin(error.message || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
     return false;
   }
 }
+setInterval(() => { syncSessionWithBackend(); }, 15000);
 
-setInterval(() => {
-  syncSessionWithBackend();
-}, 15000);
+const userKey = () => (user.email || user.id || "usuario_demo");
+const usageKey = () => `sonaria_usage_${userKey()}`;
+const historyKey = () => `sonaria_history_${userKey()}`;
 
 function getUsage(){
-  const value = parseInt(localStorage.getItem(usageKey) || "0", 10);
+  const value = parseInt(localStorage.getItem(usageKey()) || "0", 10);
   return Number.isNaN(value) ? 0 : value;
 }
 function setUsage(value){
-  localStorage.setItem(usageKey, String(Math.max(0, value)));
+  localStorage.setItem(usageKey(), String(Math.max(0, value)));
 }
-function getRemainingUsage(){ return Math.max(0, MAX_ANALISIS_GRATIS - getUsage()); }
+function getRemainingUsage(){
+  if((user.plan || "free") === "pro") return 999999;
+  return Math.max(0, MAX_ANALISIS_GRATIS - getUsage());
+}
 function getHistory(){
   try{
-    const arr = JSON.parse(localStorage.getItem(historyKey) || "[]");
+    const arr = JSON.parse(localStorage.getItem(historyKey()) || "[]");
     return Array.isArray(arr) ? arr : [];
   }catch{
     return [];
@@ -458,31 +371,38 @@ function getHistory(){
 function saveHistoryItem(item){
   const prev = getHistory();
   const next = [item, ...prev].slice(0, 8);
-  localStorage.setItem(historyKey, JSON.stringify(next));
+  localStorage.setItem(historyKey(), JSON.stringify(next));
 }
 function formatDateTime(value){
   try{return new Date(value).toLocaleString("es-CL", { dateStyle:"short", timeStyle:"short" });}
   catch{return value || "";}
 }
-function escapeHtml(text){
-  return String(text || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
 function updateUserPanel(){
   const remaining = getRemainingUsage();
   const used = getUsage();
   const displayName = user.name || "Docente";
+  const plan = user.plan || "free";
   userName.textContent = displayName;
   userEmail.textContent = user.email || "Acceso autenticado";
   userAvatar.textContent = String(displayName).trim().charAt(0).toUpperCase() || "D";
-  trialPlan.textContent = "Plan prueba";
-  trialCounter.className = "trial-pill " + (remaining > 0 ? "success" : "warn");
-  trialCounter.textContent = `${remaining} de ${MAX_ANALISIS_GRATIS} disponibles`;
-  if(remaining > 0){
-    trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya usaste <strong>${used}</strong> de <strong>${MAX_ANALISIS_GRATIS}</strong> análisis gratuitos.`;
-    upgradeCopy.textContent = "Tu historial reciente se guarda por usuario para ayudarte a decidir con más claridad pedagógica.";
+
+  if(plan === "pro"){
+    trialPlan.textContent = "Plan completo";
+    trialCounter.className = "trial-pill success";
+    trialCounter.textContent = "Uso ilimitado";
+    trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Tu cuenta tiene acceso <strong>ilimitado</strong> a SonarIA.`;
+    upgradeCopy.textContent = "Tu cuenta ya está desbloqueada. Puedes usar SonarIA sin límite de análisis.";
   }else{
-    trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya alcanzaste el límite gratuito.`;
-    upgradeCopy.textContent = "Has alcanzado el límite gratuito. Desbloquea SonarIA para usarlo ilimitadamente.";
+    trialPlan.textContent = "Plan prueba";
+    trialCounter.className = "trial-pill " + (remaining > 0 ? "success" : "warn");
+    trialCounter.textContent = `${remaining} de ${MAX_ANALISIS_GRATIS} disponibles`;
+    if(remaining > 0){
+      trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya usaste <strong>${used}</strong> de <strong>${MAX_ANALISIS_GRATIS}</strong> análisis gratuitos.`;
+      upgradeCopy.textContent = "Tu historial reciente se guarda por usuario para ayudarte a decidir con más claridad pedagógica.";
+    }else{
+      trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya alcanzaste el límite gratuito.`;
+      upgradeCopy.textContent = "Has alcanzado el límite gratuito. Desbloquea SonarIA para usarlo ilimitadamente.";
+    }
   }
 }
 function renderHistory(){
@@ -492,7 +412,7 @@ function renderHistory(){
     historyList.innerHTML = '<div class="history-empty">Todavía no has realizado análisis.</div>';
     return;
   }
-  items.forEach((item, index) => {
+  items.forEach((item) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "history-item";
@@ -504,41 +424,21 @@ function renderHistory(){
       <span>${escapeHtml(item.artista || "Artista no indicado")}</span>
       <span>${escapeHtml(formatDateTime(item.fecha))}</span>
     `;
-    button.addEventListener("click", () => alert((item.titulo || "Sin título") + " · " + (item.artista || "")));
     historyList.appendChild(button);
   });
 }
-function setStatus(msg, type){
-  statusBox.textContent = msg;
-  statusBox.className = "status show " + type;
-}
-function clearStatus(){
-  statusBox.textContent = "";
-  statusBox.className = "status";
-}
+function setStatus(msg, type){ statusBox.textContent = msg; statusBox.className = "status show " + type; }
+function clearStatus(){ statusBox.textContent = ""; statusBox.className = "status"; }
 function clearPills(){ [pillAutoLyric,pillManualText,pillFallback].forEach(el => el.classList.remove("show")); }
 function clearResult(){
   resultTitle.textContent = "Esperando análisis";
-  resultBadge.className = "badge blue";
-  resultBadge.textContent = "Sin datos";
-  summaryIcon.textContent = "—";
-  songMeta.textContent = "—";
-  mainJustificacion.textContent = "Aquí aparecerá el análisis pedagógico.";
-  metaEdad.textContent = "—";
-  metaFuente.textContent = "—";
-  metaLectura.textContent = "—";
-  resumenTexto.textContent = "—";
-  enfoqueTexto.textContent = "—";
-  actividadesTexto.textContent = "Selecciona tus cursos y analiza una canción para generar actividades.";
-  oaTexto.textContent = "Selecciona tus cursos en “Mis cursos”.";
-  riskPercent.textContent = "0%";
-  riskSensitive.textContent = "0%";
-  riskSchool.textContent = "0%";
-  riskTotalFill.style.width = "0%";
-  riskSensitiveFill.style.width = "0%";
-  riskSchoolFill.style.width = "0%";
-  temasChips.innerHTML = '<div class="empty">Sin datos.</div>';
-  obsChips.innerHTML = '<div class="empty">Sin datos.</div>';
+  resultBadge.className = "badge blue"; resultBadge.textContent = "Sin datos"; summaryIcon.textContent = "—";
+  songMeta.textContent = "—"; mainJustificacion.textContent = "Aquí aparecerá el análisis pedagógico.";
+  metaEdad.textContent = "—"; metaFuente.textContent = "—"; metaLectura.textContent = "—";
+  resumenTexto.textContent = "—"; enfoqueTexto.textContent = "—";
+  riskPercent.textContent = "0%"; riskSensitive.textContent = "0%"; riskSchool.textContent = "0%";
+  riskTotalFill.style.width = "0%"; riskSensitiveFill.style.width = "0%"; riskSchoolFill.style.width = "0%";
+  temasChips.innerHTML = '<div class="empty">Sin datos.</div>'; obsChips.innerHTML = '<div class="empty">Sin datos.</div>';
   contextList.innerHTML = '<div class="empty">Aún no hay datos.</div>';
 }
 function renderChips(container, items){
@@ -559,26 +459,14 @@ function badgeFromResult(result){
 function renderAnalysis(raw){
   const result = raw.resultado || raw.resumen || "Sin resultado";
   const badge = badgeFromResult(result);
-  resultTitle.textContent = result;
-  resultBadge.className = "badge " + badge.cls;
-  resultBadge.textContent = result;
-  summaryIcon.textContent = badge.icon;
-  songMeta.textContent = [titulo.value, artista.value].filter(Boolean).join(" · ") || "Canción analizada";
-  mainJustificacion.textContent = raw.justificacion || "Sin justificación.";
-  metaEdad.textContent = raw.edad_sugerida || raw.edad || "—";
-  metaFuente.textContent = raw.fuente_letra || "—";
-  metaLectura.textContent = raw.enfoque?.lectura_sugerida || "—";
-  resumenTexto.textContent = raw.resumen || result;
-  enfoqueTexto.textContent = raw.enfoque?.uso_recomendado || "—";
-  riskPercent.textContent = `${raw.riesgo_total || raw.riesgo || 0}%`;
-  riskSensitive.textContent = `${raw.contenido_sensible || 0}%`;
-  riskSchool.textContent = `${raw.uso_escolar || 0}%`;
-  riskTotalFill.style.width = `${raw.riesgo_total || raw.riesgo || 0}%`;
-  riskSensitiveFill.style.width = `${raw.contenido_sensible || 0}%`;
-  riskSchoolFill.style.width = `${raw.uso_escolar || 0}%`;
-  renderChips(temasChips, raw.temas || raw.temas_detectados || []);
-  renderChips(obsChips, raw.observaciones || []);
-  renderContext(raw.contextos_detectados || []);
+  resultTitle.textContent = result; resultBadge.className = "badge " + badge.cls; resultBadge.textContent = result;
+  summaryIcon.textContent = badge.icon; songMeta.textContent = [titulo.value, artista.value].filter(Boolean).join(" · ") || "Canción analizada";
+  mainJustificacion.textContent = raw.justificacion || "Sin justificación."; metaEdad.textContent = raw.edad_sugerida || raw.edad || "—";
+  metaFuente.textContent = raw.fuente_letra || "—"; metaLectura.textContent = raw.enfoque?.lectura_sugerida || "—";
+  resumenTexto.textContent = raw.resumen || result; enfoqueTexto.textContent = raw.enfoque?.uso_recomendado || "—";
+  riskPercent.textContent = `${raw.riesgo_total || raw.riesgo || 0}%`; riskSensitive.textContent = `${raw.contenido_sensible || 0}%`; riskSchool.textContent = `${raw.uso_escolar || 0}%`;
+  riskTotalFill.style.width = `${raw.riesgo_total || raw.riesgo || 0}%`; riskSensitiveFill.style.width = `${raw.contenido_sensible || 0}%`; riskSchoolFill.style.width = `${raw.uso_escolar || 0}%`;
+  renderChips(temasChips, raw.temas || raw.temas_detectados || []); renderChips(obsChips, raw.observaciones || []); renderContext(raw.contextos_detectados || []);
 }
 
 const form = document.getElementById("analysisForm");
@@ -601,8 +489,6 @@ const resumenTexto = document.getElementById("resumenTexto");
 const temasChips = document.getElementById("temasChips");
 const enfoqueTexto = document.getElementById("enfoqueTexto");
 const obsChips = document.getElementById("obsChips");
-const actividadesTexto = document.getElementById("actividadesTexto");
-const oaTexto = document.getElementById("oaTexto");
 const riskPercent = document.getElementById("riskPercent");
 const riskSensitive = document.getElementById("riskSensitive");
 const riskSchool = document.getElementById("riskSchool");
@@ -610,7 +496,6 @@ const riskTotalFill = document.getElementById("riskTotalFill");
 const riskSensitiveFill = document.getElementById("riskSensitiveFill");
 const riskSchoolFill = document.getElementById("riskSchoolFill");
 const contextList = document.getElementById("contextList");
-const cursosTexto = document.getElementById("cursosTexto");
 const pillAutoLyric = document.getElementById("pillAutoLyric");
 const pillManualText = document.getElementById("pillManualText");
 const pillFallback = document.getElementById("pillFallback");
@@ -636,12 +521,7 @@ document.getElementById("btnContexto").addEventListener("click", () => alert("Aq
 document.getElementById("btnCursos").addEventListener("click", () => alert("Aquí luego puedes sumar selección persistente de cursos."));
 
 clearBtn.addEventListener("click", () => {
-  titulo.value = "";
-  artista.value = "";
-  texto.value = "";
-  clearPills();
-  clearStatus();
-  clearResult();
+  titulo.value = ""; artista.value = ""; texto.value = ""; clearPills(); clearStatus(); clearResult();
 });
 
 form.addEventListener("submit", async (e) => {
@@ -649,14 +529,12 @@ form.addEventListener("submit", async (e) => {
   const ok = await syncSessionWithBackend();
   if(!ok) return;
 
-  if(getRemainingUsage() <= 0){
+  if((user.plan || "free") !== "pro" && getRemainingUsage() <= 0){
     setStatus("Has alcanzado el límite gratuito. Desbloquea SonarIA para usarlo ilimitadamente.", "error");
     return;
   }
 
-  clearStatus();
-  clearPills();
-  setStatus("Analizando canción...", "loading");
+  clearStatus(); clearPills(); setStatus("Analizando canción...", "loading");
 
   try{
     const payload = {
@@ -697,19 +575,18 @@ form.addEventListener("submit", async (e) => {
     renderAnalysis(raw);
     setStatus("Análisis completado correctamente.", "success");
 
-    setUsage(getUsage() + 1);
+    if((user.plan || "free") !== "pro"){
+      setUsage(getUsage() + 1);
+    }
     updateUserPanel();
 
     saveHistoryItem({
       titulo: payload.titulo || "Canción sin título",
       artista: payload.artista || "Artista no indicado",
       badge: raw.resultado || raw.resumen || "Análisis",
-      resultado: raw.resultado || raw.resumen || "Sin resultado",
-      resumen: raw.justificacion || "Sin resumen",
       fecha: new Date().toISOString()
     });
     renderHistory();
-
   }catch(error){
     setStatus(error.message || "Ocurrió un error en el análisis.", "error");
   }
@@ -718,9 +595,7 @@ form.addEventListener("submit", async (e) => {
 window.addEventListener("load", async () => {
   const ok = await syncSessionWithBackend();
   if(!ok) return;
-  updateUserPanel();
-  renderHistory();
-  clearResult();
+  updateUserPanel(); renderHistory(); clearResult();
 });
 </script>
 </body>
