@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago simulado | SonarIA Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrap {
+      max-width: 700px;
+      margin: 50px auto;
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 32px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .row {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .muted {
+      color: #94a3b8;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .ok {
+      background: #22c55e;
+      color: white;
+    }
+
+    .fail {
+      background: #ef4444;
+      color: white;
+    }
+
+    .secondary {
+      background: #334155;
+      color: white;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.info {
+      background: #1d4ed8;
+    }
+
+    .status.error {
+      background: #991b1b;
+    }
+
+    .status.success {
+      background: #166534;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Checkout simulado SonarIA Pro</h1>
+    <p class="muted">Este pago es de prueba. No se realizará ningún cobro real.</p>
+
+    <div class="card">
+      <div class="row"><strong>Producto:</strong> SonarIA Pro</div>
+      <div class="row"><strong>Monto:</strong> $5.990 CLP</div>
+      <div class="row"><strong>Orden:</strong> <span id="orderId">Cargando...</span></div>
+    </div>
+
+    <div class="actions">
+      <button class="ok" id="btnApprove">Simular pago exitoso</button>
+      <button class="fail" id="btnReject">Simular pago fallido</button>
+      <button class="secondary" id="btnBack">Volver a planes</button>
+    </div>
+
+    <div id="statusBox" class="status info"></div>
+  </div>
+
+  <script>
+    const API_BASE = "https://sonaria-api.onrender.com";
+    const PLANES_URL = "https://mejoraria.cl/planes.html";
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("order_id");
+    const token = localStorage.getItem("token") || localStorage.getItem("access_token");
+
+    const orderEl = document.getElementById("orderId");
+    const statusBox = document.getElementById("statusBox");
+    const btnApprove = document.getElementById("btnApprove");
+    const btnReject = document.getElementById("btnReject");
+    const btnBack = document.getElementById("btnBack");
+
+    function showStatus(message, type = "info") {
+      statusBox.className = "status show " + type;
+      statusBox.textContent = message;
+    }
+
+    function requireAuth() {
+      if (!token) {
+        showStatus("No hay sesión iniciada. Debes volver a iniciar sesión.", "error");
+        btnApprove.disabled = true;
+        btnReject.disabled = true;
+        return false;
+      }
+      return true;
+    }
+
+    async function postAction(url) {
+      if (!requireAuth()) return;
+      if (!orderId) {
+        showStatus("Falta order_id en la URL.", "error");
+        return;
+      }
+
+      try {
+        btnApprove.disabled = true;
+        btnReject.disabled = true;
+
+        showStatus("Procesando...", "info");
+
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ order_id: orderId })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showStatus(data.detail || "Ocurrió un error al procesar el pago.", "error");
+          btnApprove.disabled = false;
+          btnReject.disabled = false;
+          return;
+        }
+
+        if (url.includes("/confirm")) {
+          showStatus("Pago exitoso. Activando plan Pro...", "success");
+          setTimeout(() => {
+            window.location.href = PLANES_URL + "?pago=ok&order_id=" + encodeURIComponent(orderId);
+          }, 900);
+        } else {
+          showStatus("Pago fallido simulado correctamente.", "error");
+          setTimeout(() => {
+            window.location.href = PLANES_URL + "?pago=error&order_id=" + encodeURIComponent(orderId);
+          }, 900);
+        }
+
+      } catch (error) {
+        showStatus("No se pudo conectar con el servidor.", "error");
+        btnApprove.disabled = false;
+        btnReject.disabled = false;
+      }
+    }
+
+    orderEl.textContent = orderId || "Sin order_id";
+
+    btnApprove.addEventListener("click", () => {
+      postAction(API_BASE + "/payments/fake/confirm");
+    });
+
+    btnReject.addEventListener("click", () => {
+      postAction(API_BASE + "/payments/fake/fail");
+    });
+
+    btnBack.addEventListener("click", () => {
+      window.location.href = PLANES_URL;
+    });
+
+    requireAuth();
+  </script>
+</body>
+</html>
