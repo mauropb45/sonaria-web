@@ -1,291 +1,140 @@
-from fastapi import FastAPI, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
-import os
-from datetime import datetime, timedelta, timezone
-from contextlib import contextmanager
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes | MejorarIA</title>
+<meta name="description" content="Planes de SonarIA dentro de MejorarIA.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06111f; --bg2:#081728; --text:#f8fafc; --muted:#9fb0c7; --line:rgba(255,255,255,.08);
+  --orange:#ff8000; --orange2:#ff5a00; --blue:#3b82f6; --green:#19d28d; --shadow:0 18px 40px rgba(0,0,0,.28); --radius:24px; --max:1140px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:'Inter',sans-serif; color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255,128,0,.13), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(59,130,246,.14), transparent 26%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+}
+a{text-decoration:none;color:inherit}
+.container{max-width:var(--max); margin:auto; padding:30px 20px 80px}
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:26px; flex-wrap:wrap}
+.logo-wrap{display:flex; flex-direction:column; gap:2px}
+.logo{font-size:2.5rem; font-weight:900; letter-spacing:-1.2px; line-height:1; display:flex; gap:6px}
+.logo span{background:linear-gradient(135deg,#23e3a1,#6ee7ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+.hero{text-align:center; margin:20px 0 28px}
+.eyebrow{display:inline-flex; gap:8px; align-items:center; padding:8px 14px; border-radius:999px; background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.22); color:#dce8ff; font-size:.85rem; font-weight:800; margin-bottom:14px}
+h1{margin:0 0 12px; font-size:clamp(2.1rem,4vw,3.3rem); line-height:1.05; letter-spacing:-.04em}
+.hero p{max-width:820px; margin:0 auto; color:var(--muted); line-height:1.8; font-size:1.05rem}
+.principle, .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);}
+.principle{padding:24px 26px; margin-bottom:22px}
+.principle strong{display:block; margin-bottom:8px; font-size:1rem}
+.principle p{margin:0; color:#d8e4f4; line-height:1.76}
+.pricing{display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:28px}
+.plan{padding:28px; display:flex; flex-direction:column}
+.plan.featured{border:1px solid rgba(255,128,0,.35); box-shadow:0 18px 40px rgba(255,128,0,.10); transform:translateY(-4px)}
+.badge{display:inline-flex; width:max-content; padding:8px 12px; border-radius:999px; font-size:.84rem; font-weight:800; margin-bottom:16px}
+.badge.blue{background:rgba(59,130,246,.12); color:#dce8ff; border:1px solid rgba(59,130,246,.22)}
+.badge.orange{background:rgba(255,128,0,.12); color:#ffd5aa; border:1px solid rgba(255,128,0,.22)}
+.plan h2{margin:0 0 8px; font-size:1.7rem}
+.plan-sub{margin:0 0 18px; color:var(--muted); line-height:1.7; min-height:74px}
+.price{font-size:2.3rem; font-weight:900; margin:0 0 6px; letter-spacing:-.03em}
+.price small{font-size:1rem; color:var(--muted); font-weight:700}
+.meta{color:var(--muted); font-size:.95rem; line-height:1.6; margin-bottom:18px}
+.features{list-style:none; padding:0; margin:0 0 24px; display:grid; gap:10px; flex:1}
+.features li{position:relative; padding-left:18px; line-height:1.58; color:#edf3fb}
+.features li::before{content:"•"; position:absolute; left:0; top:0; color:var(--orange); font-weight:900}
+.actions{display:grid; gap:10px}
+.btn{border:none; border-radius:16px; padding:15px 22px; font-size:1rem; font-weight:800; cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2)); color:#101418; box-shadow:0 14px 34px rgba(255,128,0,.22)}
+.btn-ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line)}
+.inline-note{margin-top:14px; color:#dbe6f6; line-height:1.7}
+.footer{text-align:center; margin-top:30px; color:#d7e2f1; font-weight:800}
+.footer small{display:block; margin-top:8px; color:var(--muted); font-weight:500}
+@media(max-width:900px){.pricing{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a href="index.html">
+        <div class="logo-wrap">
+          <div class="logo">Mejorar<span>IA</span></div>
+        </div>
+      </a>
+    </div>
 
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, func, text
-from sqlalchemy.orm import declarative_base, sessionmaker
+    <section class="hero">
+      <div class="eyebrow">💳 Freemium + plan mensual</div>
+      <h1>Elige cómo continuar con SonarIA</h1>
+      <p>Puedes probar SonarIA de forma gratuita y, cuando haga sentido para tu práctica, pasar a un plan mensual con continuidad de uso.</p>
+    </section>
 
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
-import jwt
+    <section class="principle">
+      <strong>La IA acompaña. Educar es cuidar.</strong>
+      <p>La responsabilidad de educar y proteger a los estudiantes es siempre humana. Por eso, todos los productos de MejorarIA se entienden como apoyo al juicio profesional docente y al rol de la escuela como garante de cuidado.</p>
+    </section>
 
-app = FastAPI(title="SonarIA Pro API")
+    <section class="pricing">
+      <article class="card plan">
+        <div class="badge blue">Plan de prueba</div>
+        <h2>Freemium</h2>
+        <p class="plan-sub">Ideal para conocer la lógica de SonarIA y validar si la herramienta realmente aporta valor a tu contexto docente.</p>
+        <div class="price">$0 <small>/ acceso inicial</small></div>
+        <div class="meta">Incluye una experiencia breve y suficiente para probar la herramienta con criterio.</div>
+        <ul class="features">
+          <li>2 análisis gratuitos por usuario</li>
+          <li>Acceso con Google</li>
+          <li>Historial básico por usuario</li>
+          <li>Sesión protegida por cuenta</li>
+        </ul>
+        <div class="actions">
+          <button class="btn btn-ghost" type="button" onclick="window.location.href='login.html'">Probar SonarIA</button>
+        </div>
+      </article>
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://mejoraria.cl",
-        "https://www.mejoraria.cl",
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+      <article class="card plan featured">
+        <div class="badge orange">Plan recomendado</div>
+        <h2>SonarIA ilimitado</h2>
+        <p class="plan-sub">Pensado para docentes que desean continuidad de uso, análisis sin fricción y una base más estable para planificar repertorio con criterio pedagógico.</p>
+        <div class="price">$5.990 <small>/ mes</small></div>
+        <div class="meta">Plan mensual preparado para conectarse al checkout real.</div>
+        <ul class="features">
+          <li>Análisis ilimitados durante el mes activo</li>
+          <li>Acceso continuo a la herramienta</li>
+          <li>Base lista para activación automática del plan</li>
+          <li>Preparado para checkout real desde backend</li>
+        </ul>
+        <div class="actions">
+          <button class="btn btn-primary" type="button" id="btnCheckout">Pagar con Webpay</button>
+          <button class="btn btn-ghost" type="button" onclick="window.location.href='contacto.html'">Resolver dudas antes de pagar</button>
+        </div>
+        <div class="inline-note" id="checkoutMessage"></div>
+      </article>
+    </section>
 
-# ========================
-# CONFIG
-# ========================
+    <div class="footer">
+      MejorarIA · Plataforma nacida desde el aula
+      <small>Educar es cuidar. Y esa responsabilidad siempre es humana.</small>
+    </div>
+  </div>
 
-GOOGLE_WEB_CLIENT_ID = os.getenv("GOOGLE_WEB_CLIENT_ID", "").strip()
-JWT_SECRET = os.getenv("JWT_SECRET", "CAMBIAR_EN_PRODUCCION")
-JWT_ALGORITHM = "HS256"
-JWT_EXPIRE_HOURS = int(os.getenv("JWT_EXPIRE_HOURS", "24"))
+  <script>
+    const token = localStorage.getItem("mejoraria_token");
+    const userRaw = localStorage.getItem("mejoraria_user");
+    const checkoutMessage = document.getElementById("checkoutMessage");
 
-DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
-BACKEND_VERSION = "sonaria-pro-v9-plan-ready"
+    document.getElementById("btnCheckout").addEventListener("click", function () {
+      if (!token || !userRaw) {
+        window.location.href = "login.html";
+        return;
+      }
 
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL no configurada")
-
-Base = declarative_base()
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-security = HTTPBearer()
-
-# ========================
-# MODELOS
-# ========================
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True)
-    google_sub = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    name = Column(String, default="")
-    picture = Column(Text, default="")
-    session_version = Column(Integer, nullable=False, default=1)
-    plan = Column(String, nullable=False, default="free")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class UserPlan(Base):
-    __tablename__ = "user_plans"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False, index=True)
-    plan_name = Column(String, default="freemium")
-    status = Column(String, default="trial")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class GoogleAuthRequest(BaseModel):
-    credential: str
-
-
-# ========================
-# DB
-# ========================
-
-@contextmanager
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-def ensure_columns():
-    with engine.connect() as conn:
-        try:
-            conn.execute(
-                text("ALTER TABLE users ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 1")
-            )
-            conn.commit()
-        except Exception as e:
-            print("⚠️ session_version:", str(e))
-
-        try:
-            conn.execute(
-                text("ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR NOT NULL DEFAULT 'free'")
-            )
-            conn.commit()
-        except Exception as e:
-            print("⚠️ plan:", str(e))
-
-
-@app.on_event("startup")
-def startup():
-    Base.metadata.create_all(bind=engine)
-    ensure_columns()
-
-
-# ========================
-# AUTH HELPERS
-# ========================
-
-def create_token(user_id: int, email: str, session_version: int) -> str:
-    payload = {
-        "sub": str(user_id),
-        "email": email,
-        "session_version": session_version,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRE_HOURS),
-    }
-    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
-
-
-def verify_google(credential: str):
-    if not GOOGLE_WEB_CLIENT_ID:
-        raise HTTPException(status_code=500, detail="GOOGLE_WEB_CLIENT_ID no configurada")
-
-    try:
-        info = id_token.verify_oauth2_token(
-            credential,
-            google_requests.Request(),
-            GOOGLE_WEB_CLIENT_ID,
-        )
-        return info
-    except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Token Google inválido: {str(e)}")
-
-
-def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    try:
-        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expirado")
-    except Exception:
-        raise HTTPException(status_code=401, detail="No autorizado")
-
-    user_id = payload.get("sub")
-    email = payload.get("email")
-    token_session_version = payload.get("session_version")
-
-    if not user_id or not email or token_session_version is None:
-        raise HTTPException(status_code=401, detail="Token inválido")
-
-    with get_db() as db:
-        user = db.query(User).filter(User.id == int(user_id)).first()
-        if not user:
-            raise HTTPException(status_code=401, detail="Usuario no encontrado")
-
-        if user.session_version != int(token_session_version):
-            raise HTTPException(
-                status_code=401,
-                detail="Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.",
-            )
-
-        return user
-
-
-# ========================
-# ENDPOINTS AUTH
-# ========================
-
-@app.post("/auth/google")
-def auth_google(data: GoogleAuthRequest):
-    info = verify_google(data.credential)
-
-    with get_db() as db:
-        user = db.query(User).filter(User.google_sub == info["sub"]).first()
-
-        if not user:
-            user = db.query(User).filter(User.email == info["email"]).first()
-
-        if not user:
-            user = User(
-                google_sub=info["sub"],
-                email=info["email"],
-                name=info.get("name", ""),
-                picture=info.get("picture", ""),
-                session_version=1,
-                plan="free",
-            )
-            db.add(user)
-            db.commit()
-            db.refresh(user)
-
-            plan = UserPlan(user_id=user.id, plan_name="freemium", status="trial")
-            db.add(plan)
-            db.commit()
-        else:
-            user.google_sub = info["sub"]
-            user.email = info["email"]
-            user.name = info.get("name", user.name or "")
-            user.picture = info.get("picture", user.picture or "")
-            user.session_version = (user.session_version or 0) + 1
-            if not user.plan:
-                user.plan = "free"
-            db.commit()
-            db.refresh(user)
-
-            existing_plan = db.query(UserPlan).filter(UserPlan.user_id == user.id).first()
-            if not existing_plan:
-                plan = UserPlan(user_id=user.id, plan_name="freemium", status="trial")
-                db.add(plan)
-                db.commit()
-
-        token = create_token(user.id, user.email, user.session_version)
-
-        return {
-            "access_token": token,
-            "token_type": "bearer",
-            "message": "Autenticación correcta",
-            "single_session_enabled": True,
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "name": user.name,
-                "picture": user.picture,
-                "plan": user.plan,
-            },
-        }
-
-
-@app.get("/me")
-def me(current_user: User = Depends(get_current_user)):
-    return {
-        "ok": True,
-        "user": {
-            "id": current_user.id,
-            "email": current_user.email,
-            "name": current_user.name,
-            "picture": current_user.picture,
-            "plan": current_user.plan,
-            "session_version": current_user.session_version,
-        },
-        "single_session_enabled": True,
-    }
-
-
-# ============================
-# FIX DB (TEMPORAL)
-# ============================
-
-@app.get("/fix-db")
-def fix_db():
-    try:
-        ensure_columns()
-        return {
-            "ok": True,
-            "message": "Columnas session_version y plan verificadas correctamente",
-        }
-    except Exception as e:
-        return {
-            "ok": False,
-            "error": str(e),
-        }
-
-
-# ========================
-# ROOT
-# ========================
-
-@app.get("/")
-def root():
-    return {
-        "ok": True,
-        "auth_enabled": True,
-        "single_session_enabled": True,
-        "backend_version": BACKEND_VERSION,
-    }
+      checkoutMessage.textContent = "Tu sesión está lista. El siguiente paso será conectar este botón al checkout real de Webpay desde tu backend.";
+    });
+  </script>
+</body>
+</html>
