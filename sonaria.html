@@ -529,18 +529,34 @@ let lastAutoLyrics = "";
 let lastInputWasManual = false;
 
 
+function forceRelogin(message){
+  localStorage.removeItem("mejoraria_user");
+  localStorage.removeItem("mejoraria_token");
+  localStorage.removeItem("mejoraria_plan");
+  localStorage.setItem("mejoraria_logout_message", message || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
+  window.location.href = "login.html";
+}
+
 async function syncSessionWithBackend(){
   try{
     const res = await fetch(API_BASE + "/me", {
       headers: { "Authorization": "Bearer " + authToken }
     });
+
+    if(res.status === 401){
+      const data = await res.json().catch(() => ({}));
+      forceRelogin(data.detail || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
+      return;
+    }
+
     if(!res.ok) throw new Error("Sesión expirada");
+
     const data = await res.json();
     user = data.user || user;
     localStorage.setItem("mejoraria_user", JSON.stringify(user));
     localStorage.setItem("mejoraria_plan", JSON.stringify(data.plan || {}));
-  }catch{
-    logout();
+  }catch(error){
+    forceRelogin(error.message || "Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.");
   }
 }
 
