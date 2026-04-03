@@ -4,299 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso | MejorarIA</title>
-<meta name="description" content="Accede a SonarIA dentro de MejorarIA para probar la herramienta.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#050b14;
-  --bg2:#081224;
-  --text:#f5f7fb;
-  --muted:#9eafc8;
-  --line:rgba(255,255,255,.08);
-  --f1-blue:#3b82f6;
-  --mclaren:#ff8000;
-  --mclaren2:#ff5a00;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  min-height:100vh;
-  background:
-    radial-gradient(circle at top left, rgba(59,130,246,.12), transparent 20%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
-  overflow:hidden;
-}
-.stage{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:1.04fr .96fr;
-  position:relative;
-}
-.bg{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg, rgba(5,11,20,.86) 0%, rgba(5,11,20,.76) 34%, rgba(5,11,20,.58) 55%, rgba(5,11,20,.82) 100%),
-    url('images/sonaria-login-bg.jpg') center center / cover no-repeat;
-  z-index:0;
-}
-.fallback-overlay{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at right center, rgba(255,128,0,.12), transparent 18%),
-    radial-gradient(circle at left top, rgba(59,130,246,.12), transparent 18%);
-  z-index:0;
-}
-.home-link{
-  position:absolute;
-  top:20px;
-  left:20px;
-  z-index:3;
-  text-decoration:none;
-  color:inherit;
-}
-.logo-wrap{display:flex; flex-direction:column; gap:2px}
-.logo{
-  font-size:2.25rem;
-  font-weight:900;
-  letter-spacing:-1.2px;
-  line-height:1;
-  display:flex;
-  gap:6px;
-  align-items:center;
-}
-.logo span{
-  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.logo-sub{
-  color:var(--muted);
-  font-size:.76rem;
-  font-weight:700;
-}
-.left,.right{
-  position:relative;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  padding:52px;
-}
-.left{justify-content:flex-start}
-.right{justify-content:center}
-.copy{
-  max-width:520px;
-  animation:fadeUp .9s ease both;
-}
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 14px;
-  border-radius:999px;
-  background:rgba(59,130,246,.12);
-  border:1px solid rgba(59,130,246,.22);
-  color:#dce8ff;
-  font-size:.84rem;
-  font-weight:800;
-  margin-bottom:14px;
-}
-.copy h1{
-  margin:0 0 12px;
-  font-size:clamp(2.4rem,4vw,3.5rem);
-  line-height:.94;
-  letter-spacing:-.06em;
-}
-.copy p{
-  margin:0 0 12px;
-  color:var(--muted);
-  line-height:1.84;
-  font-size:1.04rem;
-}
-.benefits{display:grid; gap:10px; margin-top:18px}
-.benefit{
-  padding:14px 16px;
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  border:1px solid var(--line);
-}
-.benefit strong{display:block; margin-bottom:4px}
-.panel{
-  width:100%;
-  max-width:420px;
-  padding:26px;
-  border-radius:26px;
-  background:linear-gradient(180deg, rgba(8,18,36,.78), rgba(8,18,36,.68));
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 24px 70px rgba(0,0,0,.40);
-  animation:fadeUp .95s ease both .08s;
-}
-.brand{
-  font-size:2rem;
-  font-weight:900;
-  letter-spacing:-1px;
-  line-height:1;
-  margin-bottom:4px;
-}
-.brand span{
-  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.sub{color:var(--muted); line-height:1.7; margin-bottom:18px}
-.google-btn,.primary-btn{
-  width:100%;
-  min-height:50px;
-  border:none;
-  border-radius:16px;
-  cursor:pointer;
-  font:inherit;
-  font-weight:800;
-}
-.google-btn{
-  background:white;
-  color:#111827;
-  margin-bottom:10px;
-}
-.google-note{
-  color:var(--muted);
-  font-size:.85rem;
-  margin-bottom:14px;
-  text-align:center;
-}
-.divider{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:var(--muted);
-  font-size:.9rem;
-  margin:14px 0;
-}
-.divider::before,.divider::after{
-  content:"";
-  height:1px;
-  flex:1;
-  background:rgba(255,255,255,.10);
-}
-input{
-  width:100%;
-  min-height:48px;
-  padding:12px 14px;
-  margin-bottom:12px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  color:white;
-  font:inherit;
-  outline:none;
-}
-input:focus{
-  border-color:rgba(59,130,246,.32);
-  box-shadow:0 0 0 4px rgba(59,130,246,.10);
-}
-.primary-btn{
-  background:linear-gradient(135deg,var(--mclaren),var(--mclaren2));
-  color:#101418;
-  box-shadow:0 14px 34px rgba(255,128,0,.24);
-}
-.small{
-  text-align:center;
-  font-size:.92rem;
-  color:var(--muted);
-  margin-top:12px;
-  line-height:1.7;
-}
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(24px)}
-  to{opacity:1; transform:translateY(0)}
-}
-@media(max-width:980px){
-  .stage{grid-template-columns:1fr}
-  .left{display:none}
-  .right{padding:24px}
-  .home-link{top:14px; left:14px}
-}
-</style>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 <body>
-  <div class="bg"></div>
-  <div class="fallback-overlay"></div>
 
-  <a href="index.html" class="home-link">
-    <div class="logo-wrap">
-      <div class="logo">Mejorar<span>IA</span></div>
-      <div class="logo-sub">Volver al home</div>
-    </div>
-  </a>
+<h2>Login MejorarIA</h2>
 
-  <div class="stage">
-    <div class="left">
-      <div class="copy">
-        <div class="eyebrow">🎧 Acceso a SonarIA dentro de MejorarIA</div>
-        <h1>Estás a un paso de entrar a SonarIA.</h1>
-        <p>
-          Este acceso existe para que pruebes la herramienta dentro del entorno de MejorarIA.
-          No es un paso innecesario: te permitirá entrar a tu versión de prueba y comenzar a usarla con sentido.
-        </p>
-        <p>
-          Podrás analizar canciones, revisar lenguaje y contenido, y tomar decisiones más seguras para el aula.
-        </p>
+<!-- BOTÓN GOOGLE REAL -->
+<div id="g_id_onload"
+     data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
 
-        <div class="benefits">
-          <div class="benefit">
-            <strong>Prueba antes de decidir</strong>
-            <span style="color:var(--muted); line-height:1.72;">La idea es que puedas experimentar el valor real de la herramienta antes de pensar en compra.</span>
-          </div>
-          <div class="benefit">
-            <strong>Acceso simple y claro</strong>
-            <span style="color:var(--muted); line-height:1.72;">Una vez dentro, entrarás directamente a SonarIA, no a pasos intermedios que compliquen la experiencia.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="right">
-      <div class="panel">
-        <div class="brand">Mejorar<span>IA</span></div>
-        <div class="sub">Ingresa para acceder a SonarIA dentro de la plataforma.</div>
-
-        <button class="google-btn" onclick="loginGoogle()">Continuar con Google</button>
-        <div class="google-note">Recomendado para acceso rápido y seguro</div>
-
-        <div class="divider">o ingresa manualmente</div>
-
-        <input type="email" placeholder="Correo">
-        <input type="password" placeholder="Contraseña">
-
-        <button class="primary-btn" id="loginBtn" onclick="loginManual()">Ingresar</button>
-
-        <div class="small">
-          Entrarás directamente a SonarIA dentro de MejorarIA.
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="continue_with">
+</div>
 
 <script>
-function loginManual(){
-  const btn = document.getElementById("loginBtn");
-  btn.innerText = "Entrando...";
-  setTimeout(()=>{
-    localStorage.setItem("mejoraria_user", "true");
-    localStorage.setItem("sonaria_user", "true");
-    window.location.href = "panel.html";
-  }, 700);
-}
+// Manejar respuesta de Google
+function handleCredentialResponse(response) {
+  const data = parseJwt(response.credential);
 
-function loginGoogle(){
-  localStorage.setItem("mejoraria_user", "true");
-  localStorage.setItem("sonaria_user", "true");
+  localStorage.setItem("mejoraria_user", JSON.stringify(data));
+
   window.location.href = "panel.html";
 }
+
+// Decodificar JWT
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
 </script>
+
 </body>
 </html>
