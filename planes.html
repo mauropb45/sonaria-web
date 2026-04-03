@@ -1,81 +1,291 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planes | MejorarIA</title>
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#07111d;
-  color:white;
-}
-.header{
-  display:flex;
-  justify-content:space-between;
-  padding:20px;
-}
-.logo{
-  font-size:28px;
-  font-weight:bold;
-  cursor:pointer;
-}
-.logo span{color:#19d28d;}
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-.card{
-  background:#0b1627;
-  padding:20px;
-  border-radius:16px;
-  margin-bottom:20px;
-}
-button{
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
-.primary{
-  background:#ff8a00;
-  color:black;
-  font-weight:bold;
-}
-</style>
-</head>
-<body>
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel
+import os
+from datetime import datetime, timedelta, timezone
+from contextlib import contextmanager
 
-<div class="header">
-  <div class="logo" onclick="goHome()">Mejorar<span>IA</span></div>
-</div>
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, func, text
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-<div class="container">
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+import jwt
 
-  <div class="card">
-    <h2>Plan gratuito</h2>
-    <p>2 análisis disponibles</p>
-  </div>
+app = FastAPI(title="SonarIA Pro API")
 
-  <div class="card">
-    <h2>Plan completo</h2>
-    <p>Uso ilimitado de SonarIA</p>
-    <button class="primary" onclick="checkout()">Pagar (próximamente)</button>
-  </div>
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://mejoraria.cl",
+        "https://www.mejoraria.cl",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-</div>
+# ========================
+# CONFIG
+# ========================
 
-<script>
-function goHome(){
-  window.location.href = "index.html";
-}
+GOOGLE_WEB_CLIENT_ID = os.getenv("GOOGLE_WEB_CLIENT_ID", "").strip()
+JWT_SECRET = os.getenv("JWT_SECRET", "CAMBIAR_EN_PRODUCCION")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRE_HOURS = int(os.getenv("JWT_EXPIRE_HOURS", "24"))
 
-function checkout(){
-  alert("Checkout en preparación");
-}
-</script>
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+BACKEND_VERSION = "sonaria-pro-v9-plan-ready"
 
-</body>
-</html>
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL no configurada")
+
+Base = declarative_base()
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+security = HTTPBearer()
+
+# ========================
+# MODELOS
+# ========================
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True)
+    google_sub = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, default="")
+    picture = Column(Text, default="")
+    session_version = Column(Integer, nullable=False, default=1)
+    plan = Column(String, nullable=False, default="free")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class UserPlan(Base):
+    __tablename__ = "user_plans"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, nullable=False, index=True)
+    plan_name = Column(String, default="freemium")
+    status = Column(String, default="trial")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class GoogleAuthRequest(BaseModel):
+    credential: str
+
+
+# ========================
+# DB
+# ========================
+
+@contextmanager
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def ensure_columns():
+    with engine.connect() as conn:
+        try:
+            conn.execute(
+                text("ALTER TABLE users ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 1")
+            )
+            conn.commit()
+        except Exception as e:
+            print("⚠️ session_version:", str(e))
+
+        try:
+            conn.execute(
+                text("ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR NOT NULL DEFAULT 'free'")
+            )
+            conn.commit()
+        except Exception as e:
+            print("⚠️ plan:", str(e))
+
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+    ensure_columns()
+
+
+# ========================
+# AUTH HELPERS
+# ========================
+
+def create_token(user_id: int, email: str, session_version: int) -> str:
+    payload = {
+        "sub": str(user_id),
+        "email": email,
+        "session_version": session_version,
+        "exp": datetime.now(timezone.utc) + timedelta(hours=JWT_EXPIRE_HOURS),
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def verify_google(credential: str):
+    if not GOOGLE_WEB_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="GOOGLE_WEB_CLIENT_ID no configurada")
+
+    try:
+        info = id_token.verify_oauth2_token(
+            credential,
+            google_requests.Request(),
+            GOOGLE_WEB_CLIENT_ID,
+        )
+        return info
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Token Google inválido: {str(e)}")
+
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expirado")
+    except Exception:
+        raise HTTPException(status_code=401, detail="No autorizado")
+
+    user_id = payload.get("sub")
+    email = payload.get("email")
+    token_session_version = payload.get("session_version")
+
+    if not user_id or not email or token_session_version is None:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+    with get_db() as db:
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if not user:
+            raise HTTPException(status_code=401, detail="Usuario no encontrado")
+
+        if user.session_version != int(token_session_version):
+            raise HTTPException(
+                status_code=401,
+                detail="Esta cuenta se inició en otro dispositivo. Para continuar, vuelve a iniciar sesión aquí.",
+            )
+
+        return user
+
+
+# ========================
+# ENDPOINTS AUTH
+# ========================
+
+@app.post("/auth/google")
+def auth_google(data: GoogleAuthRequest):
+    info = verify_google(data.credential)
+
+    with get_db() as db:
+        user = db.query(User).filter(User.google_sub == info["sub"]).first()
+
+        if not user:
+            user = db.query(User).filter(User.email == info["email"]).first()
+
+        if not user:
+            user = User(
+                google_sub=info["sub"],
+                email=info["email"],
+                name=info.get("name", ""),
+                picture=info.get("picture", ""),
+                session_version=1,
+                plan="free",
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+            plan = UserPlan(user_id=user.id, plan_name="freemium", status="trial")
+            db.add(plan)
+            db.commit()
+        else:
+            user.google_sub = info["sub"]
+            user.email = info["email"]
+            user.name = info.get("name", user.name or "")
+            user.picture = info.get("picture", user.picture or "")
+            user.session_version = (user.session_version or 0) + 1
+            if not user.plan:
+                user.plan = "free"
+            db.commit()
+            db.refresh(user)
+
+            existing_plan = db.query(UserPlan).filter(UserPlan.user_id == user.id).first()
+            if not existing_plan:
+                plan = UserPlan(user_id=user.id, plan_name="freemium", status="trial")
+                db.add(plan)
+                db.commit()
+
+        token = create_token(user.id, user.email, user.session_version)
+
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "message": "Autenticación correcta",
+            "single_session_enabled": True,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "name": user.name,
+                "picture": user.picture,
+                "plan": user.plan,
+            },
+        }
+
+
+@app.get("/me")
+def me(current_user: User = Depends(get_current_user)):
+    return {
+        "ok": True,
+        "user": {
+            "id": current_user.id,
+            "email": current_user.email,
+            "name": current_user.name,
+            "picture": current_user.picture,
+            "plan": current_user.plan,
+            "session_version": current_user.session_version,
+        },
+        "single_session_enabled": True,
+    }
+
+
+# ============================
+# FIX DB (TEMPORAL)
+# ============================
+
+@app.get("/fix-db")
+def fix_db():
+    try:
+        ensure_columns()
+        return {
+            "ok": True,
+            "message": "Columnas session_version y plan verificadas correctamente",
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "error": str(e),
+        }
+
+
+# ========================
+# ROOT
+# ========================
+
+@app.get("/")
+def root():
+    return {
+        "ok": True,
+        "auth_enabled": True,
+        "single_session_enabled": True,
+        "backend_version": BACKEND_VERSION,
+    }
