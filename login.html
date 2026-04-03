@@ -4,16 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Acceso | MejorarIA</title>
-
-<!-- Google Identity Services -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 </head>
 <body>
 
 <h2>Login MejorarIA</h2>
 
-<!-- CONFIGURACIÓN GOOGLE -->
 <div id="g_id_onload"
      data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
      data-callback="handleCredentialResponse">
@@ -29,22 +25,23 @@
 </div>
 
 <script>
-// Manejar respuesta de Google
 function handleCredentialResponse(response) {
   const data = parseJwt(response.credential);
-
   localStorage.setItem("mejoraria_user", JSON.stringify(data));
-
-  window.location.href = "panel.html";
+  window.location.href = "sonaria.html";
 }
 
-// Decodificar JWT
 function parseJwt(token) {
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
 
   return JSON.parse(jsonPayload);
 }
