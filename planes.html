@@ -2,86 +2,48 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planes | SonarIA</title>
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #0f172a;
+      background: #071a44;
       color: white;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 900px;
-      margin: 40px auto;
+      max-width: 980px;
+      margin: 60px auto;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
+      font-size: 54px;
       margin-bottom: 30px;
     }
 
-    .plans {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .card {
-      background: #111827;
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid #334155;
-    }
-
-    .card h2 {
-      margin-top: 0;
-    }
-
-    .price {
-      font-size: 28px;
-      margin: 12px 0;
-    }
-
-    .features {
-      margin: 16px 0;
-      color: #94a3b8;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .free {
-      background: #334155;
-      color: white;
-    }
-
-    .pro {
-      background: #22c55e;
-      color: white;
-    }
-
-    .disabled {
-      background: #475569 !important;
-      cursor: not-allowed;
+    .user {
+      text-align: center;
+      color: #b8c4d9;
+      margin-bottom: 20px;
+      font-size: 18px;
     }
 
     .status {
-      margin-bottom: 20px;
-      padding: 14px;
-      border-radius: 10px;
       display: none;
+      margin: 0 auto 24px auto;
+      max-width: 760px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-sizing: border-box;
     }
 
     .status.show {
@@ -98,63 +60,215 @@
       color: #991b1b;
     }
 
-    .user {
+    .status.info {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(5, 18, 50, 0.75);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      padding: 28px;
+      box-sizing: border-box;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 28px;
       margin-bottom: 20px;
+    }
+
+    .price {
+      font-size: 52px;
+      font-weight: bold;
+      margin: 16px 0;
+    }
+
+    .price small {
+      font-size: 28px;
+      font-weight: normal;
+    }
+
+    .features {
+      color: #b8c4d9;
+      font-size: 18px;
+      margin: 24px 0 28px 0;
+      line-height: 1.45;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-free {
+      background: #3d4c67;
+      color: white;
+      cursor: default;
+    }
+
+    .btn-pro {
+      background: #28c45a;
+      color: white;
+    }
+
+    .btn-pro:disabled {
+      background: #5a6b87;
+      cursor: not-allowed;
+    }
+
+    .debug {
       text-align: center;
-      color: #94a3b8;
+      color: #8ea0bf;
+      margin-top: 20px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 800px) {
+      h1 {
+        font-size: 38px;
+      }
+
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .price {
+        font-size: 42px;
+      }
     }
   </style>
 </head>
-
 <body>
   <div class="container">
     <h1>Planes SonarIA</h1>
 
-    <div id="userInfo" class="user"></div>
-
-    <div id="resultadoPago" class="status"></div>
+    <div id="userInfo" class="user">Cargando sesión...</div>
+    <div id="statusBox" class="status"></div>
 
     <div class="plans">
-
-      <!-- FREE -->
       <div class="card">
         <h2>Free</h2>
         <div class="price">$0</div>
         <div class="features">
           • 2 análisis<br>
-          • Acceso básico<br>
+          • Acceso básico
         </div>
-        <button class="free" disabled>Plan actual</button>
+        <button class="btn-free" type="button">Plan actual</button>
       </div>
 
-      <!-- PRO -->
       <div class="card">
         <h2>Pro</h2>
-        <div class="price">$5.990 CLP</div>
+        <div class="price">$5.990 <small>CLP</small></div>
         <div class="features">
           • Análisis ilimitado<br>
-          • Funciones avanzadas<br>
+          • Funciones avanzadas
         </div>
-        <button id="btnPro" class="pro">Contratar Pro</button>
+        <button id="btnPro" class="btn-pro" type="button">Contratar Pro</button>
       </div>
-
     </div>
+
+    <div id="debugBox" class="debug"></div>
   </div>
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-
     const btnPro = document.getElementById("btnPro");
     const userInfo = document.getElementById("userInfo");
-    const resultadoPago = document.getElementById("resultadoPago");
+    const statusBox = document.getElementById("statusBox");
+    const debugBox = document.getElementById("debugBox");
 
-    function getToken() {
-      return localStorage.getItem("token") || localStorage.getItem("access_token");
+    function showStatus(message, type) {
+      statusBox.className = "status show " + type;
+      statusBox.textContent = message;
     }
 
-    function showMessage(msg, type) {
-      resultadoPago.className = "status show " + type;
-      resultadoPago.textContent = msg;
+    function setDebug(message) {
+      debugBox.textContent = message || "";
+    }
+
+    function getToken() {
+      const possibleKeys = [
+        "token",
+        "access_token",
+        "jwt",
+        "jwt_token",
+        "auth_token",
+        "sonaria_token"
+      ];
+
+      for (const key of possibleKeys) {
+        const value = localStorage.getItem(key);
+        if (value) return value;
+      }
+
+      return null;
+    }
+
+    async function loadUser() {
+      const token = getToken();
+
+      if (!token) {
+        userInfo.textContent = "No has iniciado sesión";
+        btnPro.disabled = true;
+        showStatus("No se encontró token en localStorage. Debes iniciar sesión otra vez.", "error");
+        setDebug("Token no encontrado en localStorage");
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + "/me", {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          userInfo.textContent = "Sesión no válida";
+          btnPro.disabled = true;
+          showStatus(data.detail || "Tu sesión no es válida. Vuelve a iniciar sesión.", "error");
+          setDebug("Respuesta /me no OK");
+          return;
+        }
+
+        const user = data.user;
+        const plan = (user.subscription && user.subscription.plan) ? user.subscription.plan : user.plan;
+
+        userInfo.textContent = user.email + " | Plan: " + plan;
+        setDebug("Sesión cargada correctamente");
+
+        if (plan === "pro") {
+          btnPro.textContent = "Ya eres Pro";
+          btnPro.disabled = true;
+        } else {
+          btnPro.textContent = "Contratar Pro";
+          btnPro.disabled = false;
+        }
+
+      } catch (error) {
+        userInfo.textContent = "Error de conexión";
+        btnPro.disabled = true;
+        showStatus("No se pudo conectar con el backend.", "error");
+        setDebug("Error al llamar /me");
+      }
     }
 
     function handlePaymentResult() {
@@ -164,47 +278,9 @@
       if (!pago) return;
 
       if (pago === "ok") {
-        showMessage("Pago aprobado. Tu plan Pro ya está activo.", "ok");
+        showStatus("Pago aprobado. Tu plan Pro ya fue activado.", "ok");
       } else if (pago === "error") {
-        showMessage("El pago no se pudo completar.", "error");
-      }
-    }
-
-    async function loadUser() {
-      const token = getToken();
-
-      if (!token) {
-        userInfo.textContent = "No has iniciado sesión";
-        btnPro.disabled = true;
-        return;
-      }
-
-      try {
-        const res = await fetch(API_BASE + "/me", {
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          userInfo.textContent = "Error al cargar usuario";
-          return;
-        }
-
-        const user = data.user;
-
-        userInfo.textContent = user.email + " | Plan: " + user.plan;
-
-        if (user.plan === "pro") {
-          btnPro.textContent = "Ya eres Pro";
-          btnPro.classList.add("disabled");
-          btnPro.disabled = true;
-        }
-
-      } catch (err) {
-        userInfo.textContent = "Error de conexión";
+        showStatus("El pago fue rechazado o no pudo completarse.", "error");
       }
     }
 
@@ -212,13 +288,13 @@
       const token = getToken();
 
       if (!token) {
-        alert("Debes iniciar sesión");
+        showStatus("Debes iniciar sesión antes de contratar Pro.", "error");
         return;
       }
 
       try {
         btnPro.disabled = true;
-        btnPro.textContent = "Cargando...";
+        btnPro.textContent = "Creando checkout...";
 
         const res = await fetch(API_BASE + "/payments/create-checkout", {
           method: "POST",
@@ -231,18 +307,29 @@
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.detail || "Error al iniciar pago");
+          showStatus(data.detail || "No se pudo iniciar el checkout.", "error");
           btnPro.disabled = false;
           btnPro.textContent = "Contratar Pro";
+          setDebug("Error al crear checkout");
           return;
         }
 
+        if (!data.checkout_url || !data.order_id) {
+          showStatus("El checkout no devolvió order_id o checkout_url.", "error");
+          btnPro.disabled = false;
+          btnPro.textContent = "Contratar Pro";
+          setDebug("Respuesta incompleta de /payments/create-checkout");
+          return;
+        }
+
+        sessionStorage.setItem("last_order_id", data.order_id);
         window.location.href = data.checkout_url;
 
-      } catch (err) {
-        alert("Error de conexión");
+      } catch (error) {
+        showStatus("No se pudo conectar con el backend.", "error");
         btnPro.disabled = false;
         btnPro.textContent = "Contratar Pro";
+        setDebug("Error de red al crear checkout");
       }
     }
 
