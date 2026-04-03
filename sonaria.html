@@ -170,6 +170,83 @@
       .summary{grid-template-columns:1fr}
       .icon{width:72px; height:72px; border-radius:20px}
     }
+  
+    .user-strip{
+      display:grid; grid-template-columns:1.2fr .8fr; gap:18px; margin-bottom:18px;
+    }
+    .user-box{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
+      padding:16px 18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+    }
+    .user-meta{display:flex; gap:14px; align-items:flex-start}
+    .avatar{
+      width:54px; height:54px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+      background:rgba(25,210,141,.12); border:1px solid rgba(25,210,141,.22); font-size:1.35rem; font-weight:900;
+    }
+    .user-name{font-size:1.02rem; font-weight:800}
+    .user-email{color:var(--muted); font-size:.92rem; margin-top:3px}
+    .trial-copy{margin-top:6px; color:#dce8ff; line-height:1.65}
+    .trial-mini{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    }
+    .trial-pill,.history-tag{
+      display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px;
+      font-size:.83rem; font-weight:800; border:1px solid var(--line);
+    }
+    .trial-pill.info{background:rgba(75,130,255,.11); color:#dce8ff; border-color:rgba(75,130,255,.22)}
+    .trial-pill.success{background:rgba(25,210,141,.11); color:#d9fff0; border-color:rgba(25,210,141,.22)}
+    .trial-pill.warn{background:rgba(255,138,0,.11); color:#ffe0bf; border-color:rgba(255,138,0,.22)}
+    .upgrade-box{
+      display:grid; gap:10px; align-content:start;
+    }
+    .upgrade-box h3{margin:0; font-size:1.08rem}
+    .upgrade-box p{margin:0; color:var(--muted); line-height:1.65}
+    .history-list{display:grid; gap:10px}
+    .history-item{
+      display:grid; gap:6px; padding:12px 13px; border-radius:16px;
+      background:var(--panel2); border:1px solid var(--line); cursor:pointer;
+    }
+    .history-item:hover{border-color:rgba(75,130,255,.28)}
+    .history-item strong{font-size:.95rem}
+    .history-item span{color:var(--muted); font-size:.88rem; line-height:1.5}
+    .history-item .history-row{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .history-empty{color:var(--muted); line-height:1.7}
+    .principle-banner{
+      margin:18px 0;
+      padding:18px 20px;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(75,130,255,.10), rgba(25,210,141,.08));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:var(--shadow);
+    }
+    .principle-banner strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:1rem;
+      color:#eef7ff;
+    }
+    .principle-banner p{
+      margin:0;
+      color:#dbe8f8;
+      line-height:1.7;
+    }
+    .legal-note{
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      color:#cdd9ea;
+      line-height:1.68;
+      font-size:.95rem;
+    }
+    .legal-note strong{color:#f3f7fc}
+    @media (max-width:1180px){.user-strip{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -181,6 +258,38 @@
     </a>
     <button class="logout" onclick="logout()">Cerrar sesión</button>
   </div>
+
+
+  <section class="user-strip">
+    <div class="user-box">
+      <div class="user-meta">
+        <div class="avatar" id="userAvatar">🎵</div>
+        <div>
+          <div class="user-name" id="userName">Docente</div>
+          <div class="user-email" id="userEmail">—</div>
+          <div class="trial-copy" id="trialCopy">Cargando estado de tu acceso…</div>
+        </div>
+      </div>
+      <div class="trial-mini">
+        <div class="trial-pill info" id="trialPlan">Plan prueba</div>
+        <div class="trial-pill success" id="trialCounter">0 de 2 disponibles</div>
+      </div>
+    </div>
+
+    <div class="user-box upgrade-box">
+      <h3>Tu espacio docente</h3>
+      <p id="upgradeCopy">Aquí verás tu progreso, tu historial reciente y el estado de tu prueba.</p>
+      <div class="trial-mini">
+        <button class="btn ghost small" type="button" id="btnHistorial">🕘 Ver historial</button>
+        <button class="btn ghost small" type="button" id="btnUpgrade">✨ Desbloquear versión completa</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="principle-banner">
+    <strong>La IA acompaña. Educar es cuidar.</strong>
+    <p>La responsabilidad de educar y proteger a los estudiantes es siempre humana. Este análisis busca orientar decisiones pedagógicas, pero cada resultado debe ser revisado por el docente antes de su uso con estudiantes.</p>
+  </section>
 
   <section class="layout">
     <aside class="card panel stack">
@@ -256,6 +365,14 @@
         </div>
       </section>
 
+
+      <section class="card panel">
+        <div class="box">
+          <h4>Historial reciente</h4>
+          <div id="historyList" class="history-list"><div class="history-empty">Todavía no has realizado análisis.</div></div>
+        </div>
+      </section>
+
       <section class="grid-two">
         <section class="card panel">
           <div class="stack-tight">
@@ -295,6 +412,11 @@
     </main>
   </section>
 
+  <div class="legal-note">
+    <strong>Uso responsable de SonarIA</strong><br>
+    SonarIA entrega orientación pedagógica basada en inteligencia artificial. Sus resultados no reemplazan el criterio profesional docente ni la responsabilidad de la escuela como garante del bienestar y la seguridad de los estudiantes.
+  </div>
+
   <div class="footer">MauRock · Mauricio José Pinto Basso</div>
 </div>
 
@@ -320,9 +442,17 @@
 
 <script>
 const API_URL = "https://sonaria-api.onrender.com/analizar";
-const user = localStorage.getItem("sonaria_user");
-if (!user) window.location.href = "login.html";
-function logout(){ localStorage.removeItem("sonaria_user"); window.location.href = "login.html"; }
+const authUserRaw = localStorage.getItem("mejoraria_user");
+if (!authUserRaw) window.location.href = "login.html";
+const user = JSON.parse(authUserRaw || "{}");
+const MAX_ANALISIS_GRATIS = 2;
+const userKey = user.email || user.sub || "usuario_demo";
+const usageKey = `sonaria_usage_${userKey}`;
+const historyKey = `sonaria_history_${userKey}`;
+function logout(){
+  localStorage.removeItem("mejoraria_user");
+  window.location.href = "login.html";
+}
 
 const MINEDUC_DB = {
   "1° básico":[{oa:"OA 1",text:"Expresar sensaciones, emociones e ideas al escuchar música."}],
@@ -379,12 +509,169 @@ const modalTitle = document.getElementById("modalTitle");
 const modalBody = document.getElementById("modalBody");
 const coursesBackdrop = document.getElementById("coursesBackdrop");
 const coursesGrid = document.getElementById("coursesGrid");
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+const userAvatar = document.getElementById("userAvatar");
+const trialCopy = document.getElementById("trialCopy");
+const trialPlan = document.getElementById("trialPlan");
+const trialCounter = document.getElementById("trialCounter");
+const upgradeCopy = document.getElementById("upgradeCopy");
+const historyList = document.getElementById("historyList");
 
 let lastAnalysis = null;
 let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || "[]");
 let lastSearchSignature = "";
 let lastAutoLyrics = "";
 let lastInputWasManual = false;
+
+
+function getUsage(){
+  const value = parseInt(localStorage.getItem(usageKey) || "0", 10);
+  return Number.isNaN(value) ? 0 : value;
+}
+function setUsage(value){
+  localStorage.setItem(usageKey, String(Math.max(0, value)));
+}
+function getRemainingUsage(){ return Math.max(0, MAX_ANALISIS_GRATIS - getUsage()); }
+function getHistory(){
+  try{
+    const arr = JSON.parse(localStorage.getItem(historyKey) || "[]");
+    return Array.isArray(arr) ? arr : [];
+  }catch{
+    return [];
+  }
+}
+function saveHistoryItem(item){
+  const prev = getHistory();
+  const next = [item, ...prev].slice(0, 8);
+  localStorage.setItem(historyKey, JSON.stringify(next));
+}
+function formatDateTime(value){
+  try{
+    return new Date(value).toLocaleString("es-CL", { dateStyle:"short", timeStyle:"short" });
+  }catch{
+    return value || "";
+  }
+}
+function updateUserPanel(){
+  const remaining = getRemainingUsage();
+  const used = getUsage();
+  const displayName = user.name || user.given_name || "Docente";
+  userName.textContent = displayName;
+  userEmail.textContent = user.email || "Acceso autenticado";
+  userAvatar.textContent = String(displayName).trim().charAt(0).toUpperCase() || "D";
+  trialPlan.textContent = "Plan prueba";
+  trialCounter.className = "trial-pill " + (remaining > 0 ? "success" : "warn");
+  trialCounter.textContent = `${remaining} de ${MAX_ANALISIS_GRATIS} disponibles`;
+  if(remaining > 0){
+    trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya usaste <strong>${used}</strong> de <strong>${MAX_ANALISIS_GRATIS}</strong> análisis gratuitos.`;
+    upgradeCopy.textContent = "Tu historial reciente se guarda por usuario para ayudarte a decidir con más claridad pedagógica.";
+  }else{
+    trialCopy.innerHTML = `Hola, <strong>${escapeHtml(displayName)}</strong>. Ya ocupaste tus <strong>${MAX_ANALISIS_GRATIS}</strong> análisis gratuitos de prueba.`;
+    upgradeCopy.textContent = "Ya probaste SonarIA en condiciones reales. El siguiente paso natural es desbloquear una versión más amplia con continuidad de uso.";
+  }
+}
+function renderHistory(){
+  const items = getHistory();
+  historyList.innerHTML = "";
+  if(!items.length){
+    historyList.innerHTML = '<div class="history-empty">Todavía no has realizado análisis.</div>';
+    return;
+  }
+  items.forEach((item, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "history-item";
+    button.dataset.index = String(index);
+    button.innerHTML = `
+      <div class="history-row">
+        <strong>${escapeHtml(item.titulo || "Canción sin título")}</strong>
+        <span class="history-tag">${escapeHtml(item.badge || "Análisis")}</span>
+      </div>
+      <span>${escapeHtml(item.artista || "Artista no indicado")}</span>
+      <span>${escapeHtml(formatDateTime(item.fecha))}</span>
+    `;
+    button.addEventListener("click", () => openHistoryDetail(index));
+    historyList.appendChild(button);
+  });
+}
+function openHistoryDetail(index){
+  const item = getHistory()[index];
+  if(!item) return;
+  openModal("Historial de análisis", `
+    <div class="modal-grid">
+      <div class="modal-panel">
+        <strong>Canción</strong>
+        <pre>${escapeHtml((item.titulo || "Sin título") + " · " + (item.artista || "Artista no indicado"))}</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Resultado</strong>
+        <pre>${escapeHtml(item.resultado || "Sin resultado")}</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Resumen</strong>
+        <pre>${escapeHtml(item.resumen || "Sin resumen")}</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Fecha</strong>
+        <pre>${escapeHtml(formatDateTime(item.fecha))}</pre>
+      </div>
+    </div>
+  `);
+}
+function openUpgradeModal(){
+  const remaining = getRemainingUsage();
+  openModal("Versión completa de SonarIA", `
+    <div class="modal-grid">
+      <div class="modal-panel">
+        <strong>Estado actual</strong>
+        <pre>${escapeHtml(`Te quedan ${remaining} análisis gratuitos de un total de ${MAX_ANALISIS_GRATIS}.`)}</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Siguiente paso sugerido</strong>
+        <pre>Desbloquear una versión continua de SonarIA con más análisis, seguimiento de uso e historial docente.</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Propuesta de valor</strong>
+        <pre>• Más continuidad de uso
+• Historial por usuario
+• Base para futuras herramientas de MejorarIA
+• Experiencia más ordenada para decisiones pedagógicas</pre>
+      </div>
+      <div class="modal-panel">
+        <strong>Implementación simple</strong>
+        <pre>Ya puedes continuar desde la página de planes para conocer la versión completa y dejar preparado el pago mensual.</pre>
+      </div>
+    </div>
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn primary small" type="button" onclick="window.location.href='planes.html'">Ir a planes</button>
+      <button class="btn ghost small" type="button" onclick="window.location.href='contacto.html'">Hablar con nosotros</button>
+    </div>
+  `);
+}
+function canRunAnalysis(showMessage = true){
+  const remaining = getRemainingUsage();
+  if(remaining > 0) return true;
+  if(showMessage){
+    setStatus("Ya utilizaste tus 2 análisis gratuitos de prueba.", "error");
+    openUpgradeModal();
+  }
+  return false;
+}
+function registerSuccessfulAnalysis(raw){
+  setUsage(getUsage() + 1);
+  const normalized = normalizeApiData(raw);
+  saveHistoryItem({
+    titulo: tituloInput.value.trim(),
+    artista: artistaInput.value.trim(),
+    resultado: normalized.clasificacion,
+    resumen: normalized.resumen,
+    badge: normalized.clasificacion?.includes("Apta") ? "Apta" : (normalized.clasificacion?.includes("No") ? "No apta" : "Revisión"),
+    fecha: new Date().toISOString()
+  });
+  updateUserPanel();
+  renderHistory();
+}
 
 function buildSignature(t,a){return `${String(t||"").trim().toLowerCase()}::${String(a||"").trim().toLowerCase()}`;}
 function setStatus(msg,type){ statusBox.textContent = msg; statusBox.className = "status show " + type; }
@@ -542,6 +829,18 @@ document.getElementById("btnTraducir").addEventListener("click", async () => {
   const tr = await translateText(lyrics);
   document.getElementById("translatedPanel").innerHTML = `<strong>Español</strong><pre>${escapeHtml(tr || "No fue posible traducir.")}</pre>`;
 });
+document.getElementById("btnHistorial").addEventListener("click", () => {
+  const items = getHistory();
+  if(!items.length){
+    setStatus("Todavía no tienes análisis guardados en tu historial.", "error");
+    return;
+  }
+  openHistoryDetail(0);
+});
+document.getElementById("btnUpgrade").addEventListener("click", () => {
+  window.location.href = "planes.html";
+});
+
 
 function render(raw){
   const data = normalizeApiData(raw);
@@ -647,6 +946,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   try{
+    if(!canRunAnalysis(true)) return;
     setStatus("Analizando canción...", "loading");
     const data = await runAnalysis(payload);
     const normalized = normalizeApiData(data);
@@ -660,6 +960,7 @@ form.addEventListener("submit", async (e) => {
 
     lastSearchSignature = signature;
     render(data);
+    registerSuccessfulAnalysis(data);
     setStatus("Análisis listo", "success");
   }catch(err){
     console.error(err);
@@ -668,6 +969,8 @@ form.addEventListener("submit", async (e) => {
 });
 
 updateCoursesText();
+updateUserPanel();
+renderHistory();
 resetView();
 </script>
 </body>
