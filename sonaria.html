@@ -441,16 +441,20 @@
 </div>
 
 <script>
-const API_URL = "https://sonaria-api.onrender.com/analizar";
+const API_BASE = "https://sonaria-api.onrender.com";
+const API_URL = API_BASE + "/analizar";
 const authUserRaw = localStorage.getItem("mejoraria_user");
-if (!authUserRaw) window.location.href = "login.html";
-const user = JSON.parse(authUserRaw || "{}");
+const authToken = localStorage.getItem("mejoraria_token");
+if (!authUserRaw || !authToken) window.location.href = "login.html";
+let user = JSON.parse(authUserRaw || "{}");
 const MAX_ANALISIS_GRATIS = 2;
 const userKey = user.email || user.sub || "usuario_demo";
 const usageKey = `sonaria_usage_${userKey}`;
 const historyKey = `sonaria_history_${userKey}`;
 function logout(){
   localStorage.removeItem("mejoraria_user");
+  localStorage.removeItem("mejoraria_token");
+  localStorage.removeItem("mejoraria_plan");
   window.location.href = "login.html";
 }
 
@@ -524,6 +528,21 @@ let lastSearchSignature = "";
 let lastAutoLyrics = "";
 let lastInputWasManual = false;
 
+
+async function syncSessionWithBackend(){
+  try{
+    const res = await fetch(API_BASE + "/me", {
+      headers: { "Authorization": "Bearer " + authToken }
+    });
+    if(!res.ok) throw new Error("Sesión expirada");
+    const data = await res.json();
+    user = data.user || user;
+    localStorage.setItem("mejoraria_user", JSON.stringify(user));
+    localStorage.setItem("mejoraria_plan", JSON.stringify(data.plan || {}));
+  }catch{
+    logout();
+  }
+}
 
 function getUsage(){
   const value = parseInt(localStorage.getItem(usageKey) || "0", 10);
