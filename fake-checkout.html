@@ -14,12 +14,29 @@
       background: #071a44;
       color: white;
       margin: 0;
-      padding: 0;
+    }
+
+    .topbar {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 20px 28px 0 28px;
+    }
+
+    .brand-link {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      display: block;
+      width: 320px;
+      max-width: 70vw;
+      height: auto;
     }
 
     .wrap {
       max-width: 760px;
-      margin: 60px auto;
+      margin: 24px auto 60px auto;
       padding: 20px;
       box-sizing: border-box;
     }
@@ -116,14 +133,16 @@
       color: #166534;
     }
 
-    .debug {
-      color: #8ea0bf;
-      margin-top: 18px;
-      font-size: 13px;
-      opacity: 0.8;
-    }
-
     @media (max-width: 800px) {
+      .topbar {
+        padding: 16px 18px 0 18px;
+      }
+
+      .brand-logo {
+        width: 220px;
+        max-width: 78vw;
+      }
+
       h1 {
         font-size: 36px;
       }
@@ -131,6 +150,12 @@
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <a href="index.html" class="brand-link" aria-label="Volver al inicio">
+      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
+    </a>
+  </div>
+
   <div class="wrap">
     <div class="panel">
       <h1>Checkout simulado SonarIA Pro</h1>
@@ -149,17 +174,15 @@
       </div>
 
       <div id="statusBox" class="status"></div>
-      <div id="debugBox" class="debug"></div>
     </div>
   </div>
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const PLANES_URL = "https://mejoraria.cl/planes.html";
+    const PLANES_URL = "planes.html";
 
     const orderEl = document.getElementById("orderId");
     const statusBox = document.getElementById("statusBox");
-    const debugBox = document.getElementById("debugBox");
     const btnApprove = document.getElementById("btnApprove");
     const btnReject = document.getElementById("btnReject");
     const btnBack = document.getElementById("btnBack");
@@ -169,33 +192,18 @@
       statusBox.textContent = message;
     }
 
-    function setDebug(message) {
-      debugBox.textContent = message || "";
-    }
-
     function getToken() {
-      const possibleKeys = [
-        "token",
-        "access_token",
-        "jwt",
-        "jwt_token",
-        "auth_token",
-        "sonaria_token"
-      ];
-
-      for (const key of possibleKeys) {
-        const value = localStorage.getItem(key);
-        if (value) return value;
-      }
-
-      return null;
+      return (
+        localStorage.getItem("mejoraria_token") ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("access_token")
+      );
     }
 
     function getOrderId() {
       const params = new URLSearchParams(window.location.search);
       const fromUrl = params.get("order_id");
       const fromSession = sessionStorage.getItem("last_order_id");
-
       return fromUrl || fromSession || null;
     }
 
@@ -209,14 +217,12 @@
       showStatus("No llegó order_id. Debes volver a planes y crear el checkout desde ahí.", "error");
       btnApprove.disabled = true;
       btnReject.disabled = true;
-      setDebug("No llegó order_id por URL ni por sessionStorage");
     }
 
     if (!token) {
       showStatus("No hay sesión iniciada. Debes volver a iniciar sesión.", "error");
       btnApprove.disabled = true;
       btnReject.disabled = true;
-      setDebug("No se encontró token en localStorage");
     }
 
     async function postAction(url) {
@@ -250,7 +256,6 @@
           showStatus(data.detail || "No se pudo procesar el pago.", "error");
           btnApprove.disabled = false;
           btnReject.disabled = false;
-          setDebug("Respuesta no OK al confirmar/fallar pago");
           return;
         }
 
@@ -270,7 +275,6 @@
         showStatus("No se pudo conectar con el backend.", "error");
         btnApprove.disabled = false;
         btnReject.disabled = false;
-        setDebug("Error de red al llamar al backend");
       }
     }
 
