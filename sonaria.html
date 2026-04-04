@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -669,7 +668,7 @@
       .hero-main,.hero-side,.panel,.results,.promo{ padding:20px; }
       .two,.metrics{ grid-template-columns:1fr; }
       .user-strip{ align-items:flex-start; }
-      h1{ font-size:2.25rem; }
+      .hero h1{ font-size:2.25rem; }
     }
   </style>
 </head>
@@ -773,7 +772,7 @@
           </div>
 
           <div class="hint-bar">
-            El plan gratuito muestra una experiencia base útil y limitada. La idea es que pruebes SonarIA, entiendas su valor y luego decidas si quieres avanzar.
+            Enter analiza desde los campos de título y artista. En la caja de letra puedes usar <strong>Ctrl/Cmd + Enter</strong>.
           </div>
 
           <div id="statusBox" class="status"></div>
@@ -874,7 +873,7 @@
 
       <div class="promo-actions">
         <button class="btn btn-primary" onclick="window.location.href='/planes.html'">Ir a planes</button>
-        <button class="btn btn-ghost" onclick="showProOverlay('Desbloquea la versión completa','Pasa de la experiencia base a SonarIA Pro y deja tu cuenta lista para un uso más potente y continuo.')">Ver upgrade</button>
+        <button class="btn btn-ghost" onclick="showProOverlay('Desbloquea la versión completa','Pasa de la experiencia base a una experiencia más completa dentro de SonarIA.')">Ver upgrade</button>
       </div>
     </section>
 
@@ -1026,7 +1025,7 @@
 
         USER = data.user;
 
-        document.getElementById("userName").textContent = USER.email || "Usuario";
+        userName.textContent = USER.email || "Usuario";
         if(USER.picture){
           userAvatar.innerHTML = '<img src="' + USER.picture + '" alt="avatar">';
         }else{
@@ -1171,6 +1170,11 @@
         return;
       }
 
+      if(!texto.value.trim() && buscarLetra.checked && !titulo.value.trim()){
+        setStatus("Para buscar la letra automáticamente, ingresa al menos el título de la canción.", "error");
+        return;
+      }
+
       if((USER.plan || "free") !== "pro" && usos >= DEMO_LIMIT){
         setStatus("Ya viste el potencial. Desbloquea Pro para seguir 🚀", "error");
         showProOverlay(
@@ -1188,7 +1192,12 @@
         contexto_escolar: contextoEscolar.checked
       };
 
-      setStatus("Analizando canción...", "info");
+      if (!texto.value.trim() && buscarLetra.checked) {
+        setStatus("Buscando letra y preparando análisis...", "info");
+      } else {
+        setStatus("Analizando canción...", "info");
+      }
+
       analyzeBtn.disabled = true;
       analyzeBtn.textContent = "Analizando...";
 
@@ -1260,9 +1269,22 @@
       );
     });
 
+    document.addEventListener("keydown", (e) => {
+      const isTextarea = document.activeElement === texto;
+
+      if (!isTextarea && e.key === "Enter") {
+        e.preventDefault();
+        analizar();
+      }
+
+      if (isTextarea && e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        analizar();
+      }
+    });
+
     resetResult();
     loadUser();
   </script>
 </body>
 </html>
-```
