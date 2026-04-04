@@ -17,7 +17,6 @@
   --text:#f5f7fb;
   --muted:#9fb0c7;
 
-  --orange:#ff8a00;
   --green:#22c55e;
 }
 
@@ -44,11 +43,6 @@ body{
 
 h1{
   font-size:2.5rem;
-  margin-bottom:10px;
-}
-
-p{
-  color:var(--muted);
 }
 
 .plans{
@@ -84,7 +78,6 @@ button{
   margin-top:10px;
   font-weight:bold;
 }
-
 </style>
 
 </head>
@@ -95,13 +88,8 @@ button{
 
   <div class="card">
     <h1>Planes SonarIA</h1>
-    <p>Empieza gratis y desbloquea funciones avanzadas.</p>
-
-```
-<div id="userInfo">Cargando usuario...</div>
-<div id="status" class="status"></div>
-```
-
+    <p id="userInfo">Cargando usuario...</p>
+    <div id="status" class="status"></div>
   </div>
 
   <div class="plans">
@@ -110,7 +98,7 @@ button{
 <div class="plan">
   <h2>Free</h2>
   <div class="price">$0</div>
-  <p>Uso básico para probar la herramienta.</p>
+  <p>Uso básico (demo).</p>
   <button disabled>Plan actual</button>
 </div>
 
@@ -166,18 +154,53 @@ async function loadUser(){
     user.email + " | Plan: " + user.plan.toUpperCase();
 
   if(user.plan === "pro"){
-    document.getElementById("btnPro").disabled = true;
-    document.getElementById("btnPro").textContent = "Ya eres Pro";
+    const btn = document.getElementById("btnPro");
+    btn.disabled = true;
+    btn.textContent = "Ya eres Pro";
+  }
+}
+
+async function iniciarPago(){
+
+  const btn = document.getElementById("btnPro");
+  btn.disabled = true;
+  btn.textContent = "Creando checkout...";
+
+  try{
+
+    const res = await fetch(API + "/payments/create-checkout", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + getToken()
+      }
+    });
+
+    const data = await res.json();
+
+    if(!res.ok || !data.checkout_url){
+      showStatus("Error al crear checkout");
+      btn.disabled = false;
+      btn.textContent = "Contratar Pro";
+      return;
+    }
+
+    // guardar order_id para el fake checkout
+    sessionStorage.setItem("order_id", data.order_id);
+
+    // redirigir
+    window.location.href = data.checkout_url;
+
+  }catch(e){
+    showStatus("Error de conexión");
+    btn.disabled = false;
+    btn.textContent = "Contratar Pro";
   }
 
 }
 
-function iniciarPago(){
-  window.location.href = "/fake checkout.html";
-}
-
 document.getElementById("btnPro").onclick = iniciarPago;
 
+// mensajes post pago
 const params = new URLSearchParams(window.location.search);
 
 if(params.get("pago") === "ok"){
