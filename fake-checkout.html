@@ -1,294 +1,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pago simulado | SonarIA Pro</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #071a44;
-      color: white;
-      margin: 0;
-    }
-
-    .topbar {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 20px 28px 0 28px;
-    }
-
-    .brand-link {
-      display: inline-block;
-      text-decoration: none;
-    }
-
-    .brand-logo {
-      display: block;
-      width: 320px;
-      max-width: 70vw;
-      height: auto;
-    }
-
-    .wrap {
-      max-width: 760px;
-      margin: 24px auto 60px auto;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .panel {
-      background: rgba(5, 18, 50, 0.75);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 22px;
-      padding: 34px;
-      box-sizing: border-box;
-    }
-
-    h1 {
-      margin-top: 0;
-      font-size: 52px;
-      line-height: 1.1;
-      margin-bottom: 18px;
-    }
-
-    .muted {
-      color: #b8c4d9;
-      font-size: 18px;
-      margin-bottom: 28px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 22px;
-      margin-bottom: 26px;
-      font-size: 18px;
-      line-height: 1.7;
-    }
-
-    .actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 16px 22px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .ok {
-      background: #28c45a;
-      color: white;
-    }
-
-    .fail {
-      background: #ff5757;
-      color: white;
-    }
-
-    .secondary {
-      background: #465778;
-      color: white;
-    }
-
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    .status {
-      display: none;
-      margin-top: 18px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-weight: bold;
-    }
-
-    .status.show {
-      display: block;
-    }
-
-    .status.info {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .status.error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .status.success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    @media (max-width: 800px) {
-      .topbar {
-        padding: 16px 18px 0 18px;
-      }
-
-      .brand-logo {
-        width: 220px;
-        max-width: 78vw;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Checkout Simulado</title>
+<style>
+body{
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.box{
+  background:#111a2b;
+  padding:40px;
+  border-radius:20px;
+  text-align:center;
+}
+button{
+  padding:12px 20px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.ok{background:#22c55e;}
+.fail{background:#ef4444;}
+</style>
 </head>
+
 <body>
-  <div class="topbar">
-    <a href="index.html" class="brand-link" aria-label="Volver al inicio">
-      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
-    </a>
-  </div>
 
-  <div class="wrap">
-    <div class="panel">
-      <h1>Checkout simulado SonarIA Pro</h1>
-      <div class="muted">Este pago es de prueba. No se realizará ningún cobro real.</div>
+<div class="box">
+  <h2>Simulación de pago</h2>
+  <p>Plan Pro - $4.990</p>
 
-      <div class="card">
-        <div><strong>Producto:</strong> SonarIA Pro</div>
-        <div><strong>Monto:</strong> $4.990 CLP</div>
-        <div><strong>Orden:</strong> <span id="orderId">Cargando...</span></div>
-      </div>
+  <button class="ok" onclick="confirmarPago()">Pagar (simulado)</button>
+  <button class="fail" onclick="cancelar()">Cancelar</button>
 
-      <div class="actions">
-        <button id="btnApprove" class="ok" type="button">Simular pago exitoso</button>
-        <button id="btnReject" class="fail" type="button">Simular pago fallido</button>
-        <button id="btnBack" class="secondary" type="button">Volver a planes</button>
-      </div>
+  <p id="status"></p>
+</div>
 
-      <div id="statusBox" class="status"></div>
-    </div>
-  </div>
+<script>
+const API = "https://sonaria-api.onrender.com";
 
-  <script>
-    const API_BASE = "https://sonaria-api.onrender.com";
-    const PLANES_URL = "planes.html";
+function getToken(){
+  return localStorage.getItem("mejoraria_token");
+}
 
-    const orderEl = document.getElementById("orderId");
-    const statusBox = document.getElementById("statusBox");
-    const btnApprove = document.getElementById("btnApprove");
-    const btnReject = document.getElementById("btnReject");
-    const btnBack = document.getElementById("btnBack");
+async function confirmarPago(){
+  const status = document.getElementById("status");
+  status.textContent = "Procesando...";
 
-    function showStatus(message, type) {
-      statusBox.className = "status show " + type;
-      statusBox.textContent = message;
+  const res = await fetch(API + "/payments/fake/confirm", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + getToken()
     }
+  });
 
-    function getToken() {
-      return (
-        localStorage.getItem("mejoraria_token") ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("access_token")
-      );
-    }
+  const data = await res.json();
 
-    function getOrderId() {
-      const params = new URLSearchParams(window.location.search);
-      const fromUrl = params.get("order_id");
-      const fromSession = sessionStorage.getItem("last_order_id");
-      return fromUrl || fromSession || null;
-    }
+  if(data.ok){
+    status.textContent = "Pago exitoso 🎉";
 
-    const token = getToken();
-    const orderId = getOrderId();
+    setTimeout(()=>{
+      window.location.href = "/planes.html?pago=ok";
+    }, 1000);
+  } else {
+    status.textContent = "Error en pago";
+  }
+}
 
-    if (orderId) {
-      orderEl.textContent = orderId;
-    } else {
-      orderEl.textContent = "Sin order_id";
-      showStatus("No llegó order_id. Debes volver a planes y crear el checkout desde ahí.", "error");
-      btnApprove.disabled = true;
-      btnReject.disabled = true;
-    }
+function cancelar(){
+  window.location.href = "/planes.html?pago=error";
+}
+</script>
 
-    if (!token) {
-      showStatus("No hay sesión iniciada. Debes volver a iniciar sesión.", "error");
-      btnApprove.disabled = true;
-      btnReject.disabled = true;
-    }
-
-    async function postAction(url) {
-      if (!token) {
-        showStatus("No hay sesión activa.", "error");
-        return;
-      }
-
-      if (!orderId) {
-        showStatus("No existe order_id para este checkout.", "error");
-        return;
-      }
-
-      try {
-        btnApprove.disabled = true;
-        btnReject.disabled = true;
-        showStatus("Procesando...", "info");
-
-        const res = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({ order_id: orderId })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          showStatus(data.detail || "No se pudo procesar el pago.", "error");
-          btnApprove.disabled = false;
-          btnReject.disabled = false;
-          return;
-        }
-
-        if (url.includes("/confirm")) {
-          showStatus("Pago aprobado. Redirigiendo...", "success");
-          setTimeout(() => {
-            window.location.href = PLANES_URL + "?pago=ok&order_id=" + encodeURIComponent(orderId);
-          }, 800);
-        } else {
-          showStatus("Pago fallido simulado. Redirigiendo...", "error");
-          setTimeout(() => {
-            window.location.href = PLANES_URL + "?pago=error&order_id=" + encodeURIComponent(orderId);
-          }, 800);
-        }
-
-      } catch (error) {
-        showStatus("No se pudo conectar con el backend.", "error");
-        btnApprove.disabled = false;
-        btnReject.disabled = false;
-      }
-    }
-
-    btnApprove.addEventListener("click", function () {
-      postAction(API_BASE + "/payments/fake/confirm");
-    });
-
-    btnReject.addEventListener("click", function () {
-      postAction(API_BASE + "/payments/fake/fail");
-    });
-
-    btnBack.addEventListener("click", function () {
-      window.location.href = PLANES_URL;
-    });
-  </script>
 </body>
 </html>
