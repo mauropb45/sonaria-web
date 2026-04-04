@@ -1,84 +1,174 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Checkout Simulado</title>
-<style>
-body{
-  font-family:Arial;
-  background:#0b1220;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-.box{
-  background:#111a2b;
-  padding:40px;
-  border-radius:20px;
-  text-align:center;
-}
-button{
-  padding:12px 20px;
-  margin:10px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.ok{background:#22c55e;}
-.fail{background:#ef4444;}
-</style>
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout Simulado | SonarIA</title>
 
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#061528;
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+
+    .box{
+      background:#0f1d35;
+      padding:40px;
+      border-radius:22px;
+      text-align:center;
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+      width:min(90vw,420px);
+    }
+
+    h2{
+      margin-top:0;
+      margin-bottom:10px;
+      font-size:2rem;
+    }
+
+    p{
+      color:#c8d3e3;
+      margin-bottom:24px;
+    }
+
+    .actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:bold;
+      cursor:pointer;
+      min-width:140px;
+    }
+
+    .ok{ background:#22c55e; color:#08131d; }
+    .fail{ background:#ef4444; color:#fff; }
+
+    #status{
+      margin-top:20px;
+      font-weight:bold;
+      min-height:24px;
+    }
+  </style>
+</head>
 <body>
 
-<div class="box">
-  <h2>Simulación de pago</h2>
-  <p>Plan Pro - $4.990</p>
+  <div class="box">
+    <h2>Simulación de pago</h2>
+    <p>Plan Pro - $4.990</p>
 
-  <button class="ok" onclick="confirmarPago()">Pagar (simulado)</button>
-  <button class="fail" onclick="cancelar()">Cancelar</button>
+    <div class="actions">
+      <button class="ok" onclick="confirmarPago()">Pagar (simulado)</button>
+      <button class="fail" onclick="cancelarPago()">Cancelar</button>
+    </div>
 
-  <p id="status"></p>
-</div>
+    <div id="status"></div>
+  </div>
 
-<script>
-const API = "https://sonaria-api.onrender.com";
+  <script>
+    const API = "https://sonaria-api.onrender.com";
 
-function getToken(){
-  return localStorage.getItem("mejoraria_token");
-}
-
-async function confirmarPago(){
-  const status = document.getElementById("status");
-  status.textContent = "Procesando...";
-
-  const res = await fetch(API + "/payments/fake/confirm", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + getToken()
+    function getToken(){
+      return (
+        localStorage.getItem("mejoraria_token") ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("access_token") ||
+        ""
+      );
     }
-  });
 
-  const data = await res.json();
+    function getOrderId(){
+      const params = new URLSearchParams(window.location.search);
+      return params.get("order_id") || sessionStorage.getItem("order_id") || "";
+    }
 
-  if(data.ok){
-    status.textContent = "Pago exitoso 🎉";
+    function setStatus(msg){
+      document.getElementById("status").textContent = msg;
+    }
 
-    setTimeout(()=>{
-      window.location.href = "/planes.html?pago=ok";
-    }, 1000);
-  } else {
-    status.textContent = "Error en pago";
-  }
-}
+    async function confirmarPago(){
+      const token = getToken();
+      const orderId = getOrderId();
 
-function cancelar(){
-  window.location.href = "/planes.html?pago=error";
-}
-</script>
+      if(!token){
+        setStatus("No hay sesión activa.");
+        return;
+      }
 
+      if(!orderId){
+        setStatus("No se encontró order_id.");
+        return;
+      }
+
+      setStatus("Procesando pago simulado...");
+
+      try{
+        const res = await fetch(API + "/payments/fake/confirm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({
+            order_id: orderId
+          })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(!res.ok || !data.ok){
+          setStatus(data.detail || "Error en pago");
+          return;
+        }
+
+        setStatus("Pago exitoso 🎉");
+
+        setTimeout(() => {
+          window.location.href = "/planes.html?pago=ok";
+        }, 900);
+
+      }catch(error){
+        console.error(error);
+        setStatus("Error de conexión");
+      }
+    }
+
+    async function cancelarPago(){
+      const token = getToken();
+      const orderId = getOrderId();
+
+      try{
+        if(token && orderId){
+          await fetch(API + "/payments/fake/fail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+              order_id: orderId
+            })
+          });
+        }
+      }catch(e){
+        console.error(e);
+      }
+
+      window.location.href = "/planes.html?pago=error";
+    }
+  </script>
 </body>
 </html>
