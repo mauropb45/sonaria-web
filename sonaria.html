@@ -1,65 +1,119 @@
-form.addEventListener("submit", async function(e){
-  e.preventDefault();
-  clearStatus();
-  clearPills();
-  clearResult();
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarIA</title>
 
-  if(!canAnalyze()){
-    setStatus("Ya alcanzaste el límite gratuito. Ve a planes para desbloquear SonarIA Pro.", "error");
-    return;
-  }
+<style>
+body {
+  font-family: Arial;
+  background: #0b0f1a;
+  color: white;
+  margin: 0;
+  padding: 20px;
+}
 
-  const payload = buildPayload();
+.container {
+  max-width: 900px;
+  margin: auto;
+}
 
-  if(!payload.titulo && !payload.texto){
-    setStatus("Debes escribir un título o pegar una letra.", "error");
-    return;
-  }
+.logo {
+  width: 260px;
+  margin-bottom: 20px;
+}
 
-  try{
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Analizando...";
-    setStatus("Analizando canción...", "loading");
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+}
 
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authToken
-      },
-      body: JSON.stringify(payload)
-    });
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-    const data = await res.json().catch(() => ({}));
+.primary {
+  background: #00d084;
+  color: black;
+  font-weight: bold;
+}
 
-    if(res.status === 401){
-      forceRelogin(data.detail || "Tu sesión expiró. Vuelve a iniciar sesión.");
-      return;
-    }
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  background: #111827;
+  border-radius: 12px;
+}
 
-    if(!res.ok){
-      throw new Error(data.detail || "No se pudo analizar la canción.");
-    }
+</style>
+</head>
 
-    renderAnalysis(data);
-    incrementUsage();
+<body>
+<div class="container">
 
-    saveHistoryItem({
-      titulo: payload.titulo || data.titulo || "Canción sin título",
-      artista: payload.artista || data.artista || "Artista no indicado",
-      badge: data.resultado || "Análisis",
-      fecha: new Date().toISOString()
-    });
+<img src="logo-mejoraria.png" class="logo">
 
-    updateUserPanel();
-    renderHistory();
-    setStatus("Análisis completado.", "success");
+<h2>SonarIA</h2>
 
-  }catch(error){
-    clearResult();
-    setStatus(error.message || "Ocurrió un error al analizar.", "error");
-  }finally{
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Analizar canción";
-  }
-});
+<form id="form">
+
+<input id="titulo" placeholder="Título">
+<input id="artista" placeholder="Artista">
+<textarea id="texto" placeholder="Letra"></textarea>
+
+<button class="primary">Analizar</button>
+
+</form>
+
+<div id="resultado" class="result"></div>
+
+</div>
+
+<script>
+
+const API = "https://sonaria-api.onrender.com/analizar"
+const token = localStorage.getItem("mejoraria_token")
+
+document.getElementById("form").addEventListener("submit", async (e)=>{
+e.preventDefault()
+
+const titulo = document.getElementById("titulo").value
+const artista = document.getElementById("artista").value
+const texto = document.getElementById("texto").value
+
+document.getElementById("resultado").innerHTML = "Analizando..."
+
+const res = await fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+token
+},
+body:JSON.stringify({
+titulo,
+artista,
+texto,
+buscar_letra:true,
+contexto_escolar:true
+})
+})
+
+const data = await res.json()
+
+document.getElementById("resultado").innerHTML = `
+<h3>${data.resultado}</h3>
+<p>${data.justificacion}</p>
+`
+
+})
+
+</script>
+</body>
+</html>
