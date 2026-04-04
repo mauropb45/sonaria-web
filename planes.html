@@ -1,761 +1,196 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planes | SonarIA</title>
-  <meta name="description" content="Elige tu plan para usar SonarIA dentro de MejorarIA. Comienza gratis o desbloquea la versión Pro." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#050b14;
-      --bg2:#081224;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.035);
-      --line:rgba(255,255,255,.10);
-      --text:#f5f7fb;
-      --muted:#9eafc8;
-
-      --orange:#ff8a00;
-      --orange2:#ff5a00;
-      --green:#22c55e;
-      --green2:#14d68f;
-      --blue:#3b82f6;
-      --purple:#6d28d9;
-      --red:#ff6b6b;
-
-      --radius:28px;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-      --max:1180px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,.10), transparent 20%),
-        radial-gradient(circle at top right, rgba(255,138,0,.10), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(109,40,217,.08), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.014) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px);
-      background-size:36px 36px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.30), transparent 80%);
-    }
-
-    .topbar{
-      width:100%;
-      box-sizing:border-box;
-      padding:22px 22px 0 22px;
-      position:relative;
-      z-index:2;
-    }
-
-    .brand-link{
-      display:inline-block;
-      text-decoration:none;
-    }
-
-    .brand-logo{
-      display:block;
-      width:320px;
-      max-width:70vw;
-      height:auto;
-    }
-
-    .container{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:18px 22px 80px;
-      position:relative;
-      z-index:1;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:20px;
-      margin-bottom:22px;
-    }
-
-    .card{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(6px);
-    }
-
-    .hero-main,
-    .hero-side,
-    .price-card,
-    .faq-card{
-      padding:28px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      width:max-content;
-      padding:8px 14px;
-      border-radius:999px;
-      background:rgba(59,130,246,.12);
-      border:1px solid rgba(59,130,246,.24);
-      color:#dce8ff;
-      font-size:.84rem;
-      font-weight:800;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(2.7rem, 5vw, 4.8rem);
-      line-height:.92;
-      letter-spacing:-.08em;
-    }
-
-    .hero-main p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.82;
-      font-size:1.04rem;
-      max-width:760px;
-    }
-
-    .hero-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:20px;
-    }
-
-    .btn{
-      min-height:52px;
-      padding:0 20px;
-      border:none;
-      border-radius:18px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;
-    }
-
-    .btn:hover{transform:translateY(-1px)}
-
-    .btn-primary{
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#111827;
-      box-shadow:0 14px 34px rgba(255,138,0,.26);
-    }
-
-    .btn-ghost{
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-
-    .btn-green{
-      background:linear-gradient(135deg,var(--green),var(--green2));
-      color:#08131d;
-      box-shadow:0 14px 34px rgba(20,214,143,.20);
-    }
-
-    .btn[disabled]{
-      opacity:.7;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .hero-side{
-      display:grid;
-      gap:14px;
-      align-content:start;
-    }
-
-    .mini-panel{
-      padding:18px 20px;
-      border-radius:22px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .mini-panel strong{
-      display:block;
-      margin-bottom:8px;
-      font-size:1rem;
-    }
-
-    .mini-panel span{
-      color:var(--muted);
-      line-height:1.72;
-      font-size:.96rem;
-    }
-
-    .user-strip{
-      margin-top:16px;
-      padding:16px 18px;
-      border-radius:20px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      color:#dce8ff;
-      font-weight:700;
-      line-height:1.6;
-    }
-
-    .status{
-      display:none;
-      margin-top:14px;
-      padding:14px 16px;
-      border-radius:16px;
-      font-weight:700;
-      line-height:1.6;
-    }
-
-    .status.show{display:block}
-
-    .status.success,
-    .status.ok{
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.24);
-      color:#d8ffe5;
-    }
-
-    .status.error{
-      background:rgba(255,107,107,.10);
-      border:1px solid rgba(255,107,107,.24);
-      color:#ffd7d7;
-    }
-
-    .status.info{
-      background:rgba(59,130,246,.10);
-      border:1px solid rgba(59,130,246,.24);
-      color:#dce8ff;
-    }
-
-    .plans{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-bottom:22px;
-    }
-
-    .price-card{
-      position:relative;
-      overflow:hidden;
-      display:grid;
-      gap:16px;
-    }
-
-    .price-card::before{
-      content:"";
-      position:absolute;
-      inset:auto -40px -40px auto;
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,.08), transparent 70%);
-      pointer-events:none;
-    }
-
-    .price-card.free{
-      border:1px solid rgba(255,255,255,.10);
-    }
-
-    .price-card.pro{
-      border:1px solid rgba(255,138,0,.30);
-      box-shadow:0 24px 70px rgba(255,138,0,.10);
-    }
-
-    .topline{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .plan-name{
-      margin:0;
-      font-size:1.5rem;
-      letter-spacing:-.04em;
-    }
-
-    .badge{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:.8rem;
-      font-weight:800;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      color:#dce8ff;
-      white-space:nowrap;
-    }
-
-    .badge.pro{
-      background:rgba(255,138,0,.12);
-      border-color:rgba(255,138,0,.24);
-      color:#ffe4c7;
-    }
-
-    .price{
-      display:flex;
-      align-items:end;
-      gap:8px;
-      line-height:1;
-    }
-
-    .price strong{
-      font-size:3.4rem;
-      letter-spacing:-.08em;
-    }
-
-    .price span{
-      color:var(--muted);
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    .plan-copy{
-      color:var(--muted);
-      line-height:1.78;
-      font-size:.98rem;
-    }
-
-    .feature-list{
-      display:grid;
-      gap:12px;
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
-
-    .feature-list li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07);
-      color:#dce8ff;
-      line-height:1.65;
-    }
-
-    .feature-list li::before{
-      content:"✦";
-      flex:0 0 auto;
-      color:#9ad6ff;
-      margin-top:1px;
-    }
-
-    .feature-list.pro li::before{
-      color:#ffd08a;
-    }
-
-    .plan-footer{
-      display:grid;
-      gap:10px;
-      margin-top:2px;
-    }
-
-    .tiny{
-      color:var(--muted);
-      font-size:.9rem;
-      line-height:1.7;
-    }
-
-    .faq-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:18px;
-    }
-
-    .faq-card h3{
-      margin:0 0 10px;
-      font-size:1.08rem;
-      letter-spacing:-.02em;
-    }
-
-    .faq-card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.76;
-    }
-
-    .footer-note{
-      margin-top:24px;
-      text-align:center;
-      color:#d7e2f1;
-      font-weight:800;
-    }
-
-    .footer-note small{
-      display:block;
-      margin-top:8px;
-      color:var(--muted);
-      font-weight:500;
-    }
-
-    @media (max-width: 980px){
-      .hero,
-      .plans,
-      .faq-grid{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media (max-width: 720px){
-      .topbar{
-        padding:16px 16px 0 16px;
-      }
-
-      .brand-logo{
-        width:220px;
-        max-width:78vw;
-      }
-
-      .container{
-        padding:16px 14px 56px;
-      }
-
-      .hero-main,
-      .hero-side,
-      .price-card,
-      .faq-card{
-        padding:20px;
-      }
-
-      h1{
-        font-size:2.45rem;
-      }
-
-      .price strong{
-        font-size:2.8rem;
-      }
-
-      .hero-actions .btn{
-        width:100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes | SonarIA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#050b14;
+  --bg2:#081224;
+  --panel:rgba(255,255,255,.05);
+  --line:rgba(255,255,255,.1);
+  --text:#f5f7fb;
+  --muted:#9fb0c7;
+
+  --orange:#ff8a00;
+  --green:#22c55e;
+}
+
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg),var(--bg2));
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:30px;
+  margin-bottom:20px;
+}
+
+h1{
+  font-size:2.5rem;
+  margin-bottom:10px;
+}
+
+p{
+  color:var(--muted);
+}
+
+.plans{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.plan{
+  padding:25px;
+  border-radius:20px;
+  border:1px solid var(--line);
+}
+
+.price{
+  font-size:2rem;
+  font-weight:bold;
+}
+
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn-pro{
+  background:var(--green);
+}
+
+.status{
+  margin-top:10px;
+  font-weight:bold;
+}
+
+</style>
+
 </head>
+
 <body>
-  <div class="topbar">
-    <a href="/index.html" class="brand-link" aria-label="Volver al inicio">
-      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
-    </a>
+
+<div class="container">
+
+  <div class="card">
+    <h1>Planes SonarIA</h1>
+    <p>Empieza gratis y desbloquea funciones avanzadas.</p>
+
+```
+<div id="userInfo">Cargando usuario...</div>
+<div id="status" class="status"></div>
+```
+
   </div>
 
-  <div class="container">
-    <section class="hero">
-      <div class="card hero-main">
-        <div class="eyebrow">💳 Planes SonarIA</div>
-        <h1>Empieza gratis y desbloquea una experiencia docente más potente.</h1>
-        <p>
-          SonarIA nace desde necesidades reales del aula. La versión base te permite conocer la herramienta
-          rápidamente, y la versión Pro prepara el camino para una experiencia más profunda y más útil para el trabajo docente.
-        </p>
+  <div class="plans">
 
-        <div class="hero-actions">
-          <button class="btn btn-ghost" type="button" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
-          <button class="btn btn-primary" type="button" onclick="window.location.href='/index.html'">Ir al home</button>
-        </div>
+```
+<div class="plan">
+  <h2>Free</h2>
+  <div class="price">$0</div>
+  <p>Uso básico para probar la herramienta.</p>
+  <button disabled>Plan actual</button>
+</div>
 
-        <div id="userInfo" class="user-strip">Cargando sesión...</div>
-        <div id="statusBox" class="status"></div>
-      </div>
+<div class="plan">
+  <h2>Pro</h2>
+  <div class="price">$4.990</div>
+  <p>Acceso completo a SonarIA.</p>
+  <button id="btnPro" class="btn-pro">Contratar Pro</button>
+</div>
+```
 
-      <div class="card hero-side">
-        <div class="mini-panel">
-          <strong>Free para entrar rápido</strong>
-          <span>Una forma simple y ligera de probar SonarIA, entender su lógica y evaluar si encaja con tu práctica docente.</span>
-        </div>
-
-        <div class="mini-panel">
-          <strong>Pro para el trabajo real</strong>
-          <span>La capa premium es la base para llevar a web una versión más potente, tomando inspiración de tu versión local usada en clases.</span>
-        </div>
-
-        <div class="mini-panel">
-          <strong>Flujo corregido</strong>
-          <span>Esta versión ya usa el backend actual de Webpay y deja atrás el checkout anterior que estaba desalineado.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="plans">
-      <article class="card price-card free">
-        <div class="topline">
-          <h2 class="plan-name">Free</h2>
-          <div class="badge">Comenzar</div>
-        </div>
-
-        <div class="price">
-          <strong>$0</strong>
-          <span>para probar</span>
-        </div>
-
-        <div class="plan-copy">
-          Una entrada simple a SonarIA para explorar la experiencia antes de escalar.
-        </div>
-
-        <ul class="feature-list">
-          <li>Acceso inicial a la herramienta.</li>
-          <li>Experiencia rápida para validar si te sirve.</li>
-          <li>Ideal para una primera toma de contacto.</li>
-          <li>Base para luego pasar a Pro si necesitas más.</li>
-        </ul>
-
-        <div class="plan-footer">
-          <button class="btn btn-ghost" type="button" disabled>Plan base</button>
-          <div class="tiny">La experiencia Free seguirá siendo simple y ágil.</div>
-        </div>
-      </article>
-
-      <article class="card price-card pro">
-        <div class="topline">
-          <h2 class="plan-name">Pro</h2>
-          <div class="badge pro">Más potente</div>
-        </div>
-
-        <div class="price">
-          <strong>$4.990</strong>
-          <span>CLP</span>
-        </div>
-
-        <div class="plan-copy">
-          Desbloquea el siguiente nivel de SonarIA y prepara el terreno para una versión docente más robusta.
-        </div>
-
-        <ul class="feature-list pro">
-          <li>Uso completo de la herramienta.</li>
-          <li>Base para sumar funciones de análisis más avanzadas.</li>
-          <li>Camino natural hacia una experiencia docente premium.</li>
-          <li>Pensado para quienes usarán SonarIA con frecuencia real.</li>
-        </ul>
-
-        <div class="plan-footer">
-          <button id="btnPro" class="btn btn-green" type="button">Contratar Pro</button>
-          <div class="tiny">El checkout se crea desde el backend actual y luego redirige a Webpay.</div>
-        </div>
-      </article>
-    </section>
-
-    <section class="faq-grid">
-      <article class="card faq-card">
-        <h3>¿Necesito iniciar sesión?</h3>
-        <p>Sí. El plan se vincula a tu cuenta y esta página valida la sesión antes de habilitar la compra.</p>
-      </article>
-
-      <article class="card faq-card">
-        <h3>¿Qué pasa si ya soy Pro?</h3>
-        <p>El sistema revisa tu plan actual y desactiva el botón de compra si ya está activo.</p>
-      </article>
-
-      <article class="card faq-card">
-        <h3>¿Qué se corrigió aquí?</h3>
-        <p>Este archivo ya no usa el checkout viejo. Ahora conversa con el backend actual de Webpay.</p>
-      </article>
-    </section>
-
-    <div class="footer-note">
-      MejorarIA
-      <small>Tecnología creada desde necesidades reales del aula y pensada para crecer junto a docentes de distintas áreas.</small>
-    </div>
   </div>
 
-  <script>
-    const API_BASE = "https://sonaria-api.onrender.com";
+</div>
 
-    const userInfo = document.getElementById("userInfo");
-    const statusBox = document.getElementById("statusBox");
-    const btnPro = document.getElementById("btnPro");
+<script>
 
-    function showStatus(message, type) {
-      statusBox.textContent = message;
-      statusBox.className = "status show " + type;
+const API = "https://sonaria-api.onrender.com";
+
+function getToken(){
+  return localStorage.getItem("mejoraria_token");
+}
+
+function showStatus(msg){
+  document.getElementById("status").textContent = msg;
+}
+
+async function loadUser(){
+
+  const token = getToken();
+
+  if(!token){
+    showStatus("Debes iniciar sesión");
+    return;
+  }
+
+  const res = await fetch(API + "/me", {
+    headers:{
+      "Authorization":"Bearer " + token
     }
+  });
 
-    function clearStatus() {
-      statusBox.textContent = "";
-      statusBox.className = "status";
-    }
+  const data = await res.json();
 
-    function getToken() {
-      return (
-        localStorage.getItem("mejoraria_token") ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("access_token") ||
-        ""
-      );
-    }
+  if(!res.ok){
+    showStatus("Sesión inválida");
+    return;
+  }
 
-    function getStoredUser() {
-      try {
-        return JSON.parse(localStorage.getItem("mejoraria_user") || "{}");
-      } catch (_) {
-        return {};
-      }
-    }
+  const user = data.user;
 
-    function setStoredUser(user) {
-      localStorage.setItem("mejoraria_user", JSON.stringify(user || {}));
-    }
+  document.getElementById("userInfo").textContent =
+    user.email + " | Plan: " + user.plan.toUpperCase();
 
-    function getPaymentResult() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("pago");
-    }
+  if(user.plan === "pro"){
+    document.getElementById("btnPro").disabled = true;
+    document.getElementById("btnPro").textContent = "Ya eres Pro";
+  }
 
-    function cleanPaymentQuery() {
-      const url = new URL(window.location.href);
-      if (url.searchParams.has("pago")) {
-        url.searchParams.delete("pago");
-        window.history.replaceState({}, "", url.toString());
-      }
-    }
+}
 
-    function handlePaymentResult() {
-      const pago = getPaymentResult();
+function iniciarPago(){
+  window.location.href = "/fake checkout.html";
+}
 
-      if (pago === "ok") {
-        showStatus("Pago aprobado correctamente. Tu cuenta debería quedar como Pro.", "success");
-        setTimeout(() => {
-          clearStatus();
-          cleanPaymentQuery();
-          loadUser();
-        }, 1800);
-      } else if (pago === "error") {
-        showStatus("El pago no fue aprobado o no pudo completarse. Puedes volver a intentarlo.", "error");
-        setTimeout(() => {
-          cleanPaymentQuery();
-        }, 1800);
-      }
-    }
+document.getElementById("btnPro").onclick = iniciarPago;
 
-    async function loadUser() {
-      const token = getToken();
+const params = new URLSearchParams(window.location.search);
 
-      if (!token) {
-        userInfo.textContent = "No hay sesión activa. Debes iniciar sesión para contratar Pro.";
-        btnPro.disabled = true;
-        btnPro.textContent = "Inicia sesión primero";
-        return;
-      }
+if(params.get("pago") === "ok"){
+  showStatus("Pago realizado con éxito 🎉");
+}
 
-      try {
-        const res = await fetch(API_BASE + "/me", {
-          method: "GET",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
+if(params.get("pago") === "error"){
+  showStatus("Pago cancelado");
+}
 
-        const data = await res.json().catch(() => ({}));
+loadUser();
 
-        if (!res.ok) {
-          userInfo.textContent = "No se pudo validar tu sesión.";
-          btnPro.disabled = true;
-          btnPro.textContent = "Sesión no válida";
-          showStatus(data.detail || "Tu sesión expiró o fue cerrada. Vuelve a iniciar sesión.", "error");
-          return;
-        }
+</script>
 
-        const user = data.user || getStoredUser() || {};
-        setStoredUser(user);
-
-        const plan = (user.plan || "free").toLowerCase();
-        userInfo.textContent = (user.email || "Cuenta sin email") + " | Plan actual: " + plan.toUpperCase();
-
-        if (plan === "pro") {
-          btnPro.textContent = "Ya eres Pro";
-          btnPro.disabled = true;
-        } else {
-          btnPro.textContent = "Contratar Pro";
-          btnPro.disabled = false;
-        }
-      } catch (error) {
-        console.error("Error al cargar usuario:", error);
-        userInfo.textContent = "Error de conexión con el backend.";
-        btnPro.disabled = true;
-        btnPro.textContent = "Sin conexión";
-        showStatus("No se pudo conectar con el backend.", "error");
-      }
-    }
-
-    async function iniciarPagoPro() {
-      const token = getToken();
-
-      if (!token) {
-        showStatus("Debes iniciar sesión antes de contratar Pro.", "error");
-        return;
-      }
-
-      try {
-        btnPro.disabled = true;
-        btnPro.textContent = "Creando checkout...";
-        showStatus("Preparando tu checkout...", "info");
-
-        const res = await fetch(API_BASE + "/webpay/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          showStatus(data.detail || "No se pudo iniciar el checkout.", "error");
-          btnPro.disabled = false;
-          btnPro.textContent = "Contratar Pro";
-          return;
-        }
-
-        if (!data.url || !data.token || !data.buy_order) {
-          showStatus("Webpay no devolvió la información esperada.", "error");
-          btnPro.disabled = false;
-          btnPro.textContent = "Contratar Pro";
-          return;
-        }
-
-        sessionStorage.setItem("last_order_id", data.buy_order);
-        window.location.href = data.url + "?token_ws=" + encodeURIComponent(data.token);
-      } catch (error) {
-        console.error("Error al iniciar pago:", error);
-        showStatus("No se pudo conectar con el backend.", "error");
-        btnPro.disabled = false;
-        btnPro.textContent = "Contratar Pro";
-      }
-    }
-
-    if (btnPro) {
-      btnPro.onclick = iniciarPagoPro;
-    }
-
-    handlePaymentResult();
-    loadUser();
-  </script>
 </body>
 </html>
