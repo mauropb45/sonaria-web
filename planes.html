@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Planes | SonarIA</title>
 
@@ -13,44 +16,51 @@
       margin: 0;
     }
 
-    /* NAV */
-    .nav {
-      display: flex;
-      align-items: center;
-      padding: 20px 30px;
+    .topbar {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 20px 28px 0 28px;
     }
 
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
+    .brand-link {
+      display: inline-block;
       text-decoration: none;
     }
 
+    .brand-logo {
+      display: block;
+      width: 320px;
+      max-width: 70vw;
+      height: auto;
+    }
+
     .container {
-      max-width: 900px;
-      margin: 40px auto;
+      max-width: 980px;
+      margin: 24px auto 40px auto;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
-      font-size: 48px;
+      font-size: 54px;
+      margin-bottom: 30px;
     }
 
     .user {
       text-align: center;
       color: #b8c4d9;
       margin-bottom: 20px;
+      font-size: 18px;
     }
 
     .status {
       display: none;
-      margin: 0 auto 20px;
-      padding: 14px;
+      margin: 0 auto 24px auto;
+      max-width: 760px;
+      padding: 14px 18px;
       border-radius: 10px;
-      max-width: 600px;
+      font-weight: bold;
+      box-sizing: border-box;
       text-align: center;
     }
 
@@ -58,78 +68,125 @@
       display: block;
     }
 
-    .status.error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
     .status.ok {
       background: #dcfce7;
       color: #166534;
     }
 
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status.info {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
     .plans {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 24px;
+      max-width: 980px;
+      margin: 0 auto;
     }
 
     .card {
-      background: rgba(5, 18, 50, 0.7);
-      border-radius: 20px;
-      padding: 24px;
+      background: rgba(5, 18, 50, 0.75);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      padding: 28px;
+      box-sizing: border-box;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 28px;
+      margin-bottom: 20px;
     }
 
     .price {
-      font-size: 42px;
-      margin: 10px 0;
+      font-size: 52px;
+      font-weight: bold;
+      margin: 16px 0;
+    }
+
+    .price small {
+      font-size: 28px;
+      font-weight: normal;
     }
 
     .features {
       color: #b8c4d9;
-      margin: 15px 0;
+      font-size: 18px;
+      margin: 24px 0 28px 0;
+      line-height: 1.45;
     }
 
     button {
       width: 100%;
-      padding: 14px;
-      border-radius: 10px;
       border: none;
-      font-size: 16px;
-      cursor: pointer;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 18px;
       font-weight: bold;
+      cursor: pointer;
     }
 
-    .free {
+    .btn-free {
       background: #3d4c67;
+      color: white;
+      cursor: default;
     }
 
-    .pro {
+    .btn-pro {
       background: #28c45a;
+      color: white;
     }
 
-    .pro:disabled {
+    .btn-pro:disabled {
       background: #5a6b87;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 800px) {
+      .topbar {
+        padding: 16px 18px 0 18px;
+      }
+
+      .brand-logo {
+        width: 220px;
+        max-width: 78vw;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      .plans {
+        grid-template-columns: 1fr;
+      }
+
+      .price {
+        font-size: 42px;
+      }
     }
   </style>
 </head>
-
 <body>
-
-  <!-- NAV -->
-  <div class="nav">
-    <a href="https://mejoraria.cl" class="logo">MejorarIA</a>
+  <div class="topbar">
+    <a href="index.html" class="brand-link" aria-label="Volver al inicio">
+      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
+    </a>
   </div>
 
   <div class="container">
     <h1>Planes SonarIA</h1>
 
-    <div id="userInfo" class="user">Cargando...</div>
-    <div id="status" class="status"></div>
+    <div id="userInfo" class="user">Cargando sesión...</div>
+    <div id="statusBox" class="status"></div>
 
     <div class="plans">
-
-      <!-- FREE -->
       <div class="card">
         <h2>Free</h2>
         <div class="price">$0</div>
@@ -137,37 +194,51 @@
           • 2 análisis<br>
           • Acceso básico
         </div>
-        <button class="free">Plan actual</button>
+        <button class="btn-free" type="button">Plan actual</button>
       </div>
 
-      <!-- PRO -->
       <div class="card">
         <h2>Pro</h2>
-        <div class="price">$4.990 CLP</div>
+        <div class="price">$4.990 <small>CLP</small></div>
         <div class="features">
           • Análisis ilimitado<br>
           • Funciones avanzadas
         </div>
-        <button id="btnPro" class="pro">Contratar Pro</button>
+        <button id="btnPro" class="btn-pro" type="button">Contratar Pro</button>
       </div>
-
     </div>
   </div>
 
   <script>
-    const API = "https://sonaria-api.onrender.com";
-
-    const btn = document.getElementById("btnPro");
+    const API_BASE = "https://sonaria-api.onrender.com";
+    const btnPro = document.getElementById("btnPro");
     const userInfo = document.getElementById("userInfo");
-    const status = document.getElementById("status");
+    const statusBox = document.getElementById("statusBox");
 
-    function show(msg, type) {
-      status.className = "status show " + type;
-      status.textContent = msg;
+    function showStatus(message, type) {
+      statusBox.className = "status show " + type;
+      statusBox.textContent = message;
     }
 
     function getToken() {
-      return localStorage.getItem("token");
+      return (
+        localStorage.getItem("mejoraria_token") ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("access_token")
+      );
+    }
+
+    function handlePaymentResult() {
+      const params = new URLSearchParams(window.location.search);
+      const pago = params.get("pago");
+
+      if (!pago) return;
+
+      if (pago === "ok") {
+        showStatus("Pago aprobado. Tu plan Pro ya fue activado.", "ok");
+      } else if (pago === "error") {
+        showStatus("El pago fue rechazado o no pudo completarse.", "error");
+      }
     }
 
     async function loadUser() {
@@ -175,50 +246,98 @@
 
       if (!token) {
         userInfo.textContent = "No has iniciado sesión";
-        btn.disabled = true;
-        show("Debes iniciar sesión primero", "error");
+        btnPro.disabled = true;
+        showStatus("Debes iniciar sesión primero.", "error");
         return;
       }
 
-      const res = await fetch(API + "/me", {
-        headers: { Authorization: "Bearer " + token }
-      });
+      try {
+        const res = await fetch(API_BASE + "/me", {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok) {
-        show("Sesión inválida", "error");
-        return;
-      }
+        if (!res.ok) {
+          userInfo.textContent = "Sesión no válida";
+          btnPro.disabled = true;
+          showStatus(data.detail || "Tu sesión no es válida. Vuelve a iniciar sesión.", "error");
+          return;
+        }
 
-      userInfo.textContent = data.user.email + " | Plan: " + data.user.plan;
+        const user = data.user;
+        const plan = (user.subscription && user.subscription.plan) ? user.subscription.plan : user.plan;
 
-      if (data.user.plan === "pro") {
-        btn.disabled = true;
-        btn.textContent = "Ya eres Pro";
+        userInfo.textContent = user.email + " | Plan: " + plan;
+
+        if (plan === "pro") {
+          btnPro.textContent = "Ya eres Pro";
+          btnPro.disabled = true;
+        } else {
+          btnPro.textContent = "Contratar Pro";
+          btnPro.disabled = false;
+        }
+
+      } catch (error) {
+        userInfo.textContent = "Error de conexión";
+        btnPro.disabled = true;
+        showStatus("No se pudo conectar con el backend.", "error");
       }
     }
 
-    async function pagar() {
+    async function iniciarPagoPro() {
       const token = getToken();
 
-      const res = await fetch(API + "/payments/create-checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+      if (!token) {
+        showStatus("Debes iniciar sesión antes de contratar Pro.", "error");
+        return;
+      }
+
+      try {
+        btnPro.disabled = true;
+        btnPro.textContent = "Creando checkout...";
+
+        const res = await fetch(API_BASE + "/payments/create-checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showStatus(data.detail || "No se pudo iniciar el checkout.", "error");
+          btnPro.disabled = false;
+          btnPro.textContent = "Contratar Pro";
+          return;
         }
-      });
 
-      const data = await res.json();
+        if (!data.checkout_url || !data.order_id) {
+          showStatus("El checkout no devolvió order_id o checkout_url.", "error");
+          btnPro.disabled = false;
+          btnPro.textContent = "Contratar Pro";
+          return;
+        }
 
-      window.location.href = data.checkout_url;
+        sessionStorage.setItem("last_order_id", data.order_id);
+        window.location.href = data.checkout_url;
+
+      } catch (error) {
+        showStatus("No se pudo conectar con el backend.", "error");
+        btnPro.disabled = false;
+        btnPro.textContent = "Contratar Pro";
+      }
     }
 
-    btn.onclick = pagar;
+    btnPro.addEventListener("click", iniciarPagoPro);
 
+    handlePaymentResult();
     loadUser();
   </script>
-
 </body>
 </html>
