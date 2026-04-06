@@ -578,7 +578,7 @@
       fuenteUsada.textContent = raw.fuente_usada || "—";
       lecturaSugerida.textContent = raw.lectura_sugerida || "—";
 
-      if (raw.texto && !texto.value.trim()) texto.value = raw.texto;
+      if (raw.texto) texto.value = raw.texto;
 
       const temas = Array.isArray(raw.temas_detectados) ? raw.temas_detectados : [];
       themesWrap.innerHTML = temas.length ? temas.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("") : '<span class="chip">Sin datos</span>';
@@ -639,10 +639,16 @@
       setStatus("Analizando canción...", "info");
 
       try{
+        let textoParaEnviar = texto.value.trim();
+
+        if (buscarLetra.checked && titulo.value.trim()) {
+          textoParaEnviar = "";
+        }
+
         const payload = {
           titulo: titulo.value.trim(),
           artista: artista.value.trim(),
-          texto: texto.value.trim(),
+          texto: textoParaEnviar,
           buscar_letra: buscarLetra.checked,
           contexto_escolar: contextoEscolar.checked
         };
