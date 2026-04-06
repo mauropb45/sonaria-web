@@ -1,1290 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Evaluador pedagógico musical</title>
-  <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#06101c;
-      --bg2:#0b1627;
-      --panel:rgba(255,255,255,.05);
-      --panel2:rgba(255,255,255,.035);
-      --line:rgba(255,255,255,.09);
-      --text:#eef2f7;
-      --muted:#a3b3c8;
-      --green:#14d68f;
-      --orange:#ff8a00;
-      --orange2:#ff6500;
-      --blue:#4b82ff;
-      --yellow:#f3c74b;
-      --red:#ff7474;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-      --radius:26px;
-      --max:1180px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.09), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-    }
-
-    a{ text-decoration:none; color:inherit; }
-
-    .wrap{
-      position:relative;
-      z-index:1;
-      max-width:var(--max);
-      margin:0 auto;
-      padding:24px 22px 80px;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      margin-bottom:18px;
-    }
-
-    .brand-wrap{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-
-    .brand{
-      margin:0;
-      font-size:clamp(2.2rem, 4vw, 3.5rem);
-      line-height:.95;
-      font-weight:900;
-      letter-spacing:-.06em;
-    }
-
-    .brand .ia{
-      color:var(--green);
-      text-shadow:0 0 22px rgba(20,214,143,.35);
-    }
-
-    .brand-sub{
-      color:#d7fff0;
-      font-size:.95rem;
-      font-weight:800;
-    }
-
-    .nav-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:48px;
-      padding:0 18px;
-      border-radius:16px;
-      border:1px solid transparent;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-    }
-
-    .btn:hover{ transform:translateY(-1px); }
-
-    .btn-primary{
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#111827;
-      box-shadow:0 12px 28px rgba(255,138,0,.28);
-    }
-
-    .btn-ghost{
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border-color:var(--line);
-    }
-
-    .btn-green{
-      background:linear-gradient(135deg,var(--green),#38e1a1);
-      color:#07131c;
-      box-shadow:0 12px 28px rgba(20,214,143,.20);
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:18px;
-      margin-bottom:18px;
-    }
-
-    .card{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .hero-main,.hero-side,.panel,.results,.promo{
-      padding:26px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:#dce8ff;
-      font-size:.84rem;
-      font-weight:800;
-      margin-bottom:14px;
-    }
-
-    .hero h1{
-      margin:0 0 12px;
-      font-size:clamp(2.4rem, 4.6vw, 4.2rem);
-      line-height:.93;
-      letter-spacing:-.07em;
-    }
-
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.8;
-      font-size:1rem;
-    }
-
-    .user-strip{
-      margin-top:18px;
-      padding:14px 16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .user-meta{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .avatar{
-      width:38px;
-      height:38px;
-      border-radius:50%;
-      background:rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:900;
-      color:#d7fff0;
-      overflow:hidden;
-      flex:0 0 auto;
-    }
-
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .plan-pill{
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:.82rem;
-      font-weight:800;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-      color:#dce8ff;
-    }
-
-    .plan-pill.pro{
-      background:rgba(20,214,143,.12);
-      border-color:rgba(20,214,143,.22);
-      color:#d9ffe9;
-    }
-
-    .mini-stack{
-      display:grid;
-      gap:12px;
-    }
-
-    .mini{
-      padding:16px 18px;
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .mini strong{
-      display:block;
-      margin-bottom:7px;
-      font-size:.98rem;
-    }
-
-    .mini span{
-      color:var(--muted);
-      line-height:1.7;
-      font-size:.95rem;
-    }
-
-    .main-grid{
-      display:grid;
-      grid-template-columns:1.02fr .98fr;
-      gap:18px;
-      margin-top:18px;
-    }
-
-    .panel-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:16px;
-    }
-
-    .panel h2,
-    .results h2,
-    .promo h2{
-      margin:0;
-      font-size:1.55rem;
-      letter-spacing:-.04em;
-    }
-
-    .muted{
-      color:var(--muted);
-      line-height:1.75;
-    }
-
-    .form-grid{
-      display:grid;
-      gap:12px;
-    }
-
-    .two{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-
-    .field{
-      display:grid;
-      gap:7px;
-    }
-
-    .field label{
-      font-size:.9rem;
-      color:#dce8ff;
-      font-weight:700;
-    }
-
-    input[type="text"], textarea{
-      width:100%;
-      border:none;
-      outline:none;
-      border-radius:16px;
-      padding:14px 15px;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.08);
-      font:inherit;
-    }
-
-    textarea{
-      min-height:170px;
-      resize:vertical;
-    }
-
-    input::placeholder, textarea::placeholder{
-      color:#90a0b6;
-    }
-
-    .checks{
-      display:grid;
-      gap:10px;
-      margin-top:4px;
-    }
-
-    .check{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07);
-      color:#dce8ff;
-      line-height:1.6;
-      font-size:.95rem;
-    }
-
-    .check input{
-      margin-top:3px;
-      accent-color:var(--green);
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:4px;
-    }
-
-    .hint-bar{
-      margin-top:16px;
-      padding:14px 16px;
-      border-radius:16px;
-      background:rgba(75,130,255,.08);
-      border:1px solid rgba(75,130,255,.18);
-      color:#dce8ff;
-      font-weight:700;
-      line-height:1.6;
-    }
-
-    .status{
-      margin-top:14px;
-      min-height:24px;
-      font-weight:800;
-      line-height:1.5;
-    }
-
-    .results-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:16px;
-      flex-wrap:wrap;
-    }
-
-    .result-badge{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:.82rem;
-      font-weight:800;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:#dce8ff;
-    }
-
-    .summary-card{
-      padding:18px;
-      border-radius:20px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-      margin-bottom:14px;
-    }
-
-    .summary-title{
-      margin:0 0 8px;
-      font-size:1.5rem;
-      letter-spacing:-.04em;
-    }
-
-    .summary-copy{
-      margin:0;
-      color:#d7e2f1;
-      line-height:1.78;
-    }
-
-    .metrics{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .metric{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .metric strong{
-      display:block;
-      margin-bottom:6px;
-      color:#dce8ff;
-      font-size:.92rem;
-    }
-
-    .metric span{
-      font-size:1.15rem;
-      font-weight:900;
-      letter-spacing:-.03em;
-    }
-
-    .traffic{
-      padding:16px;
-      border-radius:20px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-      margin-bottom:14px;
-    }
-
-    .traffic-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
-      flex-wrap:wrap;
-    }
-
-    .lights{
-      display:flex;
-      gap:10px;
-    }
-
-    .light{
-      width:18px;
-      height:18px;
-      border-radius:50%;
-      opacity:.25;
-      background:rgba(255,255,255,.08);
-      box-shadow:none;
-      transition:.2s ease;
-    }
-
-    .light.active.red{ background:var(--red); opacity:1; box-shadow:0 0 14px rgba(255,116,116,.40); }
-    .light.active.yellow{ background:var(--yellow); opacity:1; box-shadow:0 0 14px rgba(243,199,75,.35); }
-    .light.active.green{ background:var(--green); opacity:1; box-shadow:0 0 14px rgba(20,214,143,.35); }
-
-    .bars{
-      display:grid;
-      gap:12px;
-    }
-
-    .bar-row{
-      display:grid;
-      gap:6px;
-    }
-
-    .bar-label{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      color:#dce8ff;
-      font-size:.9rem;
-      font-weight:700;
-    }
-
-    .bar{
-      height:10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.06);
-    }
-
-    .bar-fill{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));
-      transition:width .35s ease;
-    }
-
-    .cards{
-      display:grid;
-      gap:12px;
-    }
-
-    .info-card{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .info-card strong{
-      display:block;
-      margin-bottom:7px;
-      color:#dce8ff;
-    }
-
-    .chips{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .chip{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:.82rem;
-      font-weight:800;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-      color:#dce8ff;
-    }
-
-    .list{
-      display:grid;
-      gap:8px;
-    }
-
-    .list-item{
-      padding:12px 14px;
-      border-radius:14px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(255,255,255,.06);
-      color:#d7e2f1;
-      line-height:1.65;
-    }
-
-    .promo{
-      margin-top:18px;
-      background:
-        radial-gradient(circle at top right, rgba(255,138,0,.16), transparent 22%),
-        linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04));
-    }
-
-    .promo h2{
-      margin-bottom:10px;
-    }
-
-    .promo-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
-    .overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(4,12,22,.72);
-      backdrop-filter:blur(6px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-      padding:20px;
-    }
-
-    .overlay-box{
-      width:min(92vw,560px);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      box-shadow:0 24px 70px rgba(0,0,0,.38);
-      padding:28px;
-      color:#f5f7fb;
-    }
-
-    .overlay-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.24);
-      font-weight:800;
-      font-size:.84rem;
-      margin-bottom:14px;
-    }
-
-    .overlay h3{
-      margin:0 0 10px;
-      font-size:2rem;
-      line-height:1;
-      letter-spacing:-.04em;
-    }
-
-    .overlay p{
-      margin:0 0 18px;
-      color:#cfd9e8;
-      line-height:1.75;
-    }
-
-    .overlay-list{
-      display:grid;
-      gap:10px;
-      margin-bottom:18px;
-    }
-
-    .overlay-list div{
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .overlay-actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    @media (max-width: 980px){
-      .hero,.main-grid{ grid-template-columns:1fr; }
-    }
-
-    @media (max-width: 720px){
-      .wrap{ padding:18px 14px 56px; }
-      .topbar{ flex-direction:column; align-items:stretch; }
-      .nav-actions{ width:100%; }
-      .nav-actions .btn{ width:100%; }
-      .hero-main,.hero-side,.panel,.results,.promo{ padding:20px; }
-      .two,.metrics{ grid-template-columns:1fr; }
-      .user-strip{ align-items:flex-start; }
-      .hero h1{ font-size:2.25rem; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarIA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family: 'Inter', sans-serif;
+  background:#0b1220;
+  color:#fff;
+  margin:0;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:30px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+input, textarea{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#1e293b;
+  color:white;
+}
+
+textarea{
+  height:180px;
+}
+
+button{
+  margin-top:15px;
+  padding:12px;
+  width:100%;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  background:#1d4ed8;
+}
+
+.result{
+  margin-top:25px;
+  padding:15px;
+  border-radius:10px;
+  background:#111827;
+}
+
+.bad{color:#ef4444;}
+.mid{color:#facc15;}
+.good{color:#22c55e;}
+
+.small{
+  font-size:13px;
+  color:#9ca3af;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="wrap">
+<div class="container">
 
-    <div class="topbar">
-      <a href="/index.html" class="brand-wrap">
-        <h1 class="brand">Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical</div>
-      </a>
+<h1>🎧 SonarIA</h1>
 
-      <div class="nav-actions">
-        <button class="btn btn-ghost" onclick="window.location.href='/planes.html'">Ver planes</button>
-        <button id="btnUpgradeTop" class="btn btn-primary">Desbloquear Pro</button>
-      </div>
-    </div>
+<input id="titulo" placeholder="Título de la canción">
+<input id="artista" placeholder="Artista">
 
-    <section class="hero card">
-      <div class="hero-main">
-        <div class="eyebrow">🎓 IA para decisiones pedagógicas</div>
-        <h1>Evalúa canciones con criterio escolar, rápido y con mejor contexto.</h1>
-        <p>
-          SonarIA te ayuda a revisar lenguaje explícito, señales sensibles y adecuación pedagógica de una canción
-          para tomar decisiones con más claridad antes de usarla en clases.
-        </p>
+<textarea id="texto" placeholder="Pega la letra o deja vacío para búsqueda automática"></textarea>
 
-        <div class="user-strip">
-          <div class="user-meta">
-            <div class="avatar" id="userAvatar">S</div>
-            <div>
-              <div id="userName" style="font-weight:800;">Cargando usuario...</div>
-              <div id="contador" class="muted" style="font-size:.92rem;">Preparando experiencia...</div>
-            </div>
-          </div>
+<button onclick="analizar()">Analizar canción</button>
 
-          <div id="planBadge" class="plan-pill">...</div>
-        </div>
-      </div>
+<div id="estado" class="small"></div>
 
-      <div class="hero-side mini-stack">
-        <div class="mini">
-          <strong>Free con valor real</strong>
-          <span>La experiencia gratuita entrega un análisis base útil para conocer la herramienta y evaluar si encaja con tu práctica.</span>
-        </div>
-        <div class="mini">
-          <strong>Pro para profundizar</strong>
-          <span>La versión Pro prepara el camino para una capa más completa de análisis, más contexto y más continuidad de uso.</span>
-        </div>
-        <div class="mini">
-          <strong>La IA acompaña. Educar es cuidar.</strong>
-          <span>La responsabilidad final siempre es humana. SonarIA orienta decisiones pedagógicas, no reemplaza el criterio docente.</span>
-        </div>
-      </div>
-    </section>
+<div id="resultado" class="result" style="display:none;"></div>
 
-    <section class="main-grid">
-      <section class="panel card">
-        <div class="panel-head">
-          <div>
-            <h2>Analizar canción</h2>
-            <div class="muted">Ingresa título, artista o pega la letra para recibir una orientación pedagógica base.</div>
-          </div>
-        </div>
+</div>
 
-        <div class="form-grid">
-          <div class="two">
-            <div class="field">
-              <label for="titulo">Título</label>
-              <input id="titulo" type="text" placeholder="Ej: Creep">
-            </div>
+<script>
 
-            <div class="field">
-              <label for="artista">Artista</label>
-              <input id="artista" type="text" placeholder="Ej: Radiohead">
-            </div>
-          </div>
+const API = "https://sonaria-api.onrender.com";
 
-          <div class="field">
-            <label for="texto">Letra</label>
-            <textarea id="texto" placeholder="Pega aquí la letra de la canción o deja este espacio vacío para intentar buscarla automáticamente."></textarea>
-          </div>
+async function analizar(){
 
-          <div class="checks">
-            <label class="check">
-              <input id="buscarLetra" type="checkbox" checked>
-              <span><strong>Buscar letra automáticamente</strong><br>Si no pegas la letra, SonarIA intentará encontrarla usando título y artista.</span>
-            </label>
+  const titulo = document.getElementById("titulo").value;
+  const artista = document.getElementById("artista").value;
+  const textoInput = document.getElementById("texto");
 
-            <label class="check">
-              <input id="contextoEscolar" type="checkbox" checked>
-              <span><strong>Priorizar contexto escolar</strong><br>La respuesta se orientará al uso pedagógico y a la mediación docente.</span>
-            </label>
-          </div>
+  const estado = document.getElementById("estado");
+  const resultado = document.getElementById("resultado");
 
-          <div class="actions">
-            <button id="analyzeBtn" class="btn btn-green">Analizar canción</button>
-            <button id="btnUpgrade" class="btn btn-ghost">Desbloquear Pro</button>
-            <button id="clearBtn" class="btn btn-ghost">Limpiar</button>
-          </div>
+  estado.innerText = "🔎 Analizando...";
+  resultado.style.display = "none";
 
-          <div class="hint-bar">
-            Enter analiza desde los campos de título y artista. En la caja de letra puedes usar <strong>Ctrl/Cmd + Enter</strong>.
-          </div>
+  try{
 
-          <div id="statusBox" class="status"></div>
-        </div>
-      </section>
-
-      <section class="results card">
-        <div class="results-top">
-          <div>
-            <h2>Resultado pedagógico</h2>
-            <div class="muted">Aquí aparecerá el análisis de SonarIA.</div>
-          </div>
-          <div id="resultBadge" class="result-badge">Sin análisis</div>
-        </div>
-
-        <div class="summary-card">
-          <div id="summaryTitle" class="summary-title">Esperando análisis</div>
-          <p id="summaryCopy" class="summary-copy">Completa el formulario para obtener una orientación base sobre la canción.</p>
-        </div>
-
-        <div class="metrics">
-          <div class="metric">
-            <strong>Edad sugerida</strong>
-            <span id="edadSugerida">—</span>
-          </div>
-          <div class="metric">
-            <strong>Fuente usada</strong>
-            <span id="fuenteUsada">—</span>
-          </div>
-          <div class="metric">
-            <strong>Lectura sugerida</strong>
-            <span id="lecturaSugerida">—</span>
-          </div>
-        </div>
-
-        <div class="traffic">
-          <div class="traffic-head">
-            <strong>Semáforo</strong>
-            <div class="lights">
-              <div id="lightRed" class="light red"></div>
-              <div id="lightYellow" class="light yellow"></div>
-              <div id="lightGreen" class="light green"></div>
-            </div>
-          </div>
-
-          <div class="bars">
-            <div class="bar-row">
-              <div class="bar-label"><span>Riesgo total</span><span id="riskPercent">0%</span></div>
-              <div class="bar"><div id="riskTotalFill" class="bar-fill"></div></div>
-            </div>
-
-            <div class="bar-row">
-              <div class="bar-label"><span>Contenido sensible</span><span id="riskSensitive">0%</span></div>
-              <div class="bar"><div id="riskSensitiveFill" class="bar-fill"></div></div>
-            </div>
-
-            <div class="bar-row">
-              <div class="bar-label"><span>Uso escolar</span><span id="riskSchool">0%</span></div>
-              <div class="bar"><div id="riskSchoolFill" class="bar-fill"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cards">
-          <div class="info-card">
-            <strong>Temas detectados</strong>
-            <div id="themesWrap" class="chips">
-              <span class="chip">Sin datos</span>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <strong>Contextos detectados</strong>
-            <div id="contextList" class="list">
-              <div class="list-item">Aún no hay datos.</div>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <strong>Observaciones pedagógicas</strong>
-            <div id="observaciones" class="list-item">Sin datos.</div>
-          </div>
-
-          <div class="info-card">
-            <strong>Enfoque sugerido</strong>
-            <div id="enfoque" class="list-item">Sin datos.</div>
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <section class="promo card">
-      <h2>SonarIA Pro</h2>
-      <div class="muted">
-        La experiencia gratuita ya entrega valor, pero está pensada para dejarte con ganas de más:
-        más continuidad, más profundidad y una capa premium cada vez más sólida.
-      </div>
-
-      <div class="promo-actions">
-        <button class="btn btn-primary" onclick="window.location.href='/planes.html'">Ir a planes</button>
-        <button class="btn btn-ghost" onclick="showProOverlay('Desbloquea la versión completa','Pasa de la experiencia base a una experiencia más completa dentro de SonarIA.')">Ver upgrade</button>
-      </div>
-    </section>
-
-  </div>
-
-  <div id="proOverlay" class="overlay">
-    <div class="overlay-box">
-      <div class="overlay-badge">🚀 SonarIA Pro</div>
-      <h3 id="proOverlayTitle">Desbloquea más</h3>
-      <p id="proOverlayText">Accede a una experiencia más completa dentro de SonarIA.</p>
-
-      <div class="overlay-list">
-        <div>Uso continuo de la herramienta</div>
-        <div>Base para funciones más avanzadas</div>
-        <div>Experiencia pensada para uso docente real</div>
-      </div>
-
-      <div class="overlay-actions">
-        <button class="btn btn-green" onclick="window.location.href='/planes.html'">Ver planes</button>
-        <button class="btn btn-ghost" onclick="hideProOverlay()">Seguir mirando</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API = "https://sonaria-api.onrender.com";
-
-    let USER = null;
-    let usos = Number(localStorage.getItem("sonaria_demo_uses") || "0");
-    const DEMO_LIMIT = 3;
-
-    const titulo = document.getElementById("titulo");
-    const artista = document.getElementById("artista");
-    const texto = document.getElementById("texto");
-    const buscarLetra = document.getElementById("buscarLetra");
-    const contextoEscolar = document.getElementById("contextoEscolar");
-
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const clearBtn = document.getElementById("clearBtn");
-    const btnUpgrade = document.getElementById("btnUpgrade");
-    const btnUpgradeTop = document.getElementById("btnUpgradeTop");
-
-    const statusBox = document.getElementById("statusBox");
-    const userName = document.getElementById("userName");
-    const userAvatar = document.getElementById("userAvatar");
-    const planBadge = document.getElementById("planBadge");
-    const contador = document.getElementById("contador");
-
-    const resultBadge = document.getElementById("resultBadge");
-    const summaryTitle = document.getElementById("summaryTitle");
-    const summaryCopy = document.getElementById("summaryCopy");
-    const edadSugerida = document.getElementById("edadSugerida");
-    const fuenteUsada = document.getElementById("fuenteUsada");
-    const lecturaSugerida = document.getElementById("lecturaSugerida");
-
-    const riskPercent = document.getElementById("riskPercent");
-    const riskSensitive = document.getElementById("riskSensitive");
-    const riskSchool = document.getElementById("riskSchool");
-
-    const riskTotalFill = document.getElementById("riskTotalFill");
-    const riskSensitiveFill = document.getElementById("riskSensitiveFill");
-    const riskSchoolFill = document.getElementById("riskSchoolFill");
-
-    const themesWrap = document.getElementById("themesWrap");
-    const contextList = document.getElementById("contextList");
-    const observaciones = document.getElementById("observaciones");
-    const enfoque = document.getElementById("enfoque");
-
-    const lightRed = document.getElementById("lightRed");
-    const lightYellow = document.getElementById("lightYellow");
-    const lightGreen = document.getElementById("lightGreen");
-
-    function getToken(){
-      return (
-        localStorage.getItem("mejoraria_token") ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("access_token") ||
-        ""
-      );
-    }
-
-    function setStatus(msg, type="info"){
-      statusBox.textContent = msg;
-      statusBox.style.color =
-        type === "ok" ? "#b7ffd1" :
-        type === "error" ? "#ffd7d7" :
-        "#dce8ff";
-    }
-
-    function clearStatus(){
-      statusBox.textContent = "";
-    }
-
-    function showProOverlay(title, text){
-      const overlay = document.getElementById("proOverlay");
-      document.getElementById("proOverlayTitle").textContent = title || "Desbloquea SonarIA Pro";
-      document.getElementById("proOverlayText").textContent = text || "Accede a una experiencia más completa.";
-      overlay.style.display = "flex";
-    }
-
-    function hideProOverlay(){
-      document.getElementById("proOverlay").style.display = "none";
-    }
-
-    function setUses(value){
-      usos = value;
-      localStorage.setItem("sonaria_demo_uses", String(usos));
-      actualizarContador();
-    }
-
-    function actualizarContador(){
-      if(!USER){
-        contador.textContent = "Preparando experiencia...";
-        return;
-      }
-
-      if((USER.plan || "free") === "pro"){
-        contador.textContent = "Modo Pro activo 🚀";
-        return;
-      }
-
-      contador.textContent = "Modo demo: " + usos + " de " + DEMO_LIMIT + " análisis usados";
-    }
-
-    async function loadUser(){
-      const token = getToken();
-
-      if(!token){
-        setStatus("Debes iniciar sesión para usar SonarIA.", "error");
-        planBadge.textContent = "Sin sesión";
-        contador.textContent = "Inicia sesión para continuar.";
-        return;
-      }
-
-      try{
-        const res = await fetch(API + "/me", {
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if(!res.ok || !data.user){
-          setStatus("No se pudo validar tu sesión.", "error");
-          planBadge.textContent = "Sesión inválida";
-          return;
-        }
-
-        USER = data.user;
-
-        userName.textContent = USER.email || "Usuario";
-        if(USER.picture){
-          userAvatar.innerHTML = '<img src="' + USER.picture + '" alt="avatar">';
-        }else{
-          userAvatar.textContent = (USER.email || "S").charAt(0).toUpperCase();
-        }
-
-        planBadge.textContent = ((USER.plan || "free").toUpperCase());
-        planBadge.className = "plan-pill " + (((USER.plan || "free") === "pro") ? "pro" : "");
-
-        actualizarContador();
-
-        if((USER.plan || "free") === "pro"){
-          btnUpgrade.style.display = "none";
-          btnUpgradeTop.style.display = "none";
-        }
-
-      }catch(error){
-        setStatus("No se pudo conectar con el backend.", "error");
-      }
-    }
-
-    function resetResult(){
-      resultBadge.textContent = "Sin análisis";
-      summaryTitle.textContent = "Esperando análisis";
-      summaryCopy.textContent = "Completa el formulario para obtener una orientación base sobre la canción.";
-      edadSugerida.textContent = "—";
-      fuenteUsada.textContent = "—";
-      lecturaSugerida.textContent = "—";
-
-      riskPercent.textContent = "0%";
-      riskSensitive.textContent = "0%";
-      riskSchool.textContent = "0%";
-
-      riskTotalFill.style.width = "0%";
-      riskSensitiveFill.style.width = "0%";
-      riskSchoolFill.style.width = "0%";
-
-      themesWrap.innerHTML = '<span class="chip">Sin datos</span>';
-      contextList.innerHTML = '<div class="list-item">Aún no hay datos.</div>';
-      observaciones.textContent = "Sin datos.";
-      enfoque.textContent = "Sin datos.";
-
-      lightRed.className = "light red";
-      lightYellow.className = "light yellow";
-      lightGreen.className = "light green";
-    }
-
-    function setTraffic(resultado){
-      lightRed.className = "light red";
-      lightYellow.className = "light yellow";
-      lightGreen.className = "light green";
-
-      const txt = (resultado || "").toLowerCase();
-
-      if(txt.includes("no apta")){
-        lightRed.className = "light red active red";
-      }else if(txt.includes("supervisión") || txt.includes("supervision")){
-        lightYellow.className = "light yellow active yellow";
-      }else{
-        lightGreen.className = "light green active green";
-      }
-    }
-
-    function renderBasicDemo(raw){
-      resultBadge.textContent = "Modo demo";
-      summaryTitle.textContent = raw.resultado || "Resultado base";
-      summaryCopy.textContent = raw.resumen || "Se generó una orientación base.";
-
-      edadSugerida.textContent = raw.edad_sugerida || "—";
-      fuenteUsada.textContent = raw.fuente_usada || "—";
-      lecturaSugerida.textContent = "Desbloquea Pro";
-
-      riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
-      riskSensitive.textContent = "—";
-      riskSchool.textContent = "—";
-
-      riskTotalFill.style.width = Math.min(raw.risk_percent ?? 0, 100) + "%";
-      riskSensitiveFill.style.width = "0%";
-      riskSchoolFill.style.width = "0%";
-
-      setTraffic(raw.resultado || "");
-
-      const themes = Array.isArray(raw.temas_detectados) ? raw.temas_detectados.slice(0,2) : [];
-      themesWrap.innerHTML = themes.length
-        ? themes.map(t => '<span class="chip">' + escapeHtml(t) + '</span>').join("")
-        : '<span class="chip">Sin datos</span>';
-
-      contextList.innerHTML = `
-        <div class="list-item">🔒 El plan gratuito muestra una vista resumida.</div>
-        <div class="list-item">Desbloquea Pro para acceder a más contexto y continuidad de uso.</div>
-      `;
-
-      observaciones.textContent = "Vista resumida disponible en modo demo.";
-      enfoque.textContent = "Desbloquea Pro para una experiencia más completa.";
-    }
-
-    function renderPro(raw){
-      resultBadge.textContent = raw.resultado || "Resultado";
-      summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
-      summaryCopy.textContent = raw.resumen || "Se completó el análisis.";
-
-      edadSugerida.textContent = raw.edad_sugerida || "—";
-      fuenteUsada.textContent = raw.fuente_usada || "—";
-      lecturaSugerida.textContent = raw.lectura_sugerida || "—";
-
-      riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
-      riskSensitive.textContent = (raw.risk_sensitive ?? 0) + "%";
-      riskSchool.textContent = (raw.risk_school ?? 0) + "%";
-
-      riskTotalFill.style.width = Math.min(raw.risk_percent ?? 0, 100) + "%";
-      riskSensitiveFill.style.width = Math.min(raw.risk_sensitive ?? 0, 100) + "%";
-      riskSchoolFill.style.width = Math.min(raw.risk_school ?? 0, 100) + "%";
-
-      setTraffic(raw.resultado || "");
-
-      const themes = Array.isArray(raw.temas_detectados) ? raw.temas_detectados : [];
-      themesWrap.innerHTML = themes.length
-        ? themes.map(t => '<span class="chip">' + escapeHtml(t) + '</span>').join("")
-        : '<span class="chip">Sin datos</span>';
-
-      const contexts = Array.isArray(raw.contextos_detectados) ? raw.contextos_detectados : [];
-      contextList.innerHTML = contexts.length
-        ? contexts.map(c => '<div class="list-item">' + escapeHtml(c) + '</div>').join("")
-        : '<div class="list-item">No se detectaron contextos destacados.</div>';
-
-      observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
-      enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
-    }
-
-    function escapeHtml(str){
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    async function analizar(){
-      if(!USER){
-        setStatus("Cargando usuario...", "error");
-        return;
-      }
-
-      if(!texto.value.trim() && buscarLetra.checked && !titulo.value.trim()){
-        setStatus("Para buscar la letra automáticamente, ingresa al menos el título de la canción.", "error");
-        return;
-      }
-
-      if((USER.plan || "free") !== "pro" && usos >= DEMO_LIMIT){
-        setStatus("Ya viste el potencial. Desbloquea Pro para seguir 🚀", "error");
-        showProOverlay(
-          "Límite gratuito alcanzado",
-          "La experiencia base ya te mostró el valor de SonarIA. Da el siguiente paso y desbloquea una experiencia más potente."
-        );
-        return;
-      }
-
-      const payload = {
-        titulo: titulo.value.trim(),
-        artista: artista.value.trim(),
-        texto: texto.value.trim(),
-        buscar_letra: buscarLetra.checked,
-        contexto_escolar: contextoEscolar.checked
-      };
-
-      if (!texto.value.trim() && buscarLetra.checked) {
-        setStatus("Buscando letra y preparando análisis...", "info");
-      } else {
-        setStatus("Analizando canción...", "info");
-      }
-
-      analyzeBtn.disabled = true;
-      analyzeBtn.textContent = "Analizando...";
-
-      try{
-        const res = await fetch(API + "/analizar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + getToken()
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const raw = await res.json().catch(() => ({}));
-
-        if(!res.ok){
-          setStatus(raw.detail || "No fue posible analizar la canción.", "error");
-          return;
-        }
-
-        if((USER.plan || "free") === "pro"){
-          renderPro(raw);
-          setStatus("Análisis completado correctamente.", "ok");
-        }else{
-          setUses(usos + 1);
-          renderBasicDemo(raw);
-          setStatus("Modo demo activo. Ya viste una vista base del análisis.", "ok");
-
-          if(usos >= DEMO_LIMIT){
-            setTimeout(() => {
-              showProOverlay(
-                "Desbloquea la versión completa",
-                "Ya probaste la experiencia base. Pasa a SonarIA Pro para seguir con más continuidad y una experiencia cada vez más completa."
-              );
-            }, 700);
-          }
-        }
-
-      }catch(error){
-        setStatus("Error de conexión con el backend.", "error");
-      }finally{
-        analyzeBtn.disabled = false;
-        analyzeBtn.textContent = "Analizar canción";
-      }
-    }
-
-    function limpiar(){
-      titulo.value = "";
-      artista.value = "";
-      texto.value = "";
-      buscarLetra.checked = true;
-      contextoEscolar.checked = true;
-      clearStatus();
-      resetResult();
-    }
-
-    analyzeBtn.addEventListener("click", analizar);
-    clearBtn.addEventListener("click", limpiar);
-    btnUpgrade.addEventListener("click", () => {
-      showProOverlay(
-        "Desbloquea SonarIA Pro",
-        "Pasa de una orientación base a una experiencia más completa dentro de SonarIA."
-      );
-    });
-    btnUpgradeTop.addEventListener("click", () => {
-      showProOverlay(
-        "Desbloquea SonarIA Pro",
-        "Haz crecer tu experiencia con una cuenta preparada para un uso más potente y continuo."
-      );
+    const res = await fetch(API + "/analizar", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + localStorage.getItem("mejoraria_token")
+      },
+      body: JSON.stringify({
+        titulo,
+        artista,
+        texto: textoInput.value,
+        buscar_letra:true
+      })
     });
 
-    document.addEventListener("keydown", (e) => {
-      const isTextarea = document.activeElement === texto;
+    const raw = await res.json();
 
-      if (!isTextarea && e.key === "Enter") {
-        e.preventDefault();
-        analizar();
-      }
+    if(!res.ok){
+      estado.innerText = "❌ " + (raw.detail || "Error");
+      return;
+    }
 
-      if (isTextarea && e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        analizar();
-      }
-    });
+    // 🔥 ESTA ES LA CLAVE
+    if(raw.texto && !textoInput.value.trim()){
+      textoInput.value = raw.texto;
+    }
 
-    resetResult();
-    loadUser();
-  </script>
+    estado.innerText = "✅ Análisis listo";
+
+    let colorClass = "good";
+    if(raw.resultado.includes("NO")) colorClass = "bad";
+    if(raw.resultado.includes("SUPERVISIÓN")) colorClass = "mid";
+
+    resultado.innerHTML = `
+      <h2 class="${colorClass}">${raw.resultado}</h2>
+      <p>${raw.resumen}</p>
+
+      <p><b>Edad sugerida:</b> ${raw.edad_sugerida}</p>
+      <p><b>Uso pedagógico:</b> ${raw.lectura_sugerida}</p>
+
+      <p class="small">Fuente: ${raw.fuente_usada}</p>
+
+      <hr>
+
+      <p><b>Temas detectados:</b> ${raw.temas_detectados.join(", ")}</p>
+    `;
+
+    resultado.style.display = "block";
+
+  }catch(e){
+    estado.innerText = "❌ Error de conexión";
+  }
+}
+
+// ENTER para analizar
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    analizar();
+  }
+});
+
+</script>
+
 </body>
 </html>
