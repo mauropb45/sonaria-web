@@ -659,7 +659,33 @@
     }
 
     async function renderHistory(){
-      if(!authToken) return;
+  if(!authToken) return;
+
+  try{
+    const res = await fetch(HISTORY_URL, {
+      headers: { "Authorization": "Bearer " + authToken }
+    });
+
+    const data = await res.json().catch(() => ({}));
+    const items = Array.isArray(data.items) ? data.items : [];
+
+    if(!items.length){
+      historyList.innerHTML = '<div class="history-item"><div class="history-title">Aún no hay análisis guardados</div><div class="history-sub">Cuando analices canciones, aparecerán aquí.</div></div>';
+      return;
+    }
+
+    historyList.innerHTML = items.slice(0, 5).map(item => `
+      <div class="history-item">
+        <div class="history-title">${escapeHtml(item.titulo || "Canción sin título")}</div>
+        <div class="history-sub">${escapeHtml(item.artista || "Artista no indicado")}${item.created_at ? " · " + new Date(item.created_at).toLocaleString("es-CL") : ""}</div>
+        <div class="history-badge">${escapeHtml(item.resultado || item.resumen || "Análisis")}</div>
+      </div>
+    `).join("");
+  }catch(error){
+    console.error("Error cargando historial:", error);
+    historyList.innerHTML = '<div class="history-item"><div class="history-title">Historial no disponible por ahora</div><div class="history-sub">El panel sigue funcionando. Revisa CORS o backend.</div></div>';
+  }
+}
 
       try{
         const res = await fetch(HISTORY_URL, {
