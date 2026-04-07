@@ -712,10 +712,14 @@
     btnUpgradeTop.addEventListener("click", goToCheckout);
     btnUpgrade.addEventListener("click", goToCheckout);
 
+  
+
     btnHistorial.addEventListener("click", async () => {
       await renderHistory();
-      window.scrollTo({ top: historyList.offsetTop - 120, behavior: "smooth" });
-    });
+    if (historyList) {
+    window.scrollTo({ top: historyList.offsetTop - 120, behavior: "smooth" });
+    }
+  });
 
     clearBtn.addEventListener("click", () => {
       titulo.value = "";
