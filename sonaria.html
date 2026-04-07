@@ -696,7 +696,7 @@
         }
 
         user = data.user || { plan: "free" };
-        usage = data.usage || usage;
+        usage = data.usage || { plan: user.plan || "free", remaining_today: 3, blocked: false };
 
         userName.textContent = user.name || user.email || "Usuario";
         userEmail.textContent = user.email || "";
