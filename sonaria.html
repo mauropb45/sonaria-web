@@ -1,64 +1,119 @@
-<!-- sonaria.html (con botón contexto real) -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SonarIA</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0b1220;
+  color:white;
+  padding:20px;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+}
+textarea{
+  width:100%;
+  height:150px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+}
+button{
+  padding:10px 20px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+.card{
+  background:#1e293b;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+}
+</style>
 </head>
+
 <body>
 
-<h2>Analizar canción</h2>
+<div class="container">
 
-<textarea id="letra" rows="10" cols="50"></textarea><br><br>
+<h1>SonarIA 🎵</h1>
 
-<button onclick="analizar()">Analizar</button>
-<button onclick="verContexto()">Contexto</button>
+<textarea id="letra" placeholder="Pega aquí la letra de la canción..."></textarea>
 
-<h3>Resultado</h3>
-<div id="resultado"></div>
+<br>
+<button onclick="analizar()">Analizar canción</button>
 
-<h3>Contexto</h3>
+<div id="resultado" class="card"></div>
 <div id="contexto"></div>
+
+</div>
 
 <script>
 
-let ultimoResultado = null;
+const API = "https://sonaria-api.onrender.com";
 
 async function analizar(){
-    const letra = document.getElementById("letra").value;
 
-    const res = await fetch("http://127.0.0.1:5000/analizar",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({letra})
+  const letra = document.getElementById("letra").value;
+
+  if(!letra){
+    alert("Pega una letra primero");
+    return;
+  }
+
+  document.getElementById("resultado").innerHTML = "Analizando...";
+  document.getElementById("contexto").innerHTML = "";
+
+  try{
+
+    const res = await fetch(API + "/analizar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        letra: letra
+      })
     });
 
     const data = await res.json();
-    ultimoResultado = data;
 
-    document.getElementById("resultado").innerHTML = "Análisis completado";
-}
-
-function verContexto(){
-    if(!ultimoResultado){
-        alert("Primero analiza una canción");
-        return;
-    }
+    document.getElementById("resultado").innerHTML = "Análisis completado ✅";
 
     let html = "";
 
-    ultimoResultado.contextos_detectados.forEach(c=>{
+    if(data.contextos_detectados.length === 0){
+      html = "<div class='card'>No se detectaron problemas relevantes 👍</div>";
+    }else{
+      data.contextos_detectados.forEach(c=>{
         html += `
-        <div style="border:1px solid #ccc; padding:10px; margin:10px;">
-            <b>Palabra:</b> ${c.termino}<br>
-            <b>Fragmento:</b> ${c.fragmento}<br>
-            <b>Lectura:</b> ${c.lectura_pedagogica}<br>
-            <b>Acción:</b> ${c.accion_sugerida}
+        <div class="card">
+          <b>Palabra:</b> ${c.termino}<br>
+          <b>Fragmento:</b> ${c.fragmento}<br>
+          <b>Tipo:</b> ${c.tipo}<br>
+          <b>Lectura pedagógica:</b> ${c.lectura_pedagogica}<br>
+          <b>Acción:</b> ${c.accion_sugerida}
         </div>
         `;
-    });
+      });
+    }
 
     document.getElementById("contexto").innerHTML = html;
+
+  }catch(error){
+    console.error(error);
+    document.getElementById("resultado").innerHTML = "Error de conexión ❌";
+  }
+
 }
 
 </script>
