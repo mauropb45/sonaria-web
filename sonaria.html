@@ -4,163 +4,221 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SonarIA</title>
+
 <style>
-body{font-family:Arial;background:#0b1220;color:#fff;padding:20px}
-.container{max-width:980px;margin:auto}
-textarea,input{width:100%;padding:10px;border:none;border-radius:10px;background:#1e293b;color:#fff}
-textarea{height:180px}
-button{padding:10px 20px;margin-top:10px;border:none;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
-.card{background:#1e293b;padding:15px;border-radius:10px;margin-top:15px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.small{color:#cbd5e1;font-size:14px}
-.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#334155;margin-right:8px}
-.ok{color:#86efac}.err{color:#fca5a5}
+body{
+  margin:0;
+  font-family:Inter, Arial;
+  background:#0b1220;
+  color:#fff;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px;
+}
+
+h1{
+  font-size:32px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:16px;
+  margin-bottom:20px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+input, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  background:#0f172a;
+  color:#fff;
+}
+
+textarea{
+  height:180px;
+}
+
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:#2563eb;
+  color:#fff;
+}
+
+.btn-pro{
+  background:#14d68f;
+  color:#000;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-right:6px;
+}
+
+.free{background:#334155;}
+.pro{background:#14d68f;color:#000;}
+
+.risk-low{color:#22c55e;}
+.risk-mid{color:#facc15;}
+.risk-high{color:#ef4444;}
+
+.blocked{
+  opacity:0.5;
+  filter:blur(2px);
+  pointer-events:none;
+}
+
+.upgrade-box{
+  background:#0f172a;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+  margin-top:10px;
+}
 </style>
 </head>
+
 <body>
 <div class="container">
+
 <h1>SonarIA 🎵</h1>
-<div id="userBox" class="card">Cargando usuario...</div>
+
+<div id="userBox" class="card"></div>
 
 <div class="card">
   <div class="row">
-    <div>
-      <div class="small">Título</div>
-      <input id="titulo" placeholder="Título canción">
-    </div>
-    <div>
-      <div class="small">Artista</div>
-      <input id="artista" placeholder="Artista">
-    </div>
+    <input id="titulo" placeholder="Título">
+    <input id="artista" placeholder="Artista">
   </div>
-  <div style="margin-top:12px" class="small">Letra</div>
-  <textarea id="texto" placeholder="Pega aquí la letra de la canción..."></textarea>
-  <button onclick="analizar()">Analizar canción</button>
-  <button onclick="window.location.href='planes.html'">Activar versión completa</button>
-  <div id="status" class="card" style="display:none"></div>
+
+  <textarea id="texto" placeholder="Pega la letra..."></textarea>
+
+  <div style="margin-top:10px;">
+    <button class="btn-primary" onclick="analizar()">Analizar</button>
+    <button class="btn-pro" onclick="window.location.href='planes.html'">Activar PRO</button>
+  </div>
 </div>
 
-<div id="resultado" class="card"></div>
-<div id="contexto"></div>
+<div id="resultado"></div>
+
 </div>
 
 <script>
 const API = "https://sonaria-api.onrender.com";
 
-function getToken(){
-  return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token");
-}
 function getUser(){
-  try{ return JSON.parse(localStorage.getItem("mejoraria_user") || "null"); }catch(e){ return null; }
+  return JSON.parse(localStorage.getItem("mejoraria_user") || "null");
 }
-function setStatus(msg, ok=false){
-  const el = document.getElementById("status");
-  el.style.display = "block";
-  el.className = "card " + (ok ? "ok" : "err");
-  el.textContent = msg;
+
+function getToken(){
+  return localStorage.getItem("mejoraria_token");
 }
+
 function renderUser(){
   const u = getUser();
   const box = document.getElementById("userBox");
-  if(!u){ box.innerHTML = "Sin sesión. Ve a <a href='login.html' style='color:#93c5fd'>login</a>"; return; }
-  box.innerHTML = `<b>${u.name || 'Usuario'}</b><br>${u.email}<br><span class="pill">${(u.plan || 'free').toUpperCase()}</span><span class="pill">${u.analyses_used || 0}/3 usados</span>`;
+
+  if(!u){
+    box.innerHTML = "No logueado";
+    return;
+  }
+
+  box.innerHTML = `
+    <b>${u.name}</b><br>
+    ${u.email}<br>
+    <span class="badge ${u.plan==='pro'?'pro':'free'}">${u.plan.toUpperCase()}</span>
+    <span class="badge free">${u.analyses_used}/3</span>
+  `;
+}
+
+function getRiskClass(risk){
+  if(risk < 30) return "risk-low";
+  if(risk < 70) return "risk-mid";
+  return "risk-high";
 }
 
 async function analizar(){
   const token = getToken();
   const user = getUser();
-  if(!token || !user){ setStatus("Debes iniciar sesión antes de analizar."); return; }
 
-  const texto = document.getElementById("texto").value.trim();
-  if(!texto){ setStatus("Pega una letra primero."); return; }
+  const texto = document.getElementById("texto").value;
 
-  document.getElementById("resultado").innerHTML = "Analizando...";
-  document.getElementById("contexto").innerHTML = "";
-  setStatus("Analizando...", true);
+  const res = await fetch(API + "/analizar",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer " + token
+    },
+    body:JSON.stringify({
+      titulo:document.getElementById("titulo").value,
+      artista:document.getElementById("artista").value,
+      texto:texto
+    })
+  });
 
-  try{
-    const res = await fetch(API + "/analizar",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + token
-      },
-      body: JSON.stringify({
-        titulo: document.getElementById("titulo").value.trim(),
-        artista: document.getElementById("artista").value.trim(),
-        texto: texto
-      })
-    });
+  const data = await res.json();
 
-    const data = await res.json();
+  const riskClass = getRiskClass(data.riesgo);
 
-    if(res.status === 401){
-      setStatus("Tu sesión expiró. Vuelve a iniciar sesión.");
-      return;
-    }
-    if(res.status === 403){
-      setStatus(data.detail || "Límite alcanzado.");
-      return;
-    }
-    if(!res.ok){
-      throw new Error(data.detail || "No fue posible analizar.");
-    }
+  let bloquePro = "";
 
-    const u = getUser() || {};
-    u.plan = data.plan;
-    u.analyses_used = data.analyses_used;
-    localStorage.setItem("mejoraria_user", JSON.stringify(u));
-    renderUser();
-
-    document.getElementById("resultado").innerHTML = `
-      <h3>${data.resultado}</h3>
-      <p>${data.resumen}</p>
-      <p><b>Alerta docente:</b> ${data.alerta_docente || "-"}</p>
-      <p><b>Edad sugerida:</b> ${data.edad_sugerida || "-"}</p>
-      <p><b>Lectura sugerida:</b> ${data.lectura_sugerida || "-"}</p>
-      <p><b>Riesgo total:</b> ${data.riesgo || 0}%</p>
-      <p><b>Riesgo apoderado:</b> ${data.riesgo_apoderado || 0}%</p>
-      <p><b>Sugerencia para clase:</b> ${data.sugerencia_clase || "-"}</p>
-      <p><b>Observaciones:</b> ${data.observaciones_pedagogicas || "-"}</p>
-      <p><b>Mensaje de contexto:</b> ${data.context_message || "Sin alerta implícita especial."}</p>
-      <p><b>Mensaje de reemplazo:</b> ${data.replacement_message || "Sin reemplazos necesarios."}</p>
+  if(user.plan !== "pro"){
+    bloquePro = `
+      <div class="upgrade-box">
+        🔒 Funciones completas disponibles en PRO<br><br>
+        <button class="btn-pro" onclick="window.location.href='planes.html'">
+          Activar versión completa
+        </button>
+      </div>
     `;
-
-    let html = "";
-    if(!data.contextos_detectados || data.contextos_detectados.length === 0){
-      html = "<div class='card'>No se detectaron problemas relevantes 👍</div>";
-    }else{
-      data.contextos_detectados.forEach(c=>{
-        html += `
-        <div class="card">
-          <b>Palabra o término:</b> ${c.termino}<br>
-          <b>Fragmento:</b> ${c.fragmento}<br>
-          <b>Tipo:</b> ${c.tipo}<br>
-          <b>Lectura pedagógica:</b> ${c.lectura_pedagogica}<br>
-          <b>Acción:</b> ${c.accion_sugerida}
-        </div>`;
-      });
-    }
-
-    if(data.reemplazos_sugeridos && Object.keys(data.reemplazos_sugeridos).length){
-      html += "<div class='card'><b>Reemplazos sugeridos</b><br>";
-      for(const [k,v] of Object.entries(data.reemplazos_sugeridos)){
-        html += `<div style="margin-top:8px"><b>${k}:</b> ${(v || []).join(" · ")}</div>`;
-      }
-      html += "</div>";
-    }
-
-    document.getElementById("contexto").innerHTML = html;
-    setStatus("Análisis completado ✅", true);
-
-  }catch(error){
-    console.error(error);
-    setStatus("Error de conexión o CORS ❌");
-    document.getElementById("resultado").innerHTML = "Error de conexión ❌";
   }
+
+  document.getElementById("resultado").innerHTML = `
+    <div class="card">
+      <h2>${data.resultado}</h2>
+      <p>${data.resumen}</p>
+
+      <p class="${riskClass}">
+        Riesgo: ${data.riesgo}%
+      </p>
+
+      <p><b>Edad:</b> ${data.edad_sugerida}</p>
+      <p><b>Sugerencia:</b> ${data.sugerencia_clase}</p>
+    </div>
+
+    <div class="card ${user.plan !== 'pro' ? 'blocked':''}">
+      <h3>Detalle pedagógico</h3>
+      ${data.contextos_detectados.map(c=>`
+        <p><b>${c.termino}</b> → ${c.lectura_pedagogica}</p>
+      `).join("")}
+    </div>
+
+    ${bloquePro}
+  `;
 }
 
 renderUser();
 </script>
+
 </body>
 </html>
