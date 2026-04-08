@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SonarIA | Docente elegante</title>
+<title>SonarIA</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -16,7 +16,6 @@
   --text:#f4f7fb;
   --muted:#99a7bc;
 
-  /* F1 palette */
   --ferrari:#E10600;
   --mclaren:#FF8700;
   --aston:#00D2BE;
@@ -529,7 +528,7 @@ input::placeholder, textarea::placeholder{ color:#8797ae; }
         </div>
 
         <div class="info-stack">
-          <div class="card info"><strong>FREE visible</strong><span>Siempre se verá la estructura completa, pero los módulos premium quedarán visibles y bloqueados con elegancia.</span></div>
+          <div class="card info"><strong>FREE visible</strong><span>Siempre se ve la estructura completa, pero los módulos premium quedan visibles y bloqueados con elegancia.</span></div>
           <div class="card info"><strong>PRO valioso</strong><span>La versión premium no se esconde: se muestra, se entiende y se desea.</span></div>
           <div class="card info"><strong>Look equilibrado</strong><span>Serio para el profesor, atractivo para estudiantes, sin exageraciones visuales.</span></div>
         </div>
@@ -538,7 +537,7 @@ input::placeholder, textarea::placeholder{ color:#8797ae; }
       <section class="card analyzer">
         <div class="section-head">
           <h3>Análisis principal</h3>
-          <p>Pega la letra y obtiene una lectura pedagógica inmediata. Las funciones premium permanecen visibles, pero bloqueadas.</p>
+          <p>Pega la letra y obtén una lectura pedagógica inmediata. Las funciones premium permanecen visibles, pero bloqueadas.</p>
         </div>
 
         <div class="form-grid">
@@ -553,14 +552,12 @@ input::placeholder, textarea::placeholder{ color:#8797ae; }
           <button class="tool primary" onclick="analizar()">Analizar</button>
           <button class="tool dark" onclick="scrollToSection('panel-contexto')">Contexto</button>
           <button class="tool locked" onclick="featureGate('Traducción paralela')">Traducción</button>
-          <button class="tool youtube" onclick="openYouTube()">
-            <span style="font-size:15px;">▶</span> YouTube
-          </button>
+          <button class="tool youtube" onclick="openYouTube()"><span style="font-size:15px;">▶</span> YouTube</button>
           <button class="tool gray" onclick="limpiar()">Limpiar</button>
         </div>
 
         <div class="helper">
-          Recomendación de producto: <strong>dejar visibles los botones premium bloqueados</strong> es mejor que ocultarlos. Así el usuario entiende el valor completo de SonarIA antes de pagar.
+          Recomendación de producto: <strong>dejar visibles los botones premium bloqueados</strong> funciona mejor que ocultarlos. Así el usuario entiende el valor completo de SonarIA antes de pagar.
         </div>
 
         <div id="statusLine" class="status">Listo para analizar.</div>
@@ -665,7 +662,9 @@ input::placeholder, textarea::placeholder{ color:#8797ae; }
 const API = "https://sonaria-api.onrender.com";
 
 function getToken(){
-  return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token");
+  return localStorage.getItem("mejoraria_token")
+      || localStorage.getItem("token")
+      || localStorage.getItem("access_token");
 }
 function getUser(){
   try { return JSON.parse(localStorage.getItem("mejoraria_user") || "null"); }
@@ -844,7 +843,7 @@ async function analizar(){
       body: JSON.stringify({
         titulo: document.getElementById("titulo").value.trim(),
         artista: document.getElementById("artista").value.trim(),
-        texto
+        texto: texto
       })
     });
 
