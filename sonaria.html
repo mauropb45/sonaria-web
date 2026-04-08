@@ -1,41 +1,115 @@
-<!-- FRONTEND SONARIA REAL -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SonarIA</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:#0b1220;
+  color:white;
+  margin:0;
+  padding:20px;
+}
+
+.card{
+  max-width:700px;
+  margin:auto;
+  background:#111827;
+  padding:20px;
+  border-radius:10px;
+}
+
+input,textarea{
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  background:#1f2937;
+  color:white;
+}
+
+button{
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.primary{
+  background:#00d084;
+  color:black;
+}
+
+.result{
+  margin-top:15px;
+  background:#1f2937;
+  padding:10px;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>SonarIA</h2>
+<div id="usuario">Cargando usuario...</div>
+
+<input id="titulo" placeholder="Título">
+<input id="artista" placeholder="Artista">
+<textarea id="texto" placeholder="Pega la letra"></textarea>
+
+<button class="primary" onclick="analizar()">Analizar</button>
+
+<div id="resultado" class="result"></div>
+
+</div>
 
 <script>
-const API="https://sonaria-api.onrender.com";
+const API = "https://sonaria-api.onrender.com";
 
-async function loginGoogle(token){
-    const res = await fetch(API+"/auth/google",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({token})
-    });
-
-    const user = await res.json();
-
-    document.getElementById("usuario").innerText =
-        user.name + " ("+user.plan+")";
+// cargar usuario
+const user = JSON.parse(localStorage.getItem("mejoraria_user"));
+if(user){
+  document.getElementById("usuario").innerText =
+    user.name + " ("+user.plan+")";
+}else{
+  document.getElementById("usuario").innerText =
+    "No logueado";
 }
 
+// analizar
 async function analizar(){
-    const texto = document.getElementById("texto").value;
 
-    const res = await fetch(API+"/analizar",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({texto})
-    });
+  const texto = document.getElementById("texto").value;
 
-    const data = await res.json();
+  const res = await fetch(API + "/analizar",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({texto})
+  });
 
-    if(data.error){
-        resultado.innerHTML = "⚠️ " + data.error;
-        return;
-    }
+  const data = await res.json();
 
-    resultado.innerHTML = `
-        <h3>${data.resultado}</h3>
-        <p>Riesgo: ${data.riesgo}%</p>
-        <p>${data.resumen}</p>
-    `;
+  if(data.error){
+    resultado.innerHTML = "⚠️ " + data.error;
+    return;
+  }
+
+  resultado.innerHTML = `
+    <h3>${data.resultado}</h3>
+    <p>Riesgo: ${data.riesgo}%</p>
+    <p>${data.resumen}</p>
+  `;
 }
 </script>
+
+</body>
+</html>
