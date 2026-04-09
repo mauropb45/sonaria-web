@@ -1,923 +1,915 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SonarIA | UX Pro V4</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0A0C10;
-  --bg2:#11151d;
-  --panel:#141a23;
-  --panel-2:#171f2b;
-  --panel-3:#1b2533;
-  --line:rgba(255,255,255,.08);
-  --text:#f4f7fb;
-  --muted:#99a7bc;
-  --ferrari:#E10600;
-  --mclaren:#FF8700;
-  --aston:#00D2BE;
-  --accent:#4DA1FF;
-  --shadow:0 18px 40px rgba(0,0,0,.28);
-  --radius:18px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(225,6,0,.08), transparent 18%),
-    radial-gradient(circle at top right, rgba(255,135,0,.07), transparent 18%),
-    linear-gradient(180deg,var(--bg),var(--bg2) 55%);
-}
-body::before{
-  content:"";
-  position:fixed; inset:0; pointer-events:none;
-  background:
-    linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
-  background-size:30px 30px;
-  mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 82%);
-}
-.wrap{
-  max-width:1360px;
-  margin:0 auto;
-  padding:22px;
-  position:relative;
-  z-index:1;
-}
-.layout{
-  display:grid;
-  grid-template-columns:240px 1fr;
-  gap:18px;
-  min-height:calc(100vh - 44px);
-}
-.card{
-  background:linear-gradient(180deg,var(--panel),var(--panel-2));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.sidebar{
-  padding:18px;
-  position:sticky;
-  top:20px;
-  align-self:start;
-  max-height:calc(100vh - 40px);
-}
-.brand{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-  margin-bottom:18px;
-}
-.brand h1{
-  margin:0;
-  font-size:28px;
-  line-height:.9;
-  letter-spacing:-.05em;
-}
-.brand h1 span{ color:var(--ferrari); }
-.brand p{
-  margin:8px 0 0;
-  color:var(--muted);
-  line-height:1.55;
-  font-size:13px;
-}
-.cross{ opacity:.12; font-size:16px; user-select:none; }
-.menu-title{
-  margin:18px 0 10px;
-  color:#c6d2e3;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-}
-.side-btn{
-  width:100%;
-  text-align:left;
-  border:none;
-  border-radius:14px;
-  padding:13px 14px;
-  background:var(--panel-3);
-  color:var(--text);
-  margin-bottom:10px;
-  font:inherit;
-  font-weight:700;
-  cursor:pointer;
-  transition:.18s ease;
-  border:1px solid rgba(255,255,255,.04);
-}
-.side-btn:hover{ transform:translateY(-1px); }
-.side-btn.active{ background:linear-gradient(135deg,var(--ferrari),#8e0b07); }
-.side-btn.locked{
-  position:relative;
-  background:#202b3c;
-}
-.side-btn.locked::after{
-  content:"PRO";
-  position:absolute; top:8px; right:10px;
-  font-size:10px; font-weight:900; color:#fff1c2;
-}
-.side-note{ color:var(--muted); font-size:12px; line-height:1.55; }
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | Panel docente</title>
+  <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-.main{ display:grid; gap:18px; }
-.hero{
-  padding:20px 22px;
-  display:flex;
-  justify-content:space-between;
-  gap:18px;
-  align-items:flex-start;
-  flex-wrap:wrap;
-}
-.hero h2{
-  margin:0;
-  font-size:36px;
-  line-height:.95;
-  letter-spacing:-.05em;
-}
-.hero p{
-  margin:10px 0 0;
-  color:var(--muted);
-  line-height:1.7;
-  max-width:720px;
-}
-.user-strip{
-  margin-top:14px;
-  padding:12px 14px;
-  border-radius:14px;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.user-meta strong{ display:block; font-size:15px; }
-.user-meta span{ color:var(--muted); font-size:13px; }
-.pill{
-  display:inline-flex; align-items:center; justify-content:center;
-  padding:7px 10px; border-radius:999px; font-size:12px; font-weight:800;
-  border:1px solid rgba(255,255,255,.08); background:#212b3a; margin-left:6px;
-}
-.pill.free{ color:#ffd8d6; background:rgba(225,6,0,.12); border-color:rgba(225,6,0,.25); }
-.pill.pro{ color:#d7fff4; background:rgba(0,210,190,.12); border-color:rgba(0,210,190,.25); }
+  <style>
+    :root{
+      --bg:#06101c;
+      --bg2:#0b1627;
+      --panel:rgba(255,255,255,.05);
+      --panel2:rgba(255,255,255,.035);
+      --line:rgba(255,255,255,.10);
+      --text:#eef2f7;
+      --muted:#a3b3c8;
+      --green:#14d68f;
+      --orange:#ff8a00;
+      --orange2:#ff6500;
+      --blue:#4b82ff;
+      --yellow:#f3c74b;
+      --red:#ff7474;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+      --radius:26px;
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.09), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+    }
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px 22px 80px;position:relative;z-index:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+    .brand{display:flex;flex-direction:column;gap:4px}
+    .brand-title{margin:0;font-size:clamp(2.2rem,4vw,3.6rem);font-weight:900;letter-spacing:-.06em;line-height:.92}
+    .brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,214,143,.35)}
+    .brand-sub{color:#d7fff0;font-size:.96rem;font-weight:800}
+    .nav-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{min-height:48px;padding:0 18px;border:none;border-radius:16px;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;display:inline-flex;align-items:center;justify-content:center}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.75;cursor:not-allowed;transform:none}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
+    .btn-green{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c;box-shadow:0 12px 28px rgba(20,214,143,.20)}
+    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line)}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-bottom:18px}
+    .hero-main,.hero-side,.panel,.results,.cta{padding:26px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dce8ff;font-size:.84rem;font-weight:800;margin-bottom:14px}
+    .hero h1{margin:0 0 12px;font-size:clamp(2.3rem,4.8vw,4.2rem);line-height:.93;letter-spacing:-.07em}
+    .hero p{margin:0;color:var(--muted);line-height:1.8;font-size:1rem}
+    .user-strip{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .user-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:900;color:#d7fff0;flex:0 0 auto}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .user-name{font-weight:800;line-height:1.2}
+    .user-email{color:var(--muted);font-size:.92rem;margin-top:3px}
+    .pill{padding:7px 11px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff;display:inline-flex;align-items:center;gap:8px}
+    .pill.pro{background:rgba(20,214,143,.12);border-color:rgba(20,214,143,.22);color:#d9ffe9}
+    .mini-grid{display:grid;gap:12px}
+    .mini{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}
+    .mini strong{display:block;margin-bottom:7px;font-size:.98rem}
+    .mini span{color:var(--muted);line-height:1.7;font-size:.95rem}
+    .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel h2,.results h2,.cta h2{margin:0;font-size:1.55rem;letter-spacing:-.04em}
+    .panel-head,.results-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .muted{color:var(--muted);line-height:1.75}
+    .form-grid{display:grid;gap:12px}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:grid;gap:7px}
+    .field label{font-size:.9rem;color:#dce8ff;font-weight:700}
+    input[type='text'], textarea{width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit}
+    textarea{min-height:190px;resize:vertical}
+    input::placeholder, textarea::placeholder{color:#90a0b6}
+    .checks{display:grid;gap:10px;margin-top:4px}
+    .check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);color:#dce8ff;line-height:1.6;font-size:.95rem}
+    .check input{margin-top:3px;accent-color:var(--green)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .hint-bar{margin-top:2px;padding:14px 16px;border-radius:16px;background:rgba(75,130,255,.08);border:1px solid rgba(75,130,255,.18);color:#dce8ff;font-weight:700;line-height:1.6}
+    .status{min-height:24px;font-weight:800;line-height:1.5}
+    .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .soft-pill{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#dce8ff;display:none}
+    .soft-pill.show{display:inline-flex}
+    .summary-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .summary-title{margin:0 0 8px;font-size:1.5rem;letter-spacing:-.04em}
+    .summary-copy{margin:0;color:#d7e2f1;line-height:1.78}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+    .metric{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .metric strong{display:block;margin-bottom:6px;color:#dce8ff;font-size:.92rem}
+    .metric span{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
+    .traffic{padding:16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .traffic-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .lights{display:flex;gap:10px}
+    .light{width:18px;height:18px;border-radius:50%;opacity:.25;background:rgba(255,255,255,.08);transition:.2s ease}
+    .light.active.red{background:var(--red);opacity:1;box-shadow:0 0 14px rgba(255,116,116,.40)}
+    .light.active.yellow{background:var(--yellow);opacity:1;box-shadow:0 0 14px rgba(243,199,75,.35)}
+    .light.active.green{background:var(--green);opacity:1;box-shadow:0 0 14px rgba(20,214,143,.35)}
+    .bars{display:grid;gap:12px}
+    .bar-row{display:grid;gap:6px}
+    .bar-label{display:flex;justify-content:space-between;gap:10px;color:#dce8ff;font-size:.9rem;font-weight:700}
+    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .35s ease}
+    .info-grid{display:grid;gap:12px}
+    .info-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .info-card strong{display:block;margin-bottom:7px;color:#dce8ff}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff}
+    .list{display:grid;gap:8px}
+    .list-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#d7e2f1;line-height:1.65}
+    .cta{margin-top:18px;background:radial-gradient(circle at top right, rgba(255,138,0,.16), transparent 22%), linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04))}
+    .cta-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .history-list{display:grid;gap:10px;margin-top:14px}
+    .history-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);line-height:1.55}
+    .history-title{font-weight:800}
+    .history-sub{color:var(--muted);font-size:.92rem}
+    .history-badge{margin-top:7px;font-size:.82rem;color:#dce8ff}
+    .overlay{position:fixed;inset:0;background:rgba(4,12,22,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+    .overlay-box{width:min(92vw,560px);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:28px;color:#f5f7fb}
+    .overlay-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.24);font-weight:800;font-size:.84rem;margin-bottom:14px}
+    .overlay h3{margin:0 0 10px;font-size:2rem;line-height:1;letter-spacing:-.04em}
+    .overlay p{margin:0 0 18px;color:#cfd9e8;line-height:1.75}
+    .overlay-list{display:grid;gap:10px;margin-bottom:18px}
+    .overlay-list div{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .overlay-actions{display:flex;gap:12px;flex-wrap:wrap}
+    @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){
+      .wrap{padding:18px 14px 56px}
+      .topbar{flex-direction:column;align-items:stretch}
+      .nav-actions{width:100%}
+      .nav-actions .btn{width:100%}
+      .hero-main,.hero-side,.panel,.results,.cta{padding:20px}
+      .two,.metrics{grid-template-columns:1fr}
+    }
 
-.dashboard{
-  display:grid;
-  grid-template-columns:1.02fr .98fr;
-  gap:18px;
-  align-items:start;
-}
-.panel{ padding:20px; }
+    .modal{position:fixed;inset:0;background:rgba(4,12,22,.76);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:10000;padding:20px}
+    .modal.show{display:flex}
+    .modal-box{width:min(92vw,760px);max-height:86vh;overflow:auto;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:26px;color:#f5f7fb}
+    .modal-box h3{margin:0 0 8px;font-size:1.7rem;letter-spacing:-.04em}
+    .modal-box p{margin:0 0 16px;color:#cfd9e8;line-height:1.75}
+    .courses-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 18px}
+    .course-check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);line-height:1.55;color:#dce8ff;font-weight:700}
+    .course-check input{margin-top:3px;accent-color:var(--green)}
+    .compat-ok{color:#b7ffd1}
+    .compat-warn{color:#ffe4b7}
+    .compat-mute{color:#dce8ff}
 
-.section-head h3{ margin:0; font-size:24px; letter-spacing:-.03em; }
-.section-head p{ margin:8px 0 0; color:var(--muted); line-height:1.7; }
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:16px;
-}
-.field-full{ grid-column:1 / -1; }
-input, textarea{
-  width:100%;
-  border:none;
-  outline:none;
-  border-radius:14px;
-  background:#0f141d;
-  color:var(--text);
-  border:1px solid rgba(255,255,255,.08);
-  padding:13px 14px;
-  font:inherit;
-}
-textarea{ min-height:220px; resize:vertical; }
-input::placeholder, textarea::placeholder{ color:#8797ae; }
-
-.toolbar{
-  margin-top:14px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.tool{
-  border:none;
-  border-radius:14px;
-  padding:13px 12px;
-  font:inherit;
-  font-weight:700;
-  cursor:pointer;
-  transition:.18s ease;
-  position:relative;
-  overflow:hidden;
-  flex:1 1 140px;
-  min-width:140px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-.tool:hover{ transform:translateY(-1px); }
-.tool:active{ transform:scale(.97); }
-.tool.primary{
-  background:linear-gradient(135deg,var(--ferrari),#8e0b07);
-  color:#fff;
-  flex:2 1 200px;
-  box-shadow:0 10px 25px rgba(225,6,0,.35);
-}
-.tool.primary:hover{ box-shadow:0 14px 35px rgba(225,6,0,.45); }
-.tool.dark{ background:#202b3c; color:#fff; }
-.tool.gray{ background:#314152; color:#fff; }
-.tool.youtube{
-  background:#FF0000;
-  color:#fff;
-}
-.tool.youtube::after{
-  content:"PRO";
-  position:absolute;
-  top:6px; right:8px;
-  font-size:10px; font-weight:900; color:#fff1c2;
-}
-.tool.locked{
-  background:#2a3546;
-  color:#d8e0ec;
-}
-.tool.locked::after{
-  content:"PRO";
-  position:absolute; top:6px; right:8px;
-  font-size:10px; font-weight:900; color:#fff1c2;
-}
-.tool.locked:hover{
-  background:#3a475c;
-  cursor:not-allowed;
-  transform:none;
-}
-.status{
-  margin-top:12px;
-  min-height:20px;
-  color:var(--muted);
-  font-size:14px;
-}
-.loader{
-  display:none;
-  margin-top:14px;
-  padding:14px;
-  border-radius:14px;
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-}
-.loader.show{ display:block; }
-.loader-track{
-  margin-top:10px; height:8px; border-radius:999px; background:#2e3a4b; overflow:hidden;
-}
-.loader-fill{
-  width:28%; height:100%;
-  background:linear-gradient(90deg,var(--ferrari),var(--mclaren),var(--aston));
-  animation:move 1.1s infinite ease-in-out;
-}
-@keyframes move{
-  0%{ transform:translateX(-120%); }
-  100%{ transform:translateX(320%); }
-}
-
-.result-top{
-  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start;
-  padding-bottom:10px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.result-big{
-  font-size:28px;
-  font-weight:900;
-  letter-spacing:-.03em;
-  margin-bottom:8px;
-  animation:fadeUp .4s ease;
-}
-@keyframes fadeUp{
-  from{ opacity:0; transform:translateY(8px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-.result-copy{ color:var(--muted); line-height:1.75; }
-.badge{
-  display:inline-flex; align-items:center; padding:8px 12px; border-radius:999px;
-  font-size:12px; font-weight:900; background:#2b3545;
-}
-.badge.ok{ background:rgba(0,210,190,.14); color:#d8fff7; }
-.badge.warn{ background:rgba(255,135,0,.14); color:#ffe4bf; }
-.badge.danger{ background:rgba(225,6,0,.16); color:#ffd5d3; }
-
-.metric-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:16px;
-}
-.metric{
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:13px;
-  transition:.2s;
-}
-.metric:hover{ transform:translateY(-2px); }
-.metric small{ display:block; color:#c8d4e6; font-weight:700; margin-bottom:6px; }
-.metric strong{ font-size:18px; }
-.callout{
-  margin-top:14px;
-  padding:14px;
-  border-radius:14px;
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border:1px solid var(--line);
-}
-.callout strong{ display:block; margin-bottom:6px; }
-.callout span{ color:var(--muted); line-height:1.7; }
-
-.bar-block{ margin-top:14px; }
-.bar-label{
-  display:flex; justify-content:space-between; gap:12px; font-size:14px; margin-bottom:6px;
-}
-.bar{ height:10px; border-radius:999px; background:#344457; overflow:hidden; }
-.fill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--aston),var(--mclaren),var(--ferrari));
-  transition:width .35s ease;
-}
-.tag{
-  display:inline-flex; padding:7px 10px; border-radius:999px;
-  background:#27364a; font-size:12px; font-weight:800; margin:0 8px 8px 0;
-}
-.stack{ display:grid; gap:10px; }
-.item{
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px;
-}
-.item b{ display:block; margin-bottom:6px; }
-.item .meta{ color:var(--muted); line-height:1.65; }
-.empty{ color:var(--muted); line-height:1.7; }
-
-.panel-shell{
-  display:none;
-  margin-top:18px;
-}
-.panel-shell.show{ display:block; }
-
-.cursos-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:10px;
-}
-.cursos-grid label{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
-  border-radius:12px;
-  background:#0f141d;
-  border:1px solid rgba(255,255,255,.08);
-  cursor:pointer;
-  font-weight:600;
-  transition:.15s;
-}
-.cursos-grid label:hover{ background:#1a2330; }
-.cursos-grid input{
-  width:auto;
-  accent-color:#E10600;
-  transform:scale(1.1);
-}
-
-.toast{
-  position:fixed; right:18px; bottom:18px;
-  background:#101b2c; color:#fff; padding:12px 16px; border-radius:14px;
-  border:1px solid var(--line); box-shadow:var(--shadow); display:none; z-index:50;
-}
-.toast.show{ display:block; }
-
-@media(max-width:1180px){
-  .layout{ grid-template-columns:1fr; }
-  .sidebar{ position:static; }
-}
-@media(max-width:980px){
-  .dashboard{ grid-template-columns:1fr; }
-  .metric-grid{ grid-template-columns:1fr 1fr; }
-}
-@media(max-width:620px){
-  .form-grid, .metric-grid, .cursos-grid{ grid-template-columns:1fr; }
-  .hero h2{ font-size:32px; }
-  .wrap{ padding:14px; }
-  .tool{ min-width:unset; flex:1 1 100%; }
-}
-</style>
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="layout">
-    <aside class="card sidebar">
-      <div class="brand">
-        <div>
-          <h1>Sonar<span>IA</span></h1>
-          <p>Evaluación pedagógica musical<br>Profesional, clara y lista para clase.</p>
-        </div>
-        <div class="cross">✝</div>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="/index.html" class="brand">
+        <h1 class="brand-title">Sonar<span class="ia">IA</span></h1>
+        <div class="brand-sub">Evaluador pedagógico musical</div>
+      </a>
+      <div class="nav-actions">
+        <button id="btnCursosTop" class="btn btn-ghost" type="button">Mis cursos</button>
+        <button id="btnPlanesTop" class="btn btn-ghost" type="button">Ver planes</button>
+        <button id="btnUpgradeTop" class="btn btn-primary" type="button">Desbloquear Pro</button>
       </div>
+    </div>
 
-      <div class="menu-title">Vista</div>
-      <button class="side-btn active" onclick="showPanel('main')">Dashboard</button>
-      <button class="side-btn" onclick="showPanel('pedagogia')">Pedagogía</button>
-      <button class="side-btn" onclick="showPanel('contexto')">Contexto</button>
-      <button class="side-btn" onclick="showPanel('historial')">Historial</button>
-      <button class="side-btn" onclick="showPanel('cursos')">Mis cursos</button>
-      <button class="side-btn locked" onclick="featureGate('OA Chile')">OA Chile</button>
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="eyebrow">🎓 IA para decisiones pedagógicas</div>
+        <h1>Evalúa canciones con criterio escolar, contexto y claridad.</h1>
+        <p>SonarIA te ayuda a revisar lenguaje explícito, señales sensibles y adecuación pedagógica antes de usar una canción en clases. La experiencia free entrega valor real; la Pro profundiza.</p>
 
-      <div class="menu-title">Free vs Pro</div>
-      <div class="side-note">
-        <strong>FREE</strong>: análisis principal, contexto básico, reemplazos, riesgo e historial local.<br><br>
-        <strong>PRO</strong>: traducción paralela, OA Chile, versión escolar completa, YouTube inteligente y búsqueda automática de letra.
-      </div>
-    </aside>
-
-    <main class="main">
-      <section class="card hero">
-        <div>
-          <h2>Evaluación de Canciones</h2>
-          <p>Un panel elegante y compacto para trabajar canciones con criterio docente, manteniendo el flujo visual que ya habíamos definido.</p>
-
-          <div class="user-strip">
-            <div class="user-meta">
-              <strong id="userName">Usuario</strong>
-              <span id="userEmail">correo</span>
-            </div>
+        <div class="user-strip">
+          <div class="user-meta">
+            <div id="userAvatar" class="avatar">S</div>
             <div>
-              <span id="planBadge" class="pill free">FREE</span>
-              <span id="usageBadge" class="pill">0/3 usados</span>
+              <div id="userName" class="user-name">Cargando usuario...</div>
+              <div id="userEmail" class="user-email">Validando sesión...</div>
             </div>
           </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <div id="trialPlan" class="pill">...</div>
+            <div id="trialCounter" class="pill">Preparando...</div>
+          </div>
         </div>
+      </div>
+
+      <div class="card hero-side">
+        <div class="mini-grid">
+          <div class="mini">
+            <strong>Free con valor real</strong>
+            <span id="trialCopy">Analiza canciones, prueba el flujo y conoce el potencial pedagógico de SonarIA.</span>
+          </div>
+          <div class="mini">
+            <strong>Experiencia Pro</strong>
+            <span id="upgradeCopy">Más continuidad, más profundidad y una experiencia preparada para uso docente real.</span>
+          </div>
+          <div class="mini">
+            <strong>La IA acompaña. Educar es cuidar.</strong>
+            <span>La responsabilidad final siempre es humana. SonarIA orienta decisiones, no reemplaza el criterio profesional docente.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <section class="card panel">
+        <div class="panel-head">
+          <div>
+            <h2>Analizar canción</h2>
+            <div class="muted">Ingresa título, artista o pega la letra para obtener una orientación pedagógica base.</div>
+          </div>
+        </div>
+
+        <form id="analysisForm" class="form-grid">
+          <div class="two">
+            <div class="field">
+              <label for="titulo">Título</label>
+              <input id="titulo" type="text" placeholder="Ej: Creep">
+            </div>
+            <div class="field">
+              <label for="artista">Artista</label>
+              <input id="artista" type="text" placeholder="Ej: Radiohead">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="texto">Letra</label>
+            <textarea id="texto" placeholder="Pega aquí la letra o deja este espacio vacío para que SonarIA intente buscarla automáticamente."></textarea>
+          </div>
+
+          <div class="checks">
+            <label class="check">
+              <input id="buscarLetra" type="checkbox" checked>
+              <span><strong>Buscar letra automáticamente</strong><br>Si no pegas la letra, SonarIA intentará encontrarla con el título y artista.</span>
+            </label>
+            <label class="check">
+              <input id="contextoEscolar" type="checkbox" checked>
+              <span><strong>Priorizar contexto escolar</strong><br>La respuesta se orientará al uso pedagógico y a la mediación docente.</span>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="analyzeBtn" class="btn btn-green" type="submit">Analizar canción</button>
+            <button id="clearBtn" class="btn btn-ghost" type="button">Limpiar</button>
+            <button id="btnUpgrade" class="btn btn-ghost" type="button">Desbloquear Pro</button>
+          </div>
+
+          <div class="hint-bar">
+            Enter analiza desde título o artista. En la caja de letra usa <strong>Ctrl/Cmd + Enter</strong>.
+          </div>
+
+          <div id="statusBox" class="status"></div>
+        </form>
       </section>
 
-      <section id="mainPanel" class="dashboard">
-        <div class="card panel">
-          <div class="section-head">
-            <h3>Análisis principal</h3>
-            <p>Pega la letra y obtén una lectura pedagógica inmediata.</p>
+      <section class="card results">
+        <div class="results-head">
+          <div>
+            <h2>Resultado pedagógico</h2>
+            <div class="muted">Aquí aparecerá el análisis de SonarIA.</div>
           </div>
+          <div id="resultBadge" class="pill">Sin análisis</div>
+        </div>
 
-          <div class="form-grid">
-            <input id="titulo" placeholder="Título canción">
-            <input id="artista" placeholder="Artista">
-            <div class="field-full">
-              <textarea id="texto" placeholder="Pega aquí la letra o un fragmento para analizar..."></textarea>
-            </div>
+        <div class="badge-row">
+          <div id="pillAutoLyric" class="soft-pill">🎵 Letra encontrada automáticamente</div>
+          <div id="pillManualText" class="soft-pill">📝 Texto ingresado manualmente</div>
+          <div id="pillFallback" class="soft-pill">⚠️ No se encontró letra automática</div>
+        </div>
+
+        <div class="summary-card">
+          <div id="summaryTitle" class="summary-title">Esperando análisis</div>
+          <p id="summaryCopy" class="summary-copy">Completa el formulario para obtener una orientación base sobre la canción.</p>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <strong>Edad sugerida</strong>
+            <span id="edadSugerida">—</span>
           </div>
-
-          <div class="toolbar">
-            <button class="tool primary" onclick="analizar()">Analizar</button>
-            <button class="tool dark" onclick="showPanel('contexto')">Contexto</button>
-            <button class="tool locked" onclick="featureGate('Traducción paralela')">Traducción</button>
-            <button class="tool youtube" onclick="openYouTube()">▶ YouTube</button>
-            <button class="tool gray" onclick="limpiar()">Limpiar</button>
+          <div class="metric">
+            <strong>Fuente usada</strong>
+            <span id="fuenteUsada">—</span>
           </div>
-
-          <div id="statusLine" class="status">Listo para analizar.</div>
-
-          <div id="loaderBox" class="loader">
-            Analizando canción...
-            <div class="loader-track"><div class="loader-fill"></div></div>
+          <div class="metric">
+            <strong>Lectura sugerida</strong>
+            <span id="lecturaSugerida">—</span>
           </div>
         </div>
 
-        <div class="card panel">
-          <div class="result-top">
-            <div>
-              <div id="resultBig" class="result-big">Sin análisis</div>
-              <div id="resultCopy" class="result-copy">Aquí aparecerá el veredicto principal.</div>
+        <div class="traffic">
+          <div class="traffic-head">
+            <strong>Semáforo</strong>
+            <div class="lights">
+              <div id="lightRed" class="light"></div>
+              <div id="lightYellow" class="light"></div>
+              <div id="lightGreen" class="light"></div>
             </div>
-            <div id="resultBadge" class="badge">Pendiente</div>
           </div>
 
-          <div class="metric-grid">
-            <div class="metric"><small>Edad sugerida</small><strong id="edad">—</strong></div>
-            <div class="metric"><small>Lectura</small><strong id="lectura">—</strong></div>
-            <div class="metric"><small>Plan</small><strong id="planActual">—</strong></div>
-            <div class="metric"><small>Riesgo apoderado</small><strong id="riesgoAp">—</strong></div>
+          <div class="bars">
+            <div class="bar-row">
+              <div class="bar-label"><span>Riesgo total</span><span id="riskPercent">0%</span></div>
+              <div class="bar"><div id="riskTotalFill" class="bar-fill"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>Contenido sensible</span><span id="riskSensitive">0%</span></div>
+              <div class="bar"><div id="riskSensitiveFill" class="bar-fill"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label"><span>Uso escolar</span><span id="riskSchool">0%</span></div>
+              <div class="bar"><div id="riskSchoolFill" class="bar-fill"></div></div>
+            </div>
           </div>
+        </div>
 
-          <div class="callout">
-            <strong>Alerta docente</strong>
-            <span id="alertaDocente">Aquí aparecerá una alerta docente clara.</span>
+        <div class="info-grid">
+          <div class="info-card">
+            <strong>Temas detectados</strong>
+            <div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div>
           </div>
-
-          <div class="callout">
+          <div class="info-card">
+            <strong>Contextos detectados</strong>
+            <div id="contextList" class="list"><div class="list-item">Aún no hay datos.</div></div>
+          </div>
+          <div class="info-card">
+            <strong>Observaciones pedagógicas</strong>
+            <div id="observaciones" class="list-item">Sin datos.</div>
+          </div>
+          <div class="info-card">
+            <strong>Enfoque sugerido</strong>
+            <div id="enfoque" class="list-item">Sin datos.</div>
+          </div>
+          <div class="info-card">
             <strong>Compatibilidad con tus cursos</strong>
-            <span id="compatCursos">Aún no evaluado</span>
+            <div id="compatCursos" class="list-item">Configura tus cursos para obtener una recomendación personalizada.</div>
           </div>
-
-          <div class="bar-block">
-            <div class="bar-label"><span>Riesgo total</span><span id="riskTotalText">—</span></div>
-            <div class="bar"><div id="riskTotalFill" class="fill"></div></div>
+          <div class="info-card">
+            <strong>OA Chile sugerido</strong>
+            <div id="oaChile" class="list-item">Aún no disponible.</div>
           </div>
-
-          <div class="bar-block">
-            <div class="bar-label"><span>Riesgo apoderado</span><span id="riskParentText">—</span></div>
-            <div class="bar"><div id="riskParentFill" class="fill"></div></div>
-          </div>
-
-          <div class="bar-block">
-            <div class="bar-label"><span>Uso escolar</span><span id="riskSchoolText">—</span></div>
-            <div class="bar"><div id="riskSchoolFill" class="fill"></div></div>
-          </div>
-
-          <div style="margin-top:16px;">
-            <h3 class="panel-title" style="margin-bottom:10px;">Categorías</h3>
-            <div id="tagsWrap"><span class="tag">sin datos</span></div>
+          <div class="info-card">
+            <strong>Actividad sugerida</strong>
+            <div id="actividadChile" class="list-item">Aún no disponible.</div>
           </div>
         </div>
-      </section>
 
-      <section id="pedagogiaPanel" class="card panel panel-shell">
-        <h3 class="panel-title">Pedagogía</h3>
-        <div id="pedagogiaList" class="stack">
-          <div class="empty">Aquí aparecerán observaciones, sugerencias y mensajes pedagógicos.</div>
-        </div>
+        <div class="history-list" id="historyList"></div>
       </section>
+    </section>
 
-      <section id="contextoPanel" class="card panel panel-shell">
-        <h3 class="panel-title">Contexto detectado</h3>
-        <div id="contextList" class="stack">
-          <div class="empty">Todavía no hay contexto para mostrar.</div>
-        </div>
-
-        <h3 class="panel-title" style="margin-top:18px;">Reemplazos sugeridos</h3>
-        <div id="replaceList" class="stack">
-          <div class="empty">Todavía no hay reemplazos sugeridos.</div>
-        </div>
-      </section>
-
-      <section id="historialPanel" class="card panel panel-shell">
-        <h3 class="panel-title">Historial local</h3>
-        <div id="historyList" class="stack">
-          <div class="empty">Todavía no hay análisis guardados.</div>
-        </div>
-      </section>
-
-      <section id="cursosPanel" class="card panel panel-shell">
-        <h3 class="panel-title">Mis cursos</h3>
-        <div class="empty" style="margin-bottom:10px;">Estos cursos se usarán automáticamente en tus análisis.</div>
-        <div id="misCursos" class="cursos-grid">
-          <label><input type="checkbox" value="Medio menor"> Medio menor</label>
-          <label><input type="checkbox" value="Medio mayor"> Medio mayor</label>
-          <label><input type="checkbox" value="Prekínder"> Prekínder</label>
-          <label><input type="checkbox" value="Kínder"> Kínder</label>
-          <label><input type="checkbox" value="1 básico"> 1 básico</label>
-          <label><input type="checkbox" value="2 básico"> 2 básico</label>
-          <label><input type="checkbox" value="3 básico"> 3 básico</label>
-          <label><input type="checkbox" value="4 básico"> 4 básico</label>
-          <label><input type="checkbox" value="5 básico"> 5 básico</label>
-          <label><input type="checkbox" value="6 básico"> 6 básico</label>
-          <label><input type="checkbox" value="7 básico"> 7 básico</label>
-          <label><input type="checkbox" value="8 básico"> 8 básico</label>
-          <label><input type="checkbox" value="1 medio"> 1 medio</label>
-          <label><input type="checkbox" value="2 medio"> 2 medio</label>
-          <label><input type="checkbox" value="3 medio"> 3 medio</label>
-          <label><input type="checkbox" value="4 medio"> 4 medio</label>
-        </div>
-        <button class="tool primary" style="margin-top:14px;" onclick="guardarCursos()">Guardar cursos</button>
-      </section>
-    </main>
+    <section class="card cta">
+      <h2>SonarIA Pro</h2>
+      <div class="muted">La experiencia gratuita ya entrega valor. La versión Pro elimina límites y prepara el camino para una experiencia más completa y más útil para el trabajo docente real.</div>
+      <div class="cta-actions">
+        <button id="btnPlanesBottom" class="btn btn-primary" type="button">Ir a planes</button>
+        <button id="btnHistorial" class="btn btn-ghost" type="button">Ver historial</button>
+      </div>
+    </section>
   </div>
-</div>
 
-<div id="toast" class="toast"></div>
+  <div id="proOverlay" class="overlay">
+    <div class="overlay-box">
+      <div class="overlay-badge">🚀 SonarIA Pro</div>
+      <h3 id="overlayTitle">Desbloquea más</h3>
+      <p id="overlayText">Pasa de una experiencia base a una experiencia más completa dentro de SonarIA.</p>
+      <div class="overlay-list">
+        <div>Uso continuo de la herramienta</div>
+        <div>Base para funciones más avanzadas</div>
+        <div>Experiencia pensada para uso docente real</div>
+      </div>
+      <div class="overlay-actions">
+        <button class="btn btn-green" type="button" onclick="window.location.href='planes.html'">Ver planes</button>
+        <button class="btn btn-ghost" type="button" onclick="hideOverlay()">Seguir mirando</button>
+      </div>
+    </div>
+  </div>
 
-<script>
-const API = "https://sonaria-api.onrender.com";
 
-function getToken(){
-  return localStorage.getItem("mejoraria_token")
-      || localStorage.getItem("token")
-      || localStorage.getItem("access_token");
-}
-function getUser(){
-  try { return JSON.parse(localStorage.getItem("mejoraria_user") || "null"); }
-  catch(e){ return null; }
-}
-function setUser(user){
-  localStorage.setItem("mejoraria_user", JSON.stringify(user));
-}
-function escapeHtml(s){
-  return String(s || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#39;");
-}
-function showToast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2400);
-}
-function renderUser(){
-  const u = getUser();
-  if(!u){
-    document.getElementById("userName").textContent = "Sin sesión";
-    document.getElementById("userEmail").textContent = "Debes iniciar sesión";
-    document.getElementById("planBadge").textContent = "FREE";
-    document.getElementById("usageBadge").textContent = "0/3 usados";
-    return;
-  }
-  document.getElementById("userName").textContent = u.name || "Usuario";
-  document.getElementById("userEmail").textContent = u.email || "";
-  document.getElementById("planBadge").textContent = (u.plan || "free").toUpperCase();
-  document.getElementById("planBadge").className = "pill " + ((u.plan || "free") === "pro" ? "pro" : "free");
-  document.getElementById("usageBadge").textContent = (u.plan === "pro") ? "Ilimitado" : `${u.analyses_used || 0}/3 usados`;
-}
-function setActiveSidebar(label){
-  document.querySelectorAll(".side-btn").forEach(b => b.classList.remove("active"));
-  const btns = [...document.querySelectorAll(".side-btn")];
-  const hit = btns.find(b => b.textContent.trim() === label);
-  if(hit) hit.classList.add("active");
-}
-function showPanel(name){
-  ["mainPanel","pedagogiaPanel","contextoPanel","historialPanel","cursosPanel"].forEach(id=>{
-    document.getElementById(id).classList.remove("show");
-  });
-  const map = {
-    main:["mainPanel","Dashboard"],
-    pedagogia:["pedagogiaPanel","Pedagogía"],
-    contexto:["contextoPanel","Contexto"],
-    historial:["historialPanel","Historial"],
-    cursos:["cursosPanel","Mis cursos"]
-  };
-  if(map[name]){
-    document.getElementById(map[name][0]).classList.add("show");
-    setActiveSidebar(map[name][1]);
-  }
-  if(name === "cursos") cargarCursos();
-}
-function featureGate(name){
-  const u = getUser();
-  if(name === "YouTube inteligente" && (!u || u.plan !== "pro")){
-    showToast(name + " es una función PRO.");
-    return;
-  }
-  if(u && u.plan === "pro"){
-    showToast(name + " estará disponible aquí.");
-  } else {
-    showToast(name + " es una función PRO.");
-  }
-}
-function openYouTube(){
-  const u = getUser();
-  if(!u || u.plan !== "pro"){
-    featureGate("YouTube inteligente");
-    return;
-  }
-  const titulo = document.getElementById("titulo").value.trim();
-  const artista = document.getElementById("artista").value.trim();
-  const q = encodeURIComponent([titulo, artista, "lyrics"].filter(Boolean).join(" "));
-  window.open("https://www.youtube.com/results?search_query=" + q, "_blank");
-}
-function limpiar(){
-  document.getElementById("titulo").value = "";
-  document.getElementById("artista").value = "";
-  document.getElementById("texto").value = "";
-  showToast("Formulario limpiado");
-}
-function setLoading(on){
-  document.getElementById("loaderBox").classList.toggle("show", on);
-}
-function saveHistory(item){
-  const items = JSON.parse(localStorage.getItem("sonaria_history_local") || "[]");
-  items.unshift(item);
-  localStorage.setItem("sonaria_history_local", JSON.stringify(items.slice(0,10)));
-}
-function renderHistory(){
-  const items = JSON.parse(localStorage.getItem("sonaria_history_local") || "[]");
-  const box = document.getElementById("historyList");
-  if(!items.length){
-    box.innerHTML = '<div class="empty">Todavía no hay análisis guardados.</div>';
-    return;
-  }
-  box.innerHTML = items.map(i => `
-    <div class="item">
-      <b>${escapeHtml(i.titulo || "Sin título")}</b>
-      <div class="meta">${escapeHtml(i.resultado || "")}</div>
-      <div class="meta">${escapeHtml(i.artista || "")}</div>
+  <div id="coursesModal" class="modal">
+    <div class="modal-box">
+      <h3>Mis cursos</h3>
+      <p>Selecciona una vez los cursos en los que haces clases. SonarIA los usará para orientar compatibilidad y sugerencias pedagógicas en Chile.</p>
+      <div id="coursesGrid" class="courses-grid">
+        <label class="course-check"><input type="checkbox" value="Medio menor"> <span>Medio menor</span></label>
+        <label class="course-check"><input type="checkbox" value="Medio mayor"> <span>Medio mayor</span></label>
+        <label class="course-check"><input type="checkbox" value="Prekínder"> <span>Prekínder</span></label>
+        <label class="course-check"><input type="checkbox" value="Kínder"> <span>Kínder</span></label>
+        <label class="course-check"><input type="checkbox" value="1 básico"> <span>1 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="2 básico"> <span>2 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="3 básico"> <span>3 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="4 básico"> <span>4 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="5 básico"> <span>5 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="6 básico"> <span>6 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="7 básico"> <span>7 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="8 básico"> <span>8 básico</span></label>
+        <label class="course-check"><input type="checkbox" value="1 medio"> <span>1 medio</span></label>
+        <label class="course-check"><input type="checkbox" value="2 medio"> <span>2 medio</span></label>
+        <label class="course-check"><input type="checkbox" value="3 medio"> <span>3 medio</span></label>
+        <label class="course-check"><input type="checkbox" value="4 medio"> <span>4 medio</span></label>
+      </div>
+      <div class="overlay-actions">
+        <button id="saveCoursesBtn" class="btn btn-green" type="button">Guardar cursos</button>
+        <button id="closeCoursesBtn" class="btn btn-ghost" type="button">Cerrar</button>
+      </div>
     </div>
-  `).join("");
-}
-function guardarCursos(){
-  const checks = document.querySelectorAll("#misCursos input:checked");
-  const cursos = [...checks].map(c => c.value);
-  localStorage.setItem("sonaria_cursos", JSON.stringify(cursos));
-  showToast("Cursos guardados");
-}
-function cargarCursos(){
-  const data = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
-  const checks = document.querySelectorAll("#misCursos input");
-  checks.forEach(c => c.checked = data.includes(c.value));
-}
-function evaluarCompatibilidadCursos(edadTexto){
-  const cursos = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
-  const n = parseInt((edadTexto || "").replace(/[^0-9]/g,""), 10);
-  if(!n || cursos.length === 0){
-    return "Selecciona cursos para obtener una recomendación personalizada.";
-  }
-  let nivel;
-  if(n <= 6) nivel = ["1 básico","2 básico","3 básico","4 básico"];
-  else if(n <= 8) nivel = ["5 básico","6 básico"];
-  else if(n <= 12) nivel = ["7 básico","8 básico"];
-  else if(n <= 14) nivel = ["1 medio","2 medio"];
-  else nivel = ["3 medio","4 medio"];
-  const match = cursos.some(c => nivel.includes(c));
-  return match ? "✔ Apta para los cursos seleccionados" : "⚠ Puede no ser adecuada para tus cursos actuales";
-}
-function setBadge(resultado){
-  const badge = document.getElementById("resultBadge");
-  const txt = (resultado || "").toLowerCase();
-  badge.className = "badge";
-  if(txt.includes("no apta")){
-    badge.classList.add("danger");
-  } else if(txt.includes("mediación") || txt.includes("mediacion")){
-    badge.classList.add("warn");
-  } else if(txt.includes("apta")){
-    badge.classList.add("ok");
-  }
-  badge.textContent = resultado || "Pendiente";
-}
-function renderRisk(total, parent){
-  document.getElementById("riskTotalText").textContent = `${total || 0}%`;
-  document.getElementById("riskParentText").textContent = `${parent || 0}%`;
-  document.getElementById("riskSchoolText").textContent = `${total || 0}%`;
-  document.getElementById("riskTotalFill").style.width = `${total || 0}%`;
-  document.getElementById("riskParentFill").style.width = `${parent || 0}%`;
-  document.getElementById("riskSchoolFill").style.width = `${total || 0}%`;
-}
-function renderTags(tags){
-  const box = document.getElementById("tagsWrap");
-  if(!tags || !tags.length){
-    box.innerHTML = '<span class="tag">sin datos</span>';
-    return;
-  }
-  box.innerHTML = tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("");
-}
-function renderContexts(items){
-  const box = document.getElementById("contextList");
-  if(!items || !items.length){
-    box.innerHTML = '<div class="empty">No se detectaron contextos sensibles en este análisis.</div>';
-    return;
-  }
-  box.innerHTML = items.map(c => `
-    <div class="item">
-      <b>${escapeHtml(c.termino)}</b>
-      <div class="meta"><strong>Fragmento:</strong> ${escapeHtml(c.fragmento)}</div>
-      <div class="meta"><strong>Tipo:</strong> ${escapeHtml(c.tipo)}</div>
-      <div class="meta"><strong>Lectura:</strong> ${escapeHtml(c.lectura_pedagogica)}</div>
-      <div class="meta"><strong>Acción:</strong> ${escapeHtml(c.accion_sugerida)}</div>
-    </div>
-  `).join("");
-}
-function renderReplacements(obj){
-  const box = document.getElementById("replaceList");
-  const entries = Object.entries(obj || {});
-  if(!entries.length){
-    box.innerHTML = '<div class="empty">Todavía no hay reemplazos sugeridos.</div>';
-    return;
-  }
-  box.innerHTML = entries.map(([k,v]) => `
-    <div class="item">
-      <b>${escapeHtml(k)}</b>
-      <div class="meta">${(v || []).map(escapeHtml).join(" · ")}</div>
-    </div>
-  `).join("");
-}
-function renderPedagogia(data){
-  const box = document.getElementById("pedagogiaList");
-  box.innerHTML = `
-    <div class="item"><b>Alerta docente</b><div class="meta">${escapeHtml(data.alerta_docente || "—")}</div></div>
-    <div class="item"><b>Sugerencia para clase</b><div class="meta">${escapeHtml(data.sugerencia_clase || "—")}</div></div>
-    <div class="item"><b>Observaciones</b><div class="meta">${escapeHtml(data.observaciones_pedagogicas || "—")}</div></div>
-    <div class="item"><b>Mensaje de contexto</b><div class="meta">${escapeHtml(data.context_message || "Sin alerta implícita especial.")}</div></div>
-    <div class="item"><b>Mensaje de reemplazo</b><div class="meta">${escapeHtml(data.replacement_message || "Sin reemplazos necesarios.")}</div></div>
-  `;
-}
-function handleSmartEnter(e){
-  if(e.key !== "Enter" || e.shiftKey) return;
-  const titulo = document.getElementById("titulo").value.trim();
-  const artista = document.getElementById("artista").value.trim();
-  const texto = document.getElementById("texto").value.trim();
-  if(e.target.id === "texto"){
-    e.preventDefault();
-    if(texto) analizar();
-    return;
-  }
-  if((e.target.id === "titulo" || e.target.id === "artista") && titulo && artista){
-    e.preventDefault();
-    if(texto){
-      analizar();
-    } else {
-      featureGate("Búsqueda automática de letra");
+  </div>
+
+
+  <script>
+    const API_BASE = "https://sonaria-api.onrender.com";
+    const ANALYZE_URL = API_BASE + "/analizar";
+    const ME_URL = API_BASE + "/me";
+    const DEMO_LIMIT = 3;
+
+    const form = document.getElementById("analysisForm");
+    const titulo = document.getElementById("titulo");
+    const artista = document.getElementById("artista");
+    const texto = document.getElementById("texto");
+    const buscarLetra = document.getElementById("buscarLetra");
+    const contextoEscolar = document.getElementById("contextoEscolar");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const statusBox = document.getElementById("statusBox");
+    const resultBadge = document.getElementById("resultBadge");
+    const summaryTitle = document.getElementById("summaryTitle");
+    const summaryCopy = document.getElementById("summaryCopy");
+    const edadSugerida = document.getElementById("edadSugerida");
+    const fuenteUsada = document.getElementById("fuenteUsada");
+    const lecturaSugerida = document.getElementById("lecturaSugerida");
+    const themesWrap = document.getElementById("themesWrap");
+    const contextList = document.getElementById("contextList");
+    const observaciones = document.getElementById("observaciones");
+    const enfoque = document.getElementById("enfoque");
+
+    const riskPercent = document.getElementById("riskPercent");
+    const riskSensitive = document.getElementById("riskSensitive");
+    const riskSchool = document.getElementById("riskSchool");
+    const riskTotalFill = document.getElementById("riskTotalFill");
+    const riskSensitiveFill = document.getElementById("riskSensitiveFill");
+    const riskSchoolFill = document.getElementById("riskSchoolFill");
+
+    const lightRed = document.getElementById("lightRed");
+    const lightYellow = document.getElementById("lightYellow");
+    const lightGreen = document.getElementById("lightGreen");
+
+    const pillAutoLyric = document.getElementById("pillAutoLyric");
+    const pillManualText = document.getElementById("pillManualText");
+    const pillFallback = document.getElementById("pillFallback");
+
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const userAvatar = document.getElementById("userAvatar");
+    const trialCopy = document.getElementById("trialCopy");
+    const trialPlan = document.getElementById("trialPlan");
+    const trialCounter = document.getElementById("trialCounter");
+    const upgradeCopy = document.getElementById("upgradeCopy");
+    const historyList = document.getElementById("historyList");
+
+    let authToken = "";
+    let user = { plan: "free" };
+
+    const compatCursos = document.getElementById("compatCursos");
+    const oaChile = document.getElementById("oaChile");
+    const actividadChile = document.getElementById("actividadChile");
+    const btnCursosTop = document.getElementById("btnCursosTop");
+    const coursesModal = document.getElementById("coursesModal");
+    const saveCoursesBtn = document.getElementById("saveCoursesBtn");
+    const closeCoursesBtn = document.getElementById("closeCoursesBtn");
+
+
+    function getToken(){
+      return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
     }
-  }
-}
-async function analizar(){
-  const token = getToken();
-  const user = getUser();
-  if(!token || !user){
-    alert("Debes iniciar sesión antes de analizar.");
-    return;
-  }
-  const texto = document.getElementById("texto").value.trim();
-  if(!texto){
-    alert("Pega una letra primero.");
-    return;
-  }
-  document.getElementById("statusLine").textContent = "Analizando canción...";
-  setLoading(true);
-  try{
-    const res = await fetch(API + "/analizar", {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + token
-      },
-      body: JSON.stringify({
-        titulo: document.getElementById("titulo").value.trim(),
-        artista: document.getElementById("artista").value.trim(),
-        texto: texto,
-        cursos: JSON.parse(localStorage.getItem("sonaria_cursos") || "[]")
-      })
+    function getUsage(){ return Number(localStorage.getItem("sonaria_demo_uses") || "0"); }
+    function setUsage(value){ localStorage.setItem("sonaria_demo_uses", String(value)); }
+    function getRemainingUsage(){ return Math.max(0, DEMO_LIMIT - getUsage()); }
+
+    function setStatus(message, type){
+      statusBox.textContent = message;
+      statusBox.style.color = type === "success" ? "#b7ffd1" : type === "error" ? "#ffd7d7" : "#dce8ff";
+    }
+    function clearStatus(){ statusBox.textContent = ""; }
+
+
+    function getCourses(){
+      try { return JSON.parse(localStorage.getItem("sonaria_cursos") || "[]"); }
+      catch(e){ return []; }
+    }
+    function setCourses(courses){
+      localStorage.setItem("sonaria_cursos", JSON.stringify(courses || []));
+    }
+    function loadCoursesIntoModal(){
+      const selected = getCourses();
+      document.querySelectorAll("#coursesGrid input").forEach(ch => {
+        ch.checked = selected.includes(ch.value);
+      });
+    }
+    function openCoursesModal(){
+      loadCoursesIntoModal();
+      coursesModal.classList.add("show");
+    }
+    function closeCoursesModal(){
+      coursesModal.classList.remove("show");
+    }
+    function saveCoursesFromModal(){
+      const courses = [...document.querySelectorAll("#coursesGrid input:checked")].map(el => el.value);
+      setCourses(courses);
+      closeCoursesModal();
+      setStatus(courses.length ? "Cursos guardados correctamente." : "No seleccionaste cursos todavía.", "success");
+      updateCourseGuidance(edadSugerida.textContent || "", resultBadge.textContent || "");
+    }
+    function evaluarCompatibilidadCursos(edadTexto){
+      const cursos = getCourses();
+      const n = parseInt(String(edadTexto || "").replace(/[^0-9]/g,""), 10);
+      if(!n || !cursos.length){
+        return { text: "Configura tus cursos para obtener una recomendación personalizada.", cls: "compat-mute" };
+      }
+      let nivel = [];
+      if(n <= 6) nivel = ["1 básico","2 básico","3 básico","4 básico"];
+      else if(n <= 8) nivel = ["5 básico","6 básico"];
+      else if(n <= 12) nivel = ["7 básico","8 básico"];
+      else if(n <= 14) nivel = ["1 medio","2 medio"];
+      else nivel = ["3 medio","4 medio"];
+      const match = cursos.some(c => nivel.includes(c));
+      return match
+        ? { text: "✔ Apta para los cursos seleccionados", cls: "compat-ok" }
+        : { text: "⚠ Puede no ser adecuada para tus cursos actuales", cls: "compat-warn" };
+    }
+    function sugerirOAChile(edadTexto, resultado){
+      const cursos = getCourses();
+      const edad = parseInt(String(edadTexto || "").replace(/[^0-9]/g,""), 10);
+      const r = String(resultado || "").toLowerCase();
+      if(!edad || !cursos.length){
+        return {
+          oa: "Selecciona tus cursos para obtener una sugerencia.",
+          actividad: "Guarda tus cursos en el panel 'Mis cursos'."
+        };
+      }
+      const tieneBasicaInicial = cursos.some(c => ["1 básico","2 básico","3 básico","4 básico"].includes(c));
+      const tieneBasicaMedia = cursos.some(c => ["5 básico","6 básico"].includes(c));
+      const tieneBasicaAlta = cursos.some(c => ["7 básico","8 básico"].includes(c));
+      const tieneMedia = cursos.some(c => ["1 medio","2 medio","3 medio","4 medio"].includes(c));
+
+      if(edad <= 8 && tieneBasicaInicial){
+        return {
+          oa: "Escuchar, expresar emociones y reconocer elementos del lenguaje musical en canciones adecuadas al nivel.",
+          actividad: "Conversación guiada sobre emociones, pulso, dinámica y mensaje principal."
+        };
+      }
+      if(edad <= 10 && tieneBasicaMedia){
+        return {
+          oa: "Analizar el carácter expresivo de una canción y relacionarlo con experiencias personales o del entorno.",
+          actividad: "Identificar emociones, instrumentos y sentido del texto con reflexión breve."
+        };
+      }
+      if(edad <= 12 && tieneBasicaAlta){
+        return {
+          oa: "Analizar mensaje, contexto y recursos expresivos de una canción desde una mirada crítica.",
+          actividad: "Debate breve sobre intención del autor, lenguaje utilizado y adecuación escolar."
+        };
+      }
+      if(tieneMedia){
+        if(r.includes("supervisión") || r.includes("supervision") || r.includes("mediación") || r.includes("mediacion")){
+          return {
+            oa: "Interpretar críticamente letras de canciones considerando contexto, intención artística y recepción social.",
+            actividad: "Foro guiado sobre mediación docente, lenguaje implícito y recepción del mensaje."
+          };
+        }
+        return {
+          oa: "Analizar música y texto como manifestaciones culturales, expresivas y sociales.",
+          actividad: "Comparar la canción con otras obras y discutir mensaje, contexto y recursos musicales."
+        };
+      }
+      return {
+        oa: "Análisis básico del mensaje, emociones y recursos musicales según el curso.",
+        actividad: "Lectura guiada, conversación y reflexión breve sobre el uso pedagógico de la canción."
+      };
+    }
+    function updateCourseGuidance(edadTexto, resultado){
+      const compat = evaluarCompatibilidadCursos(edadTexto);
+      compatCursos.textContent = compat.text;
+      compatCursos.className = "list-item " + compat.cls;
+      const oa = sugerirOAChile(edadTexto, resultado);
+      oaChile.textContent = oa.oa;
+      actividadChile.textContent = oa.actividad;
+    }
+
+    function clearPills(){
+      pillAutoLyric.classList.remove("show");
+      pillManualText.classList.remove("show");
+      pillFallback.classList.remove("show");
+    }
+
+    function clearResult(){
+      resultBadge.textContent = "Sin análisis";
+      summaryTitle.textContent = "Esperando análisis";
+      summaryCopy.textContent = "Completa el formulario para obtener una orientación base sobre la canción.";
+      edadSugerida.textContent = "—";
+      fuenteUsada.textContent = "—";
+      lecturaSugerida.textContent = "—";
+      themesWrap.innerHTML = '<span class="chip">Sin datos</span>';
+      contextList.innerHTML = '<div class="list-item">Aún no hay datos.</div>';
+      observaciones.textContent = "Sin datos.";
+      enfoque.textContent = "Sin datos.";
+      compatCursos.textContent = "Configura tus cursos para obtener una recomendación personalizada.";
+      compatCursos.className = "list-item compat-mute";
+      oaChile.textContent = "Aún no disponible.";
+      actividadChile.textContent = "Aún no disponible.";
+      riskPercent.textContent = "0%";
+      riskSensitive.textContent = "0%";
+      riskSchool.textContent = "0%";
+      riskTotalFill.style.width = "0%";
+      riskSensitiveFill.style.width = "0%";
+      riskSchoolFill.style.width = "0%";
+      lightRed.className = "light";
+      lightYellow.className = "light";
+      lightGreen.className = "light";
+    }
+
+    function activateTraffic(resultado){
+      lightRed.className = "light";
+      lightYellow.className = "light";
+      lightGreen.className = "light";
+      const txt = (resultado || "").toLowerCase();
+      if (txt.includes("no apta")) lightRed.className = "light active red";
+      else if (txt.includes("supervisión") || txt.includes("supervision")) lightYellow.className = "light active yellow";
+      else lightGreen.className = "light active green";
+    }
+
+    function showOverlay(title, text){
+      document.getElementById("overlayTitle").textContent = title || "Desbloquea SonarIA Pro";
+      document.getElementById("overlayText").textContent = text || "Pasa de una experiencia base a una experiencia más completa.";
+      document.getElementById("proOverlay").style.display = "flex";
+    }
+    function hideOverlay(){ document.getElementById("proOverlay").style.display = "none"; }
+
+    function forceRelogin(message){
+      localStorage.removeItem("mejoraria_token");
+      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      setStatus(message || "Tu sesión ya no es válida. Debes volver a iniciar sesión.", "error");
+      setTimeout(() => { window.location.href = "login.html"; }, 1400);
+    }
+
+    function updateUserPanel(){
+      const remaining = getRemainingUsage();
+      trialPlan.textContent = ((user.plan || "free").toUpperCase());
+      trialPlan.className = "pill " + ((user.plan || "free") === "pro" ? "pro" : "");
+
+      if((user.plan || "free") === "pro"){
+        trialCounter.textContent = "Uso ilimitado";
+        trialCopy.textContent = "Tu cuenta Pro está activa. Puedes analizar sin límite dentro de esta experiencia.";
+        upgradeCopy.textContent = "Tu cuenta ya está en modo Pro. Próximamente iremos sumando más profundidad y nuevas capas.";
+        document.getElementById("btnUpgrade").style.display = "inline-flex";
+        document.getElementById("btnUpgrade").textContent = "Cuenta Pro activa";
+        document.getElementById("btnUpgrade").disabled = true;
+        document.getElementById("btnUpgradeTop").style.display = "none";
+      }else{
+        trialCounter.textContent = remaining + " análisis disponibles";
+        trialCopy.textContent = "La experiencia gratuita te permite probar SonarIA con un número acotado de análisis.";
+        upgradeCopy.textContent = "Desbloquea Pro para quitar el límite y preparar el camino para una experiencia más potente.";
+        document.getElementById("btnUpgrade").style.display = "inline-flex";
+        document.getElementById("btnUpgrade").textContent = "Desbloquear Pro";
+        document.getElementById("btnUpgrade").disabled = false;
+        document.getElementById("btnUpgradeTop").style.display = "inline-flex";
+      }
+    }
+
+    function renderHistory(){
+      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      if(!items.length){ historyList.innerHTML = ""; return; }
+      historyList.innerHTML = items.slice(0, 5).map(item => `
+        <div class="history-item">
+          <div class="history-title">${escapeHtml(item.titulo)}</div>
+          <div class="history-sub">${escapeHtml(item.artista)} · ${new Date(item.fecha).toLocaleString("es-CL")}</div>
+          <div class="history-badge">${escapeHtml(item.badge)}</div>
+        </div>
+      `).join("");
+    }
+
+    function saveHistoryItem(item){
+      const current = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      current.unshift(item);
+      localStorage.setItem("sonaria_history", JSON.stringify(current.slice(0, 10)));
+    }
+
+    function escapeHtml(str){
+      return String(str || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
+    }
+
+    async function syncSessionWithBackend(){
+      authToken = getToken();
+      if(!authToken){ forceRelogin("Debes iniciar sesión para usar SonarIA."); return false; }
+
+      try{
+        const res = await fetch(ME_URL, { headers: { "Authorization": "Bearer " + authToken } });
+        const data = await res.json().catch(() => ({}));
+
+        if(res.status === 401){
+          forceRelogin(data.detail || "Tu sesión expiró o fue reemplazada.");
+          return false;
+        }
+        if(!res.ok || !data.user){
+          setStatus("No fue posible validar tu sesión.", "error");
+          return false;
+        }
+
+        user = data.user;
+        userName.textContent = user.name || user.email || "Usuario";
+        userEmail.textContent = user.email || "";
+        if(user.picture) userAvatar.innerHTML = '<img src="' + user.picture + '" alt="avatar">';
+        else userAvatar.textContent = (user.email || "S").charAt(0).toUpperCase();
+
+        updateUserPanel();
+        return true;
+      }catch(error){
+        setStatus("No fue posible conectar con el backend.", "error");
+        return false;
+      }
+    }
+
+    function renderAnalysis(raw){
+      resultBadge.textContent = raw.resultado || "Resultado";
+      summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
+      summaryCopy.textContent = raw.resumen || "Análisis completado.";
+      edadSugerida.textContent = raw.edad_sugerida || "—";
+      fuenteUsada.textContent = raw.fuente_usada || "—";
+      lecturaSugerida.textContent = raw.lectura_sugerida || "—";
+
+      if (raw.texto) texto.value = raw.texto;
+
+      const temas = Array.isArray(raw.temas_detectados) ? raw.temas_detectados : [];
+      themesWrap.innerHTML = temas.length ? temas.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("") : '<span class="chip">Sin datos</span>';
+
+      const contextos = Array.isArray(raw.contextos_detectados) ? raw.contextos_detectados : [];
+      contextList.innerHTML = contextos.length ? contextos.map(c => `<div class="list-item">${escapeHtml(c)}</div>`).join("") : '<div class="list-item">No se detectaron contextos destacados.</div>';
+
+      observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
+      enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
+
+      riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
+      riskSensitive.textContent = (raw.risk_sensitive ?? 0) + "%";
+      riskSchool.textContent = (raw.risk_school ?? 0) + "%";
+      riskTotalFill.style.width = Math.min(raw.risk_percent ?? 0, 100) + "%";
+      riskSensitiveFill.style.width = Math.min(raw.risk_sensitive ?? 0, 100) + "%";
+      riskSchoolFill.style.width = Math.min(raw.risk_school ?? 0, 100) + "%";
+
+      activateTraffic(raw.resultado || "");
+      updateCourseGuidance(raw.edad_sugerida || "", raw.resultado || "");
+    }
+
+    document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
+    btnCursosTop.addEventListener("click", openCoursesModal);
+    saveCoursesBtn.addEventListener("click", saveCoursesFromModal);
+    closeCoursesBtn.addEventListener("click", closeCoursesModal);
+    coursesModal.addEventListener("click", (e) => { if(e.target === coursesModal) closeCoursesModal(); });
+    document.getElementById("btnPlanesBottom").addEventListener("click", () => window.location.href = "planes.html");
+    document.getElementById("btnUpgradeTop").addEventListener("click", () => showOverlay("Desbloquea SonarIA Pro", "Pasa de una experiencia base a una experiencia más completa y sin límites."));
+    document.getElementById("btnUpgrade").addEventListener("click", () => {
+      if((user.plan || "free") === "pro") return;
+      showOverlay("Desbloquea SonarIA Pro", "Quita límites y prepara el camino para una experiencia docente más potente.");
     });
-    const data = await res.json();
-    if(res.status === 401){
-      alert("Tu sesión expiró. Vuelve a iniciar sesión.");
-      return;
-    }
-    if(res.status === 403){
-      alert(data.detail || "Límite alcanzado.");
-      return;
-    }
-    if(!res.ok){
-      throw new Error(data.detail || "No fue posible analizar.");
-    }
-    const u = getUser() || {};
-    u.plan = data.plan || u.plan;
-    u.analyses_used = data.analyses_used ?? u.analyses_used;
-    setUser(u);
-    renderUser();
-
-    document.getElementById("resultBig").textContent = data.resultado || "Sin análisis";
-    document.getElementById("resultCopy").textContent = data.resumen || "Sin resumen";
-    document.getElementById("edad").textContent = data.edad_sugerida || "—";
-    document.getElementById("lectura").textContent = data.lectura_sugerida || "—";
-    document.getElementById("planActual").textContent = (u.plan || "free").toUpperCase();
-    document.getElementById("riesgoAp").textContent = `${data.riesgo_apoderado || 0}%`;
-    document.getElementById("alertaDocente").textContent = data.alerta_docente || "—";
-    document.getElementById("compatCursos").textContent = evaluarCompatibilidadCursos(data.edad_sugerida);
-
-    setBadge(data.resultado);
-    renderRisk(data.riesgo || 0, data.riesgo_apoderado || 0);
-    renderTags(data.categorias_detectadas || []);
-    renderContexts(data.contextos_detectados || []);
-    renderReplacements(data.reemplazos_sugeridos || {});
-    renderPedagogia(data);
-
-    saveHistory({
-      titulo: document.getElementById("titulo").value.trim(),
-      artista: document.getElementById("artista").value.trim(),
-      resultado: data.resultado
+    document.getElementById("btnHistorial").addEventListener("click", () => {
+      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      if(!items.length){ alert("Todavía no tienes análisis guardados en este navegador."); return; }
+      alert("Historial reciente cargado en la columna derecha.");
     });
-    renderHistory();
 
-    document.getElementById("statusLine").textContent = "Análisis completado correctamente.";
-    showToast("Análisis completado");
-  } catch(err){
-    console.error(err);
-    document.getElementById("statusLine").textContent = "No fue posible analizar.";
-    showToast("Error de análisis");
-  } finally {
-    setLoading(false);
-  }
-}
+    clearBtn.addEventListener("click", () => {
+      titulo.value = "";
+      artista.value = "";
+      texto.value = "";
+      buscarLetra.checked = true;
+      contextoEscolar.checked = true;
+      clearPills();
+      clearStatus();
+      clearResult();
+    });
 
-document.getElementById("titulo").addEventListener("keydown", handleSmartEnter);
-document.getElementById("artista").addEventListener("keydown", handleSmartEnter);
-document.getElementById("texto").addEventListener("keydown", handleSmartEnter);
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const ok = await syncSessionWithBackend();
+      if(!ok) return;
 
-renderUser();
-renderHistory();
-showPanel('main');
-</script>
+      if((user.plan || "free") !== "pro" && getRemainingUsage() <= 0){
+        setStatus("Has alcanzado el límite gratuito. Desbloquea SonarIA para usarlo sin límite.", "error");
+        showOverlay("Límite gratuito alcanzado", "Ya probaste el valor de SonarIA. Desbloquea Pro para seguir usando la herramienta sin límite.");
+        return;
+      }
+
+      clearStatus();
+      clearPills();
+      setStatus("Analizando canción...", "info");
+
+      try{
+        let textoParaEnviar = texto.value.trim();
+
+        if (buscarLetra.checked && titulo.value.trim()) {
+          textoParaEnviar = "";
+        }
+
+        const payload = {
+          titulo: titulo.value.trim(),
+          artista: artista.value.trim(),
+          texto: textoParaEnviar,
+          buscar_letra: buscarLetra.checked,
+          contexto_escolar: contextoEscolar.checked
+        };
+
+        if(payload.texto.length >= 20) pillManualText.classList.add("show");
+
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = "Analizando...";
+
+        const response = await fetch(ANALYZE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if(response.status === 401){
+          const data401 = await response.json().catch(() => ({}));
+          forceRelogin(data401.detail || "Tu sesión ya no es válida.");
+          return;
+        }
+
+        if(!response.ok){
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || "No fue posible analizar la canción.");
+        }
+
+        const raw = await response.json();
+
+        if(raw.letra_encontrada) pillAutoLyric.classList.add("show");
+        if(raw.fallback_inteligente) pillFallback.classList.add("show");
+
+        renderAnalysis(raw);
+
+        if(raw.fuente_usada && raw.fuente_usada !== "Texto ingresado por el usuario" && raw.fuente_usada !== "Sin letra automática"){
+          setStatus("Letra encontrada automáticamente desde " + raw.fuente_usada + " ✔", "success");
+        }else{
+          setStatus("Análisis completado correctamente.", "success");
+        }
+
+        if((user.plan || "free") !== "pro") setUsage(getUsage() + 1);
+        updateUserPanel();
+
+        saveHistoryItem({
+          titulo: payload.titulo || "Canción sin título",
+          artista: payload.artista || "Artista no indicado",
+          badge: raw.resultado || raw.resumen || "Análisis",
+          fecha: new Date().toISOString()
+        });
+        renderHistory();
+
+      }catch(error){
+        setStatus(error.message || "Ocurrió un error en el análisis.", "error");
+      }finally{
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = "Analizar canción";
+      }
+    });
+
+    document.addEventListener("keydown", function(e){
+      const active = document.activeElement;
+      if((active === titulo || active === artista) && e.key === "Enter"){
+        e.preventDefault();
+        form.requestSubmit();
+      }
+      if(active === texto && e.key === "Enter" && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    window.addEventListener("load", async () => {
+      clearResult();
+      const ok = await syncSessionWithBackend();
+      if(ok){
+        updateUserPanel();
+        renderHistory();
+        updateCourseGuidance(edadSugerida.textContent || "", resultBadge.textContent || "");
+      }
+    });
+  </script>
 </body>
 </html>
