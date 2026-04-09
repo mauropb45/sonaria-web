@@ -1,196 +1,201 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SonarIA PRO</title>
+[SONARIA PRO UI V3 - LIMPIO Y MEJORADO]
 
-<style>
-body{
-  margin:0;
-  font-family: Arial;
-  background:#0A0C10;
-  color:white;
-  padding:20px;
+CAMBIOS INCLUIDOS:
+
+1. BOTONES RESPONSIVOS (sin compresión)
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
 }
 
-h2{
-  margin-top:0;
-}
-
-.container{
-  max-width:900px;
-  margin:auto;
-}
-
-textarea, input{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-  border:none;
-  background:#111;
-  color:white;
-}
-
-button{
-  margin-top:15px;
-  padding:12px;
-  width:100%;
-  background:#E10600;
-  color:white;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.card{
-  background:#111;
-  padding:15px;
-  border-radius:10px;
-  margin-top:20px;
-}
-
-.cursos-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:10px;
-}
-
-.cursos-grid label{
+.tool{
+  flex:1 1 140px;
+  min-width:140px;
   display:flex;
   align-items:center;
-  gap:8px;
-  padding:10px;
-  border-radius:10px;
-  background:#0f141d;
-  border:1px solid rgba(255,255,255,.1);
-  cursor:pointer;
+  justify-content:center;
+  gap:6px;
+}
+
+.tool.primary{
+  flex:2 1 200px;
+  box-shadow:0 10px 25px rgba(225,6,0,.35);
+}
+
+.tool.primary:hover{
+  box-shadow:0 14px 35px rgba(225,6,0,.45);
+}
+
+.tool:active{
+  transform:scale(0.97);
+}
+
+.tool.locked:hover{
+  background:#3a475c;
+  cursor:not-allowed;
+  transform:none;
+}
+
+2. YOUTUBE COMO PRO
+
+.tool.youtube::after{
+  content:"PRO";
+  position:absolute;
+  top:6px;
+  right:8px;
+  font-size:10px;
+  font-weight:900;
+  color:#fff1c2;
+}
+
+JS:
+
+function openYouTube(){
+  const u = getUser();
+  if(!u || u.plan !== "pro"){
+    featureGate("YouTube inteligente");
+    return;
+  }
+
+  const titulo = document.getElementById("titulo").value.trim();
+  const artista = document.getElementById("artista").value.trim();
+  const q = encodeURIComponent([titulo, artista, "lyrics"].filter(Boolean).join(" "));
+  window.open("https://www.youtube.com/results?search_query=" + q, "_blank");
+}
+
+3. LIMPIEZA DE TEXTO (ELIMINAR)
+
+ELIMINAR COMPLETAMENTE DEL HTML:
+
+- Bloque helper con explicación UX
+- Cualquier texto tipo:
+  "UX PRO..."
+  "Enter inteligente..."
+
+4. MEJORA VISUAL RESULTADO (NIVEL PRO)
+
+AGREGAR:
+
+.result-big{
+  animation:fadeUp .4s ease;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.metric{
+  transition:.2s;
+}
+
+.metric:hover{
+  transform:translateY(-2px);
+}
+
+5. TARJETA RESULTADO MÁS PREMIUM
+
+AGREGAR:
+
+.result-top{
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .callout{
-  margin-top:10px;
-  padding:10px;
-  border-radius:8px;
-  background:#1a1f2b;
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
 }
-</style>
-</head>
 
-<body>
+6. SIDEBAR NUEVO BOTÓN
 
-<div class="container">
+AGREGAR EN SIDEBAR:
 
-<h2>SonarIA PRO</h2>
+<button class="side-btn" onclick="showPanel('cursos')">Mis cursos</button>
 
-<input id="titulo" placeholder="Título">
-<input id="artista" placeholder="Artista">
-<textarea id="texto" placeholder="Pega la letra..."></textarea>
+7. PANEL MIS CURSOS
 
-<button onclick="analizar()">Analizar canción</button>
+AGREGAR NUEVO PANEL:
 
-<div class="card">
-  <strong>Resultado:</strong>
-  <div id="resultado">Sin análisis</div>
-
-  <div class="callout">
-    <strong>Edad sugerida</strong>
-    <div id="edad">—</div>
-  </div>
-
-  <div class="callout">
-    <strong>Compatibilidad con tus cursos</strong>
-    <div id="compatCursos">Aún no evaluado</div>
-  </div>
-</div>
-
-<div class="card">
+<section id="cursosPanel" class="card panel panel-shell">
   <h3>Mis cursos</h3>
+  <p style="color:#99a7bc;">Estos cursos se usarán automáticamente en tus análisis.</p>
 
-  <div id="misCursos" class="cursos-grid">
-    <label><input type="checkbox" value="1 básico"> 1 básico</label>
-    <label><input type="checkbox" value="2 básico"> 2 básico</label>
-    <label><input type="checkbox" value="3 básico"> 3 básico</label>
-    <label><input type="checkbox" value="4 básico"> 4 básico</label>
-    <label><input type="checkbox" value="5 básico"> 5 básico</label>
-    <label><input type="checkbox" value="6 básico"> 6 básico</label>
-    <label><input type="checkbox" value="7 básico"> 7 básico</label>
-    <label><input type="checkbox" value="8 básico"> 8 básico</label>
-    <label><input type="checkbox" value="1 medio"> 1 medio</label>
-    <label><input type="checkbox" value="2 medio"> 2 medio</label>
-    <label><input type="checkbox" value="3 medio"> 3 medio</label>
-    <label><input type="checkbox" value="4 medio"> 4 medio</label>
-  </div>
+  <select id="misCursos" multiple size="10" style="margin-top:10px;">
+    <option>Medio menor</option>
+    <option>Medio mayor</option>
+    <option>Prekínder</option>
+    <option>Kínder</option>
+    <option>1 básico</option>
+    <option>2 básico</option>
+    <option>3 básico</option>
+    <option>4 básico</option>
+    <option>5 básico</option>
+    <option>6 básico</option>
+    <option>7 básico</option>
+    <option>8 básico</option>
+    <option>1 medio</option>
+    <option>2 medio</option>
+    <option>3 medio</option>
+    <option>4 medio</option>
+  </select>
 
-  <button onclick="guardarCursos()">Guardar cursos</button>
-</div>
+  <button class="tool primary" style="margin-top:14px;" onclick="guardarCursos()">Guardar</button>
+</section>
 
-</div>
+8. JS PARA CURSOS
 
-<script>
 function guardarCursos(){
-  const checks = document.querySelectorAll("#misCursos input:checked");
-  const cursos = [...checks].map(c => c.value);
+  const sel = document.getElementById("misCursos");
+  const cursos = [...sel.selectedOptions].map(o => o.value);
+
   localStorage.setItem("sonaria_cursos", JSON.stringify(cursos));
-  alert("Cursos guardados");
+
+  showToast("Cursos guardados");
 }
 
 function cargarCursos(){
   const data = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
-  const checks = document.querySelectorAll("#misCursos input");
+  const sel = document.getElementById("misCursos");
 
-  checks.forEach(c => {
-    c.checked = data.includes(c.value);
+  [...sel.options].forEach(o=>{
+    o.selected = data.includes(o.value);
   });
 }
 
-function evaluarCompatibilidadCursos(edadTexto){
-  const cursos = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
-  const n = parseInt((edadTexto || "").replace(/[^0-9]/g,""), 10);
+MODIFICAR showPanel():
 
-  if(!n || cursos.length === 0){
-    return "Selecciona cursos para personalizar";
-  }
-
-  let nivel;
-
-  if(n <= 6) nivel = ["1 básico","2 básico","3 básico","4 básico"];
-  else if(n <= 8) nivel = ["5 básico","6 básico"];
-  else if(n <= 12) nivel = ["7 básico","8 básico"];
-  else if(n <= 14) nivel = ["1 medio","2 medio"];
-  else nivel = ["3 medio","4 medio"];
-
-  const match = cursos.some(c => nivel.includes(c));
-
-  if(match){
-    return "✔ Apta para tus cursos";
-  } else {
-    return "⚠ No recomendada para tus cursos";
-  }
+if(name === "cursos"){
+  document.getElementById("cursosPanel").classList.add("show");
+  cargarCursos();
+  setActiveSidebar("Mis cursos");
 }
 
-function analizar(){
-  const texto = document.getElementById("texto").value;
+9. USO AUTOMÁTICO EN ANALIZAR
 
-  if(!texto){
-    alert("Pega una letra");
-    return;
-  }
+REEMPLAZAR:
 
-  // Simulación análisis
-  const edad = Math.floor(Math.random()*10)+8;
+cursos: getSelectedCourses()
 
-  document.getElementById("resultado").textContent = "Análisis completado";
-  document.getElementById("edad").textContent = edad + "+";
+POR:
 
-  document.getElementById("compatCursos").textContent =
-    evaluarCompatibilidadCursos(edad + "+");
-}
+cursos: JSON.parse(localStorage.getItem("sonaria_cursos") || "[]")
 
-cargarCursos();
-</script>
+-----------------------------------
 
-</body>
-</html>
+RESULTADO FINAL:
+
+✔ interfaz limpia  
+✔ sin texto innecesario  
+✔ botones bien dimensionados  
+✔ sensación premium  
+✔ cursos persistentes  
+✔ base lista para OA Chile  
+✔ mejor conversión a PRO  
+
