@@ -1,34 +1,56 @@
-SONARIA - MEJORA CURSOS + PROPUESTA SMART MATCH
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarIA PRO</title>
 
-1) REEMPLAZO HTML PARA "MIS CURSOS"
+<style>
+body{
+  margin:0;
+  font-family: Arial;
+  background:#0A0C10;
+  color:white;
+  padding:20px;
+}
 
-Reemplaza el bloque actual de selección de cursos por este:
+h2{
+  margin-top:0;
+}
 
-<div id="misCursos" class="cursos-grid">
-  <label><input type="checkbox" value="Medio menor"> Medio menor</label>
-  <label><input type="checkbox" value="Medio mayor"> Medio mayor</label>
-  <label><input type="checkbox" value="Prekínder"> Prekínder</label>
-  <label><input type="checkbox" value="Kínder"> Kínder</label>
+.container{
+  max-width:900px;
+  margin:auto;
+}
 
-  <label><input type="checkbox" value="1 básico"> 1 básico</label>
-  <label><input type="checkbox" value="2 básico"> 2 básico</label>
-  <label><input type="checkbox" value="3 básico"> 3 básico</label>
-  <label><input type="checkbox" value="4 básico"> 4 básico</label>
-  <label><input type="checkbox" value="5 básico"> 5 básico</label>
-  <label><input type="checkbox" value="6 básico"> 6 básico</label>
+textarea, input{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+  background:#111;
+  color:white;
+}
 
-  <label><input type="checkbox" value="7 básico"> 7 básico</label>
-  <label><input type="checkbox" value="8 básico"> 8 básico</label>
+button{
+  margin-top:15px;
+  padding:12px;
+  width:100%;
+  background:#E10600;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-  <label><input type="checkbox" value="1 medio"> 1 medio</label>
-  <label><input type="checkbox" value="2 medio"> 2 medio</label>
-  <label><input type="checkbox" value="3 medio"> 3 medio</label>
-  <label><input type="checkbox" value="4 medio"> 4 medio</label>
-</div>
-
-2) CSS PARA QUE SE VEA PRO
-
-Agrega esto dentro de tu <style>:
+.card{
+  background:#111;
+  padding:15px;
+  border-radius:10px;
+  margin-top:20px;
+}
 
 .cursos-grid{
   display:grid;
@@ -41,38 +63,79 @@ Agrega esto dentro de tu <style>:
   display:flex;
   align-items:center;
   gap:8px;
-  padding:10px 12px;
-  border-radius:12px;
+  padding:10px;
+  border-radius:10px;
   background:#0f141d;
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
   cursor:pointer;
-  font-weight:600;
-  transition:.15s;
 }
 
-.cursos-grid label:hover{
-  background:#1a2330;
+.callout{
+  margin-top:10px;
+  padding:10px;
+  border-radius:8px;
+  background:#1a1f2b;
 }
+</style>
+</head>
 
-.cursos-grid input{
-  accent-color:#E10600;
-  transform:scale(1.1);
-}
+<body>
 
-3) JS NUEVO PARA GUARDAR CURSOS
+<div class="container">
 
-Reemplaza guardarCursos() por esto:
+<h2>SonarIA PRO</h2>
 
+<input id="titulo" placeholder="Título">
+<input id="artista" placeholder="Artista">
+<textarea id="texto" placeholder="Pega la letra..."></textarea>
+
+<button onclick="analizar()">Analizar canción</button>
+
+<div class="card">
+  <strong>Resultado:</strong>
+  <div id="resultado">Sin análisis</div>
+
+  <div class="callout">
+    <strong>Edad sugerida</strong>
+    <div id="edad">—</div>
+  </div>
+
+  <div class="callout">
+    <strong>Compatibilidad con tus cursos</strong>
+    <div id="compatCursos">Aún no evaluado</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Mis cursos</h3>
+
+  <div id="misCursos" class="cursos-grid">
+    <label><input type="checkbox" value="1 básico"> 1 básico</label>
+    <label><input type="checkbox" value="2 básico"> 2 básico</label>
+    <label><input type="checkbox" value="3 básico"> 3 básico</label>
+    <label><input type="checkbox" value="4 básico"> 4 básico</label>
+    <label><input type="checkbox" value="5 básico"> 5 básico</label>
+    <label><input type="checkbox" value="6 básico"> 6 básico</label>
+    <label><input type="checkbox" value="7 básico"> 7 básico</label>
+    <label><input type="checkbox" value="8 básico"> 8 básico</label>
+    <label><input type="checkbox" value="1 medio"> 1 medio</label>
+    <label><input type="checkbox" value="2 medio"> 2 medio</label>
+    <label><input type="checkbox" value="3 medio"> 3 medio</label>
+    <label><input type="checkbox" value="4 medio"> 4 medio</label>
+  </div>
+
+  <button onclick="guardarCursos()">Guardar cursos</button>
+</div>
+
+</div>
+
+<script>
 function guardarCursos(){
   const checks = document.querySelectorAll("#misCursos input:checked");
   const cursos = [...checks].map(c => c.value);
   localStorage.setItem("sonaria_cursos", JSON.stringify(cursos));
-  showToast("Cursos guardados");
+  alert("Cursos guardados");
 }
-
-4) JS NUEVO PARA CARGAR CURSOS
-
-Reemplaza cargarCursos() por esto:
 
 function cargarCursos(){
   const data = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
@@ -83,78 +146,51 @@ function cargarCursos(){
   });
 }
 
-5) PROPUESTA NUEVA: SMART MATCH DE CURSO
-
-Idea UX:
-Después del análisis, SonarIA puede sugerir algo como:
-
-"Esta canción podría funcionar mejor en 7 básico y 8 básico"
-
-o
-
-"Por el tipo de contenido y mediación sugerida, esta canción parece más adecuada para 1 medio"
-
-6) CÓMO SE HARÍA EN FRONTEND
-
-Agregar una tarjeta pequeña en el panel de resultado:
-
-<div class="callout">
-  <strong>Curso sugerido</strong>
-  <span id="cursoSugerido">Aquí aparecerá una sugerencia automática de nivel.</span>
-</div>
-
-7) LÓGICA SIMPLE INICIAL (SIN IA COMPLEJA)
-
-Primera versión sugerida:
-- edad 6+  → 1 a 4 básico
-- edad 8+  → 5 a 6 básico
-- edad 12+ → 7 a 8 básico
-- edad 14+ → 1 a 2 medio
-- edad 16+ → 3 a 4 medio
-
-8) EJEMPLO JS SIMPLE
-
-function sugerirCursoDesdeEdad(edadTexto){
+function evaluarCompatibilidadCursos(edadTexto){
+  const cursos = JSON.parse(localStorage.getItem("sonaria_cursos") || "[]");
   const n = parseInt((edadTexto || "").replace(/[^0-9]/g,""), 10);
 
-  if(!n) return "Sin sugerencia automática aún.";
-  if(n <= 6) return "Sugerencia: 1 básico a 4 básico";
-  if(n <= 8) return "Sugerencia: 5 básico a 6 básico";
-  if(n <= 12) return "Sugerencia: 7 básico a 8 básico";
-  if(n <= 14) return "Sugerencia: 1 medio a 2 medio";
-  return "Sugerencia: 3 medio a 4 medio";
+  if(!n || cursos.length === 0){
+    return "Selecciona cursos para personalizar";
+  }
+
+  let nivel;
+
+  if(n <= 6) nivel = ["1 básico","2 básico","3 básico","4 básico"];
+  else if(n <= 8) nivel = ["5 básico","6 básico"];
+  else if(n <= 12) nivel = ["7 básico","8 básico"];
+  else if(n <= 14) nivel = ["1 medio","2 medio"];
+  else nivel = ["3 medio","4 medio"];
+
+  const match = cursos.some(c => nivel.includes(c));
+
+  if(match){
+    return "✔ Apta para tus cursos";
+  } else {
+    return "⚠ No recomendada para tus cursos";
+  }
 }
 
-Y después de actualizar edad:
+function analizar(){
+  const texto = document.getElementById("texto").value;
 
-document.getElementById("cursoSugerido").textContent = sugerirCursoDesdeEdad(data.edad_sugerida);
+  if(!texto){
+    alert("Pega una letra");
+    return;
+  }
 
-9) EVOLUCIÓN PRO REAL
+  // Simulación análisis
+  const edad = Math.floor(Math.random()*10)+8;
 
-Versión FREE:
-- el usuario selecciona sus cursos
-- SonarIA usa esos cursos como contexto
-- muestra sugerencia simple de nivel
+  document.getElementById("resultado").textContent = "Análisis completado";
+  document.getElementById("edad").textContent = edad + "+";
 
-Versión PRO:
-- match real con cursos guardados
-- sugerencia de OA MINEDUC Chile
-- propuesta de actividad por nivel
-- ajuste de recomendación según curso seleccionado
+  document.getElementById("compatCursos").textContent =
+    evaluarCompatibilidadCursos(edad + "+");
+}
 
-10) RECOMENDACIÓN DE PRODUCTO
+cargarCursos();
+</script>
 
-Sí conviene implementar ambas cosas:
-- checkbox para cursos
-- sugerencia automática de curso según edad sugerida
-
-Porque juntas hacen que SonarIA se sienta:
-- más inteligente
-- más útil para profes
-- más lista para OA Chile después
-
-RESULTADO:
-✔ selección de cursos más cómoda
-✔ interfaz más pro
-✔ base lista para OA Chile
-✔ sensación de producto inteligente
+</body>
+</html>
