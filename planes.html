@@ -18,12 +18,13 @@
     <div class="brand">Sonar<span>IA</span></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button class="btn home" onclick="window.location.href='sonaria.html'">Volver a SonarIA</button>
-      <button class="btn pro">Desbloquear Pro</button>
+      <button id="upgradeBtnTop" class="btn pro">Desbloquear Pro</button>
     </div>
   </div>
   <section class="hero">
     <h1>Elige cuánto quieres que SonarIA te acompañe en tus decisiones de aula.</h1>
     <p>La versión <span class="orange">Free</span> te da una lectura inicial. La versión <span class="green">Pro</span> abre el motor pedagógico completo, la versión escolar y una experiencia mucho más fluida para planificar con criterio escolar.</p>
+  <div id="userPanel" style="margin-top:18px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);max-width:640px"><div id="userInfo" style="font-weight:800;line-height:1.6">Cargando usuario…</div><div id="planStatus" style="margin-top:8px;color:var(--muted)">Revisando plan actual…</div><div id="payStatus" style="margin-top:8px;color:#ffd7d7;font-weight:800;min-height:22px"></div></div>
   </section>
   <section class="grid">
     <article class="plan">
@@ -44,7 +45,7 @@
         <div class="item"><div><strong>Todo lo de Free</strong><div class="copy" style="margin:4px 0 0;">Sin límite de exploración básica.</div></div><div class="ok">✓</div></div>
         <div class="item"><div><strong>Versión escolar</strong><div class="copy" style="margin:4px 0 0;">Reemplazos destacados en amarillo.</div></div><div class="ok">✓</div></div>
         <div class="item"><div><strong>Pedagogía por curso</strong><div class="copy" style="margin:4px 0 0;">2 o 3 alternativas con OA y actividades distintas.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Contexto y traducción integrados</strong><div class="copy" style="margin:4px 0 0;">Sin salir de la experiencia.</div></div><div class="ok">✓</div></div>
+        <div class="item"><div><strong>Mis cursos, traducción y contexto integrados</strong><div class="copy" style="margin:4px 0 0;">Todo dentro del flujo de aula y con candados claros en Free.</div></div><div class="ok">✓</div></div>
         <div class="item"><div><strong>Impacto SonarIA</strong><div class="copy" style="margin:4px 0 0;">Mide cuántos malos ratos te ayudó a evitar.</div></div><div class="ok">✓</div></div>
       </div>
     </article>
@@ -62,5 +63,57 @@
     <div class="foot">La idea no es pagar por más botones, sino por una experiencia que ahorre tiempo, prevenga conflictos y entregue respaldo pedagógico más profundo.</div>
   </section>
 </div>
+
+<script>
+const API_URL = "https://sonaria-api.onrender.com";
+const authToken = localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
+const userCache = (()=>{ try{return JSON.parse(localStorage.getItem("mejoraria_user")||"{}")}catch(_){return {}} })();
+function setPayStatus(msg, ok=false){ const el=document.getElementById("payStatus"); el.textContent=msg||""; el.style.color = ok ? "#d8fff7" : "#ffd7d7"; }
+async function syncUser(){
+  if(!authToken){
+    document.getElementById("userInfo").textContent = "No hay sesión activa.";
+    document.getElementById("planStatus").textContent = "Inicia sesión para activar Pro.";
+    return null;
+  }
+  try{
+    const res = await fetch(API_URL + "/me", { headers:{"Authorization":"Bearer " + authToken} });
+    const data = await res.json();
+    const user = data.user || userCache || {};
+    localStorage.setItem("mejoraria_user", JSON.stringify(user));
+    document.getElementById("userInfo").textContent = `${user.name || user.email || "Usuario"}`;
+    document.getElementById("planStatus").textContent = user.plan === "pro" ? "Tu cuenta ya está en Pro. Todas las funciones completas están disponibles." : "Actualmente estás en Free. Puedes activar Pro demo inmediatamente.";
+    return user;
+  }catch(_){
+    document.getElementById("userInfo").textContent = userCache.name || userCache.email || "Sesión no validada";
+    document.getElementById("planStatus").textContent = "No se pudo validar el plan actual.";
+    return userCache;
+  }
+}
+async function activatePro(){
+  const currentUser = await syncUser();
+  const email = currentUser?.email || userCache?.email || "";
+  if(!authToken || !email){ setPayStatus("Inicia sesión antes de activar Pro."); return; }
+  setPayStatus("Activando Pro demo...");
+  try{
+    const res = await fetch(API_URL + "/upgrade", {
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken},
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok || !data.ok) throw new Error(data.detail || "No fue posible activar Pro.");
+    localStorage.setItem("mejoraria_user", JSON.stringify(data.user || {}));
+    localStorage.setItem("mejoraria_plan", (data.user || {}).plan || "pro");
+    setPayStatus("Pro activado correctamente. Ya puedes volver a SonarIA.", true);
+    await syncUser();
+  }catch(err){
+    setPayStatus(err.message || "No fue posible activar Pro.");
+  }
+}
+document.getElementById("upgradeBtnTop")?.addEventListener("click", activatePro);
+const btns = Array.from(document.querySelectorAll('.btn.pro')).filter(btn => btn.id !== 'upgradeBtnTop');
+btns.forEach(btn => btn.addEventListener('click', activatePro));
+syncUser();
+</script>
 </body>
 </html>
