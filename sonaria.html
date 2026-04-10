@@ -138,7 +138,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
             </div>
             <div class="actions-main">
               <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
-              <button id="voiceBtn" class="tool small" type="button">🎙️ Voz: canción - de - artista</button>
+              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz</button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
             <div class="actions-tools">
@@ -149,7 +149,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="statsBtn" class="tool small" type="button">🛡️ Lo que SonarIA te evitó</button>
               <button id="suggestBtn" class="tool small" type="button">❓ ¿Te refieres a...?</button>
             </div>
-            <div class="voice-tip">Pulsa el micrófono y di: <strong>nombre de canción - de - artista</strong>.</div>
+            <div class="voice-tip">Para hacer la búsqueda por voz di el <strong>nombre de la canción y el artista</strong>.</div>
           </form>
           <div id="statusBox" class="status"></div>
           <div id="loaderBox" class="loader">Preparando análisis pedagógico...<div class="loader-track"><div class="loader-fill"></div></div></div>
@@ -524,10 +524,28 @@ function buildSchoolVersionHtml(){
 function openVersionEscolar(){
   if(!isPro()){
     const preview = lastAnalysis?.version_escolar_preview_html || '';
-    openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisar una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
+    openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisarla en una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
     return;
   }
   openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml());
+}
+
+
+function maybePromptSchoolVersion(raw){
+  if(!raw || !raw.adaptacion_escolar_posible) return;
+  const cta = isPro()
+    ? "Esta canción no se recomienda en su versión original, pero SonarIA encontró una adaptación escolar para que la revises ahora."
+    : "Esta canción no se recomienda en su versión original, pero SonarIA encontró una adaptación escolar. Abre la vista previa y, si quieres la versión completa, desbloquea Pro.";
+  openModal(
+    "🚦 Adaptación escolar disponible",
+    "SonarIA encontró una salida pedagógica para esta canción.",
+    `<div class="item"><b>Recomendación inmediata</b><div class="meta">${escapeHtml(raw.adaptacion_escolar_mensaje || cta)}</div></div>
+     <div class="item" style="margin-top:12px;"><b>Siguiente paso</b><div class="meta">${cta}</div></div>
+     <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+       <button class="small-btn use" onclick="closeModal(); openVersionEscolar();">Ir a versión escolar</button>
+       ${isPro() ? '' : '<button class="small-btn" onclick="window.location.href=\'planes.html\'">Ver Pro</button>'}
+     </div>`
+  );
 }
 
 function renderHistoryHtml(){
@@ -607,7 +625,7 @@ function startVoiceSearch(){
   rec.onresult = (event) => {
     const heard = event.results?.[0]?.[0]?.transcript || "";
     parseVoiceCommand(heard);
-    showToast("Búsqueda por voz cargada");
+    showToast("Dí el nombre de la canción y el artista.");
     form.requestSubmit();
   };
   rec.onerror = () => setStatus("No se pudo completar la búsqueda por voz.", "error");
@@ -638,6 +656,7 @@ form.addEventListener("submit", async (e) => {
     const raw = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(raw.detail || "No fue posible analizar la canción.");
     renderAnalysis(raw);
+    if(raw.mostrar_popup_adaptacion || raw.adaptacion_escolar_posible){ maybePromptSchoolVersion(raw); }
     addHistory({ id:String(Date.now()) + Math.random().toString(36).slice(2), titulo:payload.titulo || raw.titulo || "Canción sin título", artista:payload.artista || raw.artista || "Artista no indicado", badge:raw.resultado || "Análisis", fecha:new Date().toISOString(), texto:raw.texto_analizado || texto.value || "", adaptacionMensaje: raw.adaptacion_escolar_mensaje || "" });
     if(!isPro()) setUsage((raw.analyses_used ?? (getUsage() + 1)));
     user.analyses_used = raw.analyses_used ?? getUsage(); user.analyses_limit = raw.analyses_limit ?? 3; renderUserCard(user);
@@ -684,7 +703,17 @@ function showProCelebrationIfNeeded(){
   const suffix = document.getElementById("brandPlanSuffix");
   if(suffix) suffix.style.display = "inline-flex";
   launchCelebrationConfetti();
-  openModal("🎉 Bienvenido a SonarIA Pro", "Ahora sí: entraste a lo que siempre quisiste de SonarIA.", `<div class="item"><b>Experiencia completa activada</b><div class="meta">Ya tienes disponibles Mis cursos, Traducción, Versión escolar completa y una experiencia pedagógica mucho más potente.</div></div><div class="item" style="margin-top:12px;"><b>Qué hacer ahora</b><div class="meta">Prueba una canción, abre Pedagogía y revisa cómo SonarIA puede rescatar material que antes habrías descartado.</div></div>`);
+  const welcomeName = escapeHtml((getUser().name || getUser().email || "docente").split("@")[0]);
+  openModal(
+    `🎉 ${welcomeName}, bienvenido a SonarIA Pro`,
+    "Ahora sí: entraste a la experiencia completa.",
+    `<div style="padding:16px 18px;border-radius:18px;background:linear-gradient(135deg, rgba(255,135,0,.22), rgba(54,124,255,.18), rgba(0,210,190,.18));border:1px solid rgba(255,255,255,.14);margin-bottom:12px;">
+      <div style="font-size:30px;font-weight:900;line-height:1.05;letter-spacing:-.04em;color:#fff;">Te estábamos esperando.</div>
+      <div style="margin-top:8px;font-size:16px;line-height:1.7;color:#eef3fb;">Desde aquí en adelante tienes Mis cursos, Traducción, Versión escolar completa y una experiencia mucho más poderosa para rescatar canciones que antes habrías descartado.</div>
+    </div>
+    <div class="item"><b>Qué probar primero</b><div class="meta">Busca una canción compleja, revisa la adaptación escolar y luego entra a Pedagogía para ver cómo SonarIA la transforma en material trabajable.</div></div>
+    <div class="item" style="margin-top:12px;"><b>Tu siguiente paso</b><div class="meta">Haz una prueba con una canción difícil y mira cómo crece tu estadística de rescates pedagógicos.</div></div>`
+  );
   url.searchParams.delete("welcome");
   history.replaceState({}, "", url.toString());
 }
