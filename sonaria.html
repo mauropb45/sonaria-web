@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SonarIA | V6 limpia</title>
+<title>SonarIA | Panel docente</title>
 <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -138,6 +138,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
             </div>
             <div class="actions-main">
               <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
+              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz</button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
             <div class="actions-tools">
@@ -223,6 +224,12 @@ let lastAnalysis = null;
 let translationCache = null;
 let contextCache = null;
 
+function userScope(){
+  const raw = (user?.email || "guest").toLowerCase().replace(/[^a-z0-9]/g,"_");
+  return raw || "guest";
+}
+function scopedKey(name){ return `sonaria_${name}_${userScope()}`; }
+
 const titulo = document.getElementById("titulo");
 const artista = document.getElementById("artista");
 const texto = document.getElementById("texto");
@@ -237,6 +244,7 @@ const schoolBtn = document.getElementById("schoolBtn");
 const suggestBtn = document.getElementById("suggestBtn");
 const statsBtn = document.getElementById("statsBtn");
 const coursesBtn = document.getElementById("coursesBtn");
+const voiceBtn = document.getElementById("voiceBtn");
 
 const COURSE_LIST = [
   ["1B","1° básico",6],["2B","2° básico",7],["3B","3° básico",8],["4B","4° básico",9],
@@ -250,13 +258,13 @@ function setStatus(msg,type="info"){ const box=document.getElementById("statusBo
 function setLoading(on){ document.getElementById("loaderBox").classList.toggle("show",!!on); }
 function getUser(){ return user || {}; }
 function isPro(){ return (getUser().plan || "free") === "pro"; }
-function getUsage(){ return Number(localStorage.getItem("sonaria_usage_local") || 0); }
-function setUsage(v){ localStorage.setItem("sonaria_usage_local", String(v)); }
+function getUsage(){ return Number(localStorage.getItem(scopedKey("usage_local")) || 0); }
+function setUsage(v){ localStorage.setItem(scopedKey("usage_local"), String(v)); }
 function getRemainingUsage(){ const limit = Number(getUser().analyses_limit || 3); return Math.max(limit - getUsage(), 0); }
-function getStoredCourses(){ try{ return JSON.parse(localStorage.getItem("sonaria_courses") || "[]"); }catch(_){ return []; } }
-function saveStoredCourses(courses){ localStorage.setItem("sonaria_courses", JSON.stringify(courses)); }
-function getHistory(){ try{ return JSON.parse(localStorage.getItem("sonaria_history") || "[]"); }catch(_){ return []; } }
-function saveHistory(items){ localStorage.setItem("sonaria_history", JSON.stringify(items)); }
+function getStoredCourses(){ try{ return JSON.parse(localStorage.getItem(scopedKey("courses")) || "[]"); }catch(_){ return []; } }
+function saveStoredCourses(courses){ localStorage.setItem(scopedKey("courses"), JSON.stringify(courses)); }
+function getHistory(){ try{ return JSON.parse(localStorage.getItem(scopedKey("history")) || "[]"); }catch(_){ return []; } }
+function saveHistory(items){ localStorage.setItem(scopedKey("history"), JSON.stringify(items)); }
 function historyKey(item){ return `${String(item.titulo||"").trim().toLowerCase()}::${String(item.artista||"").trim().toLowerCase()}`; }
 function addHistory(item){
   const items=getHistory();
@@ -566,12 +574,50 @@ function buildSuggestionsHtml(items){ if(!items.length) return '<div class="empt
 window.useSuggestion = function(idx){ const items=(lastAnalysis?.sugerencias_nombres || []); const hit=items[idx]; if(!hit) return; titulo.value=hit.titulo||""; artista.value=hit.artista||""; closeModal(); showToast("Sugerencia cargada"); };
 function openSuggestions(){ openModal("¿Te refieres a...?", "Sugerencias cuando el título no coincide exactamente con la búsqueda web.", buildSuggestionsHtml(lastAnalysis?.sugerencias_nombres || [])); }
 
+function parseVoiceCommand(transcript){
+  const text = String(transcript || "").trim();
+  const clean = text
+    .replace(/^sonaria[, ]*/i, "")
+    .replace(/^busca(?:r)?(?: la)?(?: canción)?/i, "")
+    .trim();
+  let song = clean;
+  let artistName = "";
+  const match = clean.match(/(.+?)\s+(?:de|by)\s+(.+)/i);
+  if(match){
+    song = match[1].trim();
+    artistName = match[2].trim();
+  }
+  if(song) titulo.value = song.replace(/^la canción\s+/i, "").trim();
+  if(artistName) artista.value = artistName;
+}
+function startVoiceSearch(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    showToast("La búsqueda por voz no está disponible en este navegador.");
+    return;
+  }
+  const rec = new SR();
+  rec.lang = "es-CL";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  setStatus('Escuchando… Puedes decir: "SonarIA busca la canción Creep de Radiohead".', 'info');
+  rec.onresult = (event) => {
+    const heard = event.results?.[0]?.[0]?.transcript || "";
+    parseVoiceCommand(heard);
+    showToast("Búsqueda por voz cargada");
+    form.requestSubmit();
+  };
+  rec.onerror = () => setStatus("No se pudo completar la búsqueda por voz.", "error");
+  rec.start();
+}
+
 contextBtn.addEventListener("click", openContexto);
 translateBtn.addEventListener("click", openTranslate);
 youtubeBtn.addEventListener("click", openYoutube);
 schoolBtn.addEventListener("click", openVersionEscolar);
 statsBtn.addEventListener("click", openStats);
 suggestBtn.addEventListener("click", openSuggestions);
+voiceBtn.addEventListener("click", startVoiceSearch);
 clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; clearResult(); setStatus(""); });
 
 form.addEventListener("submit", async (e) => {
@@ -601,12 +647,25 @@ form.addEventListener("submit", async (e) => {
 document.getElementById("modal").addEventListener("click", (e) => { if(e.target.id === "modal") closeModal(); });
 clearResult();
 function showWelcomeResponsibility(){
-  if(sessionStorage.getItem("sonaria_welcome_seen") === "1") return;
+  const tokenTail = (authToken || "anon").slice(-8);
+  const seenKey = `sonaria_welcome_seen_${userScope()}_${tokenTail}`;
+  if(sessionStorage.getItem(seenKey) === "1") return;
   openModal("Bienestar estudiantil primero", "Antes de usar SonarIA", `<div class="item"><b>Criterio docente responsable</b><div class="meta">El bienestar de los estudiantes está por encima de cualquier canción. SonarIA orienta el análisis, pero la decisión final de uso, adaptación o descarte siempre depende del criterio profesional del docente.</div></div><div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Usa las sugerencias como apoyo. Revisa contexto, curso, madurez del grupo y objetivo pedagógico antes de llevar una canción al aula.</div></div>`);
-  sessionStorage.setItem("sonaria_welcome_seen", "1");
+  sessionStorage.setItem(seenKey, "1");
 }
 
-syncSessionWithBackend().then(showWelcomeResponsibility);
+function showProCelebrationIfNeeded(){
+  const url = new URL(window.location.href);
+  const planJustUpgraded = url.searchParams.get("welcome") === "pro" || localStorage.getItem("sonaria_pro_welcome") === "1";
+  if(!planJustUpgraded || !isPro()) return;
+  localStorage.removeItem("sonaria_pro_welcome");
+  document.title = "SonarIA Pro | Panel docente";
+  openModal("Bienvenido a SonarIA Pro", "Tu experiencia completa ya está activa.", `<div class="item"><b>Celebración y bienvenida</b><div class="meta">Ya tienes disponibles Mis cursos, Traducción, Versión escolar completa y la experiencia pedagógica ampliada.</div></div><div class="item" style="margin-top:12px;"><b>Siguiente paso sugerido</b><div class="meta">Analiza una canción y revisa luego Pedagogía, la Versión escolar y Lo que SonarIA te evitó.</div></div>`);
+  url.searchParams.delete("welcome");
+  history.replaceState({}, "", url.toString());
+}
+
+syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProCelebrationIfNeeded(); });
 </script>
 </body>
 </html>
