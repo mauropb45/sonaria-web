@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SonarIA | V5 limpia</title>
+<title>SonarIA | V6 limpia</title>
 <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -79,6 +79,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
       <div class="menu-title">Navegación</div>
       <button class="nav-btn active" onclick="scrollToTop()">📍 Dashboard</button>
       <button class="nav-btn" onclick="openPedagogia()">🎓 Pedagogía</button>
+      <button class="nav-btn" onclick="openHistorial()">🕘 Historial</button>
       <div class="menu-title">Criterio</div>
       <div class="side-note">La edad orienta, pero no decide sola. El contexto escolar siempre tiene prioridad al momento de recomendar una canción.</div>
     </aside>
@@ -104,7 +105,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
         </div>
         <div class="hero-side">
           <div class="mini"><strong>OA + edad referencial</strong><span>El análisis propone un match con OA del tramo 1° básico a IV° medio y ajusta la recomendación según la edad del curso.</span></div>
-          <div class="mini"><strong>Pedagogía accionable</strong><span>La ventana de pedagogía reúne actividades guiadas, preguntas de reflexión y análisis musical aplicables en clases.</span></div>
+          <div class="mini"><strong>Planificación breve</strong><span>Pedagogía reúne OA sugerido, preguntas guiadas, análisis musical y actividades aplicables en clases.</span></div>
         </div>
       </section>
 
@@ -265,8 +266,10 @@ function renderUserCard(u){
 
 async function syncSessionWithBackend(){
   if(!authToken){ window.location.href = "login.html"; return false; }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 7000);
   try{
-    const res = await fetch(API_URL + "/me", { headers:{ "Authorization": "Bearer " + authToken } });
+    const res = await fetch(API_URL + "/me", { headers:{ "Authorization": "Bearer " + authToken }, signal: controller.signal });
     if(!res.ok) throw new Error();
     const data = await res.json();
     user = data.user || {};
@@ -277,6 +280,8 @@ async function syncSessionWithBackend(){
   }catch(_){
     localStorage.removeItem("mejoraria_token"); localStorage.removeItem("token"); localStorage.removeItem("access_token");
     window.location.href = "login.html"; return false;
+  }finally{
+    clearTimeout(timeout);
   }
 }
 
@@ -387,11 +392,29 @@ async function openContexto(){
   try{
     openModal("Contexto", "Buscando reseña y contexto web...", '<div class="empty">Cargando...</div>');
     const data = await fetchContext();
-    openModal("Contexto", "Resumen breve y referencia web de apoyo.", `
-      <div class="item"><b>Resumen</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>
-      ${(data.fuente ? `<div class="item" style="margin-top:12px;"><b>Referencia</b><div class="meta"><a href="${escapeHtml(data.fuente)}" target="_blank" rel="noopener noreferrer">Abrir búsqueda o fuente</a></div></div>` : "")}
-      ${(data.temas_detectados || []).length ? `<div class="item" style="margin-top:12px;"><b>Temas detectados</b><div class="meta">${data.temas_detectados.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>` : "")}`);
-  }catch(err){ setStatus(err.message, "error"); }
+    const referenciaHtml = data.fuente
+      ? `<div class="item" style="margin-top:12px;"><b>Referencia</b><div class="meta"><a href="${escapeHtml(data.fuente)}" target="_blank" rel="noopener noreferrer">Abrir búsqueda o fuente</a></div></div>`
+      : "";
+    const temasHtml = (data.temas_detectados || []).length
+      ? `<div class="item" style="margin-top:12px;"><b>Temas detectados</b><div class="meta">${data.temas_detectados.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`
+      : "";
+    const metaHtml = (data.metadatos || []).length
+      ? `<div class="item" style="margin-top:12px;"><b>Apoyo</b><div class="meta">${data.metadatos.map(x => escapeHtml(x)).join(" · ")}</div></div>`
+      : "";
+    openModal(
+      "Contexto",
+      "Resumen breve y referencia web de apoyo.",
+      `<div class="item"><b>Resumen</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>${metaHtml}${referenciaHtml}${temasHtml}`
+    );
+  }catch(err){
+    const q = `${titulo.value || lastAnalysis?.titulo || ""} ${artista.value || lastAnalysis?.artista || ""} significado canción`.trim();
+    openModal(
+      "Contexto",
+      "No fue posible cargar la reseña automática.",
+      `<div class="item"><b>Referencia sugerida</b><div class="meta"><a href="https://www.google.com/search?q=${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer">Buscar contexto en la web</a></div></div>`
+    );
+    setStatus(err.message, "error");
+  }
 }
 
 async function fetchTranslation(){
