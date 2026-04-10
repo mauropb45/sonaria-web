@@ -78,6 +78,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
       </div>
       <div class="menu-title">Navegación</div>
       <button class="nav-btn active" onclick="scrollToTop()">📍 Dashboard</button>
+      <button id="sidebarCoursesBtn" class="nav-btn" onclick="openCursos()">📚 Mis cursos <span class="lock-icon">🔒</span></button>
       <button class="nav-btn" onclick="openPedagogia()">🎓 Pedagogía</button>
       <button class="nav-btn" onclick="openHistorial()">🕘 Historial</button>
       <div class="menu-title">Criterio</div>
@@ -140,7 +141,6 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
             <div class="actions-tools">
-              <button id="coursesBtn" class="tool small" type="button">🧑‍🏫 Mis cursos <span class="lock-icon">🔒</span></button>
               <button id="contextBtn" class="tool small" type="button">🌐 Contexto</button>
               <button id="translateBtn" class="tool small" type="button">🈶 Traducción <span class="lock-icon">🔒</span></button>
               <button id="youtubeBtn" class="tool youtube" type="button">▶ YouTube</button>
@@ -290,10 +290,12 @@ function getImpactData(){
 function impactPercent(value,total){ return total ? Math.round((value/total)*100) : 0; }
 
 function updateProLocks(){
-  [coursesBtn, translateBtn, schoolBtn].forEach(btn => {
+  const lockHolders = [document.getElementById("sidebarCoursesBtn"), translateBtn, schoolBtn].filter(Boolean);
+  lockHolders.forEach(btn => {
     btn.classList.toggle("locked", !isPro());
     btn.setAttribute("aria-disabled", (!isPro()).toString());
     btn.title = isPro() ? "Función disponible" : "Disponible en Pro";
+    btn.querySelectorAll('.lock-icon').forEach(icon => { icon.style.display = isPro() ? 'none' : 'inline-flex'; });
   });
 }
 
@@ -510,7 +512,8 @@ function buildSchoolVersionHtml(){
 }
 function openVersionEscolar(){
   if(!isPro()){
-    openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `<div class="item"><b>Lectura recomendada</b><div class="meta">Si esta canción requiere mediación o no se recomienda directamente, revisa si SonarIA tiene una adaptación escolar disponible antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
+    const preview = lastAnalysis?.version_escolar_preview_html || '';
+    openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisar una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
     return;
   }
   openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml());
@@ -531,7 +534,7 @@ function openYoutube(){
   if(!songTitle && !songArtist){ setStatus("Primero indica una canción.", "error"); return; }
   if(!isPro()){
     window.open(`https://www.youtube.com/`, "_blank", "noopener,noreferrer,width=1100,height=760");
-    showToast("En Free, YouTube abre de forma general. En Pro va directo a la canción con lyrics.");
+    showToast("En Free, YouTube abre de forma general. En Pro abre la búsqueda directa de la canción con lyrics.");
     return;
   }
   const q = `${songTitle} ${songArtist} lyrics official audio`.trim();
@@ -569,7 +572,6 @@ youtubeBtn.addEventListener("click", openYoutube);
 schoolBtn.addEventListener("click", openVersionEscolar);
 statsBtn.addEventListener("click", openStats);
 suggestBtn.addEventListener("click", openSuggestions);
-coursesBtn.addEventListener("click", openCursos);
 clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; clearResult(); setStatus(""); });
 
 form.addEventListener("submit", async (e) => {
