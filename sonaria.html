@@ -137,9 +137,16 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <label class="check"><input id="contextoEscolar" type="checkbox" checked> Priorizar criterio escolar por sobre edad sugerida.</label>
             </div>
             <div class="actions-main">
-              <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
-              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz <span class="lock-icon">🔒</span></button>
-              <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
+              <div style="display:grid;gap:6px;">
+                <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
+              </div>
+              <div style="display:grid;gap:6px;">
+                <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz <span class="lock-icon">🔒</span></button>
+                <div class="voice-tip" style="margin:0;">Para hacer la búsqueda por voz, di el <strong>nombre de la canción</strong> y el <strong>artista</strong>.</div>
+              </div>
+              <div style="display:grid;gap:6px;">
+                <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
+              </div>
             </div>
             <div class="actions-tools">
               <button id="contextBtn" class="tool small" type="button">🌐 Contexto</button>
@@ -317,9 +324,11 @@ function renderUserCard(u){
   const badge = document.getElementById("planBadge");
   badge.textContent = (u.plan || "free").toUpperCase();
   badge.className = "pill " + ((u.plan || "free") === "pro" ? "pro" : "free");
-  document.getElementById("usageBadge").textContent = isPro() ? "PRO · funciones completas" : `${getRemainingUsage()} análisis free restantes`;
+  document.getElementById("usageBadge").textContent = isPro() ? "PRO" : `${getRemainingUsage()} análisis free restantes`;
   const suffix = document.getElementById("brandPlanSuffix"); if(suffix) suffix.style.display = isPro() ? "inline-flex" : "none";
   document.title = isPro() ? "SonarIA Pro | Panel docente" : "SonarIA | Panel docente";
+  const unlockBtn = document.querySelector('.btn-top.btn-pro');
+  if(unlockBtn) unlockBtn.style.display = isPro() ? 'none' : 'inline-flex';
   updateProLocks();
 }
 
@@ -376,7 +385,7 @@ function badgeForResult(result){
 
 function renderAnalysis(raw){
   lastAnalysis = raw;
-  texto.value = raw.texto_analizado || texto.value;
+  texto.value = raw.texto_analizado_limpio || raw.texto_analizado || texto.value;
   if((raw.pedagogia_opciones || [])[0]){ selectedPedagogyCourseCode = String((raw.pedagogia_opciones[0].curso_codigo || raw.pedagogia_opciones[0].curso || "")); selectedPedagogyIndex = 0; }
   const [badgeClass,badgeText,veredictClass] = badgeForResult(raw.resultado || "");
   const badge = document.getElementById("resultBadge"); badge.className = "badge " + badgeClass; badge.textContent = badgeText;
@@ -554,14 +563,14 @@ window.downloadTeacherPdf = function(){
     .footer{padding:0 28px 28px}.footer-box{background:linear-gradient(135deg,rgba(0,210,190,.08),rgba(54,124,255,.06));border:1px solid var(--line);border-radius:22px;padding:18px}.footer-box h3{margin:0 0 8px;font-size:1.08rem}.footer-box p{margin:0;color:#30445b;line-height:1.75;font-size:.95rem}
     @page{size:A4;margin:10mm}@media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:auto;margin:0;border-radius:0;box-shadow:none}.track,.meta,.clip{break-inside:avoid}} </style></head><body><main class="sheet">
     <section class="header"><div class="brand-row"><div class="brand"><img src="${logo}" alt="SonarIA" style="height:52px;margin-bottom:10px;"><h1>Sonar<span class="ia">IA</span> Studio Session</h1><div class="sub">Documento docente listo para clase</div></div><div class="session-badge">Curso seleccionado: ${curso}</div></div>
-    <div class="hero"><div><h2 class="hero-title">${titleSong}</h2><div class="hero-artist">${artistSong}</div><div class="hero-copy">Planificación exportada desde SonarIA para el curso seleccionado por el docente.</div></div><div class="signal"><small>Señal SonarIA</small><strong>${veredicto}</strong><p>${recomendacion}</p></div></div></section>
+    <div class="hero"><div><h2 class="hero-title">${titleSong}</h2><div class="hero-artist">${artistSong}</div><div class="hero-copy">SonarIA hizo que esta canción sea apta para su trabajo en clases. En este documento está la letra adecuada para el curso seleccionado por el docente.</div></div><div class="signal"><small>Señal SonarIA</small><strong>${veredicto}</strong><p>${recomendacion}</p></div></div></section>
     <section class="timeline"><div class="clip orange">Contexto</div><div class="clip">Letra</div><div class="clip green">OA</div><div class="clip yellow">Análisis</div><div class="clip">Clase</div></section>
     <section class="meta-grid"><div class="meta"><small>Curso</small><strong>${curso}${edad ? ` · ${edad} años` : ''}</strong></div><div class="meta"><small>OA sugerido</small><strong>${oaId}: ${oaDesc}</strong></div><div class="meta"><small>Enfoque</small><strong>${enfoque || '—'}</strong></div><div class="meta"><small>Versión base</small><strong>${schoolVersionAccepted ? 'Versión escolar adaptada' : 'Versión original'}</strong></div></section>
     <section class="content">
       <article class="track"><div class="track-head"><div class="track-title">🎤 Letra de trabajo</div><div class="track-chip">${letraTitulo}</div></div><div class="track-body"><div class="lyrics">${letraHtml || 'Sin letra disponible.'}</div></div></article>
       <article class="track"><div class="track-head"><div class="track-title">🎓 Pedagogía</div><div class="track-chip">Curso seleccionado</div></div><div class="track-body"><div class="split"><div class="panel"><b>Preguntas guiadas</b><ul class="list">${preguntas}</ul></div><div class="panel"><b>Análisis musical</b><ul class="list">${analisis}</ul></div></div><div class="panel"><b>Actividades de clase</b><ul class="list">${actividades}</ul></div></div></article>
     </section>
-    <section class="footer"><div class="footer-box"><h3>🎯 Recomendación SonarIA</h3><p>${recomendacion || 'Usa esta canción con mediación y criterio docente.'}</p></div></section>
+    <section class="footer"><div class="footer-box"><h3>🎯 SonarIA la adecuó para clases</h3><p>${recomendacion || 'Usa esta canción con mediación y criterio docente.'}</p></div></section>
     </main></body></html>`;
   const w = window.open('', '_blank');
   if(!w) return;
@@ -648,7 +657,10 @@ function openVersionEscolar(){
 
 
 function maybePromptSchoolVersion(raw){
-  if(!raw || !raw.adaptacion_escolar_posible) return;
+  if(!raw) return;
+  const resultText = String(raw.resultado || "").toLowerCase();
+  const shouldPrompt = (resultText.includes("no apta") || resultText.includes("poco recomendable")) && !!raw.adaptacion_escolar_posible;
+  if(!shouldPrompt) return;
   const cta = isPro()
     ? "Esta canción no se recomienda en su versión original, pero SonarIA encontró una adaptación escolar para que la revises ahora."
     : "Esta canción no se recomienda en su versión original, pero SonarIA encontró una adaptación escolar. Abre la vista previa y, si quieres la versión completa, desbloquea Pro.";
