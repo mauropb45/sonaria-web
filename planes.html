@@ -19,7 +19,7 @@
     <div class="brand">Sonar<span>IA</span></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button class="btn home" onclick="window.location.href='sonaria.html'">Volver a SonarIA</button>
-      <button id="upgradeBtnTop" class="btn pro">Desbloquear Pro</button>
+      <button id="upgradeBtnTop" class="btn pro">Desbloquear SonarIA Pro</button>
     </div>
   </div>
 
@@ -56,7 +56,7 @@
         <div class="item"><div><strong>Mis cursos, traducción y contexto integrados</strong><div class="copy" style="margin:4px 0 0;">Todo dentro del flujo de aula.</div></div><div class="ok">✓</div></div>
         <div class="item"><div><strong>Celebración y bienvenida Pro</strong><div class="copy" style="margin:4px 0 0;">Después del desbloqueo entras directo a SonarIA Pro.</div></div><div class="ok">✓</div></div>
       </div>
-      <div class="cta"><button id="upgradeBtnBottom" class="btn pro">Desbloquear Pro</button></div>
+      <div class="cta"><button id="upgradeBtnBottom" class="btn pro">Desbloquear SonarIA Pro</button></div>
     </article>
   </section>
 
@@ -109,7 +109,7 @@ async function syncUser(){
 function toggleButtons(isPro){
   [document.getElementById("upgradeBtnTop"), document.getElementById("upgradeBtnBottom")].forEach(btn=>{
     btn.disabled = !!isPro;
-    btn.textContent = isPro ? "Pro activado" : "Desbloquear Pro";
+    btn.textContent = isPro ? "Pro activado" : "Desbloquear SonarIA Pro";
   });
 }
 async function startFakeCheckout(){
