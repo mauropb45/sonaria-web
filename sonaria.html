@@ -60,7 +60,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .empty{color:var(--muted);line-height:1.7}.school-preview{padding:14px;border-radius:16px;background:#0c1119;border:1px solid rgba(255,255,255,.06);max-height:56vh;overflow:auto}.school-mark{background:rgba(243,199,75,.92);color:#14181f;padding:1px 4px;border-radius:5px;font-weight:900}
 .history-item,.suggestion{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.history-main strong{display:block;margin-bottom:4px}.history-main span,.suggestion span{color:var(--muted);font-size:13px}.small-btn{border:none;border-radius:12px;padding:9px 11px;background:#243244;color:#fff;font:inherit;font-weight:800;cursor:pointer}.small-btn.danger{background:#5b1a20}.small-btn.use{background:#1f4f92}
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
-.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}
+.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.brand-plan{display:inline-flex;margin-left:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.form-grid,.metric-grid,.courses-grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}}
 </style>
@@ -71,7 +71,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
     <aside class="card sidebar">
       <div class="brand">
         <div>
-          <h1>Sonar<span>IA</span></h1>
+          <h1 id="brandTitleMain">Sonar<span>IA</span><span id="brandPlanSuffix" class="brand-plan" style="display:none;">Pro</span></h1>
           <p>Filtro pedagógico musical para contexto escolar.</p>
         </div>
         <div class="cross">✝</div>
@@ -138,7 +138,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
             </div>
             <div class="actions-main">
               <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
-              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz</button>
+              <button id="voiceBtn" class="tool small" type="button">🎙️ Voz: canción - de - artista</button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
             <div class="actions-tools">
@@ -149,6 +149,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="statsBtn" class="tool small" type="button">🛡️ Lo que SonarIA te evitó</button>
               <button id="suggestBtn" class="tool small" type="button">❓ ¿Te refieres a...?</button>
             </div>
+            <div class="voice-tip">Pulsa el micrófono y di: <strong>nombre de canción - de - artista</strong>.</div>
           </form>
           <div id="statusBox" class="status"></div>
           <div id="loaderBox" class="loader">Preparando análisis pedagógico...<div class="loader-track"><div class="loader-fill"></div></div></div>
@@ -314,6 +315,8 @@ function renderUserCard(u){
   badge.textContent = (u.plan || "free").toUpperCase();
   badge.className = "pill " + ((u.plan || "free") === "pro" ? "pro" : "free");
   document.getElementById("usageBadge").textContent = isPro() ? "PRO · funciones completas" : `${getRemainingUsage()} análisis free restantes`;
+  const suffix = document.getElementById("brandPlanSuffix"); if(suffix) suffix.style.display = isPro() ? "inline-flex" : "none";
+  document.title = isPro() ? "SonarIA Pro | Panel docente" : "SonarIA | Panel docente";
   updateProLocks();
 }
 
@@ -378,7 +381,7 @@ function renderAnalysis(raw){
   document.getElementById("mediacionText").textContent = raw.requiere_mediacion ? "Sí" : "No";
   document.getElementById("explicitoCount").textContent = String((raw.analisis_explicito || []).length);
   document.getElementById("implicitoCount").textContent = String((raw.analisis_implicito || []).length);
-  document.getElementById("observacionPrincipal").textContent = raw.alerta_docente || raw.observaciones_pedagogicas || "";
+  document.getElementById("observacionPrincipal").textContent = (raw.resultado === "No apta para uso escolar" && raw.adaptacion_escolar_posible) ? (raw.adaptacion_escolar_mensaje || "NO APTA, pero SonarIA te la adapta para que puedas revisarla en aula.") : (raw.alerta_docente || raw.observaciones_pedagogicas || "");
   const compat = raw.compatibilidad_cursos || {};
   const parts=[];
   if((compat.cursos_compatibles||[]).length) parts.push("Compatibles: " + compat.cursos_compatibles.join(", "));
@@ -646,6 +649,24 @@ form.addEventListener("submit", async (e) => {
 
 document.getElementById("modal").addEventListener("click", (e) => { if(e.target.id === "modal") closeModal(); });
 clearResult();
+
+function launchCelebrationConfetti(){
+  const layer = document.createElement("div");
+  layer.className = "confetti-layer";
+  const pieces = ["🎉","✨","🟠","🔵","🟢","🎊"];
+  for(let i=0;i<42;i++){
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.textContent = pieces[i % pieces.length];
+    piece.style.left = `${Math.random()*100}vw`;
+    piece.style.animationDelay = `${Math.random()*0.35}s`;
+    piece.style.setProperty("--drift", `${(Math.random()*160 - 80).toFixed(0)}px`);
+    layer.appendChild(piece);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 2600);
+}
+
 function showWelcomeResponsibility(){
   const tokenTail = (authToken || "anon").slice(-8);
   const seenKey = `sonaria_welcome_seen_${userScope()}_${tokenTail}`;
@@ -660,7 +681,10 @@ function showProCelebrationIfNeeded(){
   if(!planJustUpgraded || !isPro()) return;
   localStorage.removeItem("sonaria_pro_welcome");
   document.title = "SonarIA Pro | Panel docente";
-  openModal("Bienvenido a SonarIA Pro", "Tu experiencia completa ya está activa.", `<div class="item"><b>Celebración y bienvenida</b><div class="meta">Ya tienes disponibles Mis cursos, Traducción, Versión escolar completa y la experiencia pedagógica ampliada.</div></div><div class="item" style="margin-top:12px;"><b>Siguiente paso sugerido</b><div class="meta">Analiza una canción y revisa luego Pedagogía, la Versión escolar y Lo que SonarIA te evitó.</div></div>`);
+  const suffix = document.getElementById("brandPlanSuffix");
+  if(suffix) suffix.style.display = "inline-flex";
+  launchCelebrationConfetti();
+  openModal("🎉 Bienvenido a SonarIA Pro", "Ahora sí: entraste a lo que siempre quisiste de SonarIA.", `<div class="item"><b>Experiencia completa activada</b><div class="meta">Ya tienes disponibles Mis cursos, Traducción, Versión escolar completa y una experiencia pedagógica mucho más potente.</div></div><div class="item" style="margin-top:12px;"><b>Qué hacer ahora</b><div class="meta">Prueba una canción, abre Pedagogía y revisa cómo SonarIA puede rescatar material que antes habrías descartado.</div></div>`);
   url.searchParams.delete("welcome");
   history.replaceState({}, "", url.toString());
 }
