@@ -237,6 +237,12 @@ const texto = document.getElementById("texto");
 const buscarLetra = document.getElementById("buscarLetra");
 const contextoEscolar = document.getElementById("contextoEscolar");
 const form = document.getElementById("analyzeForm");
+const safeFormEl = document.getElementById("analyzeForm");
+if(safeFormEl){
+  safeFormEl.addEventListener("submit", function(e){
+    e.preventDefault();
+  }, { capture:true });
+}
 const clearBtn = document.getElementById("clearBtn");
 const contextBtn = document.getElementById("contextBtn");
 const translateBtn = document.getElementById("translateBtn");
@@ -446,8 +452,7 @@ function currentPedagogyOptions(){
 function currentPedagogyModeLabel(){
   return schoolVersionAccepted ? 'Planificación desde versión escolar' : 'Planificación desde versión original';
 }
-function nl2brSafe(text){ return escapeHtml(text || '').replace(/
-/g,'<br>'); }
+function nl2brSafe(text){ return escapeHtml(text || '').replace(/\n/g, '<br>'); }
 function buildTeacherPdfHtml(opt, ped){
   const logo = 'logo-mejoraria.png';
   const isSchoolMode = schoolVersionAccepted && !!(lastAnalysis.version_escolar_html || '').trim();
