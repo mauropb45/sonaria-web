@@ -138,7 +138,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
             </div>
             <div class="actions-main">
               <button id="analyzeBtn" class="tool primary" type="submit">🔍 Analizar canción</button>
-              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz</button>
+              <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz <span class="lock-icon">🔒</span></button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
             <div class="actions-tools">
@@ -149,7 +149,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="statsBtn" class="tool small" type="button">🛡️ Lo que SonarIA te evitó</button>
               <button id="suggestBtn" class="tool small" type="button">❓ ¿Te refieres a...?</button>
             </div>
-            <div class="voice-tip">Para hacer la búsqueda por voz di el <strong>nombre de la canción y el artista</strong>.</div>
+            <div class="voice-tip">Disponible en <strong>Pro</strong>. Para hacer la búsqueda por voz, di el <strong>nombre de la canción y el artista</strong>.</div>
           </form>
           <div id="statusBox" class="status"></div>
           <div id="loaderBox" class="loader">Preparando análisis pedagógico...<div class="loader-track"><div class="loader-fill"></div></div></div>
@@ -299,7 +299,7 @@ function getImpactData(){
 function impactPercent(value,total){ return total ? Math.round((value/total)*100) : 0; }
 
 function updateProLocks(){
-  const lockHolders = [document.getElementById("sidebarCoursesBtn"), translateBtn, schoolBtn].filter(Boolean);
+  const lockHolders = [document.getElementById("sidebarCoursesBtn"), translateBtn, schoolBtn, voiceBtn].filter(Boolean);
   lockHolders.forEach(btn => {
     btn.classList.toggle("locked", !isPro());
     btn.setAttribute("aria-disabled", (!isPro()).toString());
@@ -612,6 +612,10 @@ function parseVoiceCommand(transcript){
   if(artistName) artista.value = artistName;
 }
 function startVoiceSearch(){
+  if(!isPro()){
+    showToast("La búsqueda por voz está disponible en Pro. Di el nombre de la canción y el artista.");
+    return;
+  }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){
     showToast("La búsqueda por voz no está disponible en este navegador.");
