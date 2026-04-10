@@ -253,6 +253,10 @@
             <strong>Cursos del docente</strong>
             <div class="muted" style="margin-bottom:10px;">Influyen en la recomendación, pero no habilitan automáticamente contenido.</div>
             <div id="courseSelector" class="chips">
+              <label class="chip"><input type="checkbox" value="1B"> 1° básico</label>
+              <label class="chip"><input type="checkbox" value="2B"> 2° básico</label>
+              <label class="chip"><input type="checkbox" value="3B"> 3° básico</label>
+              <label class="chip"><input type="checkbox" value="4B"> 4° básico</label>
               <label class="chip"><input type="checkbox" value="5B"> 5° básico</label>
               <label class="chip"><input type="checkbox" value="6B"> 6° básico</label>
               <label class="chip"><input type="checkbox" value="7B"> 7° básico</label>
@@ -366,6 +370,13 @@
           </div>
         </div>
 
+        <div class="cta-actions" style="margin-top:14px">
+          <button id="btnContexto" class="btn btn-ghost" type="button">Contexto musical</button>
+          <button id="btnTraduccion" class="btn btn-ghost" type="button">Traducción</button>
+          <button id="btnYoutube" class="btn btn-ghost" type="button">YouTube</button>
+          <button id="btnLyrics" class="btn btn-ghost" type="button">Buscar lyrics</button>
+        </div>
+
         <div class="history-list" id="historyList"></div>
       </section>
     </section>
@@ -400,6 +411,8 @@
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
     const ANALYZE_URL = API_BASE + "/analizar";
+    const CONTEXT_URL = API_BASE + "/contexto";
+    const TRANSLATE_URL = API_BASE + "/traducir";
     const ME_URL = API_BASE + "/me";
     const DEMO_LIMIT = 3;
 
@@ -452,6 +465,7 @@
 
     let authToken = "";
     let user = { plan: "free" };
+    let latestAnalysis = null;
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
@@ -598,6 +612,114 @@
       }
     }
 
+    function openPopupWindow(title, bodyHtml){
+      const win = window.open("", "_blank", "width=980,height=760,resizable=yes,scrollbars=yes");
+      if(!win) return;
+      win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>${escapeHtml(title)}</title><style>
+        body{margin:0;font-family:Inter,Arial,sans-serif;background:#06101c;color:#eef2f7;padding:22px;line-height:1.7}
+        h1{margin:0 0 12px;font-size:1.9rem;letter-spacing:-.04em}
+        .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:18px;margin-bottom:14px}
+        .muted{color:#a3b3c8}.grid{display:grid;gap:10px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .cell{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px;white-space:pre-wrap}
+        a{color:#8fd2ff}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.07);margin:0 8px 8px 0}
+        @media(max-width:720px){.pair{grid-template-columns:1fr}}
+      </style></head><body><h1>${escapeHtml(title)}</h1>${bodyHtml}</body></html>`);
+      win.document.close();
+    }
+
+    async function postJson(url, payload){
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + authToken
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if(res.status === 401){
+        forceRelogin(data.detail || "Tu sesión ya no es válida.");
+        throw new Error(data.detail || "Sesión inválida");
+      }
+      if(!res.ok) throw new Error(data.detail || "No fue posible completar la acción.");
+      return data;
+    }
+
+    function currentPayloadBase(){
+      return {
+        titulo: titulo.value.trim(),
+        artista: artista.value.trim(),
+        texto: (latestAnalysis && latestAnalysis.texto) ? latestAnalysis.texto : texto.value.trim()
+      };
+    }
+
+    async function openContextoPopup(){
+      const ok = await syncSessionWithBackend();
+      if(!ok) return;
+      const base = currentPayloadBase();
+      if(!base.titulo && !base.texto){
+        setStatus("Primero analiza una canción o escribe un título.", "error");
+        return;
+      }
+      setStatus("Preparando contexto musical...", "info");
+      try{
+        const data = await postJson(CONTEXT_URL, base);
+        const temas = Array.isArray(data.temas) ? data.temas.map(t => `<span class="pill">${escapeHtml(t)}</span>`).join("") : "";
+        const exp = Array.isArray(data.analisis_explicito) && data.analisis_explicito.length
+          ? data.analisis_explicito.map(i => `<div class="card"><strong>${escapeHtml(i.tipo || i.termino || "Señal")}</strong><div class="muted">${escapeHtml(i.fragmento || i.termino || "")}</div></div>`).join("")
+          : `<div class="card muted">No se detectaron señales explícitas relevantes.</div>`;
+        const imp = Array.isArray(data.analisis_implicito) && data.analisis_implicito.length
+          ? data.analisis_implicito.map(i => `<div class="card"><strong>${escapeHtml(i.tipo || i.termino || "Señal")}</strong><div class="muted">${escapeHtml(i.fragmento || i.termino || "")}</div><div>${escapeHtml(i.lectura_pedagogica || "")}</div></div>`).join("")
+          : `<div class="card muted">No se detectaron señales implícitas destacadas.</div>`;
+        const fuente = data.fuente ? `<div class="card"><strong>Fuente</strong><div><a href="${data.fuente}" target="_blank" rel="noopener noreferrer">Abrir reseña de referencia</a></div></div>` : "";
+        openPopupWindow(`Contexto musical · ${base.titulo || "Canción"}`, `
+          <div class="card"><strong>Reseña</strong><div>${escapeHtml(data.resena || "")}</div></div>
+          <div class="card"><strong>Temas detectados</strong><div>${temas || '<span class="muted">Sin temas destacados.</span>'}</div></div>
+          <div class="card"><strong>Lectura pedagógica</strong><div>${escapeHtml(data.lectura_pedagogica || "")}</div></div>
+          <div class="grid"><div><strong>Análisis explícito</strong>${exp}</div><div><strong>Análisis implícito</strong>${imp}</div></div>
+          ${fuente}
+        `);
+        setStatus("Contexto musical listo.", "success");
+      }catch(error){
+        setStatus(error.message || "No fue posible cargar el contexto.", "error");
+      }
+    }
+
+    async function openTraduccionPopup(){
+      const ok = await syncSessionWithBackend();
+      if(!ok) return;
+      const base = currentPayloadBase();
+      if(!base.texto){
+        setStatus("Primero analiza o pega una letra para traducir.", "error");
+        return;
+      }
+      setStatus("Preparando traducción...", "info");
+      try{
+        const data = await postJson(TRANSLATE_URL, { texto: base.texto });
+        const pairs = Array.isArray(data.pairs) ? data.pairs : [];
+        const rows = pairs.length ? pairs.map(pair => `
+          <div class="pair">
+            <div class="cell">${escapeHtml(pair.original || "")}</div>
+            <div class="cell">${escapeHtml(pair.traduccion || "")}</div>
+          </div>
+        `).join("") : `<div class="card muted">No se pudo generar una traducción línea a línea.</div>`;
+        openPopupWindow(`Traducción · ${base.titulo || "Canción"}`, rows);
+        setStatus("Traducción lista.", "success");
+      }catch(error){
+        setStatus(error.message || "No fue posible traducir la letra.", "error");
+      }
+    }
+
+    function openYoutubePopup(){
+      const query = encodeURIComponent(`${titulo.value.trim()} ${artista.value.trim()} lyrics`.trim() || "song lyrics");
+      window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank", "width=1120,height=760,resizable=yes,scrollbars=yes");
+    }
+
+    function openLyricsPopup(){
+      const query = encodeURIComponent(`${titulo.value.trim()} ${artista.value.trim()} lyrics`.trim() || "song lyrics");
+      window.open(`https://www.google.com/search?q=${query}`, "_blank", "width=1120,height=760,resizable=yes,scrollbars=yes");
+    }
+
     function renderAnalysis(raw){
       resultBadge.textContent = raw.resultado || "Resultado";
       summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
@@ -632,6 +754,7 @@
       riskSchoolFill.style.width = Math.min(raw.risk_school ?? 0, 100) + "%";
 
       activateTraffic(raw.resultado || "");
+      latestAnalysis = raw;
     }
 
     document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
@@ -641,6 +764,10 @@
       if((user.plan || "free") === "pro") return;
       showOverlay("Desbloquea SonarIA Pro", "Quita límites y prepara el camino para una experiencia docente más potente.");
     });
+    document.getElementById("btnContexto").addEventListener("click", openContextoPopup);
+    document.getElementById("btnTraduccion").addEventListener("click", openTraduccionPopup);
+    document.getElementById("btnYoutube").addEventListener("click", openYoutubePopup);
+    document.getElementById("btnLyrics").addEventListener("click", openLyricsPopup);
     document.getElementById("btnHistorial").addEventListener("click", () => {
       const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
       if(!items.length){ alert("Todavía no tienes análisis guardados en este navegador."); return; }
@@ -656,6 +783,7 @@
       clearPills();
       clearStatus();
       clearResult();
+      latestAnalysis = null;
     });
 
     form.addEventListener("submit", async (e) => {
