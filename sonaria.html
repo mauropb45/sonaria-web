@@ -226,6 +226,7 @@ let translationCache = null;
 let contextCache = null;
 let schoolVersionAccepted = false;
 let selectedPedagogyIndex = 0;
+let selectedPedagogyCourseCode = "";
 
 function userScope(){
   const raw = (user?.email || "guest").toLowerCase().replace(/[^a-z0-9]/g,"_");
@@ -345,7 +346,7 @@ async function syncSessionWithBackend(){
 
 function clearResult(){
   lastAnalysis = null;
-  schoolVersionAccepted = false; selectedPedagogyIndex = 0; translationCache = null; contextCache = null;
+  schoolVersionAccepted = false; selectedPedagogyIndex = 0; selectedPedagogyCourseCode = ""; translationCache = null; contextCache = null;
   const big = document.getElementById("resultBig"); big.textContent = "(sin análisis)"; big.className = "veredict";
   document.getElementById("resultCopy").textContent = "Carga una canción y presiona Analizar.";
   document.getElementById("resultBadge").className = "badge"; document.getElementById("resultBadge").textContent = "Sin datos";
@@ -376,6 +377,7 @@ function badgeForResult(result){
 function renderAnalysis(raw){
   lastAnalysis = raw;
   texto.value = raw.texto_analizado || texto.value;
+  if((raw.pedagogia_opciones || [])[0]){ selectedPedagogyCourseCode = String((raw.pedagogia_opciones[0].curso_codigo || raw.pedagogia_opciones[0].curso || "")); selectedPedagogyIndex = 0; }
   const [badgeClass,badgeText,veredictClass] = badgeForResult(raw.resultado || "");
   const badge = document.getElementById("resultBadge"); badge.className = "badge " + badgeClass; badge.textContent = badgeText;
   const big = document.getElementById("resultBig"); big.textContent = raw.resultado || "Sin resultado"; big.className = "veredict " + veredictClass;
@@ -425,7 +427,8 @@ function openCursos(){ if(!isPro()){ openModal("Mis cursos · Pro", "Disponible 
 
 function buildPedagogiaSelector(options){
   if(!options.length) return "";
-  return `<div class="item" style="margin-bottom:14px;"><b>Curso para planificar</b><div class="meta" style="margin-bottom:10px;">Elige uno de los cursos sugeridos y SonarIA ajustará el OA y las propuestas de clase. El PDF docente se exportará con el curso que selecciones aquí.</div><div style="display:flex;gap:8px;flex-wrap:wrap;">${options.map((opt,idx)=>`<button class="small-btn use" style="${idx===selectedPedagogyIndex ? 'outline:2px solid rgba(255,135,0,.6);' : ''}" onclick="selectPedagogiaOption(${idx})">${escapeHtml(opt.curso)}</button>`).join("")}</div></div>`;
+  syncSelectedPedagogyWithOptions();
+  return `<div class="item" style="margin-bottom:14px;"><b>Curso para planificar</b><div class="meta" style="margin-bottom:10px;">Elige uno de los cursos sugeridos y SonarIA ajustará el OA y las propuestas de clase. El PDF docente se exportará con el curso que selecciones aquí.</div><div style="display:flex;gap:8px;flex-wrap:wrap;">${options.map((opt,idx)=>{ const code=String(opt.curso_codigo || opt.curso || ""); const active = code === selectedPedagogyCourseCode || idx===selectedPedagogyIndex; return `<button class="small-btn use" style="${active ? 'outline:2px solid rgba(255,135,0,.6);' : ''}" onclick="selectPedagogiaOption(${idx})">${escapeHtml(opt.curso)}</button>`; }).join("")}</div></div>`;
 }
 function renderPedagogiaOption(opt){
   const ped = opt?.pedagogia || {};
@@ -445,10 +448,28 @@ function currentPedagogyOptions(){
   if(!lastAnalysis) return [];
   return schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar_opciones || []) : (lastAnalysis.pedagogia_opciones || []);
 }
+function syncSelectedPedagogyWithOptions(){
+  const options = currentPedagogyOptions();
+  if(!options.length){
+    selectedPedagogyIndex = 0;
+    selectedPedagogyCourseCode = "";
+    return;
+  }
+  if(selectedPedagogyCourseCode){
+    const idx = options.findIndex(opt => String(opt.curso_codigo || opt.curso || "").toLowerCase() === String(selectedPedagogyCourseCode).toLowerCase());
+    if(idx >= 0){
+      selectedPedagogyIndex = idx;
+      return;
+    }
+  }
+  if(selectedPedagogyIndex >= options.length) selectedPedagogyIndex = 0;
+  const fallback = options[selectedPedagogyIndex] || options[0];
+  selectedPedagogyCourseCode = String(fallback?.curso_codigo || fallback?.curso || "");
+}
 function currentPedagogySelection(){
   const options = currentPedagogyOptions();
   if(!options.length) return null;
-  if(selectedPedagogyIndex >= options.length) selectedPedagogyIndex = 0;
+  syncSelectedPedagogyWithOptions();
   return options[selectedPedagogyIndex] || options[0] || null;
 }
 function currentPedagogyModeLabel(){
@@ -464,7 +485,7 @@ function buildPedagogiaHtml(){
   const pdfBtn = isPro()
     ? '<div style="margin-top:10px;"><button class="small-btn use" onclick="downloadTeacherPdf()">Descargar PDF docente</button></div>'
     : '<div style="margin-top:10px;"><button class="small-btn" onclick="openModal(\'PDF docente · Pro\', \'Disponible en SonarIA Pro\', `<div class=&quot;item&quot;><b>En Pro</b><div class=&quot;meta&quot;>Exportas una guía docente en formato SonarIA Studio con la letra completa y el curso seleccionado.</div></div>`)">PDF docente · Pro</button></div>';
-  const topNote = `<div class="item" style="margin-bottom:14px;"><b>${currentPedagogyModeLabel()}</b><div class="meta">${schoolVersionAccepted ? 'Estas actividades se construyen sobre la letra adaptada aceptada por el docente.' : 'Estas actividades se construyen sobre la versión original analizada.'}</div>${pdfBtn}</div>`;
+  const topNote = `<div class="item" style="margin-bottom:14px;"><b>${currentPedagogyModeLabel()}</b><div class="meta">${schoolVersionAccepted ? 'Estas actividades se construyen sobre la letra adaptada aceptada por el docente.' : 'Estas actividades se construyen sobre la versión original analizada.'}<br><strong>Curso activo para exportación:</strong> ${escapeHtml((currentPedagogySelection()?.curso || '—'))}</div>${pdfBtn}</div>`;
   return `${topNote}${buildPedagogiaSelector(options)}<div id="pedagogiaDynamic">${selected ? renderPedagogiaOption(selected) : '<div class="item"><b>Sin propuesta pedagógica</b><div class="meta">Aún no hay cursos sugeridos para esta canción.</div></div>'}</div>`;
 }
 window.selectPedagogiaOption = function(idx){
@@ -472,6 +493,7 @@ window.selectPedagogiaOption = function(idx){
   const opt = options[idx];
   if(!opt) return;
   selectedPedagogyIndex = idx;
+  selectedPedagogyCourseCode = String(opt.curso_codigo || opt.curso || "");
   const box = document.getElementById('pedagogiaDynamic');
   if(box) box.innerHTML = renderPedagogiaOption(opt);
   const selectorWrap = box && box.parentElement;
@@ -485,6 +507,7 @@ window.selectPedagogiaOption = function(idx){
 window.acceptSchoolVersionForPedagogy = function(){
   schoolVersionAccepted = true;
   selectedPedagogyIndex = 0;
+  selectedPedagogyCourseCode = String((currentPedagogyOptions()[0]?.curso_codigo || currentPedagogyOptions()[0]?.curso || selectedPedagogyCourseCode || ""));
   closeModal();
   openPedagogia();
   showToast('Versión escolar aceptada para planificar.');
@@ -495,6 +518,7 @@ window.downloadTeacherPdf = function(){
     openModal("PDF docente · Pro", "Disponible en SonarIA Pro", `<div class="item"><b>En Pro</b><div class="meta">Exportas una guía docente con formato SonarIA Studio, el curso seleccionado y la letra completa.</div></div>`);
     return;
   }
+  syncSelectedPedagogyWithOptions();
   const opt = currentPedagogySelection() || {};
   const ped = opt.pedagogia || (schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar || {}) : (lastAnalysis.pedagogia || {}));
   const logo = 'logo-mejoraria.png';
