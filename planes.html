@@ -1,143 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Planes | SonarIA</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#06101c;--bg2:#0b1627;--panel:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--text:#eef3fb;--muted:#9fb0c7;--ferrari:#E10600;--mclaren:#FF8700;--aston:#00D2BE;--blue:#367CFF;--shadow:0 24px 60px rgba(0,0,0,.35);--radius:26px}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(255,135,0,.1), transparent 18%),radial-gradient(circle at top right, rgba(54,124,255,.09), transparent 16%),linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
-.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 70px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}.brand{font-size:2.5rem;font-weight:900;letter-spacing:-.06em}.brand span{color:var(--mclaren)}.btn{border:none;border-radius:16px;padding:14px 18px;font:inherit;font-weight:800;cursor:pointer}.btn.home{background:#223146;color:#fff}.btn.pro{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#151922}.btn.pro[disabled]{opacity:.55;cursor:not-allowed}
-.hero,.plan,.compare{background:linear-gradient(180deg,var(--panel),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.hero{padding:28px;margin-bottom:20px}.hero h1{margin:0 0 10px;font-size:clamp(2.6rem,4.6vw,4.3rem);line-height:.94;letter-spacing:-.08em}.hero p{margin:0;color:var(--muted);line-height:1.8;max-width:820px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.plan{padding:26px;position:relative}.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}.badge{padding:8px 12px;border-radius:999px;font-size:.78rem;font-weight:900;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}.badge.pro{background:rgba(0,210,190,.14);color:#d8fff7;border-color:rgba(0,210,190,.22)}.price{font-size:3rem;font-weight:900;letter-spacing:-.08em;margin:0 0 6px}.copy{color:var(--muted);line-height:1.75;margin-bottom:18px}.list{display:grid;gap:10px}.item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}.item.locked{opacity:.62}.lock,.ok{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;font-size:.9rem;font-weight:900;flex:0 0 auto}.lock{background:rgba(225,6,0,.16);color:#ffd5d3}.ok{background:rgba(0,210,190,.16);color:#d8fff7}.cta{margin-top:18px;display:flex;justify-content:flex-end}.status{margin-top:10px;min-height:22px;font-weight:800}.userbox{margin-top:18px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);max-width:720px}.compare{padding:24px;margin-top:20px}.row{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:10px;align-items:center}.cell{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}.feature{font-weight:700}.foot{margin-top:18px;color:var(--muted);line-height:1.75}
-@media(max-width:880px){.grid,.row{grid-template-columns:1fr}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planes | SonarIA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#04101f;--bg2:#081a31;--line:rgba(255,255,255,.10);--text:#f5f7fb;--muted:#9fb0c7;--green:#22c55e;--green2:#14d68f;--orange:#ff8a00;--orange2:#ff5a00;--shadow:0 24px 60px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,sans-serif;color:var(--text);background:linear-gradient(180deg,var(--bg),var(--bg2));min-height:100vh}
+    .wrap{max-width:1160px;margin:0 auto;padding:24px 20px 70px}
+    .topbar,.actions{display:flex;gap:12px;flex-wrap:wrap}
+    .topbar{justify-content:space-between;align-items:center;margin-bottom:24px}
+    .brand{font-size:2rem;font-weight:900;letter-spacing:-.06em}.brand .ia{color:#26d07c}
+    .btn{border:none;border-radius:16px;min-height:48px;padding:0 18px;font:inherit;font-weight:800;cursor:pointer}
+    .btn-ghost{background:rgba(255,255,255,.05);color:#fff;border:1px solid var(--line)}
+    .btn-home{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#101418}
+    .hero,.plan{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow)}
+    .hero{padding:28px;margin-bottom:20px}
+    h1{margin:0 0 12px;font-size:clamp(2.6rem,4.4vw,4.8rem);line-height:.92;letter-spacing:-.08em}
+    .hero p,.copy,.statusline{color:var(--muted);line-height:1.82}
+    .user-panel{margin-top:18px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .plan{padding:28px}
+    .plan h2{margin:0;font-size:1.55rem}
+    .price{display:flex;align-items:flex-end;gap:8px;line-height:1;margin:14px 0}.price strong{font-size:3.1rem;letter-spacing:-.08em}
+    ul{display:grid;gap:10px;list-style:none;padding:0;margin:0 0 18px}
+    li{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);line-height:1.65}
+    .btn-pro{background:linear-gradient(135deg,var(--green),var(--green2));color:#07131e;min-width:180px}
+    .status{margin-top:12px;min-height:24px;font-weight:800}
+    @media (max-width:980px){.plans{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top">
-    <div class="brand">Sonar<span>IA</span></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button class="btn home" onclick="window.location.href='sonaria.html'">Volver a SonarIA</button>
-      <button id="upgradeBtnTop" class="btn pro">Desbloquear SonarIA Pro</button>
+  <div class="topbar">
+    <div class="brand">Sonar<span class="ia">IA</span></div>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
+      <button class="btn btn-home" onclick="window.location.href='/index.html'">Ir al home</button>
     </div>
   </div>
 
   <section class="hero">
     <h1>Elige cuánto quieres que SonarIA te acompañe en tus decisiones de aula.</h1>
-    <p>La versión <strong style="color:var(--mclaren)">Free</strong> te da una lectura inicial. La versión <strong style="color:var(--aston)">Pro</strong> abre el motor pedagógico completo, la versión escolar y una experiencia más fluida para planificar con criterio escolar.</p>
-    <div class="userbox">
-      <div id="userInfo" style="font-weight:800;line-height:1.6">Cargando usuario…</div>
-      <div id="planStatus" style="margin-top:8px;color:var(--muted)">Revisando plan actual…</div>
-      <div id="payStatus" class="status"></div>
+    <p>La versión Free te da una lectura inicial. La versión Pro abre el motor pedagógico completo, la versión escolar y una experiencia más fluida para planificar con criterio escolar.</p>
+    <div class="user-panel">
+      <div id="userLine" style="font-weight:800;">Cargando usuario…</div>
+      <div id="statusLine" class="statusline">Validando tu sesión y tu plan actual.</div>
+      <div id="statusBox" class="status"></div>
     </div>
   </section>
 
-  <section class="grid">
-    <article class="plan">
-      <div class="head"><div><h2 style="margin:0;font-size:1.7rem;">Free</h2><div class="price">$0</div></div><div class="badge">Inicio</div></div>
+  <section class="plans">
+    <div class="plan">
+      <h2>Free</h2>
+      <div class="price"><strong>$0</strong></div>
       <div class="copy">Ideal para explorar el filtro pedagógico y evitar errores evidentes antes de llevar una canción a clases.</div>
-      <div class="list">
-        <div class="item"><div><strong>Veredicto escolar</strong><div class="copy" style="margin:4px 0 0;">Apta, mediación o no apta.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Riesgo y alertas</strong><div class="copy" style="margin:4px 0 0;">Lectura básica de lenguaje y contexto.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>YouTube externo</strong><div class="copy" style="margin:4px 0 0;">En Free abre YouTube general. En Pro abre la búsqueda directa de la canción con lyrics.</div></div><div class="ok">✓</div></div>
-        <div class="item locked"><div><strong>Versión escolar completa</strong><div class="copy" style="margin:4px 0 0;">Letra adaptada, resaltada y lista para revisión docente.</div></div><div class="lock">🔒</div></div>
-        <div class="item locked"><div><strong>Pedagogía por curso</strong><div class="copy" style="margin:4px 0 0;">OA y actividades diferenciadas.</div></div><div class="lock">🔒</div></div>
-      </div>
-    </article>
-
-    <article class="plan">
-      <div class="head"><div><h2 style="margin:0;font-size:1.7rem;">Pro</h2><div class="price">$4.990</div></div><div class="badge pro">Completa</div></div>
+      <ul><li>Veredicto escolar</li><li>Riesgo general</li><li>Contexto y sugerencias</li></ul>
+    </div>
+    <div class="plan">
+      <h2>Pro</h2>
+      <div class="price"><strong>$4.990</strong></div>
       <div class="copy">Pensada para docentes que quieren filtrar, adaptar y planificar con respaldo pedagógico y menos fricción.</div>
-      <div class="list">
-        <div class="item"><div><strong>Todo lo de Free</strong><div class="copy" style="margin:4px 0 0;">Sin fricción en el flujo base.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Versión escolar completa</strong><div class="copy" style="margin:4px 0 0;">No solo bloquea: intenta rescatar canciones mediante adaptación.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Pedagogía por curso</strong><div class="copy" style="margin:4px 0 0;">2 o 3 alternativas con OA y actividades diferentes.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Mis cursos, traducción y contexto integrados</strong><div class="copy" style="margin:4px 0 0;">Todo dentro del flujo de aula.</div></div><div class="ok">✓</div></div>
-        <div class="item"><div><strong>Celebración y bienvenida Pro</strong><div class="copy" style="margin:4px 0 0;">Después del desbloqueo entras directo a SonarIA Pro.</div></div><div class="ok">✓</div></div>
-      </div>
-      <div class="cta"><button id="upgradeBtnBottom" class="btn pro">Desbloquear SonarIA Pro</button></div>
-    </article>
-  </section>
-
-  <section class="compare">
-    <h2 style="margin:0 0 12px;font-size:1.7rem">Comparación rápida</h2>
-    <div class="row"><div class="cell feature">Función</div><div class="cell feature">Free</div><div class="cell feature">Pro</div></div>
-    <div class="row"><div class="cell">Análisis y veredicto</div><div class="cell">Sí</div><div class="cell">Sí</div></div>
-    <div class="row"><div class="cell">OA sugerido en pedagogía</div><div class="cell">Simple</div><div class="cell">2 o 3 alternativas</div></div>
-    <div class="row"><div class="cell">Actividades de clase</div><div class="cell">Bloqueado</div><div class="cell">Incluido</div></div>
-    <div class="row"><div class="cell">Versión escolar adaptada</div><div class="cell">Demo de 1 línea</div><div class="cell">Completa</div></div>
-    <div class="row"><div class="cell">YouTube</div><div class="cell">General</div><div class="cell">Canción + lyrics</div></div>
-    <div class="foot">La idea no es pagar por más botones, sino por una experiencia que ahorre tiempo, prevenga conflictos y entregue respaldo pedagógico más profundo.</div>
+      <ul><li>Todo lo de Free</li><li>Mis cursos</li><li>Versión escolar completa</li><li>Traducción y búsqueda por voz</li><li>Pedagogía por curso y PDF docente</li></ul>
+      <button id="buyBtn" class="btn btn-pro" type="button">Desbloquear SonarIA Pro</button>
+    </div>
   </section>
 </div>
-
 <script>
-const API_URL = "https://sonaria-api.onrender.com";
-const authToken = localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
-const userCache = (()=>{ try{return JSON.parse(localStorage.getItem("mejoraria_user")||"{}")}catch(_){return {}} })();
-
-function setPayStatus(msg, ok=false){
-  const el=document.getElementById("payStatus");
-  el.textContent=msg||"";
-  el.style.color = ok ? "#d8fff7" : "#ffd7d7";
-}
+const API = "https://sonaria-api.onrender.com";
+function getToken(){ return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || ""; }
+function getUser(){ try{return JSON.parse(localStorage.getItem("mejoraria_user") || "{}")}catch(e){return {}} }
+function setStatus(msg){ document.getElementById("statusBox").textContent = msg || ""; }
 async function syncUser(){
-  if(!authToken){
-    document.getElementById("userInfo").textContent = "No hay sesión activa.";
-    document.getElementById("planStatus").textContent = "Inicia sesión para activar Pro.";
-    return null;
+  const token = getToken();
+  const localUser = getUser();
+  if(localUser && (localUser.name || localUser.email)){
+    document.getElementById("userLine").textContent = localUser.name || localUser.email;
+    document.getElementById("statusLine").textContent = localUser.plan === "pro" ? "Ya tienes Pro activo." : "Actualmente estás en Free. Puedes activar Pro ahora con la simulación de pago.";
   }
+  if(!token) return;
   try{
-    const res = await fetch(API_URL + "/me", { headers:{"Authorization":"Bearer " + authToken} });
+    const res = await fetch(API + "/me", { headers:{ "Authorization":"Bearer " + token }});
     const data = await res.json();
-    const user = data.user || userCache || {};
-    localStorage.setItem("mejoraria_user", JSON.stringify(user));
-    localStorage.setItem("mejoraria_plan", user.plan || "free");
-    document.getElementById("userInfo").textContent = `${user.name || user.email || "Usuario"}`;
-    document.getElementById("planStatus").textContent = user.plan === "pro"
-      ? "Tu cuenta ya está en Pro. Ya puedes volver a SonarIA Pro."
-      : "Actualmente estás en Free. Puedes activar Pro ahora con la simulación de pago.";
-    toggleButtons(user.plan === "pro");
-    return user;
-  }catch(_){
-    document.getElementById("userInfo").textContent = userCache.name || userCache.email || "Sesión no validada";
-    document.getElementById("planStatus").textContent = "No se pudo validar el plan actual.";
-    return userCache;
-  }
+    if(res.ok && data.user){
+      localStorage.setItem("mejoraria_user", JSON.stringify(data.user));
+      document.getElementById("userLine").textContent = data.user.name || data.user.email;
+      document.getElementById("statusLine").textContent = data.user.plan === "pro" ? "Ya tienes Pro activo." : "Actualmente estás en Free. Puedes activar Pro ahora con la simulación de pago.";
+      if(data.user.plan === "pro"){
+        document.getElementById("buyBtn").textContent = "Ya tienes SonarIA Pro";
+        document.getElementById("buyBtn").disabled = true;
+      }
+    }
+  }catch(e){}
 }
-function toggleButtons(isPro){
-  [document.getElementById("upgradeBtnTop"), document.getElementById("upgradeBtnBottom")].forEach(btn=>{
-    btn.disabled = !!isPro;
-    btn.textContent = isPro ? "Pro activado" : "Desbloquear SonarIA Pro";
-  });
-}
-async function startFakeCheckout(){
-  const currentUser = await syncUser();
-  if(!authToken || !currentUser?.email){
-    setPayStatus("Inicia sesión antes de activar Pro.");
-    return;
-  }
-  if(currentUser.plan === "pro"){
-    setPayStatus("Tu cuenta ya está en Pro.", true);
-    return;
-  }
-  setPayStatus("Preparando checkout simulado…");
+async function startCheckout(){
+  const token = getToken();
+  if(!token){ setStatus("Primero inicia sesión."); return; }
+  setStatus("Preparando checkout simulado…");
   try{
-    const res = await fetch(API_URL + "/payments/create-checkout", {
-      method:"POST",
-      headers:{ "Authorization":"Bearer " + authToken }
-    });
-    const data = await res.json().catch(()=>({}));
-    if(!res.ok || !data.ok) throw new Error(data.detail || "No se pudo iniciar el checkout.");
+    const res = await fetch(API + "/payments/create-checkout", { method:"POST", headers:{ "Authorization":"Bearer " + token }});
+    const data = await res.json();
+    if(!res.ok || !data.ok){ setStatus(data.detail || "No se pudo iniciar el pago."); return; }
     sessionStorage.setItem("order_id", data.order_id || "");
-    window.location.href = data.checkout_url || "fake-checkout.html";
-  }catch(err){
-    setPayStatus(err.message || "No se pudo iniciar el checkout.");
-  }
+    window.location.href = data.checkout_url;
+  }catch(e){ setStatus("No se pudo iniciar el pago."); }
 }
-document.getElementById("upgradeBtnTop").addEventListener("click", startFakeCheckout);
-document.getElementById("upgradeBtnBottom").addEventListener("click", startFakeCheckout);
+document.getElementById("buyBtn").addEventListener("click", startCheckout);
 syncUser();
 </script>
 </body>
