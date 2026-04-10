@@ -149,7 +149,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="statsBtn" class="tool small" type="button">🛡️ Lo que SonarIA te evitó</button>
               <button id="suggestBtn" class="tool small" type="button">❓ ¿Te refieres a...?</button>
             </div>
-            <div id="voiceTip" class="voice-tip"><strong>Búsqueda por voz · Pro.</strong> Para hacer la búsqueda por voz, di el <strong>nombre de la canción y el artista</strong>. Ejemplo: <em>Creep de Radiohead</em>.</div>
+            <div class="voice-tip">Disponible en <strong>Pro</strong>. Para hacer la búsqueda por voz, di el <strong>nombre de la canción y el artista</strong>.</div>
           </form>
           <div id="statusBox" class="status"></div>
           <div id="loaderBox" class="loader">Preparando análisis pedagógico...<div class="loader-track"><div class="loader-fill"></div></div></div>
@@ -224,7 +224,6 @@ let user = JSON.parse(localStorage.getItem("mejoraria_user") || "{}");
 let lastAnalysis = null;
 let translationCache = null;
 let contextCache = null;
-let adaptedTeachingAccepted = false;
 
 function userScope(){
   const raw = (user?.email || "guest").toLowerCase().replace(/[^a-z0-9]/g,"_");
@@ -343,7 +342,8 @@ async function syncSessionWithBackend(){
 }
 
 function clearResult(){
-  lastAnalysis = null; translationCache = null; contextCache = null;
+  lastAnalysis = null;
+  schoolVersionAccepted = false; translationCache = null; contextCache = null;
   const big = document.getElementById("resultBig"); big.textContent = "(sin análisis)"; big.className = "veredict";
   document.getElementById("resultCopy").textContent = "Carga una canción y presiona Analizar.";
   document.getElementById("resultBadge").className = "badge"; document.getElementById("resultBadge").textContent = "Sin datos";
@@ -372,7 +372,6 @@ function badgeForResult(result){
 }
 
 function renderAnalysis(raw){
-  adaptedTeachingAccepted = false;
   lastAnalysis = raw;
   texto.value = raw.texto_analizado || texto.value;
   const [badgeClass,badgeText,veredictClass] = badgeForResult(raw.resultado || "");
@@ -427,12 +426,10 @@ function buildPedagogiaSelector(options){
   return `<div class="item" style="margin-bottom:14px;"><b>Curso para planificar</b><div class="meta" style="margin-bottom:10px;">Elige uno de los cursos sugeridos y SonarIA ajustará el OA y las propuestas de clase.</div><div style="display:flex;gap:8px;flex-wrap:wrap;">${options.map((opt,idx)=>`<button class="small-btn use" onclick="selectPedagogiaOption(${idx})">${escapeHtml(opt.curso)}</button>`).join("")}</div></div>`;
 }
 function renderPedagogiaOption(opt){
-  const useAdapted = adaptedTeachingAccepted && lastAnalysis?.adaptacion_escolar_posible && (lastAnalysis?.pedagogia_version_escolar?.actividades_clase || []).length;
-  const ped = useAdapted ? (lastAnalysis.pedagogia_version_escolar || {}) : (opt?.pedagogia || {});
-  const titleNote = useAdapted ? '<div class="item" style="margin-bottom:14px;"><b>Modo versión escolar</b><div class="meta">Estas propuestas se construyen a partir de la adaptación escolar aceptada por el docente.</div></div>' : '';
-  return `${titleNote}
+  const ped = opt?.pedagogia || {};
+  return `
     <div class="overlay-grid">
-      <div class="item"><b>OA sugerido</b><div class="meta"><strong>${escapeHtml(useAdapted ? (ped.oa_recomendado?.curso || opt?.curso || "—") : (opt?.curso || "—"))}</strong>${(useAdapted ? ped.oa_recomendado?.edad_referencial : opt?.edad_referencial) ? ` · ${useAdapted ? ped.oa_recomendado?.edad_referencial : opt.edad_referencial} años` : ""}<br>${escapeHtml(useAdapted ? (ped.oa_recomendado?.id || opt?.oa_id || "—") : (opt?.oa_id || "—"))}: ${escapeHtml(useAdapted ? (ped.oa_recomendado?.desc || opt?.oa_desc || "") : (opt?.oa_desc || ""))}</div></div>
+      <div class="item"><b>OA sugerido</b><div class="meta"><strong>${escapeHtml(opt?.curso || "—")}</strong>${opt?.edad_referencial ? ` · ${opt.edad_referencial} años` : ""}<br>${escapeHtml(opt?.oa_id || "—")}: ${escapeHtml(opt?.oa_desc || "")}</div></div>
       <div class="item"><b>Enfoque pedagógico</b><div class="meta">${escapeHtml(ped.enfoque || "")}</div></div>
     </div>
     <div class="overlay-grid" style="margin-top:14px;">
@@ -442,27 +439,50 @@ function renderPedagogiaOption(opt){
     <div class="item" style="margin-top:14px;"><b>Actividades para clase</b><div class="overlay-list">${(ped.actividades_clase || []).map(q => `<div>${escapeHtml(q)}</div>`).join("") || '<div>Sin actividades sugeridas.</div>'}</div></div>
     <div class="item" style="margin-top:14px;"><b>Responsabilidad docente</b><div class="meta">${escapeHtml(lastAnalysis?.disclaimer_docente || 'El bienestar de los estudiantes es prioritario y la decisión final siempre corresponde al docente.')}</div></div>`;
 }
+function currentPedagogyOptions(){
+  if(!lastAnalysis) return [];
+  return schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar_opciones || []) : (lastAnalysis.pedagogia_opciones || []);
+}
+function currentPedagogyModeLabel(){
+  return schoolVersionAccepted ? 'Planificación desde versión escolar' : 'Planificación desde versión original';
+}
 function buildPedagogiaHtml(){
   if(!lastAnalysis) return '<div class="empty">Analiza una canción antes de abrir esta ventana.</div>';
-  if((lastAnalysis.resultado || "").includes("No apta") && !adaptedTeachingAccepted){
-    if(lastAnalysis.adaptacion_escolar_posible){
-      return `<div class="item"><b>Sin propuesta pedagógica para la versión original</b><div class="meta">La canción fue clasificada como no apta para uso escolar. Si aceptas la versión escolar adaptada, SonarIA puede construir una propuesta pedagógica para esa nueva versión.</div><div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;"><button class="small-btn use" onclick="acceptSchoolVersionPedagogy()">Trabajar versión escolar</button><button class="small-btn use" onclick="openVersionEscolar()">Revisar versión escolar</button></div></div>`;
-    }
-    return `<div class="item"><b>Sin propuesta pedagógica</b><div class="meta">La canción fue clasificada como no apta para uso escolar. En esta condición, SonarIA no propone actividades, OA ni sugerencias de aplicación en aula.</div></div>`;
+  if((lastAnalysis.resultado || "").includes("No apta") && !schoolVersionAccepted){
+    return `<div class="item"><b>Sin propuesta pedagógica aún</b><div class="meta">La canción fue clasificada como no apta para uso escolar en su versión original. Si aceptas la versión escolar, SonarIA puede levantar una propuesta docente basada en la adaptación.</div></div>`;
   }
-  const options = lastAnalysis.pedagogia_opciones || [];
+  const options = currentPedagogyOptions();
   const first = options[0];
-  const adaptedBanner = adaptedTeachingAccepted ? '<div class="item" style="margin-bottom:14px;"><b>Versión escolar aceptada</b><div class="meta">Ahora la propuesta se construye a partir de la adaptación escolar y no de la versión original.</div></div>' : '';
-  return `${adaptedBanner}${buildPedagogiaSelector(options)}<div id="pedagogiaDynamic">${first ? renderPedagogiaOption(first) : '<div class="item"><b>Sin propuesta pedagógica</b><div class="meta">Aún no hay cursos sugeridos para esta canción.</div></div>'}</div>`;
+  const topNote = `<div class="item" style="margin-bottom:14px;"><b>${currentPedagogyModeLabel()}</b><div class="meta">${schoolVersionAccepted ? 'Estas actividades se construyen sobre la letra adaptada aceptada por el docente.' : 'Estas actividades se construyen sobre la versión original analizada.'}</div>${schoolVersionAccepted ? '<div style="margin-top:10px;"><button class="small-btn use" onclick="downloadTeacherPdf()">Descargar PDF docente</button></div>' : ''}</div>`;
+  return `${topNote}${buildPedagogiaSelector(options)}<div id="pedagogiaDynamic">${first ? renderPedagogiaOption(first) : '<div class="item"><b>Sin propuesta pedagógica</b><div class="meta">Aún no hay cursos sugeridos para esta canción.</div></div>'}</div>`;
 }
 window.selectPedagogiaOption = function(idx){
-  const options = lastAnalysis?.pedagogia_opciones || [];
+  const options = currentPedagogyOptions();
   const opt = options[idx];
   if(!opt) return;
   const box = document.getElementById('pedagogiaDynamic');
   if(box) box.innerHTML = renderPedagogiaOption(opt);
 };
-function openPedagogia(){ openModal("Pedagogía", "Elige un curso sugerido y revisa actividades ajustadas para ese tramo.", buildPedagogiaHtml()); }
+window.acceptSchoolVersionForPedagogy = function(){
+  schoolVersionAccepted = true;
+  closeModal();
+  openPedagogia();
+  showToast('Versión escolar aceptada para planificar.');
+};
+window.downloadTeacherPdf = function(){
+  if(!lastAnalysis) return;
+  const options = currentPedagogyOptions();
+  const opt = options[0] || {};
+  const ped = opt.pedagogia || lastAnalysis.pedagogia_version_escolar || {};
+  const logo = 'logo-mejoraria.png';
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>SonarIA docente</title><style>body{font-family:Arial,sans-serif;padding:34px;color:#111} h1{font-size:28px;margin:0 0 6px} h2{font-size:18px;margin:20px 0 8px} .muted{color:#555} .box{border:1px solid #ddd;border-radius:10px;padding:14px;margin:10px 0} mark{background:#f5de6f;padding:1px 3px} ul{margin:8px 0 0 18px} li{margin:6px 0} img{height:54px}</style></head><body><img src="${logo}" alt="SonarIA"><h1>SonarIA · Guía docente</h1><div class="muted">${escapeHtml((lastAnalysis.titulo||'Canción') + (lastAnalysis.artista ? ' · ' + lastAnalysis.artista : ''))}</div><div class="box"><strong>Curso sugerido:</strong> ${escapeHtml(opt.curso || '—')}<br><strong>OA:</strong> ${escapeHtml(opt.oa_id || '—')} · ${escapeHtml(opt.oa_desc || '')}<br><strong>Enfoque:</strong> ${escapeHtml(ped.enfoque || '')}</div><h2>Letra adaptada</h2><div class="box">${lastAnalysis.version_escolar_html || ''}</div><h2>Preguntas guiadas</h2><ul>${(ped.preguntas_guiadas||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><h2>Análisis musical</h2><ul>${(ped.ideas_analisis_musical||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul><h2>Actividades de clase</h2><ul>${(ped.actividades_clase||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul></body></html>`;
+  const w = window.open('', '_blank');
+  if(!w) return;
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>w.print(), 500);
+};
+function openPedagogia(){ openModal("Pedagogía", schoolVersionAccepted ? "Planificación construida sobre la versión escolar aceptada." : "Elige un curso sugerido y revisa actividades ajustadas para ese tramo.", buildPedagogiaHtml()); }
 
 async function fetchContext(){
   if(contextCache) return contextCache;
@@ -529,24 +549,14 @@ function buildSchoolVersionHtml(){
   const reps = lastAnalysis.version_escolar_reemplazos || [];
   return `<div class="overlay-grid"><div class="item"><b>Letra adaptada</b><div class="school-preview">${lastAnalysis.version_escolar_html || '<div class="empty">Sin cambios sugeridos.</div>'}</div></div><div class="item"><b>Criterio de adaptación</b><div class="meta">${escapeHtml(lastAnalysis.adaptacion_escolar_mensaje || '')}</div><div class="overlay-list" style="margin-top:10px;">${reps.length ? reps.map(r => `<div><strong>${escapeHtml(r.original)}</strong> → ${escapeHtml(r.sugerida)}</div>`).join("") : '<div>No se detectaron cambios necesarios.</div>'}</div></div></div>`;
 }
-function acceptSchoolVersionPedagogy(){
-  if(!lastAnalysis?.adaptacion_escolar_posible) return;
-  adaptedTeachingAccepted = true;
-  closeModal();
-  openPedagogia();
-  showToast("Ahora SonarIA está proponiendo actividades para la versión escolar.");
-}
-
 function openVersionEscolar(){
   if(!isPro()){
     const preview = lastAnalysis?.version_escolar_preview_html || '';
     openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisarla en una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
     return;
   }
-  const extraAction = lastAnalysis?.resultado === "No apta para uso escolar"
-    ? `<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;"><button class="small-btn use" onclick="acceptSchoolVersionPedagogy()">Aceptar y trabajar esta versión</button></div>`
-    : "";
-  openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml() + extraAction);
+  const acceptBtn = (lastAnalysis && (lastAnalysis.resultado || '').includes('No apta') && lastAnalysis.adaptacion_escolar_posible) ? `<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;"><button class="small-btn use" onclick="acceptSchoolVersionForPedagogy()">Aceptar versión escolar y planificar</button><button class="small-btn" onclick="downloadTeacherPdf()">Descargar PDF docente</button></div>` : '';
+  openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml() + acceptBtn);
 }
 
 
@@ -561,7 +571,7 @@ function maybePromptSchoolVersion(raw){
     `<div class="item"><b>Recomendación inmediata</b><div class="meta">${escapeHtml(raw.adaptacion_escolar_mensaje || cta)}</div></div>
      <div class="item" style="margin-top:12px;"><b>Siguiente paso</b><div class="meta">${cta}</div></div>
      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
-       <button class="small-btn use" onclick="closeModal(); openVersionEscolar();">Ir a versión escolar</button>
+       <button class="small-btn use" onclick="closeModal(); openVersionEscolar();">Revisar versión escolar</button>
        ${isPro() ? '' : '<button class="small-btn" onclick="window.location.href=\'planes.html\'">Ver Pro</button>'}
      </div>`
   );
@@ -632,7 +642,7 @@ function parseVoiceCommand(transcript){
 }
 function startVoiceSearch(){
   if(!isPro()){
-    openModal("Búsqueda por voz · Pro", "Cómo usarla", `<div class="item"><b>Indicación</b><div class="meta">Para hacer la búsqueda por voz, di el nombre de la canción y el artista. Ejemplo: <strong>Creep de Radiohead</strong>.</div></div><div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;"><button class="small-btn" onclick="window.location.href='planes.html'">Ver Pro</button></div>`);
+    openModal("Búsqueda por voz · Pro", "Disponible en la experiencia completa.", `<div class="item"><b>Cómo usarla</b><div class="meta">Para hacer la búsqueda por voz, di claramente el <strong>nombre de la canción</strong> y el <strong>artista</strong>. Ejemplo: <em>Creep de Radiohead</em>.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">SonarIA escucha el comando, completa los campos y lanza la búsqueda por ti.</div></div>`);
     return;
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -644,11 +654,11 @@ function startVoiceSearch(){
   rec.lang = "es-CL";
   rec.interimResults = false;
   rec.maxAlternatives = 1;
-  setStatus('Escuchando… Para hacer la búsqueda por voz, di el nombre de la canción y el artista. Ejemplo: "Creep de Radiohead".', 'info');
+  setStatus('Escuchando… Puedes decir: "SonarIA busca la canción Creep de Radiohead".', 'info');
   rec.onresult = (event) => {
     const heard = event.results?.[0]?.[0]?.transcript || "";
     parseVoiceCommand(heard);
-    showToast("Di el nombre de la canción y el artista.");
+    showToast("Dí el nombre de la canción y el artista.");
     form.requestSubmit();
   };
   rec.onerror = () => setStatus("No se pudo completar la búsqueda por voz.", "error");
@@ -679,7 +689,7 @@ form.addEventListener("submit", async (e) => {
     const raw = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(raw.detail || "No fue posible analizar la canción.");
     renderAnalysis(raw);
-    if(raw.mostrar_popup_adaptacion){ maybePromptSchoolVersion(raw); }
+    if(raw.mostrar_popup_adaptacion || raw.adaptacion_escolar_posible){ maybePromptSchoolVersion(raw); }
     addHistory({ id:String(Date.now()) + Math.random().toString(36).slice(2), titulo:payload.titulo || raw.titulo || "Canción sin título", artista:payload.artista || raw.artista || "Artista no indicado", badge:raw.resultado || "Análisis", fecha:new Date().toISOString(), texto:raw.texto_analizado || texto.value || "", adaptacionMensaje: raw.adaptacion_escolar_mensaje || "" });
     if(!isPro()) setUsage((raw.analyses_used ?? (getUsage() + 1)));
     user.analyses_used = raw.analyses_used ?? getUsage(); user.analyses_limit = raw.analyses_limit ?? 3; renderUserCard(user);
