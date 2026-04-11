@@ -60,7 +60,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .empty{color:var(--muted);line-height:1.7}.school-preview{padding:14px;border-radius:16px;background:#0c1119;border:1px solid rgba(255,255,255,.06);max-height:56vh;overflow:auto}.school-mark{background:rgba(243,199,75,.92);color:#14181f;padding:1px 4px;border-radius:5px;font-weight:900}
 .history-item,.suggestion{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.history-main strong{display:block;margin-bottom:4px}.history-main span,.suggestion span{color:var(--muted);font-size:13px}.small-btn{border:none;border-radius:12px;padding:9px 11px;background:#243244;color:#fff;font:inherit;font-weight:800;cursor:pointer}.small-btn.danger{background:#5b1a20}.small-btn.use{background:#1f4f92}
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
-.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.brand-plan{display:inline-flex;margin-left:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
+.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;margin-left:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.form-grid,.metric-grid,.courses-grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}}
 </style>
@@ -141,6 +141,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz <span class="lock-icon">🔒</span></button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
+            <div class="voice-tip">Para usar la búsqueda por voz, di el nombre de la canción y el artista.</div>
             <div class="actions-tools">
               <button id="contextBtn" class="tool small" type="button">🌐 Contexto</button>
               <button id="translateBtn" class="tool small" type="button">🈶 Traducción <span class="lock-icon">🔒</span></button>
@@ -210,6 +211,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
         <h3 id="modalTitle">Ventana</h3>
         <p id="modalSubtitle">Detalle</p>
       </div>
+      <div id="modalHeaderActions" class="modal-header-actions"></div>
       <button class="overlay-close" onclick="closeModal()">Cerrar</button>
     </div>
     <div id="modalBody"></div>
@@ -312,7 +314,7 @@ function updateProLocks(){
 }
 
 function renderUserCard(u){
-  const name = u.name || u.email || "Usuario";
+  const name = resolveDisplayName(u);
   document.getElementById("userName").textContent = name;
   const badge = document.getElementById("planBadge");
   badge.textContent = (u.plan || "free").toUpperCase();
@@ -331,7 +333,9 @@ async function syncSessionWithBackend(){
     const res = await fetch(API_URL + "/me", { headers:{ "Authorization": "Bearer " + authToken }, signal: controller.signal });
     if(!res.ok) throw new Error();
     const data = await res.json();
+    const cachedUser = (()=>{ try{return JSON.parse(localStorage.getItem("mejoraria_user")||"{}")}catch(_){return {}} })();
     user = data.user || {};
+    if(isWeakDisplayName(user.name, user.email) && !isWeakDisplayName(cachedUser.name, cachedUser.email)) user.name = cachedUser.name;
     localStorage.setItem("mejoraria_user", JSON.stringify(user));
     if(typeof user.analyses_used === "number") setUsage(user.analyses_used);
     renderUserCard(user);
@@ -407,8 +411,21 @@ function renderAnalysis(raw){
     : (raw.adaptacion_escolar_mensaje || "No se recomienda usar esta canción directamente en aula.");
 }
 
+function setModalHeaderAction(html){ const box=document.getElementById("modalHeaderActions"); if(box) box.innerHTML = html || ""; }
 function openModal(title, subtitle, bodyHtml){ document.getElementById("modalTitle").textContent=title; document.getElementById("modalSubtitle").textContent=subtitle||""; document.getElementById("modalBody").innerHTML=bodyHtml; document.getElementById("modal").classList.add("show"); }
-function closeModal(){ document.getElementById("modal").classList.remove("show"); }
+function closeModal(){ setModalHeaderAction(""); document.getElementById("modal").classList.remove("show"); }
+function isWeakDisplayName(name,email){
+  const n=String(name||"").trim(); const e=String(email||"").trim().toLowerCase();
+  if(!n) return true;
+  if(n.toLowerCase()===e) return true;
+  if(e && n.toLowerCase()===e.split("@")[0]) return true;
+  return !/\s/.test(n) && /\d/.test(n);
+}
+function resolveDisplayName(u){
+  const cached = (()=>{ try{return JSON.parse(localStorage.getItem("mejoraria_user")||"{}")}catch(_){return {}} })();
+  if(!isWeakDisplayName(cached.name,cached.email) && isWeakDisplayName(u?.name,u?.email)) return cached.name;
+  return u?.name || cached.name || u?.email || cached.email || "Usuario";
+}
 function scrollToTop(){ window.scrollTo({ top: 0, behavior: "smooth" }); }
 
 function buildCoursesHtml(){
@@ -554,14 +571,14 @@ window.downloadTeacherPdf = function(){
     .footer{padding:0 28px 28px}.footer-box{background:linear-gradient(135deg,rgba(0,210,190,.08),rgba(54,124,255,.06));border:1px solid var(--line);border-radius:22px;padding:18px}.footer-box h3{margin:0 0 8px;font-size:1.08rem}.footer-box p{margin:0;color:#30445b;line-height:1.75;font-size:.95rem}
     @page{size:A4;margin:10mm}@media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:auto;margin:0;border-radius:0;box-shadow:none}.track,.meta,.clip{break-inside:avoid}} </style></head><body><main class="sheet">
     <section class="header"><div class="brand-row"><div class="brand"><img src="${logo}" alt="SonarIA" style="height:52px;margin-bottom:10px;"><h1>Sonar<span class="ia">IA</span> Studio Session</h1><div class="sub">Documento docente listo para clase</div></div><div class="session-badge">Curso seleccionado: ${curso}</div></div>
-    <div class="hero"><div><h2 class="hero-title">${titleSong}</h2><div class="hero-artist">${artistSong}</div><div class="hero-copy">Planificación exportada desde SonarIA para el curso seleccionado por el docente.</div></div><div class="signal"><small>Señal SonarIA</small><strong>${veredicto}</strong><p>${recomendacion}</p></div></div></section>
+    <div class="hero"><div><h2 class="hero-title">${titleSong}</h2><div class="hero-artist">${artistSong}</div><div class="hero-copy">${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA. En este documento encontrarás la letra adecuada para su trabajo en clases, ajustada al curso seleccionado por el docente.' : 'Planificación exportada desde SonarIA para el curso seleccionado por el docente.'}</div></div><div class="signal"><small>Señal SonarIA</small><strong>${veredicto}</strong><p>${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA. En este documento está la letra adecuada para trabajarla en clases.' : recomendacion}</p></div></div></section>
     <section class="timeline"><div class="clip orange">Contexto</div><div class="clip">Letra</div><div class="clip green">OA</div><div class="clip yellow">Análisis</div><div class="clip">Clase</div></section>
     <section class="meta-grid"><div class="meta"><small>Curso</small><strong>${curso}${edad ? ` · ${edad} años` : ''}</strong></div><div class="meta"><small>OA sugerido</small><strong>${oaId}: ${oaDesc}</strong></div><div class="meta"><small>Enfoque</small><strong>${enfoque || '—'}</strong></div><div class="meta"><small>Versión base</small><strong>${schoolVersionAccepted ? 'Versión escolar adaptada' : 'Versión original'}</strong></div></section>
     <section class="content">
       <article class="track"><div class="track-head"><div class="track-title">🎤 Letra de trabajo</div><div class="track-chip">${letraTitulo}</div></div><div class="track-body"><div class="lyrics">${letraHtml || 'Sin letra disponible.'}</div></div></article>
       <article class="track"><div class="track-head"><div class="track-title">🎓 Pedagogía</div><div class="track-chip">Curso seleccionado</div></div><div class="track-body"><div class="split"><div class="panel"><b>Preguntas guiadas</b><ul class="list">${preguntas}</ul></div><div class="panel"><b>Análisis musical</b><ul class="list">${analisis}</ul></div></div><div class="panel"><b>Actividades de clase</b><ul class="list">${actividades}</ul></div></div></article>
     </section>
-    <section class="footer"><div class="footer-box"><h3>🎯 Recomendación SonarIA</h3><p>${recomendacion || 'Usa esta canción con mediación y criterio docente.'}</p></div></section>
+    <section class="footer"><div class="footer-box"><h3>🎯 Recomendación SonarIA</h3><p>${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA y aquí se presenta la letra adecuada para su trabajo en clases.' : (recomendacion || 'Usa esta canción con mediación y criterio docente.')}</p></div></section>
     </main></body></html>`;
   const w = window.open('', '_blank');
   if(!w) return;
@@ -633,17 +650,19 @@ function buildSchoolVersionHtml(){
   if(!lastAnalysis.adaptacion_escolar_posible){
     return `<div class="item"><b>Versión escolar no sugerida</b><div class="meta">${escapeHtml(lastAnalysis.adaptacion_escolar_mensaje || 'No se recomienda intentar una versión escolar para esta canción.')}</div></div>`;
   }
-  const reps = lastAnalysis.version_escolar_reemplazos || [];
-  return `<div class="overlay-grid"><div class="item"><b>Letra adaptada</b><div class="school-preview">${lastAnalysis.version_escolar_html || '<div class="empty">Sin cambios sugeridos.</div>'}</div></div><div class="item"><b>Criterio de adaptación</b><div class="meta">${escapeHtml(lastAnalysis.adaptacion_escolar_mensaje || '')}</div><div class="overlay-list" style="margin-top:10px;">${reps.length ? reps.map(r => `<div><strong>${escapeHtml(r.original)}</strong> → ${escapeHtml(r.sugerida)}</div>`).join("") : '<div>No se detectaron cambios necesarios.</div>'}</div></div></div>`;
+  const reps = (lastAnalysis.version_escolar_reemplazos || []).filter(r => !/[\\\[\]\(\)\?\+\*\|]/.test(String(r.original || "")));
+  return `<div class="overlay-grid"><div class="item"><b>Letra adaptada</b><div class="school-preview">${lastAnalysis.version_escolar_html || '<div class="empty">Sin cambios sugeridos.</div>'}</div></div><div class="item"><b>Criterio de adaptación</b><div class="meta">${escapeHtml(lastAnalysis.adaptacion_escolar_mensaje || '')}</div><div class="overlay-list" style="margin-top:10px;">${reps.length ? reps.map(r => `<div><strong>${escapeHtml(r.original)}</strong> → ${escapeHtml(r.sugerida)}</div>`).join("") : '<div>SonarIA aplicó cambios útiles sin mostrar reglas técnicas innecesarias.</div>'}</div></div></div>`;
 }
 function openVersionEscolar(){
   if(!isPro()){
     const preview = lastAnalysis?.version_escolar_preview_html || '';
+    setModalHeaderAction("");
     openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisarla en una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
     return;
   }
-  const acceptBtn = (lastAnalysis && (lastAnalysis.resultado || '').includes('No apta') && lastAnalysis.adaptacion_escolar_posible) ? `<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;"><button class="small-btn use" onclick="acceptSchoolVersionForPedagogy()">Aceptar versión escolar y planificar</button><button class="small-btn" onclick="downloadTeacherPdf()">Descargar PDF docente</button></div>` : '';
-  openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml() + acceptBtn);
+  const canAccept = (lastAnalysis && (lastAnalysis.resultado || '').includes('No apta') && lastAnalysis.adaptacion_escolar_posible);
+  setModalHeaderAction(canAccept ? '<button class="small-btn use" onclick="acceptSchoolVersionForPedagogy()">Aceptar versión escolar</button>' : '');
+  openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml());
 }
 
 
