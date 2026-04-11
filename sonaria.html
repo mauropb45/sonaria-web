@@ -480,7 +480,20 @@ function renderPedagogiaOption(opt){
 }
 function currentPedagogyOptions(){
   if(!lastAnalysis) return [];
-  return schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar_opciones || []) : (lastAnalysis.pedagogia_opciones || []);
+  const opts = schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar_opciones || []) : (lastAnalysis.pedagogia_opciones || []);
+  if(Array.isArray(opts) && opts.length) return opts;
+  const single = schoolVersionAccepted ? (lastAnalysis.pedagogia_version_escolar || {}) : (lastAnalysis.pedagogia || {});
+  if(single && (single.enfoque || single.oa_recomendado)){
+    return [{
+      curso_codigo: "",
+      curso: single?.oa_recomendado?.curso || "Curso sugerido",
+      edad_referencial: single?.oa_recomendado?.edad_referencial || "",
+      oa_id: single?.oa_recomendado?.id || "—",
+      oa_desc: single?.oa_recomendado?.desc || "Sin OA sugerido",
+      pedagogia: single
+    }];
+  }
+  return [];
 }
 function syncSelectedPedagogyWithOptions(){
   const options = currentPedagogyOptions();
@@ -511,7 +524,9 @@ function currentPedagogyModeLabel(){
 }
 function buildPedagogiaHtml(){
   if(!lastAnalysis) return '<div class="empty">Analiza una canción antes de abrir esta ventana.</div>';
-  if((lastAnalysis.resultado || "").includes("No apta") && !schoolVersionAccepted){
+  const verdict = String(lastAnalysis.resultado || "");
+  const isStrictNoApta = verdict === "No apta para uso escolar";
+  if(isStrictNoApta && !schoolVersionAccepted){
     return `<div class="item"><b>Sin propuesta pedagógica aún</b><div class="meta">La canción fue clasificada como no apta para uso escolar en su versión original. Si aceptas la versión escolar, SonarIA puede levantar una propuesta docente basada en la adaptación.</div></div>`;
   }
   const options = currentPedagogyOptions();
