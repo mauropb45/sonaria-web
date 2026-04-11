@@ -270,6 +270,38 @@ let schoolVersionAccepted = false;
 let selectedPedagogyIndex = 0;
 let selectedPedagogyCourseCode = "";
 
+function manejarSesionExpirada(data){
+  const mensaje = data?.detail === "session_invalidated"
+    ? "Tu sesión se cerró porque iniciaste sesión en otro dispositivo."
+    : "Tu sesión expiró. Vuelve a iniciar sesión.";
+  localStorage.setItem("mejoraria_logout_message", mensaje);
+  localStorage.removeItem("mejoraria_token");
+  localStorage.removeItem("token");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("mejoraria_user");
+  localStorage.removeItem("mejoraria_plan");
+  sessionStorage.removeItem("order_id");
+  window.location.href = "login.html";
+}
+
+async function authFetch(url, options = {}){
+  const opts = { ...options };
+  const headers = { ...(opts.headers || {}) };
+  if(authToken){
+    headers["Authorization"] = "Bearer " + authToken;
+  }
+  opts.headers = headers;
+  const res = await fetch(url, opts);
+  if(res.status === 401){
+    let data = {};
+    try { data = await res.json(); } catch(_){}
+    manejarSesionExpirada(data);
+    throw new Error("Sesión inválida");
+  }
+  return res;
+}
+
+
 function userScope(){
   const raw = (user?.email || "guest").toLowerCase().replace(/[^a-z0-9]/g,"_");
   return raw || "guest";
@@ -376,7 +408,7 @@ async function syncSessionWithBackend(){
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 7000);
   try{
-    const res = await fetch(API_URL + "/me", { headers:{ "Authorization": "Bearer " + authToken }, signal: controller.signal });
+    const res = await authFetch(API_URL + "/me", { signal: controller.signal });
     if(!res.ok) throw new Error();
     const data = await res.json();
     const cachedUser = (()=>{ try{return JSON.parse(localStorage.getItem("mejoraria_user")||"{}")}catch(_){return {}} })();
@@ -386,7 +418,8 @@ async function syncSessionWithBackend(){
     if(typeof user.analyses_used === "number") setUsage(user.analyses_used);
     renderUserCard(user);
     return true;
-  }catch(_){
+  }catch(err){
+    if(err?.message === "Sesión inválida") return false;
     localStorage.removeItem("mejoraria_token"); localStorage.removeItem("token"); localStorage.removeItem("access_token");
     window.location.href = "login.html"; return false;
   }finally{
@@ -474,14 +507,23 @@ function resolveDisplayName(u){
 }
 function scrollToTop(){ window.scrollTo({ top: 0, behavior: "smooth" }); }
 
-function logout(){
-  localStorage.removeItem("mejoraria_token");
-  localStorage.removeItem("token");
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("mejoraria_user");
-  localStorage.removeItem("mejoraria_plan");
-  sessionStorage.removeItem("order_id");
-  window.location.href = "login.html";
+async function logout(){
+  try{
+    await authFetch(API_URL + "/auth/logout", { method:"POST" });
+  }catch(err){
+    if(err?.message !== "Sesión inválida"){
+      console.error(err);
+    }
+  }finally{
+    localStorage.setItem("mejoraria_logout_message", "Sesión cerrada correctamente.");
+    localStorage.removeItem("mejoraria_token");
+    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("mejoraria_user");
+    localStorage.removeItem("mejoraria_plan");
+    sessionStorage.removeItem("order_id");
+    window.location.href = "login.html";
+  }
 }
 
 function buildCoursesHtml(){
@@ -686,7 +728,7 @@ async function fetchContext(){
   if(contextCache) return contextCache;
   if(!lastAnalysis && !titulo.value.trim()) throw new Error("Primero indica una canción o realiza un análisis.");
   const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto_analizado || texto.value || "").trim() };
-  const res = await fetch(API_URL + "/contexto", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(body) });
+  const res = await authFetch(API_URL + "/contexto", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if(!res.ok) throw new Error(data.detail || "No se pudo cargar el contexto.");
   contextCache = data; return data;
@@ -724,7 +766,7 @@ async function fetchTranslation(){
   if(translationCache) return translationCache;
   const content = (lastAnalysis?.texto_analizado || texto.value || "").trim();
   if(!content) throw new Error("No hay letra para traducir.");
-  const res = await fetch(API_URL + "/traducir", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify({ texto: content }) });
+  const res = await authFetch(API_URL + "/traducir", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ texto: content }) });
   const data = await res.json().catch(() => ({}));
   if(!res.ok || data.ok === false) throw new Error(data.detail || "No se pudo traducir la letra.");
   translationCache = data; return data;
@@ -886,7 +928,7 @@ form.addEventListener("submit", async (e) => {
     let textoParaEnviar = texto.value.trim();
     if(buscarLetra.checked && titulo.value.trim()) textoParaEnviar = "";
     const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses };
-    const res = await fetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(payload) });
+    const res = await authFetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
     const raw = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(raw.detail || "No fue posible analizar la canción.");
     renderAnalysis(raw);
