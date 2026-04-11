@@ -63,7 +63,30 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:4px 10px;min-height:28px;border-radius:10px;font-size:20px;font-weight:900;line-height:1;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.form-grid,.metric-grid,.courses-grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}}
-</style>
+
+.credits-signature{
+  margin-top:30px;
+  text-align:center;
+  font-size:12px;
+  color:rgba(255,255,255,.56);
+  line-height:1.5;
+  opacity:0;
+  animation:sonariaCreditsFade 1.5s ease forwards;
+}
+.credits-signature .divider{
+  width:72px;
+  height:1px;
+  margin:0 auto 10px;
+  background:rgba(255,255,255,.18);
+  border-radius:999px;
+}
+.credits-signature .brand{color:#00cfff;font-weight:700}
+.credits-signature .author{color:#ff7a00;font-weight:700}
+@keyframes sonariaCreditsFade{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:.78;transform:translateY(0)}
+}
+        </style>
 </head>
 <body>
 <div class="wrap">
@@ -200,6 +223,12 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
           </div>
         </div>
       </section>
+      <div class="credits-signature">
+        <div class="divider"></div>
+        SonarIA pertenece a la familia de productos de <span class="brand">MejorarIA</span><br>
+        Creado por <span class="author">Maurock</span> - Mauricio José Pinto Basso
+      </div>
+
     </main>
   </div>
 </div>
@@ -601,7 +630,30 @@ window.downloadTeacherPdf = function(){
     .quote{border-left:4px solid var(--mclaren);padding:12px 14px;background:#fff8f1;border-radius:0 14px 14px 0;color:#3a2e21;font-weight:700;line-height:1.8}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.list{margin:0;padding-left:18px}
     .lyrics{padding:14px 15px;background:#fff;border:1px solid #e3eaf3;border-radius:16px;line-height:1.8;color:#24364c} mark{background:#f5de6f;padding:1px 3px;border-radius:4px}
     .footer{padding:0 28px 28px}.footer-box{background:linear-gradient(135deg,rgba(0,210,190,.08),rgba(54,124,255,.06));border:1px solid var(--line);border-radius:22px;padding:18px}.footer-box h3{margin:0 0 8px;font-size:1.08rem}.footer-box p{margin:0;color:#30445b;line-height:1.75;font-size:.95rem}
-    @page{size:A4;margin:10mm}@media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:auto;margin:0;border-radius:0;box-shadow:none}.track,.meta,.clip{break-inside:avoid}} </style></head><body><main class="sheet">
+    @page{size:A4;margin:10mm}@media print{body{background:#fff;padding:0}.sheet{width:auto;min-height:auto;margin:0;border-radius:0;box-shadow:none}.track,.meta,.clip{break-inside:avoid}} 
+.credits-signature{
+  margin-top:30px;
+  text-align:center;
+  font-size:12px;
+  color:rgba(255,255,255,.56);
+  line-height:1.5;
+  opacity:0;
+  animation:sonariaCreditsFade 1.5s ease forwards;
+}
+.credits-signature .divider{
+  width:72px;
+  height:1px;
+  margin:0 auto 10px;
+  background:rgba(255,255,255,.18);
+  border-radius:999px;
+}
+.credits-signature .brand{color:#00cfff;font-weight:700}
+.credits-signature .author{color:#ff7a00;font-weight:700}
+@keyframes sonariaCreditsFade{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:.78;transform:translateY(0)}
+}
+        </style></head><body><main class="sheet">
     <section class="header"><div class="brand-row"><div class="brand"><img src="${logo}" alt="SonarIA" style="height:52px;margin-bottom:10px;"><h1>Sonar<span class="ia">IA</span> Studio Session</h1><div class="sub">Documento docente listo para clase</div></div><div class="session-badge">Curso seleccionado: ${curso}</div></div>
     <div class="hero"><div><h2 class="hero-title">${titleSong}</h2><div class="hero-artist">${artistSong}</div><div class="hero-copy">${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA. En este documento encontrarás la letra adecuada para su trabajo en clases, ajustada al curso seleccionado por el docente.' : 'Planificación exportada desde SonarIA para el curso seleccionado por el docente.'}</div></div><div class="signal"><small>Señal SonarIA</small><strong>${veredicto}</strong><p>${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA. En este documento está la letra adecuada para trabajarla en clases.' : recomendacion}</p></div></div></section>
     <section class="timeline"><div class="clip orange">Contexto</div><div class="clip">Letra</div><div class="clip green">OA</div><div class="clip yellow">Análisis</div><div class="clip">Clase</div></section>
@@ -892,25 +944,5 @@ function showProCelebrationIfNeeded(){
 
 syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProCelebrationIfNeeded(); });
 </script>
-
-</script>
-
-<footer style="
-  position: fixed;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: rgba(255,255,255,0.6);
-  text-align: center;
-  line-height: 1.4;
-  z-index: 999;
-  pointer-events: none;
-">
-  SonarIA pertenece a la familia de productos de 
-  <span style="color:#00cfff;">MejorarIA</span><br>
-  Creado por <span style="color:#ff7a00;">Maurock</span> - Mauricio José Pinto Basso
-</footer>
-
 </body>
 </html>
