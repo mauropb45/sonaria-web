@@ -60,7 +60,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .empty{color:var(--muted);line-height:1.7}.school-preview{padding:14px;border-radius:16px;background:#0c1119;border:1px solid rgba(255,255,255,.06);max-height:56vh;overflow:auto}.school-mark{background:rgba(243,199,75,.92);color:#14181f;padding:1px 4px;border-radius:5px;font-weight:900}
 .history-item,.suggestion{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.history-main strong{display:block;margin-bottom:4px}.history-main span,.suggestion span{color:var(--muted);font-size:13px}.small-btn{border:none;border-radius:12px;padding:9px 11px;background:#243244;color:#fff;font:inherit;font-weight:800;cursor:pointer}.small-btn.danger{background:#5b1a20}.small-btn.use{background:#1f4f92}
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
-.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;margin-left:10px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
+.translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:4px 10px;min-height:28px;border-radius:10px;font-size:20px;font-weight:900;line-height:1;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.form-grid,.metric-grid,.courses-grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}}
 </style>
@@ -93,8 +93,9 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
           <span id="userName" class="pill">Cargando usuario…</span>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn-top btn-ghost" onclick="window.location.href='planes.html'">Free vs Pro</button>
-          <button class="btn-top btn-pro" onclick="window.location.href='planes.html'">Desbloquear Pro</button>
+          <button id="topPlansBtn" class="btn-top btn-ghost" onclick="window.location.href='planes.html'">Free vs Pro</button>
+          <button id="topUpgradeBtn" class="btn-top btn-pro" onclick="window.location.href='planes.html'">Desbloquear Pro</button>
+          <button id="logoutBtn" class="btn-top btn-ghost" type="button">Cerrar sesión</button>
         </div>
       </div>
 
@@ -141,7 +142,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
               <button id="voiceBtn" class="tool small" type="button">🎙️ Búsqueda por voz <span class="lock-icon">🔒</span></button>
               <button id="clearBtn" class="tool small" type="button">🧹 Limpiar</button>
             </div>
-            <div class="voice-tip">Para usar la búsqueda por voz, di el nombre de la canción y el artista.</div>
+            <div class="voice-tip">Para hacer la búsqueda por voz, di el nombre de la canción y el artista.</div>
             <div class="actions-tools">
               <button id="contextBtn" class="tool small" type="button">🌐 Contexto</button>
               <button id="translateBtn" class="tool small" type="button">🈶 Traducción <span class="lock-icon">🔒</span></button>
@@ -319,8 +320,14 @@ function renderUserCard(u){
   const badge = document.getElementById("planBadge");
   badge.textContent = (u.plan || "free").toUpperCase();
   badge.className = "pill " + ((u.plan || "free") === "pro" ? "pro" : "free");
-  document.getElementById("usageBadge").textContent = isPro() ? "PRO · funciones completas" : `${getRemainingUsage()} análisis free restantes`;
+  const usage = document.getElementById("usageBadge");
+  usage.textContent = isPro() ? "" : `${getRemainingUsage()} análisis free restantes`;
+  usage.style.display = isPro() ? "none" : "inline-flex";
   const suffix = document.getElementById("brandPlanSuffix"); if(suffix) suffix.style.display = isPro() ? "inline-flex" : "none";
+  const plansBtn = document.getElementById("topPlansBtn");
+  const upgradeBtn = document.getElementById("topUpgradeBtn");
+  if(plansBtn) plansBtn.style.display = isPro() ? "none" : "inline-flex";
+  if(upgradeBtn) upgradeBtn.style.display = isPro() ? "none" : "inline-flex";
   document.title = isPro() ? "SonarIA Pro | Panel docente" : "SonarIA | Panel docente";
   updateProLocks();
 }
@@ -427,6 +434,16 @@ function resolveDisplayName(u){
   return u?.name || cached.name || u?.email || cached.email || "Usuario";
 }
 function scrollToTop(){ window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+function logout(){
+  localStorage.removeItem("mejoraria_token");
+  localStorage.removeItem("token");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("mejoraria_user");
+  localStorage.removeItem("mejoraria_plan");
+  sessionStorage.removeItem("order_id");
+  window.location.href = "login.html";
+}
 
 function buildCoursesHtml(){
   const selected = new Set(getStoredCourses());
@@ -698,7 +715,7 @@ function openYoutube(){
   if(!songTitle && !songArtist){ setStatus("Primero indica una canción.", "error"); return; }
   if(!isPro()){
     window.open(`https://www.youtube.com/`, "_blank", "noopener,noreferrer,width=1100,height=760");
-    showToast("En Free, YouTube abre de forma general. En Pro abre la búsqueda directa de la canción con lyrics.");
+    showToast("En Free, YouTube abre de forma general. En Pro buscaría el video de la canción con lyrics.");
     return;
   }
   const q = `${songTitle} ${songArtist} lyrics official audio`.trim();
@@ -778,6 +795,7 @@ schoolBtn.addEventListener("click", openVersionEscolar);
 statsBtn.addEventListener("click", openStats);
 suggestBtn.addEventListener("click", openSuggestions);
 voiceBtn.addEventListener("click", startVoiceSearch);
+const logoutBtn = document.getElementById("logoutBtn"); if(logoutBtn) logoutBtn.addEventListener("click", logout);
 clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; clearResult(); setStatus(""); });
 
 form.addEventListener("submit", async (e) => {
