@@ -46,8 +46,12 @@ linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);background-s
 label.small-label{display:block;margin-bottom:6px;color:#dce8ff;font-size:13px;font-weight:800}
 input,textarea{width:100%;border:none;outline:none;border-radius:14px;background:#0f141d;color:var(--text);border:1px solid rgba(255,255,255,.08);padding:13px 14px;font:inherit}textarea{min-height:220px;resize:vertical}input::placeholder,textarea::placeholder{color:#8797ae}
 .checks{display:grid;gap:10px;margin-top:14px}.check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#dce8ff;font-size:14px;line-height:1.6}.check input{width:auto;margin-top:3px;accent-color:var(--aston)}
-.actions-main{display:grid;grid-template-columns:minmax(220px,1.2fr) minmax(220px,1fr) auto;gap:10px;align-items:start;margin-top:14px}
-.actions-tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.actions-main{display:grid;grid-template-columns:1.2fr 1fr .65fr;gap:12px;align-items:start;margin-top:14px}
+.actions-main>.tool{width:100%;min-height:56px}
+.actions-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.actions-tools>.tool{width:100%;min-height:54px}
+#statsBtn{grid-column:span 2}
+#suggestBtn{grid-column:span 1}
 .tool{border:none;border-radius:14px;padding:14px 14px;font:inherit;font-weight:800;cursor:pointer;transition:.18s;color:#fff;background:#253245}
 .tool:hover{transform:translateY(-1px)}
 .tool.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#161b22;box-shadow:0 12px 28px rgba(255,135,0,.22)}
@@ -58,8 +62,8 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .tool.locked .lock-icon{opacity:1}
 .lock-icon{margin-left:8px;opacity:.82}
 .voice-stack{display:flex;flex-direction:column;gap:8px;align-items:stretch}
-.voice-stack .tool{width:100%}
-.voice-tip.inline{margin-top:0;max-width:none}
+.voice-stack .tool{width:100%;min-height:56px}
+.voice-tip.inline{margin-top:0;max-width:none;padding-left:2px}
 .inline-loader{display:none;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
 .inline-loader.show{display:block}
 .inline-loader .loader-track{margin-top:10px;height:8px;border-radius:999px;background:#2e3a4b;overflow:hidden}.impact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.impact-card{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.impact-card strong{display:block;font-size:28px;line-height:1;margin-bottom:6px}.impact-card span{color:var(--muted);font-size:13px;line-height:1.5}.impact-chart{margin-top:16px;padding:16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}.impact-bars{display:grid;gap:12px}.impact-bar-row{display:grid;gap:6px}.impact-bar-head{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:800;color:#dce8ff}.impact-track{height:12px;border-radius:999px;background:#344457;overflow:hidden}.impact-fill{height:100%;border-radius:999px}.impact-fill.apta{background:linear-gradient(90deg,var(--aston),#63e7cf)}.impact-fill.mediada{background:linear-gradient(90deg,var(--yellow),#ffd96f)}.impact-fill.noapta{background:linear-gradient(90deg,var(--ferrari),#ff5a52)}.impact-fill.adaptable{background:linear-gradient(90deg,var(--blue),#7aa7ff)}
@@ -78,17 +82,16 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
 .translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:4px 10px;min-height:28px;border-radius:10px;font-size:20px;font-weight:900;line-height:1;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
-@media(max-width:760px){.form-grid,.metric-grid,.courses-grid,.actions-main{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}}
+@media(max-width:760px){.form-grid,.metric-grid,.courses-grid,.actions-main,.actions-tools{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}#statsBtn,#suggestBtn{grid-column:span 1}}
 
 .credits-signature{
   margin-top:26px;
   text-align:center;
   font-size:13px;
   color:#dce6f6;
-  line-height:1.5;
+  line-height:1.45;
   opacity:1;
 }
-.credits-signature div{max-width:250px;margin-left:auto;margin-right:auto}
 .credits-signature .divider{
   width:86px;
   height:1px;
@@ -96,14 +99,32 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
   background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.28), rgba(255,255,255,0));
   border-radius:999px;
 }
-.credits-signature .brand{
-  font-weight:900;
-  background:linear-gradient(135deg,#ffffff 0%, #f4f7ff 45%, #22d7ff 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+.credits-line{
+  max-width:230px;
+  margin:0 auto;
+  color:rgba(255,255,255,.72);
 }
-.credits-signature .author{color:#ff8a00;font-weight:900;font-size:15px}
-.credits-signature .realname{display:block;color:#f2f6fd;font-weight:800;margin-top:2px}
+.credits-brand{
+  margin:10px auto 14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+.credits-brand .brand-main{color:#f4f7fb}
+.credits-brand .brand-ia{color:#ff9b1f}
+.credits-created{
+  color:#f0f5fd;
+  font-size:13px;
+  font-weight:700;
+}
+.credits-signature .author{color:#ff8a00;font-weight:900;font-size:16px}
+.credits-signature .realname{
+  display:block;
+  color:#f2f6fd;
+  font-weight:800;
+  margin-top:4px;
+  font-size:13px;
+}
 @keyframes sonariaCreditsFade{
   from{opacity:0;transform:translateY(8px)}
   to{opacity:.78;transform:translateY(0)}
@@ -132,8 +153,10 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 
     <div class="credits-signature">
       <div class="divider"></div>
-      <div>SonarIA pertenece a la familia de productos de <span class="brand">MejorarIA</span></div>
-      <div style="margin-top:6px;">Creado por <span class="author">MauRock</span><span class="realname">Mauricio José Pinto Basso</span></div>
+      <div class="credits-line">SonarIA pertenece a la familia de productos de</div>
+      <div class="credits-brand"><span class="brand-main">Mejorar</span><span class="brand-ia">IA</span></div>
+      <div class="credits-created">Creado por <span class="author">MauRock</span></div>
+      <div class="realname">Mauricio José Pinto Basso</div>
     </div>
 
     </aside>
@@ -386,8 +409,8 @@ function renderUserCard(u){
   if(upgradeBtn) upgradeBtn.style.display = isPro() ? "none" : "inline-flex";
   const ytBtn = document.getElementById("youtubeBtn");
   if(ytBtn){
-    ytBtn.textContent = isPro() ? "▶ YouTube exacto" : "▶ YouTube rápido";
-    ytBtn.title = isPro() ? "Búsqueda precisa de la canción" : "En Free abre YouTube general; en Pro busca la canción con más precisión";
+    ytBtn.textContent = isPro() ? "▶ YouTube lyrics" : "▶ YouTube";
+    ytBtn.title = isPro() ? "En Pro abre una búsqueda enfocada en lyrics" : "En Free abre YouTube general";
   }
   document.title = isPro() ? "SonarIA Pro | Panel docente" : "SonarIA | Panel docente";
   updateProLocks();
@@ -676,10 +699,9 @@ window.downloadTeacherPdf = function(){
   text-align:center;
   font-size:13px;
   color:#dce6f6;
-  line-height:1.5;
+  line-height:1.45;
   opacity:1;
 }
-.credits-signature div{max-width:250px;margin-left:auto;margin-right:auto}
 .credits-signature .divider{
   width:86px;
   height:1px;
@@ -687,14 +709,32 @@ window.downloadTeacherPdf = function(){
   background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.28), rgba(255,255,255,0));
   border-radius:999px;
 }
-.credits-signature .brand{
-  font-weight:900;
-  background:linear-gradient(135deg,#ffffff 0%, #f4f7ff 45%, #22d7ff 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+.credits-line{
+  max-width:230px;
+  margin:0 auto;
+  color:rgba(255,255,255,.72);
 }
-.credits-signature .author{color:#ff8a00;font-weight:900;font-size:15px}
-.credits-signature .realname{display:block;color:#f2f6fd;font-weight:800;margin-top:2px}
+.credits-brand{
+  margin:10px auto 14px;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+.credits-brand .brand-main{color:#f4f7fb}
+.credits-brand .brand-ia{color:#ff9b1f}
+.credits-created{
+  color:#f0f5fd;
+  font-size:13px;
+  font-weight:700;
+}
+.credits-signature .author{color:#ff8a00;font-weight:900;font-size:16px}
+.credits-signature .realname{
+  display:block;
+  color:#f2f6fd;
+  font-weight:800;
+  margin-top:4px;
+  font-size:13px;
+}
 @keyframes sonariaCreditsFade{
   from{opacity:0;transform:translateY(8px)}
   to{opacity:.78;transform:translateY(0)}
@@ -835,9 +875,9 @@ function openYoutube(){
     window.open(`https://www.youtube.com/`, "_blank", "noopener,noreferrer,width=1100,height=760");
     openModal(
       "YouTube en Free",
-      "Acceso rápido, pero no guiado.",
-      `<div class="item"><b>Lo que obtienes ahora</b><div class="meta">En Free, el botón abre YouTube de forma general para que sigas explorando por tu cuenta.</div></div>
-       <div class="item" style="margin-top:12px;"><b>Lo que cambia en Pro</b><div class="meta">En Pro, SonarIA abriría una búsqueda mucho más precisa con el <strong>título</strong>, el <strong>artista</strong> y una consulta enfocada en <strong>lyrics / audio oficial</strong>.</div></div>`
+      "Acceso general a YouTube.",
+      `<div class="item"><b>Free</b><div class="meta">El botón abre <strong>YouTube</strong> para que explores manualmente.</div></div>
+       <div class="item" style="margin-top:12px;"><b>Pro</b><div class="meta">El botón cambia a <strong>YouTube lyrics</strong> y abre una búsqueda enfocada en la canción con <strong>lyrics</strong>.</div></div>`
     );
     return;
   }
