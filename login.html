@@ -145,86 +145,6 @@
       line-height:1.7;
     }
 
-
-
-    .session-popup{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      background:rgba(3,8,15,.72);
-      backdrop-filter:blur(6px);
-      z-index:9999;
-    }
-
-    .session-popup.show{display:flex}
-
-    .session-popup-card{
-      width:min(92vw,460px);
-      padding:28px;
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(8,18,36,.96), rgba(8,18,36,.88));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 24px 70px rgba(0,0,0,.45);
-    }
-
-    .session-popup-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(59,130,246,.12);
-      border:1px solid rgba(59,130,246,.22);
-      color:#dce8ff;
-      font-size:.82rem;
-      font-weight:800;
-      margin-bottom:14px;
-    }
-
-    .session-popup-card h2{
-      margin:0 0 12px;
-      font-size:1.65rem;
-      letter-spacing:-.03em;
-      line-height:1.1;
-    }
-
-    .session-popup-card p{
-      margin:0;
-      color:#dbe6f5;
-      line-height:1.75;
-    }
-
-    .session-popup-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:20px;
-    }
-
-    .session-popup-btn{
-      border:none;
-      border-radius:14px;
-      min-height:46px;
-      padding:0 18px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .session-popup-btn.primary{
-      background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-      color:#081224;
-    }
-
-    .session-popup-btn.ghost{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      color:#f5f7fb;
-    }
-
     @media (max-width: 640px){
       .topbar{
         padding:16px 18px 0 18px;
@@ -283,28 +203,21 @@
     </div>
   </div>
 
-
-
-  <div id="sessionPopup" class="session-popup" aria-hidden="true">
-    <div class="session-popup-card" role="dialog" aria-modal="true" aria-labelledby="sessionPopupTitle">
-      <div class="session-popup-badge">⚠️ Sesión cerrada</div>
-      <h2 id="sessionPopupTitle">Detectamos que tu cuenta se abrió en otro dispositivo.</h2>
-      <p id="sessionPopupMessage">Cerramos esta sesión automáticamente para mantener tu cuenta segura y tu experiencia estable.</p>
-      <div class="session-popup-actions">
-        <button class="session-popup-btn primary" type="button" onclick="closeSessionPopup()">Volver a iniciar sesión</button>
-        <button class="session-popup-btn ghost" type="button" onclick="closeSessionPopup()">Entendido</button>
-      </div>
-    </div>
-  </div>
-
-
   <script>
-    const API_URL = "https://sonaria-api.onrender.com";
+    const API_URL = "https://sonaria-api.onrender.com".replace(/\/$/, "");
 
     function setStatus(message, type){
       const box = document.getElementById("statusBox");
       box.textContent = message;
       box.className = "status show " + type;
+    }
+
+    function clearSession(){
+      localStorage.removeItem("mejoraria_token");
+      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("mejoraria_user");
+      localStorage.removeItem("mejoraria_plan");
     }
 
     function saveSession(data) {
@@ -318,37 +231,22 @@
       }
     }
 
-    function openSessionPopup(message){
-      const popup = document.getElementById("sessionPopup");
-      const copy = document.getElementById("sessionPopupMessage");
-      if(copy){
-        copy.textContent = message || "Cerramos esta sesión automáticamente para mantener tu cuenta segura y tu experiencia estable.";
-      }
-      if(popup){
-        popup.classList.add("show");
-        popup.setAttribute("aria-hidden", "false");
-      }
-    }
-
-    function closeSessionPopup(){
-      const popup = document.getElementById("sessionPopup");
-      if(popup){
-        popup.classList.remove("show");
-        popup.setAttribute("aria-hidden", "true");
-      }
-    }
-
     (function showLogoutMessage(){
       const message = localStorage.getItem("mejoraria_logout_message");
       if(message){
-        setStatus("Vuelve a iniciar sesión para continuar.", "info");
-        openSessionPopup(message);
+        setStatus(message, "info");
         localStorage.removeItem("mejoraria_logout_message");
       }
     })();
 
     async function handleCredentialResponse(response) {
       try {
+        clearSession();
+
+        if (!response || !response.credential) {
+          throw new Error("Google no devolvió una credencial válida.");
+        }
+
         setStatus("Validando acceso con MejorarIA...", "loading");
 
         const res = await fetch(API_URL + "/auth/google", {
@@ -357,16 +255,29 @@
           body: JSON.stringify({ credential: response.credential })
         });
 
-        const data = await res.json();
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (_) {
+          data = {};
+        }
 
         if (!res.ok) {
-          throw new Error(data.detail || "No fue posible iniciar sesión.");
+          if (res.status === 404) {
+            throw new Error("El endpoint /auth/google no existe en el backend desplegado.");
+          }
+          throw new Error(data.detail || data.message || "No fue posible iniciar sesión.");
+        }
+
+        if (!data.access_token) {
+          throw new Error("El backend respondió, pero no devolvió access_token.");
         }
 
         saveSession(data);
         localStorage.removeItem("mejoraria_logout_message");
-        window.location.href = "/sonaria.html";
+        window.location.href = "sonaria.html";
       } catch (error) {
+        clearSession();
         setStatus(error.message || "Error al iniciar sesión", "error");
       }
     }
