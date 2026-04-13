@@ -751,7 +751,185 @@ window.downloadTeacherPdf = function(){
       <article class="track"><div class="track-head"><div class="track-title">🎓 Pedagogía</div><div class="track-chip">Curso seleccionado</div></div><div class="track-body"><div class="split"><div class="panel"><b>Preguntas guiadas</b><ul class="list">${preguntas}</ul></div><div class="panel"><b>Análisis musical</b><ul class="list">${analisis}</ul></div></div><div class="panel"><b>Actividades de clase</b><ul class="list">${actividades}</ul></div></div></article>
     </section>
     <section class="footer"><div class="footer-box"><h3>🎯 Recomendación SonarIA</h3><p>${schoolVersionAccepted ? 'Esta canción es apta gracias a SonarIA y aquí se presenta la letra adecuada para su trabajo en clases.' : (recomendacion || 'Usa esta canción con mediación y criterio docente.')}</p></div></section>
-    </main></body></html>`;
+    </main>
+<!-- PATCH MÓVIL PRO PARA SONARIA -->
+<style>
+@media (max-width: 768px) {
+  body { overflow-x: hidden !important; }
+  .wrap { padding: 10px !important; }
+  .layout { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .sidebar { display: none !important; }
+  .hero { display: none !important; }
+  .dashboard { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .card { border-radius: 18px !important; }
+  .form-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .form-grid .field-full { order: 3; }
+  textarea { min-height: 170px !important; font-size: 16px !important; }
+  input, textarea, select { font-size: 16px !important; }
+  .checks { gap: 10px !important; }
+  .check { font-size: 13px !important; line-height: 1.45 !important; }
+  .actions-main { display: grid !important; grid-template-columns: 1fr !important; gap: 10px !important; }
+  .voice-stack { order: 3 !important; }
+  #clearBtn { order: 2 !important; }
+  .actions-tools { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  #statsBtn, #suggestBtn { grid-column: span 2 !important; }
+  .tool, .actions-main > .tool, .actions-tools > .tool, .voice-stack .tool {
+    width: 100% !important; min-height: 54px !important; font-size: 15px !important;
+  }
+  .voice-tip.inline { font-size: 12px !important; line-height: 1.5 !important; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .metric .num { font-size: 1.6rem !important; }
+  .callout { padding: 14px !important; }
+
+  .mobile-topbar {
+    display: flex !important; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 12px; padding: 12px 14px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.08); box-shadow: 0 14px 32px rgba(0,0,0,.22);
+  }
+  .mobile-brand { display: flex; align-items: center; gap: 0; font-weight: 900; letter-spacing: -.04em; }
+  .mobile-brand .logo-main { color: #f3f7ff; font-size: 1.55rem; }
+  .mobile-brand .logo-ia { color: #ff9b1f; font-size: 1.55rem; }
+  .mobile-badge {
+    padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.08); color: #d9e8f8; font-size: 12px; font-weight: 800;
+  }
+
+  .mobile-quick {
+    display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; margin-bottom: 12px;
+  }
+  .mobile-quick .quick-card {
+    padding: 14px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.07);
+  }
+  .mobile-quick .quick-card strong { display: block; margin-bottom: 6px; font-size: 1rem; }
+  .mobile-quick .quick-card p { margin: 0; color: rgba(255,255,255,.75); line-height: 1.55; font-size: 13px; }
+
+  .mobile-section-title {
+    display: block !important; margin: 0 0 8px; font-size: 12px; font-weight: 900;
+    letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.62);
+  }
+
+  .credits-signature { display: none !important; }
+  .inline-loader { margin-bottom: 10px !important; }
+  #mobileSchoolCard { display: block !important; }
+}
+
+@media (max-width: 420px) {
+  .metric-grid { grid-template-columns: 1fr 1fr !important; }
+  .actions-tools { grid-template-columns: 1fr !important; }
+  #statsBtn, #suggestBtn { grid-column: span 1 !important; }
+}
+</style>
+
+<script>
+(function () {
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) return;
+
+  const layout = document.querySelector('.layout');
+  const dashboard = document.querySelector('.dashboard');
+  const cards = Array.from(document.querySelectorAll('.dashboard > .card'));
+
+  if (!layout || !dashboard || !cards.length) return;
+
+  const analysisCard = cards[0] || null;
+  const resultCard = cards[1] || null;
+
+  if (!document.getElementById('mobileTopbar')) {
+    const topbar = document.createElement('div');
+    topbar.id = 'mobileTopbar';
+    topbar.className = 'mobile-topbar';
+    topbar.innerHTML = `
+      <div class="mobile-brand">
+        <span class="logo-main">Sonar</span><span class="logo-ia">IA</span>
+      </div>
+      <div class="mobile-badge">Modo móvil</div>
+    `;
+    layout.insertBefore(topbar, layout.firstChild);
+  }
+
+  if (!document.getElementById('mobileQuickZone') && dashboard) {
+    const quick = document.createElement('div');
+    quick.id = 'mobileQuickZone';
+    quick.className = 'mobile-quick';
+
+    const veredicto = document.getElementById('resultBig');
+    const resumen = document.getElementById('resultCopy');
+    const edad = document.getElementById('edadSugerida');
+    const mediacion = document.getElementById('mediacionText');
+
+    const quickResult = document.createElement('div');
+    quickResult.className = 'quick-card';
+    quickResult.innerHTML = `
+      <strong>Resultado rápido</strong>
+      <p id="mobileQuickVerdict">${veredicto ? veredicto.textContent : '(sin análisis)'}</p>
+      <p id="mobileQuickMeta" style="margin-top:6px;">Edad sugerida: ${edad ? edad.textContent : '—'} · Mediación: ${mediacion ? mediacion.textContent : '—'}</p>
+      <p id="mobileQuickSummary" style="margin-top:6px;">${resumen ? resumen.textContent : 'Carga una canción y presiona Analizar.'}</p>
+    `;
+
+    const quickSchool = document.createElement('div');
+    quickSchool.className = 'quick-card';
+    quickSchool.id = 'mobileSchoolCard';
+    quickSchool.innerHTML = `
+      <strong>Versión escolar</strong>
+      <p>Accede más rápido a la adaptación escolar sugerida por SonarIA.</p>
+      <div style="margin-top:10px;"></div>
+    `;
+
+    const schoolBtn = document.getElementById('schoolBtn');
+    if (schoolBtn) quickSchool.lastElementChild.appendChild(schoolBtn);
+
+    quick.appendChild(quickResult);
+    quick.appendChild(quickSchool);
+    dashboard.parentElement.insertBefore(quick, dashboard);
+  }
+
+  if (analysisCard && !analysisCard.querySelector('.mobile-section-title')) {
+    const tag = document.createElement('span');
+    tag.className = 'mobile-section-title';
+    tag.textContent = 'Análisis rápido';
+    analysisCard.insertBefore(tag, analysisCard.firstChild);
+  }
+
+  if (resultCard && !resultCard.querySelector('.mobile-section-title')) {
+    const tag = document.createElement('span');
+    tag.className = 'mobile-section-title';
+    tag.textContent = 'Veredicto';
+    resultCard.insertBefore(tag, resultCard.firstChild);
+  }
+
+  const originalRender = window.renderAnalysis;
+  if (typeof originalRender === 'function' && !window.__mobileRenderPatched) {
+    window.renderAnalysis = function(raw){
+      originalRender(raw);
+
+      const quickVerdict = document.getElementById('mobileQuickVerdict');
+      const quickMeta = document.getElementById('mobileQuickMeta');
+      const quickSummary = document.getElementById('mobileQuickSummary');
+
+      const veredicto = document.getElementById('resultBig');
+      const edad = document.getElementById('edadSugerida');
+      const mediacion = document.getElementById('mediacionText');
+      const resumen = document.getElementById('resultCopy');
+
+      if (quickVerdict && veredicto) quickVerdict.textContent = veredicto.textContent;
+      if (quickMeta) quickMeta.textContent = `Edad sugerida: ${edad ? edad.textContent : '—'} · Mediación: ${mediacion ? mediacion.textContent : '—'}`;
+      if (quickSummary && resumen) quickSummary.textContent = resumen.textContent;
+
+      const schoolCard = document.getElementById('mobileSchoolCard');
+      if (schoolCard) {
+        const adaptOk = !!(raw.adaptacion_escolar_posible ?? raw.adaptation_possible);
+        schoolCard.style.display = adaptOk ? 'block' : 'none';
+      }
+    };
+    window.__mobileRenderPatched = true;
+  }
+})();
+</script>
+
+</body></html>`;
   const w = window.open('', '_blank');
   if(!w) return;
   w.document.write(html);
@@ -1043,5 +1221,183 @@ function showProCelebrationIfNeeded(){
 
 syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProCelebrationIfNeeded(); });
 </script>
+
+<!-- PATCH MÓVIL PRO PARA SONARIA -->
+<style>
+@media (max-width: 768px) {
+  body { overflow-x: hidden !important; }
+  .wrap { padding: 10px !important; }
+  .layout { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .sidebar { display: none !important; }
+  .hero { display: none !important; }
+  .dashboard { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .card { border-radius: 18px !important; }
+  .form-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .form-grid .field-full { order: 3; }
+  textarea { min-height: 170px !important; font-size: 16px !important; }
+  input, textarea, select { font-size: 16px !important; }
+  .checks { gap: 10px !important; }
+  .check { font-size: 13px !important; line-height: 1.45 !important; }
+  .actions-main { display: grid !important; grid-template-columns: 1fr !important; gap: 10px !important; }
+  .voice-stack { order: 3 !important; }
+  #clearBtn { order: 2 !important; }
+  .actions-tools { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  #statsBtn, #suggestBtn { grid-column: span 2 !important; }
+  .tool, .actions-main > .tool, .actions-tools > .tool, .voice-stack .tool {
+    width: 100% !important; min-height: 54px !important; font-size: 15px !important;
+  }
+  .voice-tip.inline { font-size: 12px !important; line-height: 1.5 !important; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .metric .num { font-size: 1.6rem !important; }
+  .callout { padding: 14px !important; }
+
+  .mobile-topbar {
+    display: flex !important; align-items: center; justify-content: space-between; gap: 10px;
+    margin-bottom: 12px; padding: 12px 14px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.08); box-shadow: 0 14px 32px rgba(0,0,0,.22);
+  }
+  .mobile-brand { display: flex; align-items: center; gap: 0; font-weight: 900; letter-spacing: -.04em; }
+  .mobile-brand .logo-main { color: #f3f7ff; font-size: 1.55rem; }
+  .mobile-brand .logo-ia { color: #ff9b1f; font-size: 1.55rem; }
+  .mobile-badge {
+    padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.08); color: #d9e8f8; font-size: 12px; font-weight: 800;
+  }
+
+  .mobile-quick {
+    display: grid !important; grid-template-columns: 1fr !important; gap: 12px !important; margin-bottom: 12px;
+  }
+  .mobile-quick .quick-card {
+    padding: 14px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.07);
+  }
+  .mobile-quick .quick-card strong { display: block; margin-bottom: 6px; font-size: 1rem; }
+  .mobile-quick .quick-card p { margin: 0; color: rgba(255,255,255,.75); line-height: 1.55; font-size: 13px; }
+
+  .mobile-section-title {
+    display: block !important; margin: 0 0 8px; font-size: 12px; font-weight: 900;
+    letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.62);
+  }
+
+  .credits-signature { display: none !important; }
+  .inline-loader { margin-bottom: 10px !important; }
+  #mobileSchoolCard { display: block !important; }
+}
+
+@media (max-width: 420px) {
+  .metric-grid { grid-template-columns: 1fr 1fr !important; }
+  .actions-tools { grid-template-columns: 1fr !important; }
+  #statsBtn, #suggestBtn { grid-column: span 1 !important; }
+}
+</style>
+
+<script>
+(function () {
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) return;
+
+  const layout = document.querySelector('.layout');
+  const dashboard = document.querySelector('.dashboard');
+  const cards = Array.from(document.querySelectorAll('.dashboard > .card'));
+
+  if (!layout || !dashboard || !cards.length) return;
+
+  const analysisCard = cards[0] || null;
+  const resultCard = cards[1] || null;
+
+  if (!document.getElementById('mobileTopbar')) {
+    const topbar = document.createElement('div');
+    topbar.id = 'mobileTopbar';
+    topbar.className = 'mobile-topbar';
+    topbar.innerHTML = `
+      <div class="mobile-brand">
+        <span class="logo-main">Sonar</span><span class="logo-ia">IA</span>
+      </div>
+      <div class="mobile-badge">Modo móvil</div>
+    `;
+    layout.insertBefore(topbar, layout.firstChild);
+  }
+
+  if (!document.getElementById('mobileQuickZone') && dashboard) {
+    const quick = document.createElement('div');
+    quick.id = 'mobileQuickZone';
+    quick.className = 'mobile-quick';
+
+    const veredicto = document.getElementById('resultBig');
+    const resumen = document.getElementById('resultCopy');
+    const edad = document.getElementById('edadSugerida');
+    const mediacion = document.getElementById('mediacionText');
+
+    const quickResult = document.createElement('div');
+    quickResult.className = 'quick-card';
+    quickResult.innerHTML = `
+      <strong>Resultado rápido</strong>
+      <p id="mobileQuickVerdict">${veredicto ? veredicto.textContent : '(sin análisis)'}</p>
+      <p id="mobileQuickMeta" style="margin-top:6px;">Edad sugerida: ${edad ? edad.textContent : '—'} · Mediación: ${mediacion ? mediacion.textContent : '—'}</p>
+      <p id="mobileQuickSummary" style="margin-top:6px;">${resumen ? resumen.textContent : 'Carga una canción y presiona Analizar.'}</p>
+    `;
+
+    const quickSchool = document.createElement('div');
+    quickSchool.className = 'quick-card';
+    quickSchool.id = 'mobileSchoolCard';
+    quickSchool.innerHTML = `
+      <strong>Versión escolar</strong>
+      <p>Accede más rápido a la adaptación escolar sugerida por SonarIA.</p>
+      <div style="margin-top:10px;"></div>
+    `;
+
+    const schoolBtn = document.getElementById('schoolBtn');
+    if (schoolBtn) quickSchool.lastElementChild.appendChild(schoolBtn);
+
+    quick.appendChild(quickResult);
+    quick.appendChild(quickSchool);
+    dashboard.parentElement.insertBefore(quick, dashboard);
+  }
+
+  if (analysisCard && !analysisCard.querySelector('.mobile-section-title')) {
+    const tag = document.createElement('span');
+    tag.className = 'mobile-section-title';
+    tag.textContent = 'Análisis rápido';
+    analysisCard.insertBefore(tag, analysisCard.firstChild);
+  }
+
+  if (resultCard && !resultCard.querySelector('.mobile-section-title')) {
+    const tag = document.createElement('span');
+    tag.className = 'mobile-section-title';
+    tag.textContent = 'Veredicto';
+    resultCard.insertBefore(tag, resultCard.firstChild);
+  }
+
+  const originalRender = window.renderAnalysis;
+  if (typeof originalRender === 'function' && !window.__mobileRenderPatched) {
+    window.renderAnalysis = function(raw){
+      originalRender(raw);
+
+      const quickVerdict = document.getElementById('mobileQuickVerdict');
+      const quickMeta = document.getElementById('mobileQuickMeta');
+      const quickSummary = document.getElementById('mobileQuickSummary');
+
+      const veredicto = document.getElementById('resultBig');
+      const edad = document.getElementById('edadSugerida');
+      const mediacion = document.getElementById('mediacionText');
+      const resumen = document.getElementById('resultCopy');
+
+      if (quickVerdict && veredicto) quickVerdict.textContent = veredicto.textContent;
+      if (quickMeta) quickMeta.textContent = `Edad sugerida: ${edad ? edad.textContent : '—'} · Mediación: ${mediacion ? mediacion.textContent : '—'}`;
+      if (quickSummary && resumen) quickSummary.textContent = resumen.textContent;
+
+      const schoolCard = document.getElementById('mobileSchoolCard');
+      if (schoolCard) {
+        const adaptOk = !!(raw.adaptacion_escolar_posible ?? raw.adaptation_possible);
+        schoolCard.style.display = adaptOk ? 'block' : 'none';
+      }
+    };
+    window.__mobileRenderPatched = true;
+  }
+})();
+</script>
+
 </body>
 </html>
