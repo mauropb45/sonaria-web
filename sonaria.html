@@ -1041,5 +1041,130 @@ function showProCelebrationIfNeeded(){
 
 syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProCelebrationIfNeeded(); });
 </script>
+<!-- SOLO AGREGA ESTO AL FINAL DE TU sonaria.html, NO REEMPLAZA NADA -->
+
+<style>
+/* ===== MOBILE FIRST FIX (NO ROMPE DESKTOP) ===== */
+
+/* Base mejoras táctiles */
+button, .tool {
+  min-height: 48px;
+  font-size: 15px;
+}
+
+/* Contenedor principal */
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+  }
+
+  .wrap {
+    padding: 10px !important;
+  }
+
+  /* Hero más compacto */
+  .hero {
+    text-align: center;
+    padding: 12px 6px;
+  }
+
+  .hero h2 {
+    font-size: 26px !important;
+  }
+
+  /* Formulario en columna */
+  .form-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px;
+  }
+
+  /* Botones principales */
+  .actions-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px;
+  }
+
+  /* Botones secundarios ordenados */
+  .actions-tools {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px;
+  }
+
+  #statsBtn {
+    grid-column: span 2;
+  }
+
+  /* Input y textarea más cómodos */
+  input, textarea {
+    font-size: 16px !important;
+    padding: 10px !important;
+  }
+
+  textarea {
+    min-height: 140px;
+  }
+
+  /* Resultado más arriba y claro */
+  .result, .card {
+    margin-top: 12px !important;
+  }
+
+  /* Ocultar elementos poco críticos */
+  .credits-signature {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  /* Modales */
+  .modal-content {
+    width: 95% !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    border-radius: 12px;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 420px) {
+  .actions-tools {
+    grid-template-columns: 1fr !important;
+  }
+
+  #statsBtn {
+    grid-column: span 1;
+  }
+}
+</style>
+
+<script>
+/* ===== DETECCIÓN SIMPLE DE MÓVIL ===== */
+
+(function() {
+  const isMobile = window.innerWidth <= 768;
+
+  if (isMobile) {
+    document.body.classList.add("mobile");
+
+    // Scroll automático al resultado
+    const analizarBtn = document.querySelector("#analyzeBtn");
+    if (analizarBtn) {
+      analizarBtn.addEventListener("click", () => {
+        setTimeout(() => {
+          const result = document.querySelector(".result, .card");
+          if (result) {
+            result.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 1200);
+      });
+    }
+  }
+})();
+</script>
+
+
+  
 </body>
 </html>
