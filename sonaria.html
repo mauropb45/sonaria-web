@@ -77,7 +77,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .toast{position:fixed;right:18px;bottom:18px;background:#101b2c;color:#fff;padding:12px 16px;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);display:none;z-index:50}.toast.show{display:block}
 .overlay{position:fixed;inset:0;background:rgba(4,12,22,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}.overlay.show{display:flex}.overlay-box{width:min(94vw,1020px);max-height:88vh;overflow:auto;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:26px;color:#f5f7fb}
 .overlay-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.overlay-head h3{margin:0;font-size:1.8rem;line-height:1;letter-spacing:-.04em}.overlay-head p{margin:8px 0 0;color:#cfd9e8;line-height:1.7}.overlay-close{background:#27364a;color:#fff;border:none;border-radius:14px;padding:12px 14px;font:inherit;font-weight:800;cursor:pointer}.overlay-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item,.suggestion,.history-item{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.item b{display:block;margin-bottom:7px}.meta{color:var(--muted);line-height:1.7}.overlay-list{display:grid;gap:10px}.overlay-list div{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-.empty{color:var(--muted);line-height:1.7}.school-preview{padding:14px;border-radius:16px;background:#0c1119;border:1px solid rgba(255,255,255,.06);max-height:56vh;overflow:auto}.school-mark{background:rgba(243,199,75,.92);color:#14181f;padding:1px 4px;border-radius:5px;font-weight:900}
+.empty{color:var(--muted);line-height:1.7}.school-preview{padding:14px;border-radius:16px;background:#0c1119;border:1px solid rgba(255,255,255,.06);max-height:56vh;overflow:auto}.school-mark{background:rgba(243,199,75,.92);color:#14181f;padding:1px 4px;border-radius:5px;font-weight:900}.explicit-list,.proposal-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}.explicit-chip{display:inline-flex;align-items:center;padding:7px 10px;border-radius:999px;background:rgba(255,116,116,.14);border:1px solid rgba(255,116,116,.28);color:#ffe1e1;font-size:12px;font-weight:800}.proposal-list div{width:100%;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);line-height:1.6}
 .history-item,.suggestion{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.history-main strong{display:block;margin-bottom:4px}.history-main span,.suggestion span{color:var(--muted);font-size:13px}.small-btn{border:none;border-radius:12px;padding:9px 11px;background:#243244;color:#fff;font:inherit;font-weight:800;cursor:pointer}.small-btn.danger{background:#5b1a20}.small-btn.use{background:#1f4f92}
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
 .translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:4px 10px;min-height:28px;border-radius:10px;font-size:20px;font-weight:900;line-height:1;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
@@ -253,6 +253,8 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 
           <div class="callout"><strong>Observación pedagógica</strong><div id="observacionPrincipal">Aquí aparecerá la observación principal.</div></div>
           <div class="callout"><strong>Compatibilidad con tus cursos</strong><div id="compatCursos">Aún no evaluado.</div></div>
+          <div class="callout"><strong>Palabras explícitas detectadas</strong><div id="explicitWords">Aquí verás exactamente cuáles fueron detectadas.</div></div>
+          <div class="callout"><strong>Propuesta docente</strong><div id="docenteProposal">Aquí aparecerán sugerencias concretas para abordar la canción en aula.</div></div>
 
           <div class="bars">
             <div class="bar-row"><div class="bar-label"><span>Riesgo total</span><span id="riskTotalText">—</span></div><div class="bar"><div id="riskTotalFill" class="fill"></div></div></div>
@@ -761,7 +763,7 @@ function openPedagogia(){ openModal("Pedagogía", schoolVersionAccepted ? "Plani
 async function fetchContext(){
   if(contextCache) return contextCache;
   if(!lastAnalysis && !titulo.value.trim()) throw new Error("Primero indica una canción o realiza un análisis.");
-  const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto_analizado || texto.value || "").trim() };
+  const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto || lastAnalysis?.texto_analizado || texto.value || "").trim() };
   const res = await fetch(API_URL + "/contexto", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if(!res.ok) throw new Error(data.detail || "No se pudo cargar el contexto.");
@@ -970,7 +972,7 @@ form.addEventListener("submit", async (e) => {
   setLoading(true); setStatus("Analizando canción...", "info"); translationCache=null; contextCache=null;
   try{
     let textoParaEnviar = texto.value.trim();
-    if(buscarLetra.checked && titulo.value.trim()) textoParaEnviar = "";
+    if(!textoParaEnviar && buscarLetra.checked && titulo.value.trim()) textoParaEnviar = "";
     const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses };
     const res = await fetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(payload) });
     const raw = await res.json().catch(() => ({}));
@@ -1041,319 +1043,5 @@ function showProCelebrationIfNeeded(){
 
 syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProCelebrationIfNeeded(); });
 </script>
-<!-- SOLO AGREGA ESTO AL FINAL DE TU sonaria.html, NO REEMPLAZA NADA -->
-
-<style>
-/* ===== MOBILE FIRST FIX (NO ROMPE DESKTOP) ===== */
-
-/* Base mejoras táctiles */
-button, .tool {
-  min-height: 48px;
-  font-size: 15px;
-}
-
-/* Contenedor principal */
-@media (max-width: 768px) {
-  body {
-    padding: 10px !important;
-  }
-
-  .wrap {
-    padding: 10px !important;
-  }
-
-  /* Hero más compacto */
-  .hero {
-    text-align: center;
-    padding: 12px 6px;
-  }
-
-  .hero h2 {
-    font-size: 26px !important;
-  }
-
-  /* Formulario en columna */
-  .form-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px;
-  }
-
-  /* Botones principales */
-  .actions-main {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px;
-  }
-
-  /* Botones secundarios ordenados */
-  .actions-tools {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px;
-  }
-
-  #statsBtn {
-    grid-column: span 2;
-  }
-
-  /* Input y textarea más cómodos */
-  input, textarea {
-    font-size: 16px !important;
-    padding: 10px !important;
-  }
-
-  textarea {
-    min-height: 140px;
-  }
-
-  /* Resultado más arriba y claro */
-  .result, .card {
-    margin-top: 12px !important;
-  }
-
-  /* Ocultar elementos poco críticos */
-  .credits-signature {
-    font-size: 11px;
-    opacity: 0.7;
-  }
-
-  /* Modales */
-  .modal-content {
-    width: 95% !important;
-    max-height: 85vh !important;
-    overflow-y: auto !important;
-    border-radius: 12px;
-  }
-}
-
-/* Pantallas muy pequeñas */
-@media (max-width: 420px) {
-  .actions-tools {
-    grid-template-columns: 1fr !important;
-  }
-
-  #statsBtn {
-    grid-column: span 1;
-  }
-}
-</style>
-
-<script>
-/* ===== DETECCIÓN SIMPLE DE MÓVIL ===== */
-
-(function() {
-  const isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    document.body.classList.add("mobile");
-
-    // Scroll automático al resultado
-    const analizarBtn = document.querySelector("#analyzeBtn");
-    if (analizarBtn) {
-      analizarBtn.addEventListener("click", () => {
-        setTimeout(() => {
-          const result = document.querySelector(".result, .card");
-          if (result) {
-            result.scrollIntoView({ behavior: "smooth" });
-          }
-        }, 1200);
-      });
-    }
-  }
-})();
-</script>
-
-<style>
-@media (max-width: 768px) {
-  /* Oculta/compacta bloques altos */
-  .hero,
-  .sidebar,
-  .nav-left,
-  .nav-right {
-    display: none !important;
-  }
-
-  .wrap,
-  .main,
-  .container {
-    padding: 10px !important;
-    margin: 0 !important;
-  }
-
-  /* Fuerza flujo vertical rápido */
-  .mobile-priority-zone {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  /* Tarjetas más compactas */
-  .card,
-  .panel,
-  .result,
-  .results {
-    margin: 0 0 12px 0 !important;
-    padding: 14px !important;
-    border-radius: 16px !important;
-  }
-
-  /* Inputs más visibles */
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-
-  textarea {
-    min-height: 150px !important;
-  }
-
-  /* Botones principales */
-  .actions-main {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  /* Botones secundarios */
-  .actions-tools {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-  }
-
-  #statsBtn,
-  #suggestBtn {
-    grid-column: span 2 !important;
-  }
-
-  /* Versión escolar arriba */
-  .mobile-school-priority {
-    order: 1 !important;
-  }
-
-  .mobile-result-priority {
-    order: 2 !important;
-  }
-
-  .mobile-tools-priority {
-    order: 3 !important;
-  }
-
-  .mobile-pedagogy-priority {
-    order: 4 !important;
-  }
-
-  .mobile-rest-priority {
-    order: 5 !important;
-  }
-}
-
-@media (max-width: 420px) {
-  .actions-tools {
-    grid-template-columns: 1fr !important;
-  }
-
-  #statsBtn,
-  #suggestBtn {
-    grid-column: span 1 !important;
-  }
-}
-</style>
-
-<script>
-(function () {
-  const isMobile = window.innerWidth <= 768;
-  if (!isMobile) return;
-
-  function q(sel) { return document.querySelector(sel); }
-
-  const analysisPanel =
-    q("#analysisPanel") ||
-    q(".panel") ||
-    q(".analysis-panel") ||
-    q("form")?.closest(".card");
-
-  const resultPanel =
-    q("#resultsPanel") ||
-    q(".results") ||
-    q(".result") ||
-    q("#resultCard") ||
-    q("[data-role='results']");
-
-  const schoolButton =
-    q("#schoolBtn");
-
-  const pedagogyButton =
-    q("#pedagogyBtn") ||
-    q("[data-open='pedagogia']");
-
-  const toolsWrap =
-    q(".actions-tools");
-
-  if (!analysisPanel || !resultPanel) return;
-
-  const parent = analysisPanel.parentElement;
-  if (!parent) return;
-
-  const zone = document.createElement("div");
-  zone.className = "mobile-priority-zone";
-
-  analysisPanel.classList.add("mobile-input-priority");
-  resultPanel.classList.add("mobile-result-priority");
-
-  zone.appendChild(analysisPanel);
-  zone.appendChild(resultPanel);
-
-  // Bloque prioritario de versión escolar
-  if (schoolButton) {
-    const schoolWrap = document.createElement("div");
-    schoolWrap.className = "card mobile-school-priority";
-    schoolWrap.innerHTML = `
-      <div style="font-weight:800;font-size:1rem;margin-bottom:8px;">✏️ Versión escolar</div>
-      <div style="color:rgba(255,255,255,.78);line-height:1.5;margin-bottom:10px;">
-        Revisa primero la adaptación escolar sugerida por SonarIA.
-      </div>
-    `;
-    schoolWrap.appendChild(schoolButton);
-    zone.insertBefore(schoolWrap, resultPanel.nextSibling);
-  }
-
-  // Herramientas
-  if (toolsWrap) {
-    const toolsCard = document.createElement("div");
-    toolsCard.className = "card mobile-tools-priority";
-    toolsCard.innerHTML = `
-      <div style="font-weight:800;font-size:1rem;margin-bottom:10px;">⚙️ Herramientas</div>
-    `;
-    toolsCard.appendChild(toolsWrap);
-    zone.appendChild(toolsCard);
-  }
-
-  // Pedagogía
-  if (pedagogyButton) {
-    const pedagogyCard = document.createElement("div");
-    pedagogyCard.className = "card mobile-pedagogy-priority";
-    pedagogyCard.innerHTML = `
-      <div style="font-weight:800;font-size:1rem;margin-bottom:8px;">🎓 Pedagogía</div>
-      <div style="color:rgba(255,255,255,.78);line-height:1.5;margin-bottom:10px;">
-        OA, preguntas guiadas y actividades sugeridas.
-      </div>
-    `;
-    pedagogyCard.appendChild(pedagogyButton);
-    zone.appendChild(pedagogyCard);
-  }
-
-  // Inserta la zona arriba
-  parent.prepend(zone);
-
-  // Lleva el scroll al análisis si viene desde carga móvil
-  setTimeout(() => {
-    analysisPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 250);
-})();
-</script>
-  
 </body>
 </html>
