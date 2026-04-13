@@ -1164,7 +1164,196 @@ button, .tool {
 })();
 </script>
 
+<style>
+@media (max-width: 768px) {
+  /* Oculta/compacta bloques altos */
+  .hero,
+  .sidebar,
+  .nav-left,
+  .nav-right {
+    display: none !important;
+  }
 
+  .wrap,
+  .main,
+  .container {
+    padding: 10px !important;
+    margin: 0 !important;
+  }
+
+  /* Fuerza flujo vertical rápido */
+  .mobile-priority-zone {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* Tarjetas más compactas */
+  .card,
+  .panel,
+  .result,
+  .results {
+    margin: 0 0 12px 0 !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Inputs más visibles */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  textarea {
+    min-height: 150px !important;
+  }
+
+  /* Botones principales */
+  .actions-main {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Botones secundarios */
+  .actions-tools {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  #statsBtn,
+  #suggestBtn {
+    grid-column: span 2 !important;
+  }
+
+  /* Versión escolar arriba */
+  .mobile-school-priority {
+    order: 1 !important;
+  }
+
+  .mobile-result-priority {
+    order: 2 !important;
+  }
+
+  .mobile-tools-priority {
+    order: 3 !important;
+  }
+
+  .mobile-pedagogy-priority {
+    order: 4 !important;
+  }
+
+  .mobile-rest-priority {
+    order: 5 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .actions-tools {
+    grid-template-columns: 1fr !important;
+  }
+
+  #statsBtn,
+  #suggestBtn {
+    grid-column: span 1 !important;
+  }
+}
+</style>
+
+<script>
+(function () {
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile) return;
+
+  function q(sel) { return document.querySelector(sel); }
+
+  const analysisPanel =
+    q("#analysisPanel") ||
+    q(".panel") ||
+    q(".analysis-panel") ||
+    q("form")?.closest(".card");
+
+  const resultPanel =
+    q("#resultsPanel") ||
+    q(".results") ||
+    q(".result") ||
+    q("#resultCard") ||
+    q("[data-role='results']");
+
+  const schoolButton =
+    q("#schoolBtn");
+
+  const pedagogyButton =
+    q("#pedagogyBtn") ||
+    q("[data-open='pedagogia']");
+
+  const toolsWrap =
+    q(".actions-tools");
+
+  if (!analysisPanel || !resultPanel) return;
+
+  const parent = analysisPanel.parentElement;
+  if (!parent) return;
+
+  const zone = document.createElement("div");
+  zone.className = "mobile-priority-zone";
+
+  analysisPanel.classList.add("mobile-input-priority");
+  resultPanel.classList.add("mobile-result-priority");
+
+  zone.appendChild(analysisPanel);
+  zone.appendChild(resultPanel);
+
+  // Bloque prioritario de versión escolar
+  if (schoolButton) {
+    const schoolWrap = document.createElement("div");
+    schoolWrap.className = "card mobile-school-priority";
+    schoolWrap.innerHTML = `
+      <div style="font-weight:800;font-size:1rem;margin-bottom:8px;">✏️ Versión escolar</div>
+      <div style="color:rgba(255,255,255,.78);line-height:1.5;margin-bottom:10px;">
+        Revisa primero la adaptación escolar sugerida por SonarIA.
+      </div>
+    `;
+    schoolWrap.appendChild(schoolButton);
+    zone.insertBefore(schoolWrap, resultPanel.nextSibling);
+  }
+
+  // Herramientas
+  if (toolsWrap) {
+    const toolsCard = document.createElement("div");
+    toolsCard.className = "card mobile-tools-priority";
+    toolsCard.innerHTML = `
+      <div style="font-weight:800;font-size:1rem;margin-bottom:10px;">⚙️ Herramientas</div>
+    `;
+    toolsCard.appendChild(toolsWrap);
+    zone.appendChild(toolsCard);
+  }
+
+  // Pedagogía
+  if (pedagogyButton) {
+    const pedagogyCard = document.createElement("div");
+    pedagogyCard.className = "card mobile-pedagogy-priority";
+    pedagogyCard.innerHTML = `
+      <div style="font-weight:800;font-size:1rem;margin-bottom:8px;">🎓 Pedagogía</div>
+      <div style="color:rgba(255,255,255,.78);line-height:1.5;margin-bottom:10px;">
+        OA, preguntas guiadas y actividades sugeridas.
+      </div>
+    `;
+    pedagogyCard.appendChild(pedagogyButton);
+    zone.appendChild(pedagogyCard);
+  }
+
+  // Inserta la zona arriba
+  parent.prepend(zone);
+
+  // Lleva el scroll al análisis si viene desde carga móvil
+  setTimeout(() => {
+    analysisPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 250);
+})();
+</script>
   
 </body>
 </html>
