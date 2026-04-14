@@ -11,19 +11,17 @@
 :root{
   --bg:#06101c;
   --bg2:#0b1627;
-  --panel:rgba(255,255,255,.05);
-  --panel2:rgba(255,255,255,.035);
   --line:rgba(255,255,255,.10);
   --text:#eef2f7;
   --muted:#a3b3c8;
   --green:#14d68f;
   --orange:#ff8a00;
   --orange2:#ff6500;
-  --mclaren:#ff8700;
-  --mclaren2:#ff5a00;
+  --mp-blue:#1400a5;
+  --mp-cyan:#00b1ea;
   --shadow:0 24px 70px rgba(0,0,0,.34);
   --radius:28px;
-  --max:1040px;
+  --max:980px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -62,7 +60,7 @@ a{text-decoration:none;color:inherit}
   justify-content:space-between;
   align-items:center;
   gap:16px;
-  margin-bottom:26px;
+  margin-bottom:28px;
 }
 .brand-link{
   display:flex;
@@ -71,7 +69,7 @@ a{text-decoration:none;color:inherit}
 }
 .brand-title{
   margin:0;
-  font-size:clamp(2.2rem,4vw,3.6rem);
+  font-size:clamp(2.2rem,4vw,3.4rem);
   font-weight:900;
   letter-spacing:-.06em;
   line-height:.92;
@@ -105,12 +103,12 @@ a{text-decoration:none;color:inherit}
 }
 .hero{
   text-align:center;
-  max-width:780px;
+  max-width:760px;
   margin:0 auto 28px;
 }
 .hero h1{
   margin:0 0 12px;
-  font-size:clamp(2.6rem,5vw,4.2rem);
+  font-size:clamp(2.5rem,5vw,4rem);
   line-height:.95;
   letter-spacing:-.08em;
 }
@@ -119,6 +117,13 @@ a{text-decoration:none;color:inherit}
   color:var(--muted);
   line-height:1.8;
   font-size:1.03rem;
+}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:30px;
 }
 .banner{
   display:none;
@@ -149,43 +154,14 @@ a{text-decoration:none;color:inherit}
 }
 .mini-btn.primary{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c}
 .mini-btn.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
-
 .plans{
   display:grid;
-  grid-template-columns:1fr 1.08fr;
+  grid-template-columns:1fr 1.05fr;
   gap:22px;
   align-items:stretch;
 }
-.card{
-  background:linear-gradient(180deg,var(--panel),var(--panel2));
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:28px;
-  text-align:left;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.card:hover{
-  transform:translateY(-3px);
-}
-.card.pro{
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(255,138,0,.30);
-  box-shadow:0 24px 70px rgba(255,95,0,.18);
-}
-.card.pro::after{
-  content:"";
-  position:absolute;
-  right:-40px;
-  top:-40px;
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(255,138,0,.16), transparent 72%);
-  pointer-events:none;
-}
-.badge{
+.free-card .badge,
+.pro-card .badge{
   display:inline-flex;
   align-items:center;
   gap:8px;
@@ -199,12 +175,29 @@ a{text-decoration:none;color:inherit}
   background:rgba(255,255,255,.05);
   color:#dce8ff;
 }
-.badge.pro{
-  background:rgba(255,138,0,.13);
-  border-color:rgba(255,138,0,.24);
-  color:#ffe4c7;
+.pro-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(0,177,234,.28);
+  box-shadow:0 24px 70px rgba(0,177,234,.12);
 }
-.card h2{
+.pro-card::after{
+  content:"";
+  position:absolute;
+  right:-44px;
+  top:-44px;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(0,177,234,.18), transparent 72%);
+  pointer-events:none;
+}
+.pro-card .badge{
+  background:rgba(0,177,234,.12);
+  border-color:rgba(0,177,234,.24);
+  color:#d6f5ff;
+}
+.free-card h2,.pro-card h2{
   margin:0 0 8px;
   font-size:1.9rem;
   letter-spacing:-.05em;
@@ -254,25 +247,6 @@ a{text-decoration:none;color:inherit}
   flex:0 0 auto;
   margin-top:1px;
 }
-.pro .features li::before{
-  color:#ffb15b;
-}
-.value-box{
-  margin-top:6px;
-  padding:16px 18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-}
-.value-box strong{
-  display:block;
-  margin-bottom:7px;
-}
-.value-box span{
-  color:#dce7f5;
-  line-height:1.7;
-}
-
 .free-cta{
   width:100%;
   margin-top:22px;
@@ -285,150 +259,120 @@ a{text-decoration:none;color:inherit}
   font-weight:900;
   cursor:pointer;
 }
-
-.mp-stack{
-  margin-top:22px;
-  display:grid;
-  gap:12px;
-}
-.mp-intro{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 14px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  color:#dbe7f7;
-  font-size:.92rem;
-  font-weight:800;
-}
-.mp-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:46px;
-  min-height:34px;
-  border-radius:999px;
-  padding:0 10px;
-  background:rgba(255,255,255,.92);
-  box-shadow:0 8px 20px rgba(0,0,0,.12);
-}
-.mp-pill img{
-  height:18px;
-  width:auto;
-  display:block;
-}
-
-.pay-btn{
+.mp-button{
   width:100%;
-  min-height:88px;
+  min-height:112px;
   border:none;
-  border-radius:22px;
+  border-radius:26px;
   cursor:pointer;
   background:
-    linear-gradient(135deg, rgba(255,135,0,.18), rgba(255,95,0,.16)),
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-  border:1px solid rgba(255,138,0,.34);
+    linear-gradient(180deg, rgba(255,255,255,.92), rgba(244,249,255,.98)),
+    linear-gradient(135deg, rgba(0,177,234,.08), rgba(20,0,165,.06));
+  border:1px solid rgba(255,255,255,.90);
   box-shadow:
-    0 22px 48px rgba(255,95,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.08);
-  color:var(--text);
-  padding:14px 16px;
+    0 24px 50px rgba(0,177,234,.16),
+    inset 0 1px 0 rgba(255,255,255,.98);
+  color:#0b1730;
+  padding:16px 18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:16px;
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease;
 }
-.pay-btn:hover{
+.mp-button:hover{
   transform:translateY(-2px);
   box-shadow:
-    0 28px 56px rgba(255,95,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.08);
-  border-color:rgba(255,138,0,.48);
+    0 30px 60px rgba(0,177,234,.20),
+    inset 0 1px 0 rgba(255,255,255,.98);
 }
-.pay-btn:disabled{
+.mp-button:disabled{
   opacity:.78;
   cursor:not-allowed;
   transform:none;
 }
-.pay-left{
+.mp-left{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:18px;
   min-width:0;
 }
-.pay-logo{
-  width:68px;
-  height:52px;
-  border-radius:16px;
-  background:rgba(255,255,255,.96);
+.mp-logo{
+  width:108px;
+  height:80px;
+  border-radius:22px;
+  background:
+    linear-gradient(180deg, #ffffff, #f5faff);
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:0 10px 24px rgba(0,0,0,.14);
+  box-shadow:0 14px 30px rgba(20,27,45,.12);
   flex:0 0 auto;
+  overflow:hidden;
 }
-.pay-logo img{
-  height:24px;
-  width:auto;
+.mp-logo img{
+  width:78px;
+  height:auto;
   display:block;
 }
-.pay-copy{
+.mp-copy{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   min-width:0;
 }
-.pay-copy small{
-  font-size:.76rem;
-  letter-spacing:.06em;
+.mp-copy small{
+  font-size:.8rem;
+  letter-spacing:.08em;
   text-transform:uppercase;
-  color:#ffd6b3;
+  color:#2d5f81;
   font-weight:900;
-  margin-bottom:4px;
+  margin-bottom:5px;
 }
-.pay-copy strong{
-  font-size:1.28rem;
+.mp-copy strong{
+  font-size:1.45rem;
   letter-spacing:-.03em;
   line-height:1.05;
   text-align:left;
+  color:var(--mp-blue);
 }
-.pay-copy span{
-  margin-top:4px;
-  font-size:.88rem;
-  color:#d7e4f6;
+.mp-copy span{
+  margin-top:6px;
+  font-size:.95rem;
+  color:#375571;
   text-align:left;
+  font-weight:700;
 }
-.pay-arrow{
+.mp-check{
   flex:0 0 auto;
-  width:46px;
-  height:46px;
+  width:58px;
+  height:58px;
   border-radius:999px;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  font-size:1.2rem;
+  background:linear-gradient(135deg, rgba(0,177,234,.12), rgba(20,0,165,.08));
+  border:1px solid rgba(20,0,165,.10);
+  color:var(--mp-blue);
+  font-size:1.45rem;
+  font-weight:900;
 }
 .trust{
   text-align:center;
   color:#cdd9ea;
-  font-size:.84rem;
+  font-size:.86rem;
   font-weight:800;
+  margin-top:12px;
 }
 .afterpay{
-  margin-top:18px;
+  margin:18px 0 4px;
   padding:16px 18px;
   border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg, rgba(0,177,234,.08), rgba(255,255,255,.03));
+  border:1px solid rgba(0,177,234,.14);
 }
 .afterpay strong{display:block;margin-bottom:7px}
 .afterpay span{color:#dce7f5;line-height:1.72}
-
 @media(max-width:900px){
   .plans{grid-template-columns:1fr}
 }
@@ -438,16 +382,17 @@ a{text-decoration:none;color:inherit}
   .top-actions{width:100%}
   .top-actions .btn{width:100%}
   .card{padding:20px}
-  .hero h1{font-size:2.35rem}
-  .pay-btn{min-height:96px}
-  .pay-copy strong{font-size:1.12rem}
+  .hero h1{font-size:2.3rem}
+  .mp-button{min-height:126px}
+  .mp-logo{width:92px;height:72px}
+  .mp-logo img{width:66px}
+  .mp-copy strong{font-size:1.16rem}
 }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-
   <div class="topbar">
     <a href="/index.html" class="brand-link">
       <h1 class="brand-title">Sonar<span class="ia">IA</span></h1>
@@ -461,8 +406,8 @@ a{text-decoration:none;color:inherit}
   </div>
 
   <section class="hero">
-    <h1>Empieza gratis o activa la versión que te deja la clase mucho más cerca.</h1>
-    <p>SonarIA Free te ayuda a decidir. SonarIA Pro te ayuda a avanzar: adaptar, orientar por curso y preparar material más listo para usar.</p>
+    <h1>Empieza gratis o activa una experiencia más completa y segura.</h1>
+    <p>SonarIA Free te ayuda a decidir. SonarIA Pro te ayuda a avanzar más rápido hacia una clase mejor preparada.</p>
   </section>
 
   <div id="bannerOk" class="banner ok">
@@ -491,8 +436,7 @@ a{text-decoration:none;color:inherit}
   </div>
 
   <section class="plans">
-
-    <article class="card">
+    <article class="card free-card">
       <div class="badge">FREE</div>
       <h2>SonarIA Free</h2>
       <p class="copy">Conoce la herramienta y obtén una orientación inicial para decidir si una canción puede funcionar en contexto escolar.</p>
@@ -504,15 +448,10 @@ a{text-decoration:none;color:inherit}
         <li>Ideal para probar SonarIA sin fricción.</li>
       </ul>
 
-      <div class="value-box">
-        <strong>Qué ganas con Free</strong>
-        <span>Más claridad para decidir qué hacer con una canción antes de invertir más tiempo en analizarla manualmente.</span>
-      </div>
-
       <button class="free-cta" onclick="window.location.href='/sonaria.html'">Seguir con Free</button>
     </article>
 
-    <article class="card pro">
+    <article class="card pro-card">
       <div class="badge pro">PRO</div>
       <h2>SonarIA Pro</h2>
 
@@ -528,7 +467,6 @@ a{text-decoration:none;color:inherit}
         <li>Propuestas pedagógicas y OA por curso.</li>
         <li>PDF más listo para usar en clase.</li>
         <li>Menos trabajo manual, más foco en enseñar.</li>
-        <li>Ruta más corta entre análisis y clase real.</li>
       </ul>
 
       <div class="afterpay">
@@ -536,34 +474,23 @@ a{text-decoration:none;color:inherit}
         <span>Tu siguiente paso será entrar a SonarIA Pro, revisar una canción desafiante, elegir el curso y descargar material para clase. La idea es que sientas valor en minutos.</span>
       </div>
 
-      <div class="mp-stack">
-        <div class="mp-intro">
-          <span class="mp-pill">
-            <img src="/MP_RGB_HANDSHAKE_color_vertical.png" alt="Mercado Pago">
-          </span>
-          Pago real con Mercado Pago integrado al flujo de SonarIA
-        </div>
-
-        <button id="btnPro" class="pay-btn" type="button">
-          <div class="pay-left">
-            <div class="pay-logo">
-              <img src="/mercadopago-logo.png" alt="Mercado Pago">
-            </div>
-            <div class="pay-copy">
-              <small>Pago real</small>
-              <strong>Activar SonarIA Pro</strong>
-              <span>Pago seguro con activación rápida</span>
-            </div>
+      <button id="btnPro" class="mp-button" type="button">
+        <div class="mp-left">
+          <div class="mp-logo">
+            <img src="/mercadopago-logo.png" alt="Mercado Pago">
           </div>
-          <div class="pay-arrow">→</div>
-        </button>
+          <div class="mp-copy">
+            <small>Pago seguro</small>
+            <strong>Activar SonarIA Pro</strong>
+            <span>Procesado con Mercado Pago</span>
+          </div>
+        </div>
+        <div class="mp-check">✓</div>
+      </button>
 
-        <div class="trust">Pago seguro · Activación rápida · Hecho para docentes</div>
-      </div>
+      <div class="trust">Pago seguro · Activación rápida · Hecho para docentes</div>
     </article>
-
   </section>
-
 </div>
 
 <script>
@@ -597,7 +524,7 @@ document.getElementById("btnPro").addEventListener("click", async ()=>{
   const btn=document.getElementById("btnPro");
   const old=btn.innerHTML;
   btn.disabled=true;
-  btn.innerHTML='<div class="pay-left"><div class="pay-copy"><small>Mercado Pago</small><strong>Conectando...</strong><span>Preparando tu pago real</span></div></div>';
+  btn.innerHTML='<div class="mp-left"><div class="mp-copy"><small>Mercado Pago</small><strong>Conectando...</strong><span>Preparando tu pago real</span></div></div>';
 
   try{
     const token = getToken();
