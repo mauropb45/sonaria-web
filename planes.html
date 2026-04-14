@@ -3,561 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planes | SonarIA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<title>Planes SonarIA</title>
+
 <style>
-:root{
-  --bg:#06101c;
-  --bg2:#0b1627;
-  --line:rgba(255,255,255,.10);
-  --text:#eef2f7;
-  --muted:#a3b3c8;
-  --green:#14d68f;
-  --orange:#ff8a00;
-  --orange2:#ff6500;
-  --mp-blue:#1400a5;
-  --mp-cyan:#00b1ea;
-  --shadow:0 24px 70px rgba(0,0,0,.34);
-  --radius:28px;
-  --max:980px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{
   margin:0;
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
-    radial-gradient(circle at top right, rgba(20,214,143,.08), transparent 18%),
-    radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
-  overflow-x:hidden;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size:38px 38px;
-  mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
-}
-a{text-decoration:none;color:inherit}
-.wrap{
-  max-width:var(--max);
-  margin:0 auto;
-  padding:22px 20px 80px;
-  position:relative;
-  z-index:1;
-}
-.topbar{
+  font-family:Arial;
+  background:#06101c;
+  color:white;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  margin-bottom:28px;
-}
-.brand-link{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.brand-title{
-  margin:0;
-  font-size:clamp(2.2rem,4vw,3.4rem);
-  font-weight:900;
-  letter-spacing:-.06em;
-  line-height:.92;
-}
-.brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,214,143,.35)}
-.brand-sub{color:#d7fff0;font-size:.96rem;font-weight:800}
-.top-actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  min-height:48px;
-  padding:0 18px;
-  border:none;
-  border-radius:16px;
-  font:inherit;
-  font-weight:800;
-  cursor:pointer;
-  transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-  display:inline-flex;
-  align-items:center;
   justify-content:center;
-}
-.btn:hover{transform:translateY(-1px)}
-.btn-ghost{
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  border:1px solid var(--line);
-}
-.btn-home{
-  background:linear-gradient(135deg,var(--orange),var(--orange2));
-  color:#111827;
-  box-shadow:0 12px 28px rgba(255,138,0,.28);
-}
-.hero{
-  text-align:center;
-  max-width:760px;
-  margin:0 auto 28px;
-}
-.hero h1{
-  margin:0 0 12px;
-  font-size:clamp(2.5rem,5vw,4rem);
-  line-height:.95;
-  letter-spacing:-.08em;
-}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.8;
-  font-size:1.03rem;
-}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:30px;
-}
-.banner{
-  display:none;
-  margin:0 auto 24px;
-  max-width:860px;
-  text-align:left;
-  padding:18px 20px;
-  border-radius:22px;
-  border:1px solid var(--line);
-  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-  box-shadow:var(--shadow);
-}
-.banner.show{display:block}
-.banner.ok{border-color:rgba(20,214,143,.22);background:linear-gradient(180deg, rgba(20,214,143,.12), rgba(255,255,255,.03))}
-.banner.pending{border-color:rgba(255,138,0,.24);background:linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,255,255,.03))}
-.banner.error{border-color:rgba(255,116,116,.24);background:linear-gradient(180deg, rgba(255,116,116,.10), rgba(255,255,255,.03))}
-.banner strong{display:block;margin-bottom:6px;font-size:1rem}
-.banner p{margin:0;color:#dce6f5;line-height:1.72}
-.banner-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.mini-btn{
-  min-height:44px;
-  padding:0 16px;
-  border:none;
-  border-radius:14px;
-  cursor:pointer;
-  font:inherit;
-  font-weight:800;
-}
-.mini-btn.primary{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c}
-.mini-btn.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
-.plans{
-  display:grid;
-  grid-template-columns:1fr 1.05fr;
-  gap:22px;
-  align-items:stretch;
-}
-.free-card .badge,
-.pro-card .badge{
-  display:inline-flex;
   align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:.78rem;
-  font-weight:900;
-  letter-spacing:.02em;
-  margin-bottom:14px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);
-  color:#dce8ff;
+  height:100vh;
 }
-.pro-card{
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(0,177,234,.28);
-  box-shadow:0 24px 70px rgba(0,177,234,.12);
-}
-.pro-card::after{
-  content:"";
-  position:absolute;
-  right:-44px;
-  top:-44px;
-  width:190px;
-  height:190px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(0,177,234,.18), transparent 72%);
-  pointer-events:none;
-}
-.pro-card .badge{
-  background:rgba(0,177,234,.12);
-  border-color:rgba(0,177,234,.24);
-  color:#d6f5ff;
-}
-.free-card h2,.pro-card h2{
-  margin:0 0 8px;
-  font-size:1.9rem;
-  letter-spacing:-.05em;
-}
-.copy{
-  margin:0 0 18px;
-  color:var(--muted);
-  line-height:1.8;
-}
-.price{
-  display:flex;
-  align-items:flex-end;
-  gap:8px;
-  line-height:1;
-  margin:10px 0 14px;
-}
-.price strong{
-  font-size:3.1rem;
-  letter-spacing:-.08em;
-}
-.price span{
-  color:var(--muted);
-  font-weight:700;
-  margin-bottom:6px;
-}
-.features{
-  display:grid;
-  gap:10px;
-  margin:0 0 18px;
-  padding:0;
-  list-style:none;
-}
-.features li{
-  display:flex;
-  gap:10px;
-  align-items:flex-start;
-  padding:12px 14px;
-  border-radius:16px;
-  background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.06);
-  color:#dce8ff;
-  line-height:1.65;
-}
-.features li::before{
-  content:"✦";
-  color:#9ad6ff;
-  flex:0 0 auto;
-  margin-top:1px;
-}
-.free-cta{
-  width:100%;
-  margin-top:22px;
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  border:1px solid var(--line);
-  min-height:56px;
-  border-radius:16px;
-  font:inherit;
-  font-weight:900;
-  cursor:pointer;
-}
+
+/* BOTÓN */
 .mp-button{
-  width:100%;
-  min-height:112px;
+  width:90%;
+  max-width:600px;
+  min-height:110px;
   border:none;
-  border-radius:26px;
+  border-radius:24px;
   cursor:pointer;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.92), rgba(244,249,255,.98)),
-    linear-gradient(135deg, rgba(0,177,234,.08), rgba(20,0,165,.06));
-  border:1px solid rgba(255,255,255,.90);
-  box-shadow:
-    0 24px 50px rgba(0,177,234,.16),
-    inset 0 1px 0 rgba(255,255,255,.98);
-  color:#0b1730;
-  padding:16px 18px;
+
+  background:linear-gradient(180deg,#ffffff,#f4f9ff);
+  border:2px solid rgba(0,177,234,0.4);
+
+  box-shadow:0 25px 60px rgba(0,177,234,0.25);
+
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:16px;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease;
+  padding:16px 20px;
+
+  transition:0.2s;
 }
+
 .mp-button:hover{
-  transform:translateY(-2px);
-  box-shadow:
-    0 30px 60px rgba(0,177,234,.20),
-    inset 0 1px 0 rgba(255,255,255,.98);
+  transform:translateY(-2px) scale(1.01);
 }
-.mp-button:disabled{
-  opacity:.78;
-  cursor:not-allowed;
-  transform:none;
-}
+
 .mp-left{
   display:flex;
   align-items:center;
-  gap:18px;
-  min-width:0;
+  gap:20px;
 }
+
 .mp-logo{
-  width:108px;
-  height:80px;
-  border-radius:22px;
-  background:
-    linear-gradient(180deg, #ffffff, #f5faff);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 14px 30px rgba(20,27,45,.12);
-  flex:0 0 auto;
-  overflow:hidden;
+  background:white;
+  border-radius:18px;
+  padding:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
+
 .mp-logo img{
-  width:78px;
-  height:auto;
-  display:block;
+  width:70px;
 }
+
 .mp-copy{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  min-width:0;
 }
+
 .mp-copy small{
-  font-size:.8rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
+  font-size:12px;
   color:#2d5f81;
-  font-weight:900;
-  margin-bottom:5px;
+  font-weight:800;
 }
+
 .mp-copy strong{
-  font-size:1.45rem;
-  letter-spacing:-.03em;
-  line-height:1.05;
-  text-align:left;
-  color:var(--mp-blue);
+  font-size:20px;
+  color:#1400a5;
+  font-weight:900;
 }
+
 .mp-copy span{
-  margin-top:6px;
-  font-size:.95rem;
+  font-size:14px;
   color:#375571;
-  text-align:left;
+  margin-top:4px;
   font-weight:700;
 }
+
 .mp-check{
-  flex:0 0 auto;
-  width:58px;
-  height:58px;
-  border-radius:999px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg, rgba(0,177,234,.12), rgba(20,0,165,.08));
-  border:1px solid rgba(20,0,165,.10);
-  color:var(--mp-blue);
-  font-size:1.45rem;
-  font-weight:900;
+  background:rgba(0,177,234,0.15);
+  font-size:22px;
+  color:#1400a5;
 }
+
 .trust{
+  position:absolute;
+  bottom:30px;
+  width:100%;
   text-align:center;
-  color:#cdd9ea;
-  font-size:.86rem;
-  font-weight:800;
-  margin-top:12px;
+  font-size:13px;
+  color:#aaa;
 }
-.afterpay{
-  margin:18px 0 4px;
-  padding:16px 18px;
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(0,177,234,.08), rgba(255,255,255,.03));
-  border:1px solid rgba(0,177,234,.14);
-}
-.afterpay strong{display:block;margin-bottom:7px}
-.afterpay span{color:#dce7f5;line-height:1.72}
-@media(max-width:900px){
-  .plans{grid-template-columns:1fr}
-}
-@media(max-width:720px){
-  .wrap{padding:18px 14px 56px}
-  .topbar{flex-direction:column;align-items:stretch}
-  .top-actions{width:100%}
-  .top-actions .btn{width:100%}
-  .card{padding:20px}
-  .hero h1{font-size:2.3rem}
-  .mp-button{min-height:126px}
-  .mp-logo{width:92px;height:72px}
-  .mp-logo img{width:66px}
-  .mp-copy strong{font-size:1.16rem}
-}
+
 </style>
 </head>
+
 <body>
 
-<div class="wrap">
-  <div class="topbar">
-    <a href="/index.html" class="brand-link">
-      <h1 class="brand-title">Sonar<span class="ia">IA</span></h1>
-      <div class="brand-sub">Planes y acceso docente</div>
-    </a>
+<button id="btnPro" class="mp-button">
 
-    <div class="top-actions">
-      <button class="btn btn-ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
-      <button class="btn btn-home" onclick="window.location.href='/index.html'">Ir al home</button>
+  <div class="mp-left">
+    <div class="mp-logo">
+      <img src="/mercadopago-logo.png">
+    </div>
+
+    <div class="mp-copy">
+      <small>Pago seguro</small>
+      <strong>Quiero ahorrar tiempo con SonarIA Pro</strong>
+      <span>$4.990 mensual · $49.990 anual</span>
     </div>
   </div>
 
-  <section class="hero">
-    <h1>Empieza gratis o activa una experiencia más completa y segura.</h1>
-    <p>SonarIA Free te ayuda a decidir. SonarIA Pro te ayuda a avanzar más rápido hacia una clase mejor preparada.</p>
-  </section>
+  <div class="mp-check">✓</div>
 
-  <div id="bannerOk" class="banner ok">
-    <strong>Pago recibido. Ahora viene lo mejor.</strong>
-    <p>Entra a SonarIA Pro y prueba de inmediato una canción desafiante: revisa la versión escolar, elige el curso y genera el PDF docente.</p>
-    <div class="banner-actions">
-      <button class="mini-btn primary" onclick="window.location.href='/sonaria.html?welcome=pro'">Entrar a SonarIA Pro</button>
-      <button class="mini-btn ghost" onclick="window.location.href='/index.html'">Ir al home</button>
-    </div>
-  </div>
+</button>
 
-  <div id="bannerPending" class="banner pending">
-    <strong>Tu pago está en proceso.</strong>
-    <p>Si ya pagaste hace un momento, espera un instante y vuelve a entrar a SonarIA. Tu activación puede tardar unos minutos en confirmarse.</p>
-    <div class="banner-actions">
-      <button class="mini-btn ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
-    </div>
-  </div>
-
-  <div id="bannerError" class="banner error">
-    <strong>No pudimos completar el pago.</strong>
-    <p>No se aplicó ningún cobro exitoso. Puedes volver a intentarlo cuando quieras desde esta misma página.</p>
-    <div class="banner-actions">
-      <button class="mini-btn ghost" onclick="document.getElementById('btnPro').scrollIntoView({behavior:'smooth', block:'center'})">Reintentar</button>
-    </div>
-  </div>
-
-  <section class="plans">
-    <article class="card free-card">
-      <div class="badge">FREE</div>
-      <h2>SonarIA Free</h2>
-      <p class="copy">Conoce la herramienta y obtén una orientación inicial para decidir si una canción puede funcionar en contexto escolar.</p>
-
-      <ul class="features">
-        <li>Análisis base de la canción.</li>
-        <li>Detección inicial de señales de riesgo.</li>
-        <li>Orientación pedagógica rápida.</li>
-        <li>Ideal para probar SonarIA sin fricción.</li>
-      </ul>
-
-      <button class="free-cta" onclick="window.location.href='/sonaria.html'">Seguir con Free</button>
-    </article>
-
-    <article class="card pro-card">
-      <div class="badge pro">PRO</div>
-      <h2>SonarIA Pro</h2>
-
-      <div class="price">
-        <strong>$4.990</strong>
-        <span>CLP</span>
-      </div>
-
-      <p class="copy">La experiencia más completa para docentes que quieren pasar de “¿se podrá usar?” a “ya tengo cómo llevarla al aula”.</p>
-
-      <ul class="features">
-        <li>Adaptación escolar de canciones más complejas.</li>
-        <li>Propuestas pedagógicas y OA por curso.</li>
-        <li>PDF más listo para usar en clase.</li>
-        <li>Menos trabajo manual, más foco en enseñar.</li>
-      </ul>
-
-      <div class="afterpay">
-        <strong>Después del pago</strong>
-        <span>Tu siguiente paso será entrar a SonarIA Pro, revisar una canción desafiante, elegir el curso y descargar material para clase. La idea es que sientas valor en minutos.</span>
-      </div>
-
-      <button id="btnPro" class="mp-button" type="button">
-        <div class="mp-left">
-          <div class="mp-logo">
-            <img src="/MP_RGB_HANDSHAKE_color_vertical.png" alt="Mercado Pago">
-          </div>
-          <div class="mp-copy">
-            <small>Pago seguro</small>
-            <strong>Activar SonarIA Pro</strong>
-            <span>Procesado con Mercado Pago</span>
-          </div>
-        </div>
-        <div class="mp-check">✓</div>
-      </button>
-
-      <div class="trust">Pago seguro · Activación rápida · Hecho para docentes</div>
-    </article>
-  </section>
+<div class="trust">
+  Pago seguro con Mercado Pago · Activación inmediata · Hecho para docentes
 </div>
 
 <script>
 const API="https://sonaria-api.onrender.com";
 
 function getToken(){
-  return (
-    localStorage.getItem("mejoraria_token") ||
-    localStorage.getItem("token") ||
-    localStorage.getItem("access_token") ||
-    ""
-  );
+  return localStorage.getItem("mejoraria_token");
 }
 
-(function showPaymentState(){
-  const params = new URLSearchParams(window.location.search);
-  const pago = params.get("pago");
-  if(pago === "ok"){
-    document.getElementById("bannerOk").classList.add("show");
-    localStorage.setItem("sonaria_pro_welcome","1");
-  }
-  if(pago === "pending"){
-    document.getElementById("bannerPending").classList.add("show");
-  }
-  if(pago === "error"){
-    document.getElementById("bannerError").classList.add("show");
-  }
-})();
-
 document.getElementById("btnPro").addEventListener("click", async ()=>{
+
   const btn=document.getElementById("btnPro");
-  const old=btn.innerHTML;
-  btn.disabled=true;
-  btn.innerHTML='<div class="mp-left"><div class="mp-copy"><small>Mercado Pago</small><strong>Conectando...</strong><span>Preparando tu pago real</span></div></div>';
+  btn.innerHTML="Redirigiendo a pago seguro...";
 
-  try{
-    const token = getToken();
-    if(!token){
-      alert("Primero debes iniciar sesión.");
-      window.location.href='/login.html';
-      return;
+  const res=await fetch(API+"/payments/create-checkout",{
+    method:"POST",
+    headers:{
+      "Authorization":"Bearer "+getToken()
     }
+  });
 
-    const res=await fetch(API+"/payments/create-checkout",{
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer "+token
-      }
-    });
+  const data=await res.json();
 
-    const data=await res.json().catch(()=>({}));
-
-    if(data.checkout_url){
-      if(data.external_reference){
-        sessionStorage.setItem("mp_external_reference", data.external_reference);
-      }
-      window.location.href=data.checkout_url;
-    }else{
-      alert(data.detail || "No pudimos iniciar el pago.");
-      btn.disabled=false;
-      btn.innerHTML=old;
-    }
-  }catch(error){
-    alert("Error de conexión al iniciar Mercado Pago.");
-    btn.disabled=false;
-    btn.innerHTML=old;
+  if(data.checkout_url){
+    window.location.href=data.checkout_url;
+  }else{
+    alert("Error al iniciar pago");
+    location.reload();
   }
+
 });
 </script>
 
