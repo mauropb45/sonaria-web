@@ -6,33 +6,125 @@
 <title>Planes - SonarIA</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0c1422;color:white;}
-.container{max-width:1100px;margin:auto;padding:40px 20px;}
-h1{text-align:center;margin-bottom:20px;}
-.subtitle{text-align:center;color:#bbb;margin-bottom:40px;}
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.card{background:#182232;padding:25px;border-radius:14px;}
-.price{font-size:28px;font-weight:bold;margin:10px 0;}
-.btn{padding:12px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
-.btn-pro{background:#00d2be;color:black;width:100%;}
-.compare{margin-top:50px;}
-.compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
-.compare-card{background:#182232;padding:20px;border-radius:12px;}
-.highlight{border:2px solid #00d2be;}
-.pay-row{margin-top:20px;display:flex;flex-direction:column;gap:10px;align-items:center;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0c1422;
+  color:white;
+}
+
+/* 🔙 HOME BTN */
+.home{
+  position:fixed;
+  top:15px;
+  left:15px;
+  background:#182232;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:80px 20px 40px;
+}
+
+h1{
+  text-align:center;
+}
+
+.subtitle{
+  text-align:center;
+  color:#bbb;
+  margin-bottom:40px;
+}
+
+.plans{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+}
+
+.card{
+  background:#182232;
+  padding:25px;
+  border-radius:16px;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.02);
+}
+
+.highlight{
+  border:2px solid #00d2be;
+}
+
+.price{
+  font-size:30px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.btn{
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+  width:100%;
+}
+
+.btn-pro{
+  background:#00d2be;
+  color:black;
+}
+
+.pay-row{
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.compare{
+  margin-top:60px;
+}
+
+.compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:20px;
+}
+
+.compare-card{
+  background:#182232;
+  padding:20px;
+  border-radius:14px;
+}
+
+.compare-card h3{
+  margin-top:0;
+}
+
 @media(max-width:800px){
-.plans{grid-template-columns:1fr;}
-.compare-grid{grid-template-columns:1fr;}
+  .plans{grid-template-columns:1fr;}
+  .compare-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 
 <body>
 
+<div class="home" onclick="window.location.href='index.html'">← Home</div>
+
 <div class="container">
 
 <h1>Planes SonarIA</h1>
-<p class="subtitle">Transforma canciones en experiencias educativas reales</p>
+<p class="subtitle">Convierte canciones en clases listas para usar</p>
 
 <div class="plans">
 
@@ -41,7 +133,7 @@ h1{text-align:center;margin-bottom:20px;}
 <div class="price">$0</div>
 <ul>
 <li>Análisis básico</li>
-<li>Detección de contenido explícito</li>
+<li>Detección explícita</li>
 <li>Uso limitado</li>
 </ul>
 </div>
@@ -50,12 +142,11 @@ h1{text-align:center;margin-bottom:20px;}
 <h2>Pro</h2>
 <div class="price">$4.990 CLP</div>
 <ul>
-<li>✔ Análisis pedagógico completo</li>
 <li>✔ Adaptación escolar automática</li>
-<li>✔ Versión escolar destacada</li>
-<li>✔ Múltiples cursos (OA dinámicos)</li>
-<li>✔ Generación de PDF</li>
+<li>✔ Pedagogía por curso</li>
+<li>✔ PDF listo para clase</li>
 <li>✔ Datos de la canción</li>
+<li>✔ Uso ilimitado</li>
 </ul>
 
 <div class="pay-row">
@@ -69,7 +160,7 @@ h1{text-align:center;margin-bottom:20px;}
 
 <div class="compare">
 
-<h2 style="text-align:center">¿Por qué no usar ChatGPT o Gemini?</h2>
+<h2 style="text-align:center">SonarIA vs IA general</h2>
 
 <div class="compare-grid">
 
@@ -77,29 +168,27 @@ h1{text-align:center;margin-bottom:20px;}
 <h3>ChatGPT / Gemini</h3>
 <ul>
 <li>Generalistas</li>
-<li>No pensados para aula</li>
-<li>No analizan contexto escolar</li>
-<li>No adaptan canciones automáticamente</li>
+<li>No entienden aula</li>
+<li>No adaptan canciones</li>
 </ul>
 </div>
 
 <div class="compare-card highlight">
 <h3>SonarIA</h3>
 <ul>
-<li>✔ Pensado para docentes</li>
-<li>✔ Analiza explícito + implícito</li>
-<li>✔ Adapta canciones al contexto escolar</li>
-<li>✔ Genera actividades por curso</li>
-<li>✔ Convierte canciones en clases</li>
+<li>✔ Enfoque docente</li>
+<li>✔ Análisis contextual</li>
+<li>✔ Adaptación escolar</li>
+<li>✔ Genera clases</li>
 </ul>
 </div>
 
 <div class="compare-card">
 <h3>Resultado</h3>
 <ul>
-<li>Menos tiempo planificando</li>
-<li>Mayor seguridad pedagógica</li>
-<li>Uso real de canciones en aula</li>
+<li>Menos tiempo</li>
+<li>Más seguridad</li>
+<li>Mejores clases</li>
 </ul>
 </div>
 
@@ -113,26 +202,28 @@ h1{text-align:center;margin-bottom:20px;}
 const API="https://sonaria-api.onrender.com";
 
 function getToken(){
-return localStorage.getItem("mejoraria_token");
+  return localStorage.getItem("mejoraria_token");
 }
 
 document.getElementById("btnPro").addEventListener("click", async ()=>{
-const btn=document.getElementById("btnPro");
-btn.innerText="Conectando con Mercado Pago...";
+  const btn=document.getElementById("btnPro");
+  btn.innerText="Conectando...";
 
-const res=await fetch(API+"/payments/create-checkout",{
-method:"POST",
-headers:{ "Authorization":"Bearer "+getToken() }
-});
+  const res=await fetch(API+"/payments/create-checkout",{
+    method:"POST",
+    headers:{
+      "Authorization":"Bearer "+getToken()
+    }
+  });
 
-const data=await res.json();
+  const data=await res.json();
 
-if(data.checkout_url){
-window.location.href=data.checkout_url;
-}else{
-alert("Error al iniciar pago");
-btn.innerText="Pagar con Mercado Pago";
-}
+  if(data.checkout_url){
+    window.location.href=data.checkout_url;
+  }else{
+    alert("Error en pago");
+    btn.innerText="Pagar con Mercado Pago";
+  }
 });
 </script>
 
