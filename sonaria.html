@@ -48,10 +48,12 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .checks{display:grid;gap:10px;margin-top:14px}.check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#dce8ff;font-size:14px;line-height:1.6}.check input{width:auto;margin-top:3px;accent-color:var(--aston)}
 .actions-main{display:grid;grid-template-columns:1.2fr 1fr .65fr;gap:12px;align-items:start;margin-top:14px}
 .actions-main>.tool{width:100%;min-height:56px}
-.actions-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
-.actions-tools>.tool{width:100%;min-height:54px}
+.actions-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.actions-tools>.tool,.tool-stack>.tool{width:100%;min-height:54px}
 #statsBtn{grid-column:span 2}
-#suggestBtn{grid-column:span 1}
+.tool-stack{display:grid;gap:6px;align-content:start}
+.tool-note{margin-top:0;color:var(--muted);font-size:12px;line-height:1.55;padding:0 2px}
+.ped-course-active{background:linear-gradient(135deg,var(--mclaren),#ff9b1f)!important;color:#151920!important;border:none!important;box-shadow:0 10px 24px rgba(255,135,0,.24)}
 .tool{border:none;border-radius:14px;padding:14px 14px;font:inherit;font-weight:800;cursor:pointer;transition:.18s;color:#fff;background:#253245}
 .tool:hover{transform:translateY(-1px)}
 .tool.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#161b22;box-shadow:0 12px 28px rgba(255,135,0,.22)}
@@ -63,7 +65,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .lock-icon{margin-left:8px;opacity:.82}
 .voice-stack{display:flex;flex-direction:column;gap:8px;align-items:stretch}
 .voice-stack .tool{width:100%;min-height:56px}
-.voice-tip.inline{margin-top:0;max-width:none;padding-left:2px}.feature-notes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}.feature-note{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:12px;line-height:1.65}.feature-note strong{color:#dce8ff}.feature-note.pro{border-color:rgba(255,135,0,.18)}
+.voice-tip.inline{margin-top:0;max-width:none;padding-left:2px}
 .inline-loader{display:none;margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
 .inline-loader.show{display:block}
 .inline-loader .loader-track{margin-top:10px;height:8px;border-radius:999px;background:#2e3a4b;overflow:hidden}.impact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.impact-card{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.impact-card strong{display:block;font-size:28px;line-height:1;margin-bottom:6px}.impact-card span{color:var(--muted);font-size:13px;line-height:1.5}.impact-chart{margin-top:16px;padding:16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}.impact-bars{display:grid;gap:12px}.impact-bar-row{display:grid;gap:6px}.impact-bar-head{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:800;color:#dce8ff}.impact-track{height:12px;border-radius:999px;background:#344457;overflow:hidden}.impact-fill{height:100%;border-radius:999px}.impact-fill.apta{background:linear-gradient(90deg,var(--aston),#63e7cf)}.impact-fill.mediada{background:linear-gradient(90deg,var(--yellow),#ffd96f)}.impact-fill.noapta{background:linear-gradient(90deg,var(--ferrari),#ff5a52)}.impact-fill.adaptable{background:linear-gradient(90deg,var(--blue),#7aa7ff)}
@@ -82,7 +84,7 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
 .courses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.course-card{padding:12px;border-radius:14px;background:#0f141d;border:1px solid rgba(255,255,255,.08);display:flex;align-items:flex-start;gap:8px}.course-card input{width:auto;accent-color:var(--mclaren);margin-top:3px}.course-info strong{display:block}.course-info span{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:3px}
 .translate-pairs{display:grid;gap:10px}.pair{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pair strong{display:block;margin-bottom:6px}.pair div{color:#d7e2f1}.pair div + div{margin-top:6px;color:var(--muted)}.voice-tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}.modal-header-actions{display:flex;gap:10px;align-items:center}.brand-plan{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;padding:4px 10px;min-height:28px;border-radius:10px;font-size:20px;font-weight:900;line-height:1;background:rgba(0,210,190,.14);color:#d8fff7;border:1px solid rgba(0,210,190,.22);vertical-align:middle}.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.confetti-piece{position:absolute;top:-10vh;font-size:22px;animation:confetti-fall 2200ms linear forwards}@keyframes confetti-fall{0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}10%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(760deg);opacity:0}}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:static}.hero,.dashboard,.overlay-grid{grid-template-columns:1fr}}
-@media(max-width:760px){.form-grid,.metric-grid,.courses-grid,.actions-main,.actions-tools,.feature-notes{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}#statsBtn,#suggestBtn{grid-column:span 1}}
+@media(max-width:760px){.form-grid,.metric-grid,.courses-grid,.actions-main,.actions-tools{grid-template-columns:1fr}.wrap{padding:14px}.hero h2{font-size:34px}#statsBtn{grid-column:span 1}}
 
 .credits-signature{
   margin-top:26px;
@@ -223,16 +225,17 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
             </div>
             <div id="statusBox" class="status"></div>
             <div class="actions-tools">
-              <button id="contextBtn" class="tool small" type="button">🌐 Contexto</button>
+              <button id="contextBtn" class="tool small" type="button">🎵 Datos canción</button>
               <button id="translateBtn" class="tool small" type="button">🈶 Traducción <span class="lock-icon">🔒</span></button>
-              <button id="youtubeBtn" class="tool youtube" type="button">▶ YouTube rápido</button>
-              <button id="schoolBtn" class="tool green" type="button">✏️ Versión escolar <span class="lock-icon">🔒</span></button>
+              <div class="tool-stack">
+                <button id="youtubeBtn" class="tool youtube" type="button">▶ YouTube rápido</button>
+                <div class="tool-note">En <strong>Free</strong> abre YouTube para explorar manualmente. En <strong>Pro</strong> abre una búsqueda enfocada en lyrics de la canción.</div>
+              </div>
+              <div class="tool-stack">
+                <button id="schoolBtn" class="tool green" type="button">✏️ Versión escolar <span class="lock-icon">🔒</span></button>
+                <div class="tool-note">En <strong>Free</strong> ves una muestra de la adaptación. En <strong>Pro</strong> obtienes la versión completa con cambios destacados y conexión a pedagogía.</div>
+              </div>
               <button id="statsBtn" class="tool small" type="button">🛡️ Lo que SonarIA te evitó</button>
-              <button id="suggestBtn" class="tool small" type="button">❓ ¿Te refieres a...?</button>
-            </div>
-            <div class="feature-notes">
-              <div id="schoolFeatureNote" class="feature-note pro"><strong>Versión escolar en Free:</strong> puedes ver una orientación inicial sobre si conviene adaptar la canción. En Pro accedes a una adaptación más completa y usable dentro del flujo pedagógico.</div>
-              <div id="youtubeFeatureNote" class="feature-note pro"><strong>YouTube en Free:</strong> abre acceso general a YouTube. En Pro cambia a <strong>YouTube lyrics</strong> y te lleva directo a una búsqueda más precisa para trabajar la canción.</div>
             </div>
           </form>
 
@@ -331,7 +334,6 @@ const contextBtn = document.getElementById("contextBtn");
 const translateBtn = document.getElementById("translateBtn");
 const youtubeBtn = document.getElementById("youtubeBtn");
 const schoolBtn = document.getElementById("schoolBtn");
-const suggestBtn = document.getElementById("suggestBtn");
 const statsBtn = document.getElementById("statsBtn");
 const coursesBtn = document.getElementById("coursesBtn");
 const voiceBtn = document.getElementById("voiceBtn");
@@ -415,18 +417,6 @@ function renderUserCard(u){
   if(ytBtn){
     ytBtn.textContent = isPro() ? "▶ YouTube lyrics" : "▶ YouTube rápido";
     ytBtn.title = isPro() ? "En Pro abre una búsqueda enfocada en lyrics" : "En Free abre YouTube general";
-  }
-  const schoolNote = document.getElementById("schoolFeatureNote");
-  const ytNote = document.getElementById("youtubeFeatureNote");
-  if(schoolNote){
-    schoolNote.innerHTML = isPro()
-      ? "<strong>Versión escolar en Pro:</strong> revisas la adaptación sugerida, aceptas la versión docente y planificas sobre esa base."
-      : "<strong>Versión escolar en Free:</strong> puedes ver una orientación inicial sobre si conviene adaptar la canción. En Pro accedes a una adaptación más completa y usable dentro del flujo pedagógico.";
-  }
-  if(ytNote){
-    ytNote.innerHTML = isPro()
-      ? "<strong>YouTube en Pro:</strong> el botón cambia a <strong>YouTube lyrics</strong> y abre una búsqueda más precisa para trabajar la canción."
-      : "<strong>YouTube en Free:</strong> abre acceso general a YouTube. En Pro cambia a <strong>YouTube lyrics</strong> y te lleva directo a una búsqueda más precisa para trabajar la canción.";
   }
   document.title = isPro() ? "SonarIA Pro | Panel docente" : "SonarIA | Panel docente";
   updateProLocks();
@@ -570,7 +560,7 @@ function openCursos(){ if(!isPro()){ openModal("Mis cursos · Pro", "Disponible 
 function buildPedagogiaSelector(options){
   if(!options.length) return "";
   syncSelectedPedagogyWithOptions();
-  return `<div class="item" style="margin-bottom:14px;"><b>Curso para planificar</b><div class="meta" style="margin-bottom:10px;">Elige uno de los cursos sugeridos y SonarIA ajustará el OA y las propuestas de clase. El PDF docente se exportará con el curso que selecciones aquí.</div><div style="display:flex;gap:8px;flex-wrap:wrap;">${options.map((opt,idx)=>{ const code=String(opt.curso_codigo || opt.curso || ""); const active = code === selectedPedagogyCourseCode || idx===selectedPedagogyIndex; return `<button class="small-btn use" style="${active ? 'background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#14181f;box-shadow:0 10px 24px rgba(255,135,0,.24);outline:none;border:1px solid rgba(255,135,0,.35);' : ''}" onclick="selectPedagogiaOption(${idx})">${escapeHtml(opt.curso)}</button>`; }).join("")}</div></div>`;
+  return `<div class="item" style="margin-bottom:14px;"><b>Curso para planificar</b><div class="meta" style="margin-bottom:10px;">Elige uno de los cursos sugeridos y SonarIA ajustará el OA y las propuestas de clase. El PDF docente se exportará con el curso que selecciones aquí.</div><div style="display:flex;gap:8px;flex-wrap:wrap;">${options.map((opt,idx)=>{ const code=String(opt.curso_codigo || opt.curso || ""); const active = code === selectedPedagogyCourseCode || idx===selectedPedagogyIndex; return `<button class="small-btn use ${active ? 'ped-course-active' : ''}" onclick="selectPedagogiaOption(${idx})">${escapeHtml(opt.curso)}</button>`; }).join("")}</div></div>`;
 }
 function renderPedagogiaOption(opt){
   const ped = opt?.pedagogia || {};
@@ -666,6 +656,7 @@ window.acceptSchoolVersionForPedagogy = function(){
   selectedPedagogyIndex = 0;
   selectedPedagogyCourseCode = String((currentPedagogyOptions()[0]?.curso_codigo || currentPedagogyOptions()[0]?.curso || selectedPedagogyCourseCode || ""));
   closeModal();
+  showToast('Versión docente aceptada para ' + (currentPedagogySelection()?.curso || 'el curso sugerido'));
   openPedagogia();
   showToast('Versión escolar aceptada para planificar.');
 };
@@ -785,27 +776,27 @@ async function fetchContext(){
 }
 async function openContexto(){
   try{
-    openModal("Contexto", "Buscando reseña y contexto web...", '<div class="empty">Cargando...</div>');
+    openModal("Datos canción", "Buscando datos útiles para clase...", '<div class="empty">Cargando...</div>');
     const data = await fetchContext();
     const referenciaHtml = data.fuente
       ? `<div class="item" style="margin-top:12px;"><b>Referencia</b><div class="meta"><a href="${escapeHtml(data.fuente)}" target="_blank" rel="noopener noreferrer">Abrir búsqueda o fuente</a></div></div>`
       : "";
     const temasHtml = (data.temas_detectados || []).length
-      ? `<div class="item" style="margin-top:12px;"><b>Temas detectados</b><div class="meta">${data.temas_detectados.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`
+      ? `<div class="item" style="margin-top:12px;"><b>Temas para trabajar</b><div class="meta">${data.temas_detectados.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`
       : "";
     const metaHtml = (data.metadatos || []).length
-      ? `<div class="item" style="margin-top:12px;"><b>Apoyo</b><div class="meta">${data.metadatos.map(x => escapeHtml(x)).join(" · ")}</div></div>`
+      ? `<div class="item" style="margin-top:12px;"><b>Curiosidades / pistas</b><div class="meta">${data.metadatos.map(x => escapeHtml(x)).join(" · ")}</div></div>`
       : "";
     openModal(
-      "Contexto",
-      "Resumen breve y referencia web de apoyo.",
-      `<div class="item"><b>Resumen</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>${metaHtml}${referenciaHtml}${temasHtml}`
+      "Datos canción",
+      "Curiosidades, referencia y datos útiles para abrir conversación en clases.",
+      `<div class="item"><b>Dato útil para clase</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>${metaHtml}${referenciaHtml}${temasHtml}`
     );
   }catch(err){
     const q = `${titulo.value || lastAnalysis?.titulo || ""} ${artista.value || lastAnalysis?.artista || ""} significado canción`.trim();
     openModal(
-      "Contexto",
-      "No fue posible cargar la reseña automática.",
+      "Datos canción",
+      "No fue posible cargar los datos automáticos.",
       `<div class="item"><b>Referencia sugerida</b><div class="meta"><a href="https://www.google.com/search?q=${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer">Buscar contexto en la web</a></div></div>`
     );
     setStatus(err.message, "error");
@@ -838,20 +829,23 @@ function buildSchoolVersionHtml(){
   if(!adaptOk){
     return `<div class="item"><b>Versión escolar no sugerida</b><div class="meta">${escapeHtml(adaptMsg)}</div></div>`;
   }
-  const reps = (lastAnalysis.version_escolar_reemplazos || lastAnalysis.replacements || []).filter(r => !/[\\\[\]\(\)\?\+\*\|]/.test(String(r.original || "")));
+  const reps = (lastAnalysis.version_escolar_reemplazos || lastAnalysis.replacements || []).filter(r => !/[\\[\]\(\)\?\+\*\|]/.test(String(r.original || "")));
   const adaptedText = lastAnalysis.version_escolar_html || (lastAnalysis.adapted_lyrics ? `<pre style="white-space:pre-wrap;margin:0;font:inherit;">${escapeHtml(lastAnalysis.adapted_lyrics)}</pre>` : '<div class="empty">Sin cambios sugeridos.</div>');
-  return `<div class="overlay-grid"><div class="item"><b>Letra adaptada</b><div class="school-preview">${adaptedText}</div></div><div class="item"><b>Criterio de adaptación</b><div class="meta">${escapeHtml(adaptMsg)}</div><div class="overlay-list" style="margin-top:10px;">${reps.length ? reps.map(r => `<div><strong>${escapeHtml(r.original)}</strong> → ${escapeHtml(r.sugerida)}</div>`).join("") : '<div>SonarIA aplicó cambios útiles sin mostrar reglas técnicas innecesarias.</div>'}</div></div></div>`;
+  const currentCourse = escapeHtml((currentPedagogySelection()?.curso || currentPedagogyOptions()?.[0]?.curso || 'Curso sugerido'));
+  const courseButtons = (currentPedagogyOptions() || []).length
+    ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${currentPedagogyOptions().map((opt,idx)=>{ const code=String(opt.curso_codigo || opt.curso || ""); const active = code === selectedPedagogyCourseCode || idx===selectedPedagogyIndex; return `<button class="small-btn use ${active ? 'ped-course-active' : ''}" onclick="selectPedagogiaOption(${idx}); closeModal(); setTimeout(openVersionEscolar, 20);">${escapeHtml(opt.curso)}</button>`; }).join("")}</div>` : '';
+  return `<div class="item" style="margin-bottom:14px;"><b>Versión escolar sugerida</b><div class="meta">SonarIA adapta lenguaje y contexto para uso pedagógico.<br><strong>Curso activo:</strong> <span class="tag" style="background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22;">${currentCourse}</span></div>${courseButtons}</div><div class="overlay-grid"><div class="item"><b>Letra adaptada</b><div class="school-preview">${adaptedText}</div></div><div class="item"><b>Qué cambió</b><div class="meta">${escapeHtml(adaptMsg)}</div><div class="overlay-list" style="margin-top:10px;">${reps.length ? reps.map(r => `<div><strong>${escapeHtml(r.original)}</strong> → ${escapeHtml(r.sugerida)}</div>`).join("") : '<div>SonarIA aplicó cambios útiles sin mostrar reglas técnicas innecesarias.</div>'}</div><div class="meta" style="margin-top:12px;">${isPro() ? 'Al aceptar esta versión, SonarIA la usará como base para pedagogía y PDF docente.' : 'En Free ves una muestra de la adaptación. En Pro desbloqueas la versión completa y su integración con pedagogía.'}</div></div></div>`;
 }
 function openVersionEscolar(){
   if(!isPro()){
     const preview = lastAnalysis?.version_escolar_preview_html || '';
     setModalHeaderAction("");
-    openModal("Versión escolar · Pro", "Disponible en la experiencia completa.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisarla en una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
+    openModal("Versión escolar · Pro", "Vista previa de adaptación para uso pedagógico.", `${preview || '<div class="item"><b>Vista previa</b><div class="meta">No hay una adaptación demo disponible todavía para esta canción.</div></div>'}<div class="item" style="margin-top:12px;"><b>Lectura recomendada</b><div class="meta">Esta canción no se recomienda para uso escolar directo, pero SonarIA puede ayudarte a revisarla en una adaptación escolar antes de descartarla por completo.</div></div><div class="item" style="margin-top:12px;"><b>En Pro</b><div class="meta">Obtienes la letra adaptada completa, con cambios destacados en amarillo y lista para revisar con criterio docente.</div></div>`);
     return;
   }
   const canAccept = (lastAnalysis && (lastAnalysis.resultado || '').includes('No apta') && lastAnalysis.adaptacion_escolar_posible);
   setModalHeaderAction(canAccept ? '<button class="small-btn use" onclick="acceptSchoolVersionForPedagogy()">Aceptar versión escolar</button>' : '');
-  openModal("Versión escolar", "Letra adaptada con cambios destacados en amarillo.", buildSchoolVersionHtml());
+  openModal("Versión escolar sugerida", "Revisa la adaptación, el curso activo y decide si quieres usarla como base docente.", buildSchoolVersionHtml());
 }
 
 
@@ -972,24 +966,21 @@ translateBtn.addEventListener("click", openTranslate);
 youtubeBtn.addEventListener("click", openYoutube);
 schoolBtn.addEventListener("click", openVersionEscolar);
 statsBtn.addEventListener("click", openStats);
-suggestBtn.addEventListener("click", openSuggestions);
+if(typeof suggestBtn !== "undefined" && suggestBtn) suggestBtn.addEventListener("click", openSuggestions);
 voiceBtn.addEventListener("click", startVoiceSearch);
 const logoutBtn = document.getElementById("logoutBtn"); if(logoutBtn) logoutBtn.addEventListener("click", logout);
 clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; clearResult(); setStatus(""); });
-
-function syncLyricsMode(){
-  const hasManualLyrics = !!texto.value.trim();
-  if(hasManualLyrics){
-    buscarLetra.checked = false;
-  }
-}
-texto.addEventListener("paste", () => {
-  setTimeout(syncLyricsMode, 0);
-});
 texto.addEventListener("input", () => {
-  if(texto.value.trim()){
-    buscarLetra.checked = false;
-  }
+  if(texto.value.trim()) buscarLetra.checked = false;
+});
+texto.addEventListener("paste", () => {
+  buscarLetra.checked = false;
+  setTimeout(() => {
+    if(texto.value.trim()){
+      setStatus("Letra pegada. Iniciando análisis...", "info");
+      form.requestSubmit();
+    }
+  }, 120);
 });
 
 form.addEventListener("submit", async (e) => {
