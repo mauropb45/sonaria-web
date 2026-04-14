@@ -1,112 +1,638 @@
-<!-- BOTÓN PRO OPTIMIZADO SONARIA -->
-
-<button id="btnPro" class="btn-pro">
-
-  <div class="logo-box">
-    <img src="/mercadopago-logo.png" alt="Mercado Pago">
-  </div>
-
-  <div class="text-box">
-    <div class="main">Activar SonarIA Pro</div>
-    <div class="sub">Pago seguro con Mercado Pago</div>
-  </div>
-
-</button>
-
-<div class="trust">
-  ✔ Pago seguro · ✔ Activación inmediata · ✔ Hecho para docentes
-</div>
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes | SonarIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-
-.btn-pro{
-  background:linear-gradient(135deg,#ff8700,#ff5a00);
-  border:none;
-  border-radius:18px;
-  width:100%;
-  height:90px;
-
+:root{
+  --bg:#06101c;
+  --bg2:#0b1627;
+  --panel:rgba(255,255,255,.05);
+  --panel2:rgba(255,255,255,.035);
+  --line:rgba(255,255,255,.10);
+  --text:#eef2f7;
+  --muted:#a3b3c8;
+  --green:#14d68f;
+  --orange:#ff8a00;
+  --orange2:#ff6500;
+  --mclaren:#ff8700;
+  --mclaren2:#ff5a00;
+  --shadow:0 24px 70px rgba(0,0,0,.34);
+  --radius:28px;
+  --max:1040px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+    radial-gradient(circle at top right, rgba(20,214,143,.08), transparent 18%),
+    radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size:38px 38px;
+  mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+}
+a{text-decoration:none;color:inherit}
+.wrap{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:22px 20px 80px;
+  position:relative;
+  z-index:1;
+}
+.topbar{
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:18px;
-  padding:0 20px;
-
-  cursor:pointer;
-  box-shadow:0 20px 50px rgba(255,90,0,0.4);
-  transition:0.2s;
+  gap:16px;
+  margin-bottom:26px;
 }
-
-.btn-pro:hover{
-  transform:scale(1.02);
-}
-
-.logo-box{
-  background:white;
-  border-radius:14px;
-  padding:10px;
+.brand-link{
   display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.brand-title{
+  margin:0;
+  font-size:clamp(2.2rem,4vw,3.6rem);
+  font-weight:900;
+  letter-spacing:-.06em;
+  line-height:.92;
+}
+.brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,214,143,.35)}
+.brand-sub{color:#d7fff0;font-size:.96rem;font-weight:800}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  min-height:48px;
+  padding:0 18px;
+  border:none;
+  border-radius:16px;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+  display:inline-flex;
   align-items:center;
   justify-content:center;
 }
+.btn:hover{transform:translateY(-1px)}
+.btn-ghost{
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  border:1px solid var(--line);
+}
+.btn-home{
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  color:#111827;
+  box-shadow:0 12px 28px rgba(255,138,0,.28);
+}
+.hero{
+  text-align:center;
+  max-width:780px;
+  margin:0 auto 28px;
+}
+.hero h1{
+  margin:0 0 12px;
+  font-size:clamp(2.6rem,5vw,4.2rem);
+  line-height:.95;
+  letter-spacing:-.08em;
+}
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.8;
+  font-size:1.03rem;
+}
+.banner{
+  display:none;
+  margin:0 auto 24px;
+  max-width:860px;
+  text-align:left;
+  padding:18px 20px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
+  box-shadow:var(--shadow);
+}
+.banner.show{display:block}
+.banner.ok{border-color:rgba(20,214,143,.22);background:linear-gradient(180deg, rgba(20,214,143,.12), rgba(255,255,255,.03))}
+.banner.pending{border-color:rgba(255,138,0,.24);background:linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,255,255,.03))}
+.banner.error{border-color:rgba(255,116,116,.24);background:linear-gradient(180deg, rgba(255,116,116,.10), rgba(255,255,255,.03))}
+.banner strong{display:block;margin-bottom:6px;font-size:1rem}
+.banner p{margin:0;color:#dce6f5;line-height:1.72}
+.banner-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.mini-btn{
+  min-height:44px;
+  padding:0 16px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  font:inherit;
+  font-weight:800;
+}
+.mini-btn.primary{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c}
+.mini-btn.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
 
-.logo-box img{
-  height:32px;
+.plans{
+  display:grid;
+  grid-template-columns:1fr 1.08fr;
+  gap:22px;
+  align-items:stretch;
+}
+.card{
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:28px;
+  text-align:left;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{
+  transform:translateY(-3px);
+}
+.card.pro{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,138,0,.30);
+  box-shadow:0 24px 70px rgba(255,95,0,.18);
+}
+.card.pro::after{
+  content:"";
+  position:absolute;
+  right:-40px;
+  top:-40px;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,138,0,.16), transparent 72%);
+  pointer-events:none;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.02em;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.05);
+  color:#dce8ff;
+}
+.badge.pro{
+  background:rgba(255,138,0,.13);
+  border-color:rgba(255,138,0,.24);
+  color:#ffe4c7;
+}
+.card h2{
+  margin:0 0 8px;
+  font-size:1.9rem;
+  letter-spacing:-.05em;
+}
+.copy{
+  margin:0 0 18px;
+  color:var(--muted);
+  line-height:1.8;
+}
+.price{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  line-height:1;
+  margin:10px 0 14px;
+}
+.price strong{
+  font-size:3.1rem;
+  letter-spacing:-.08em;
+}
+.price span{
+  color:var(--muted);
+  font-weight:700;
+  margin-bottom:6px;
+}
+.features{
+  display:grid;
+  gap:10px;
+  margin:0 0 18px;
+  padding:0;
+  list-style:none;
+}
+.features li{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:12px 14px;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.06);
+  color:#dce8ff;
+  line-height:1.65;
+}
+.features li::before{
+  content:"✦";
+  color:#9ad6ff;
+  flex:0 0 auto;
+  margin-top:1px;
+}
+.pro .features li::before{
+  color:#ffb15b;
+}
+.value-box{
+  margin-top:6px;
+  padding:16px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+}
+.value-box strong{
+  display:block;
+  margin-bottom:7px;
+}
+.value-box span{
+  color:#dce7f5;
+  line-height:1.7;
 }
 
-.text-box{
+.free-cta{
+  width:100%;
+  margin-top:22px;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid var(--line);
+  min-height:56px;
+  border-radius:16px;
+  font:inherit;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.mp-stack{
+  margin-top:22px;
+  display:grid;
+  gap:12px;
+}
+.mp-intro{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dbe7f7;
+  font-size:.92rem;
+  font-weight:800;
+}
+.mp-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:46px;
+  min-height:34px;
+  border-radius:999px;
+  padding:0 10px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+.mp-pill img{
+  height:18px;
+  width:auto;
+  display:block;
+}
+
+.pay-btn{
+  width:100%;
+  min-height:88px;
+  border:none;
+  border-radius:22px;
+  cursor:pointer;
+  background:
+    linear-gradient(135deg, rgba(255,135,0,.18), rgba(255,95,0,.16)),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
+  border:1px solid rgba(255,138,0,.34);
+  box-shadow:
+    0 22px 48px rgba(255,95,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  color:var(--text);
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease;
+}
+.pay-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:
+    0 28px 56px rgba(255,95,0,.24),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  border-color:rgba(255,138,0,.48);
+}
+.pay-btn:disabled{
+  opacity:.78;
+  cursor:not-allowed;
+  transform:none;
+}
+.pay-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+}
+.pay-logo{
+  width:68px;
+  height:52px;
+  border-radius:16px;
+  background:rgba(255,255,255,.96);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 10px 24px rgba(0,0,0,.14);
+  flex:0 0 auto;
+}
+.pay-logo img{
+  height:24px;
+  width:auto;
+  display:block;
+}
+.pay-copy{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
+  min-width:0;
 }
-
-.main{
-  font-size:20px;
-  font-weight:800;
-  color:#14181f;
+.pay-copy small{
+  font-size:.76rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#ffd6b3;
+  font-weight:900;
+  margin-bottom:4px;
 }
-
-.sub{
-  font-size:13px;
-  opacity:0.85;
-  color:#2f2f2f;
+.pay-copy strong{
+  font-size:1.28rem;
+  letter-spacing:-.03em;
+  line-height:1.05;
+  text-align:left;
 }
-
+.pay-copy span{
+  margin-top:4px;
+  font-size:.88rem;
+  color:#d7e4f6;
+  text-align:left;
+}
+.pay-arrow{
+  flex:0 0 auto;
+  width:46px;
+  height:46px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  font-size:1.2rem;
+}
 .trust{
-  margin-top:10px;
-  font-size:13px;
-  color:#aaa;
   text-align:center;
+  color:#cdd9ea;
+  font-size:.84rem;
+  font-weight:800;
 }
+.afterpay{
+  margin-top:18px;
+  padding:16px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+}
+.afterpay strong{display:block;margin-bottom:7px}
+.afterpay span{color:#dce7f5;line-height:1.72}
 
+@media(max-width:900px){
+  .plans{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .wrap{padding:18px 14px 56px}
+  .topbar{flex-direction:column;align-items:stretch}
+  .top-actions{width:100%}
+  .top-actions .btn{width:100%}
+  .card{padding:20px}
+  .hero h1{font-size:2.35rem}
+  .pay-btn{min-height:96px}
+  .pay-copy strong{font-size:1.12rem}
+}
 </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <a href="/index.html" class="brand-link">
+      <h1 class="brand-title">Sonar<span class="ia">IA</span></h1>
+      <div class="brand-sub">Planes y acceso docente</div>
+    </a>
+
+    <div class="top-actions">
+      <button class="btn btn-ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
+      <button class="btn btn-home" onclick="window.location.href='/index.html'">Ir al home</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>Empieza gratis o activa la versión que te deja la clase mucho más cerca.</h1>
+    <p>SonarIA Free te ayuda a decidir. SonarIA Pro te ayuda a avanzar: adaptar, orientar por curso y preparar material más listo para usar.</p>
+  </section>
+
+  <div id="bannerOk" class="banner ok">
+    <strong>Pago recibido. Ahora viene lo mejor.</strong>
+    <p>Entra a SonarIA Pro y prueba de inmediato una canción desafiante: revisa la versión escolar, elige el curso y genera el PDF docente.</p>
+    <div class="banner-actions">
+      <button class="mini-btn primary" onclick="window.location.href='/sonaria.html?welcome=pro'">Entrar a SonarIA Pro</button>
+      <button class="mini-btn ghost" onclick="window.location.href='/index.html'">Ir al home</button>
+    </div>
+  </div>
+
+  <div id="bannerPending" class="banner pending">
+    <strong>Tu pago está en proceso.</strong>
+    <p>Si ya pagaste hace un momento, espera un instante y vuelve a entrar a SonarIA. Tu activación puede tardar unos minutos en confirmarse.</p>
+    <div class="banner-actions">
+      <button class="mini-btn ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
+    </div>
+  </div>
+
+  <div id="bannerError" class="banner error">
+    <strong>No pudimos completar el pago.</strong>
+    <p>No se aplicó ningún cobro exitoso. Puedes volver a intentarlo cuando quieras desde esta misma página.</p>
+    <div class="banner-actions">
+      <button class="mini-btn ghost" onclick="document.getElementById('btnPro').scrollIntoView({behavior:'smooth', block:'center'})">Reintentar</button>
+    </div>
+  </div>
+
+  <section class="plans">
+
+    <article class="card">
+      <div class="badge">FREE</div>
+      <h2>SonarIA Free</h2>
+      <p class="copy">Conoce la herramienta y obtén una orientación inicial para decidir si una canción puede funcionar en contexto escolar.</p>
+
+      <ul class="features">
+        <li>Análisis base de la canción.</li>
+        <li>Detección inicial de señales de riesgo.</li>
+        <li>Orientación pedagógica rápida.</li>
+        <li>Ideal para probar SonarIA sin fricción.</li>
+      </ul>
+
+      <div class="value-box">
+        <strong>Qué ganas con Free</strong>
+        <span>Más claridad para decidir qué hacer con una canción antes de invertir más tiempo en analizarla manualmente.</span>
+      </div>
+
+      <button class="free-cta" onclick="window.location.href='/sonaria.html'">Seguir con Free</button>
+    </article>
+
+    <article class="card pro">
+      <div class="badge pro">PRO</div>
+      <h2>SonarIA Pro</h2>
+
+      <div class="price">
+        <strong>$4.990</strong>
+        <span>CLP</span>
+      </div>
+
+      <p class="copy">La experiencia más completa para docentes que quieren pasar de “¿se podrá usar?” a “ya tengo cómo llevarla al aula”.</p>
+
+      <ul class="features">
+        <li>Adaptación escolar de canciones más complejas.</li>
+        <li>Propuestas pedagógicas y OA por curso.</li>
+        <li>PDF más listo para usar en clase.</li>
+        <li>Menos trabajo manual, más foco en enseñar.</li>
+        <li>Ruta más corta entre análisis y clase real.</li>
+      </ul>
+
+      <div class="afterpay">
+        <strong>Después del pago</strong>
+        <span>Tu siguiente paso será entrar a SonarIA Pro, revisar una canción desafiante, elegir el curso y descargar material para clase. La idea es que sientas valor en minutos.</span>
+      </div>
+
+      <div class="mp-stack">
+        <div class="mp-intro">
+          <span class="mp-pill">
+            <img src="/mercadopago-logo.png" alt="Mercado Pago">
+          </span>
+          Pago real con Mercado Pago integrado al flujo de SonarIA
+        </div>
+
+        <button id="btnPro" class="pay-btn" type="button">
+          <div class="pay-left">
+            <div class="pay-logo">
+              <img src="/mercadopago-logo.png" alt="Mercado Pago">
+            </div>
+            <div class="pay-copy">
+              <small>Pago real</small>
+              <strong>Activar SonarIA Pro</strong>
+              <span>Pago seguro con activación rápida</span>
+            </div>
+          </div>
+          <div class="pay-arrow">→</div>
+        </button>
+
+        <div class="trust">Pago seguro · Activación rápida · Hecho para docentes</div>
+      </div>
+    </article>
+
+  </section>
+
+</div>
 
 <script>
 const API="https://sonaria-api.onrender.com";
 
 function getToken(){
-  return localStorage.getItem("mejoraria_token");
+  return (
+    localStorage.getItem("mejoraria_token") ||
+    localStorage.getItem("token") ||
+    localStorage.getItem("access_token") ||
+    ""
+  );
 }
 
-document.getElementById("btnPro").addEventListener("click", async ()=>{
-
-  const btn=document.getElementById("btnPro");
-  btn.innerHTML = "Conectando con Mercado Pago...";
-
-  const res=await fetch(API+"/payments/create-checkout",{
-    method:"POST",
-    headers:{
-      "Authorization":"Bearer "+getToken()
-    }
-  });
-
-  const data=await res.json();
-
-  if(data.checkout_url){
-    window.location.href=data.checkout_url;
-  }else{
-    alert("Error al iniciar pago");
-    location.reload();
+(function showPaymentState(){
+  const params = new URLSearchParams(window.location.search);
+  const pago = params.get("pago");
+  if(pago === "ok"){
+    document.getElementById("bannerOk").classList.add("show");
+    localStorage.setItem("sonaria_pro_welcome","1");
   }
+  if(pago === "pending"){
+    document.getElementById("bannerPending").classList.add("show");
+  }
+  if(pago === "error"){
+    document.getElementById("bannerError").classList.add("show");
+  }
+})();
 
+document.getElementById("btnPro").addEventListener("click", async ()=>{
+  const btn=document.getElementById("btnPro");
+  const old=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<div class="pay-left"><div class="pay-copy"><small>Mercado Pago</small><strong>Conectando...</strong><span>Preparando tu pago real</span></div></div>';
+
+  try{
+    const token = getToken();
+    if(!token){
+      alert("Primero debes iniciar sesión.");
+      window.location.href='/login.html';
+      return;
+    }
+
+    const res=await fetch(API+"/payments/create-checkout",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+token
+      }
+    });
+
+    const data=await res.json().catch(()=>({}));
+
+    if(data.checkout_url){
+      if(data.external_reference){
+        sessionStorage.setItem("mp_external_reference", data.external_reference);
+      }
+      window.location.href=data.checkout_url;
+    }else{
+      alert(data.detail || "No pudimos iniciar el pago.");
+      btn.disabled=false;
+      btn.innerHTML=old;
+    }
+  }catch(error){
+    alert("Error de conexión al iniciar Mercado Pago.");
+    btn.disabled=false;
+    btn.innerHTML=old;
+  }
 });
 </script>
+
+</body>
+</html>
