@@ -17,30 +17,35 @@ body{
   height:100vh;
 }
 
-/* BOTÓN */
-.mp-button{
+.container{
   width:90%;
-  max-width:600px;
+  max-width:700px;
+  text-align:center;
+}
+
+h1{
+  margin-bottom:10px;
+}
+
+.sub{
+  color:#aaa;
+  margin-bottom:40px;
+}
+
+.mp-button{
+  width:100%;
   min-height:110px;
   border:none;
   border-radius:24px;
   cursor:pointer;
-
   background:linear-gradient(180deg,#ffffff,#f4f9ff);
   border:2px solid rgba(0,177,234,0.4);
-
   box-shadow:0 25px 60px rgba(0,177,234,0.25);
-
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:16px 20px;
-
-  transition:0.2s;
-}
-
-.mp-button:hover{
-  transform:translateY(-2px) scale(1.01);
+  margin-bottom:20px;
 }
 
 .mp-left{
@@ -53,7 +58,6 @@ body{
   background:white;
   border-radius:18px;
   padding:12px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
 }
 
 .mp-logo img{
@@ -66,44 +70,18 @@ body{
   align-items:flex-start;
 }
 
-.mp-copy small{
-  font-size:12px;
-  color:#2d5f81;
-  font-weight:800;
-}
-
 .mp-copy strong{
-  font-size:20px;
   color:#1400a5;
-  font-weight:900;
-}
-
-.mp-copy span{
-  font-size:14px;
-  color:#375571;
-  margin-top:4px;
-  font-weight:700;
 }
 
 .mp-check{
   width:55px;
   height:55px;
   border-radius:50%;
+  background:rgba(0,177,234,0.15);
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(0,177,234,0.15);
-  font-size:22px;
-  color:#1400a5;
-}
-
-.trust{
-  position:absolute;
-  bottom:30px;
-  width:100%;
-  text-align:center;
-  font-size:13px;
-  color:#aaa;
 }
 
 </style>
@@ -111,57 +89,60 @@ body{
 
 <body>
 
-<button id="btnPro" class="mp-button">
+<div class="container">
 
-  <div class="mp-left">
-    <div class="mp-logo">
-      <img src="/mercadopago-logo.png">
-    </div>
+<h1>Activa SonarIA Pro</h1>
+<p class="sub">Elige tu modalidad</p>
 
-    <div class="mp-copy">
-      <small>Pago seguro</small>
-      <strong>Quiero ahorrar tiempo con SonarIA Pro</strong>
-      <span>$4.990 mensual · $49.990 anual</span>
-    </div>
-  </div>
-
-  <div class="mp-check">✓</div>
-
+<button class="mp-button" onclick="checkout('monthly')">
+<div class="mp-left">
+<div class="mp-logo">
+<img src="/mercadopago-logo.png">
+</div>
+<div class="mp-copy">
+<strong>$4.990 mensual</strong>
+</div>
+</div>
+<div class="mp-check">✓</div>
 </button>
 
-<div class="trust">
-  Pago seguro con Mercado Pago · Activación inmediata · Hecho para docentes
+<button class="mp-button" onclick="checkout('annual')">
+<div class="mp-left">
+<div class="mp-logo">
+<img src="/mercadopago-logo.png">
+</div>
+<div class="mp-copy">
+<strong>$49.990 anual</strong>
+</div>
+</div>
+<div class="mp-check">✓</div>
+</button>
+
 </div>
 
 <script>
 const API="https://sonaria-api.onrender.com";
 
 function getToken(){
-  return localStorage.getItem("mejoraria_token");
+return localStorage.getItem("mejoraria_token");
 }
 
-document.getElementById("btnPro").addEventListener("click", async ()=>{
-
-  const btn=document.getElementById("btnPro");
-  btn.innerHTML="Redirigiendo a pago seguro...";
-
-  const res=await fetch(API+"/payments/create-checkout",{
-    method:"POST",
-    headers:{
-      "Authorization":"Bearer "+getToken()
-    }
-  });
-
-  const data=await res.json();
-
-  if(data.checkout_url){
-    window.location.href=data.checkout_url;
-  }else{
-    alert("Error al iniciar pago");
-    location.reload();
-  }
-
+async function checkout(tipo){
+const res=await fetch(API+"/subscriptions/create-checkout",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+getToken()
+},
+body:JSON.stringify({cadence:tipo})
 });
+const data=await res.json();
+if(data.checkout_url){
+window.location.href=data.checkout_url;
+}else{
+alert("Error en pago");
+}
+}
 </script>
 
 </body>
