@@ -8,8 +8,8 @@
 <style>
 body{
   margin:0;
-  font-family:'Segoe UI',Arial;
-  background:linear-gradient(180deg,#0c1422,#09101c);
+  font-family:'Inter', Arial;
+  background:linear-gradient(180deg,#071221,#0b1a2e);
   color:white;
 }
 
@@ -22,103 +22,117 @@ body{
   padding:10px 14px;
   border-radius:10px;
   cursor:pointer;
-  backdrop-filter:blur(6px);
 }
 
 /* CONTENEDOR */
 .container{
-  max-width:1100px;
+  max-width:1000px;
   margin:auto;
-  padding:80px 20px 40px;
+  padding:100px 20px;
   text-align:center;
 }
 
 h1{
-  font-size:40px;
   margin-bottom:10px;
+  font-size:36px;
 }
 
 .subtitle{
-  color:#aab;
+  color:#aaa;
   margin-bottom:50px;
 }
 
-/* PLANES */
+/* GRID */
 .plans{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:30px;
 }
 
+/* TARJETAS */
 .card{
   background:rgba(255,255,255,0.05);
+  border-radius:20px;
   padding:30px;
-  border-radius:18px;
   border:1px solid rgba(255,255,255,0.08);
   transition:0.3s;
 }
 
 .card:hover{
-  transform:translateY(-5px);
+  transform:translateY(-6px);
 }
 
-.highlight{
+/* PRO DESTACADO */
+.pro{
   border:2px solid #00d2be;
-  box-shadow:0 0 20px rgba(0,210,190,0.3);
+  box-shadow:0 0 30px rgba(0,210,190,0.25);
 }
 
-.price{
-  font-size:32px;
-  margin:15px 0;
-  color:#00d2be;
+/* TITULOS */
+.card h2{
+  margin-bottom:10px;
 }
 
-/* BOTÓN MERCADOPAGO */
-.mp-btn{
+.card p{
+  color:#bbb;
+}
+
+/* LISTA */
+ul{
+  text-align:left;
+  margin-top:20px;
+}
+
+li{
+  margin-bottom:10px;
+}
+
+/* BOTONES */
+.btn{
   margin-top:25px;
   padding:14px;
+  border:none;
   border-radius:12px;
-  background:white;
+  width:100%;
+  font-weight:bold;
   cursor:pointer;
+}
+
+/* FREE */
+.btn-free{
+  background:#444;
+  color:white;
+}
+
+/* PRO */
+.btn-pro{
+  background:white;
+  color:black;
+  font-size:16px;
+  height:70px;
   display:flex;
-  justify-content:center;
   align-items:center;
-  transition:0.2s;
+  justify-content:center;
+  gap:10px;
 }
 
-.mp-btn:hover{
-  transform:scale(1.05);
+/* LOGO */
+.btn-pro img{
+  height:28px;
 }
 
-.mp-btn img{
-  height:30px;
-}
-
-/* COMPARACIÓN */
-.compare{
-  margin-top:80px;
-}
-
-.compare-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:20px;
-}
-
-.compare-card{
-  background:rgba(255,255,255,0.05);
-  padding:20px;
-  border-radius:14px;
-}
-
-.compare-card.highlight{
-  border:2px solid #00d2be;
+/* TEXTO CONFIANZA */
+.trust{
+  margin-top:10px;
+  font-size:13px;
+  color:#aaa;
 }
 
 /* MOBILE */
 @media(max-width:800px){
-  .plans{grid-template-columns:1fr;}
-  .compare-grid{grid-template-columns:1fr;}
+  .plans{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -129,74 +143,47 @@ h1{
 
 <div class="container">
 
-<h1>Activa SonarIA Pro</h1>
-<p class="subtitle">Deja de adaptar canciones manualmente. Hazlo en segundos.</p>
+<h1>Elige cómo quieres usar SonarIA</h1>
+<p class="subtitle">Empieza gratis o activa la versión que te ahorra más tiempo</p>
 
 <div class="plans">
 
+<!-- FREE -->
 <div class="card">
-<h2>Free</h2>
-<div class="price">$0</div>
-<ul>
-<li>Análisis básico</li>
-<li>Detección explícita</li>
-<li>Uso limitado</li>
-</ul>
+  <h2>SonarIA Free</h2>
+  <p>Analiza canciones y obtén una orientación inicial para decidir si usarlas en clase.</p>
+
+  <ul>
+    <li>Análisis base de la canción</li>
+    <li>Detección de riesgos</li>
+    <li>Orientación pedagógica inicial</li>
+    <li>Ideal para probar</li>
+  </ul>
+
+  <button class="btn btn-free">Seguir con Free</button>
 </div>
 
-<div class="card highlight">
-<h2>Pro</h2>
-<div class="price">$4.990 CLP</div>
-<ul>
-<li>✔ Adaptación escolar automática</li>
-<li>✔ Pedagogía por curso</li>
-<li>✔ PDF listo para clase</li>
-<li>✔ Datos de la canción</li>
-<li>✔ Uso ilimitado</li>
-</ul>
+<!-- PRO -->
+<div class="card pro">
+  <h2>SonarIA Pro</h2>
+  <p>Transforma canciones en material listo para clase sin perder tiempo analizando.</p>
 
-<div id="mpBtn" class="mp-btn">
-  <img src="/mercadopago-logo.png">
-</div>
+  <ul>
+    <li>Adaptación escolar automática</li>
+    <li>Actividades por curso</li>
+    <li>OA sugeridos</li>
+    <li>PDF listo para usar</li>
+    <li>Menos trabajo manual</li>
+  </ul>
 
-</div>
+  <button id="btnPro" class="btn btn-pro">
+    <img src="/mercadopago-logo.png">
+    Activar SonarIA Pro
+  </button>
 
-</div>
-
-<div class="compare">
-
-<h2>¿Por qué SonarIA?</h2>
-
-<div class="compare-grid">
-
-<div class="compare-card">
-<h3>IA general</h3>
-<ul>
-<li>No entiende aula</li>
-<li>No adapta canciones</li>
-<li>Resultados inconsistentes</li>
-</ul>
-</div>
-
-<div class="compare-card highlight">
-<h3>SonarIA</h3>
-<ul>
-<li>✔ Pensado para docentes</li>
-<li>✔ Contexto escolar real</li>
-<li>✔ Adaptación automática</li>
-<li>✔ Clases listas</li>
-</ul>
-</div>
-
-<div class="compare-card">
-<h3>Resultado</h3>
-<ul>
-<li>Menos tiempo</li>
-<li>Más seguridad</li>
-<li>Mejores clases</li>
-</ul>
-</div>
-
+  <div class="trust">
+    Pago seguro · Activación inmediata · Hecho para docentes
+  </div>
 </div>
 
 </div>
@@ -210,9 +197,10 @@ function getToken(){
   return localStorage.getItem("mejoraria_token");
 }
 
-document.getElementById("mpBtn").addEventListener("click", async ()=>{
-  const btn=document.getElementById("mpBtn");
-  btn.innerHTML="Conectando...";
+document.getElementById("btnPro").addEventListener("click", async ()=>{
+
+  const btn=document.getElementById("btnPro");
+  btn.innerText="Conectando...";
 
   const res=await fetch(API+"/payments/create-checkout",{
     method:"POST",
@@ -226,9 +214,10 @@ document.getElementById("mpBtn").addEventListener("click", async ()=>{
   if(data.checkout_url){
     window.location.href=data.checkout_url;
   }else{
-    alert("Error al iniciar pago");
-    btn.innerHTML='<img src="/mercadopago-logo.png">';
+    alert("Error en pago");
+    btn.innerHTML='<img src="/mercadopago-logo.png"> Activar SonarIA Pro';
   }
+
 });
 </script>
 
