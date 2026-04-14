@@ -8,90 +8,95 @@
 <style>
 body{
   margin:0;
-  font-family:Arial;
-  background:#0c1422;
+  font-family:'Segoe UI',Arial;
+  background:linear-gradient(180deg,#0c1422,#09101c);
   color:white;
 }
 
-/* 🔙 HOME BTN */
+/* HOME */
 .home{
   position:fixed;
   top:15px;
   left:15px;
-  background:#182232;
+  background:rgba(255,255,255,0.08);
   padding:10px 14px;
   border-radius:10px;
   cursor:pointer;
-  font-weight:bold;
+  backdrop-filter:blur(6px);
 }
 
+/* CONTENEDOR */
 .container{
   max-width:1100px;
   margin:auto;
   padding:80px 20px 40px;
+  text-align:center;
 }
 
 h1{
-  text-align:center;
+  font-size:40px;
+  margin-bottom:10px;
 }
 
 .subtitle{
-  text-align:center;
-  color:#bbb;
-  margin-bottom:40px;
+  color:#aab;
+  margin-bottom:50px;
 }
 
+/* PLANES */
 .plans{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:25px;
+  gap:30px;
 }
 
 .card{
-  background:#182232;
-  padding:25px;
-  border-radius:16px;
+  background:rgba(255,255,255,0.05);
+  padding:30px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.08);
   transition:0.3s;
 }
 
 .card:hover{
-  transform:scale(1.02);
+  transform:translateY(-5px);
 }
 
 .highlight{
   border:2px solid #00d2be;
+  box-shadow:0 0 20px rgba(0,210,190,0.3);
 }
 
 .price{
-  font-size:30px;
-  font-weight:bold;
-  margin:10px 0;
+  font-size:32px;
+  margin:15px 0;
+  color:#00d2be;
 }
 
-.btn{
+/* BOTÓN MERCADOPAGO */
+.mp-btn{
+  margin-top:25px;
   padding:14px;
-  border:none;
   border-radius:12px;
+  background:white;
   cursor:pointer;
-  font-weight:bold;
-  width:100%;
-}
-
-.btn-pro{
-  background:#00d2be;
-  color:black;
-}
-
-.pay-row{
-  margin-top:20px;
   display:flex;
-  flex-direction:column;
+  justify-content:center;
   align-items:center;
-  gap:10px;
+  transition:0.2s;
 }
 
+.mp-btn:hover{
+  transform:scale(1.05);
+}
+
+.mp-btn img{
+  height:30px;
+}
+
+/* COMPARACIÓN */
 .compare{
-  margin-top:60px;
+  margin-top:80px;
 }
 
 .compare-grid{
@@ -101,15 +106,16 @@ h1{
 }
 
 .compare-card{
-  background:#182232;
+  background:rgba(255,255,255,0.05);
   padding:20px;
   border-radius:14px;
 }
 
-.compare-card h3{
-  margin-top:0;
+.compare-card.highlight{
+  border:2px solid #00d2be;
 }
 
+/* MOBILE */
 @media(max-width:800px){
   .plans{grid-template-columns:1fr;}
   .compare-grid{grid-template-columns:1fr;}
@@ -123,8 +129,8 @@ h1{
 
 <div class="container">
 
-<h1>Planes SonarIA</h1>
-<p class="subtitle">Convierte canciones en clases listas para usar</p>
+<h1>Activa SonarIA Pro</h1>
+<p class="subtitle">Deja de adaptar canciones manualmente. Hazlo en segundos.</p>
 
 <div class="plans">
 
@@ -149,9 +155,8 @@ h1{
 <li>✔ Uso ilimitado</li>
 </ul>
 
-<div class="pay-row">
-<img src="/mercadopago-logo.png" style="height:30px">
-<button id="btnPro" class="btn btn-pro">Pagar con Mercado Pago</button>
+<div id="mpBtn" class="mp-btn">
+  <img src="/mercadopago-logo.png">
 </div>
 
 </div>
@@ -160,26 +165,26 @@ h1{
 
 <div class="compare">
 
-<h2 style="text-align:center">SonarIA vs IA general</h2>
+<h2>¿Por qué SonarIA?</h2>
 
 <div class="compare-grid">
 
 <div class="compare-card">
-<h3>ChatGPT / Gemini</h3>
+<h3>IA general</h3>
 <ul>
-<li>Generalistas</li>
-<li>No entienden aula</li>
-<li>No adaptan canciones</li>
+<li>No entiende aula</li>
+<li>No adapta canciones</li>
+<li>Resultados inconsistentes</li>
 </ul>
 </div>
 
 <div class="compare-card highlight">
 <h3>SonarIA</h3>
 <ul>
-<li>✔ Enfoque docente</li>
-<li>✔ Análisis contextual</li>
-<li>✔ Adaptación escolar</li>
-<li>✔ Genera clases</li>
+<li>✔ Pensado para docentes</li>
+<li>✔ Contexto escolar real</li>
+<li>✔ Adaptación automática</li>
+<li>✔ Clases listas</li>
 </ul>
 </div>
 
@@ -205,9 +210,9 @@ function getToken(){
   return localStorage.getItem("mejoraria_token");
 }
 
-document.getElementById("btnPro").addEventListener("click", async ()=>{
-  const btn=document.getElementById("btnPro");
-  btn.innerText="Conectando...";
+document.getElementById("mpBtn").addEventListener("click", async ()=>{
+  const btn=document.getElementById("mpBtn");
+  btn.innerHTML="Conectando...";
 
   const res=await fetch(API+"/payments/create-checkout",{
     method:"POST",
@@ -221,8 +226,8 @@ document.getElementById("btnPro").addEventListener("click", async ()=>{
   if(data.checkout_url){
     window.location.href=data.checkout_url;
   }else{
-    alert("Error en pago");
-    btn.innerText="Pagar con Mercado Pago";
+    alert("Error al iniciar pago");
+    btn.innerHTML='<img src="/mercadopago-logo.png">';
   }
 });
 </script>
