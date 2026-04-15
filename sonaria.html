@@ -227,6 +227,45 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
   text-align:center;
 }
 
+
+/* ===== Barras de riesgo con color incluso sin análisis ===== */
+.bar{
+  position:relative;
+  background:linear-gradient(90deg,
+    rgba(0,191,166,.16) 0%,
+    rgba(0,191,166,.16) 28%,
+    rgba(243,199,75,.18) 55%,
+    rgba(225,6,0,.14) 100%
+  ) !important;
+}
+.bar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,
+    rgba(0,191,166,.20),
+    rgba(243,199,75,.18),
+    rgba(225,6,0,.16)
+  );
+  opacity:.9;
+}
+.bar::after{
+  content:"Sin análisis";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:10px;
+  color:#5e6f87;
+  font-weight:800;
+  letter-spacing:.02em;
+  z-index:2;
+}
+.fill{
+  position:relative;
+  z-index:3;
+}
+
 </style>
 </head>
 <body>
