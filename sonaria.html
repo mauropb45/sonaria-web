@@ -95,7 +95,7 @@
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .field{display:grid;gap:7px}
     .field label{font-size:.9rem;color:#dce8ff;font-weight:700}
-    input[type='text'], select, textarea{width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit}
+    input[type='text'], textarea{width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit}
     textarea{min-height:190px;resize:vertical}
     input::placeholder, textarea::placeholder{color:#90a0b6}
     .checks{display:grid;gap:10px;margin-top:4px}
@@ -158,7 +158,6 @@
       .two,.metrics{grid-template-columns:1fr}
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -231,25 +230,6 @@
               <label for="artista">Artista</label>
               <input id="artista" type="text" placeholder="Ej: Radiohead">
             </div>
-          </div>
-
-          <div class="field">
-            <label for="cursoObjetivo">Curso objetivo</label>
-            <select id="cursoObjetivo">
-              <option value="">Automático según análisis</option>
-              <option value="1B">1° básico</option>
-              <option value="2B">2° básico</option>
-              <option value="3B">3° básico</option>
-              <option value="4B">4° básico</option>
-              <option value="5B">5° básico</option>
-              <option value="6B">6° básico</option>
-              <option value="7B">7° básico</option>
-              <option value="8B">8° básico</option>
-              <option value="1M">1° medio</option>
-              <option value="2M">2° medio</option>
-              <option value="3M">3° medio</option>
-              <option value="4M">4° medio</option>
-            </select>
           </div>
 
           <div class="field">
@@ -362,34 +342,6 @@
           </div>
         </div>
 
-        <div class="info-grid" style="margin-top:14px;">
-          <div class="info-card">
-            <strong>Curso recomendado</strong>
-            <div id="cursoRecomendado" class="list-item">Sin datos.</div>
-          </div>
-          <div class="info-card">
-            <strong>OA sugerido</strong>
-            <div id="oaSugerido" class="list-item">Sin datos.</div>
-          </div>
-          <div class="info-card">
-            <strong>Actividades sugeridas</strong>
-            <div id="actividadesSugeridas" class="list-item">Sin datos.</div>
-          </div>
-          <div class="info-card">
-            <strong>Clase completa</strong>
-            <div id="claseCompleta" class="list-item">Sin datos.</div>
-          </div>
-          <div class="info-card">
-            <strong>Plan MINEDUC</strong>
-            <div id="planMineduc" class="list-item">Sin datos.</div>
-          </div>
-          <div class="info-card">
-            <strong>Informe docente</strong>
-            <div class="list-item">Genera un PDF con la versión docente del análisis.</div>
-            <div style="margin-top:10px;"><button id="btnPdfDocente" class="btn btn-ghost" type="button">Descargar PDF docente</button></div>
-          </div>
-        </div>
-
         <div class="history-list" id="historyList"></div>
       </section>
     </section>
@@ -400,6 +352,7 @@
       <div class="cta-actions">
         <button id="btnPlanesBottom" class="btn btn-primary" type="button">Ir a planes</button>
         <button id="btnHistorial" class="btn btn-ghost" type="button">Ver historial</button>
+        <button id="btnDocente" class="btn btn-ghost" type="button">Versión docente</button>
       </div>
     </section>
   </div>
@@ -417,6 +370,50 @@
       <div class="overlay-actions">
         <button class="btn btn-green" type="button" onclick="window.location.href='planes.html'">Ver planes</button>
         <button class="btn btn-ghost" type="button" onclick="hideOverlay()">Seguir mirando</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="docenteOverlay" class="overlay">
+    <div class="overlay-box" style="width:min(94vw,860px); max-height:88vh; overflow:auto;">
+      <div class="overlay-badge">🧑‍🏫 Versión docente</div>
+      <h3>Informe pedagógico</h3>
+      <p>Esta vista concentra la capa docente sin alterar la pantalla principal de SonarIA.</p>
+
+      <div style="display:grid; gap:12px; margin-bottom:18px;">
+        <div class="field">
+          <label for="cursoObjetivoDocente">Curso objetivo</label>
+          <select id="cursoObjetivoDocente" style="width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit">
+            <option value="">Elegir automáticamente</option>
+            <option value="1B">1° básico</option>
+            <option value="2B">2° básico</option>
+            <option value="3B">3° básico</option>
+            <option value="4B">4° básico</option>
+            <option value="5B">5° básico</option>
+            <option value="6B">6° básico</option>
+            <option value="7B">7° básico</option>
+            <option value="8B">8° básico</option>
+            <option value="1M">1° medio</option>
+            <option value="2M">2° medio</option>
+            <option value="3M">3° medio</option>
+            <option value="4M">4° medio</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overlay-list" id="docenteList">
+        <div><strong>Curso recomendado</strong><br><span id="docCurso">Aún no hay datos.</span></div>
+        <div><strong>OA sugerido</strong><br><span id="docOa">Aún no hay datos.</span></div>
+        <div><strong>Actividades sugeridas</strong><br><span id="docActividades">Aún no hay datos.</span></div>
+        <div><strong>Clase completa</strong><br><span id="docClase">Aún no hay datos.</span></div>
+        <div><strong>Plan MINEDUC</strong><br><span id="docMineduc">Aún no hay datos.</span></div>
+      </div>
+
+      <div class="overlay-actions">
+        <button id="btnReanalizarDocente" class="btn btn-green" type="button">Actualizar versión docente</button>
+        <button id="btnPdfDocente" class="btn btn-primary" type="button">PDF docente</button>
+        <button class="btn btn-ghost" type="button" onclick="hideDocenteOverlay()">Cerrar</button>
       </div>
     </div>
   </div>
@@ -474,6 +471,124 @@
 
     let authToken = "";
     let user = { plan: "free" };
+    let lastAnalysis = null;
+
+    const docenteOverlay = document.getElementById("docenteOverlay");
+    const cursoObjetivoDocente = document.getElementById("cursoObjetivoDocente");
+    const docCurso = document.getElementById("docCurso");
+    const docOa = document.getElementById("docOa");
+    const docActividades = document.getElementById("docActividades");
+    const docClase = document.getElementById("docClase");
+    const docMineduc = document.getElementById("docMineduc");
+
+    function escapeMultiline(value){
+      return escapeHtml(String(value || "Sin datos.")).replaceAll("\n", "<br>");
+    }
+
+    function showDocenteOverlay(){
+      if(!lastAnalysis){
+        alert("Primero analiza una canción.");
+        return;
+      }
+      docenteOverlay.style.display = "flex";
+      renderDocente(lastAnalysis);
+    }
+
+    function hideDocenteOverlay(){
+      docenteOverlay.style.display = "none";
+    }
+
+    function renderDocente(raw){
+      docCurso.innerHTML = escapeMultiline(raw.curso_recomendado_label || raw.curso_recomendado || "Sin datos.");
+      const oaText = [raw.oa_sugerido, raw.oa_text].filter(Boolean).join(" — ");
+      docOa.innerHTML = escapeMultiline(oaText || "Sin datos.");
+      docActividades.innerHTML = escapeMultiline(raw.actividades_sugeridas || "Sin datos.");
+      docClase.innerHTML = escapeMultiline(raw.clase_completa || "Sin datos.");
+      docMineduc.innerHTML = escapeMultiline(raw.plan_mineduc || "Sin datos.");
+    }
+
+    async function refreshTeacherVersion(){
+      if(!lastAnalysis){
+        alert("Primero analiza una canción.");
+        return;
+      }
+
+      const payload = {
+        titulo: titulo.value.trim(),
+        artista: artista.value.trim(),
+        texto: texto.value.trim(),
+        buscar_letra: buscarLetra.checked,
+        contexto_escolar: contextoEscolar.checked,
+        curso_objetivo: cursoObjetivoDocente.value
+      };
+
+      try{
+        setStatus("Actualizando versión docente...", "info");
+        const response = await fetch(ANALYZE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
+          body: JSON.stringify(payload)
+        });
+        const raw = await response.json().catch(() => ({}));
+        if(!response.ok){
+          throw new Error(raw.detail || "No fue posible actualizar la versión docente.");
+        }
+        lastAnalysis = raw;
+        renderAnalysis(raw);
+        renderDocente(raw);
+        setStatus("Versión docente actualizada.", "success");
+      }catch(error){
+        setStatus(error.message || "Error al actualizar la versión docente.", "error");
+      }
+    }
+
+    function openTeacherPdf(){
+      if(!lastAnalysis){
+        alert("Primero analiza una canción.");
+        return;
+      }
+      const text = lastAnalysis.pdf_text || [
+        "SONARIA · INFORME DOCENTE",
+        "",
+        "Canción: " + (titulo.value.trim() || "—"),
+        "Artista: " + (artista.value.trim() || "—"),
+        "Curso: " + (lastAnalysis.curso_recomendado_label || lastAnalysis.curso_recomendado || "—"),
+        "OA: " + ([lastAnalysis.oa_sugerido, lastAnalysis.oa_text].filter(Boolean).join(" — ") || "—"),
+        "",
+        "ACTIVIDADES",
+        lastAnalysis.actividades_sugeridas || "Sin datos.",
+        "",
+        "CLASE COMPLETA",
+        lastAnalysis.clase_completa || "Sin datos.",
+        "",
+        "PLAN MINEDUC",
+        lastAnalysis.plan_mineduc || "Sin datos."
+      ].join("\n");
+
+      const printable = window.open("", "_blank", "width=900,height=1000");
+      printable.document.write(`
+        <html>
+          <head>
+            <title>${(lastAnalysis.pdf_filename || "sonaria_informe_docente").replace(/</g,"&lt;")}</title>
+            <style>
+              body{font-family:Arial,sans-serif;padding:36px;line-height:1.55;color:#111}
+              h1{font-size:22px;margin:0 0 18px}
+              pre{white-space:pre-wrap;font-family:Arial,sans-serif;font-size:14px}
+            </style>
+          </head>
+          <body>
+            <h1>Informe docente SonarIA</h1>
+            <pre>${escapeHtml(text)}</pre>
+          </body>
+        </html>
+      `);
+      printable.document.close();
+      printable.focus();
+      printable.print();
+    }
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
@@ -505,12 +620,6 @@
       contextList.innerHTML = '<div class="list-item">Aún no hay datos.</div>';
       observaciones.textContent = "Sin datos.";
       enfoque.textContent = "Sin datos.";
-      cursoRecomendado.textContent = "Sin datos.";
-      oaSugerido.textContent = "Sin datos.";
-      actividadesSugeridas.textContent = "Sin datos.";
-      claseCompleta.textContent = "Sin datos.";
-      planMineduc.textContent = "Sin datos.";
-      window.__lastAnalysis = null;
       riskPercent.textContent = "0%";
       riskSensitive.textContent = "0%";
       riskSchool.textContent = "0%";
@@ -625,6 +734,7 @@
     }
 
     function renderAnalysis(raw){
+      lastAnalysis = raw;
       resultBadge.textContent = raw.resultado || "Resultado";
       summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
       summaryCopy.textContent = raw.resumen || "Análisis completado.";
@@ -642,12 +752,6 @@
 
       observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
       enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
-      cursoRecomendado.textContent = raw.curso_recomendado_label || raw.curso_recomendado || "Sin datos.";
-      oaSugerido.textContent = (raw.oa_code ? raw.oa_code + " — " : "") + (raw.oa_text || "Sin datos.");
-      actividadesSugeridas.textContent = raw.actividades_sugeridas || "Sin datos.";
-      claseCompleta.textContent = raw.clase_completa || "Sin datos.";
-      planMineduc.textContent = raw.plan_mineduc || "Sin datos.";
-      window.__lastAnalysis = raw;
 
       riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
       riskSensitive.textContent = (raw.risk_sensitive ?? 0) + "%";
@@ -671,6 +775,9 @@
       if(!items.length){ alert("Todavía no tienes análisis guardados en este navegador."); return; }
       alert("Historial reciente cargado en la columna derecha.");
     });
+    document.getElementById("btnDocente").addEventListener("click", showDocenteOverlay);
+    document.getElementById("btnReanalizarDocente").addEventListener("click", refreshTeacherVersion);
+    document.getElementById("btnPdfDocente").addEventListener("click", openTeacherPdf);
 
     clearBtn.addEventListener("click", () => {
       titulo.value = "";
@@ -681,6 +788,9 @@
       clearPills();
       clearStatus();
       clearResult();
+      lastAnalysis = null;
+      cursoObjetivoDocente.value = "";
+      renderDocente({});
     });
 
     form.addEventListener("submit", async (e) => {
@@ -710,8 +820,7 @@
           artista: artista.value.trim(),
           texto: textoParaEnviar,
           buscar_letra: buscarLetra.checked,
-          contexto_escolar: contextoEscolar.checked,
-          curso_objetivo: document.getElementById("cursoObjetivo").value
+          contexto_escolar: contextoEscolar.checked
         };
 
         if(payload.texto.length >= 20) pillManualText.classList.add("show");
@@ -782,54 +891,6 @@
         form.requestSubmit();
       }
     });
-
-
-    function downloadTeacherPdf(){
-      const raw = window.__lastAnalysis;
-      if(!raw){
-        alert("Primero analiza una canción.");
-        return;
-      }
-      const title = raw.titulo || "Informe docente";
-      const filename = raw.pdf_filename || "sonaria_informe_docente.pdf";
-      const text = raw.pdf_text || "Sin contenido.";
-
-      if(window.jspdf && window.jspdf.jsPDF){
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: "pt", format: "a4" });
-        const margin = 42;
-        const width = doc.internal.pageSize.getWidth() - margin * 2;
-        let y = 48;
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
-        doc.text("SonarIA · Informe docente", margin, y);
-        y += 24;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-
-        const lines = doc.splitTextToSize(text, width);
-        for(const line of lines){
-          if(y > 790){
-            doc.addPage();
-            y = 48;
-          }
-          doc.text(line, margin, y);
-          y += 16;
-        }
-        doc.save(filename);
-        return;
-      }
-
-      const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = (filename || "informe_docente.txt").replace(/\.pdf$/i, ".txt");
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    document.getElementById("btnPdfDocente").addEventListener("click", downloadTeacherPdf);
 
     window.addEventListener("load", async () => {
       clearResult();
