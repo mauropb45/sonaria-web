@@ -510,7 +510,8 @@ function renderAnalysis(raw){
   document.getElementById("riskSchoolFill").style.width = `${Math.max(0, Math.min(100, raw.risk_school || 0))}%`;
   document.getElementById("tagsWrap").innerHTML = ((raw.temas_detectados||[]).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")) || '<span class="tag">sin datos</span>';
   const adaptOk = !!raw.adaptacion_escolar_posible;
-  document.getElementById("adaptCurso").textContent = adaptOk ? "Versión escolar: revisa adaptación disponible" : "Versión escolar: no sugerida";
+  const cursoActivo = raw.curso_objetivo_aplicado || currentAnalysisCourseCode() || "";
+  document.getElementById("adaptCurso").textContent = adaptOk ? `Versión escolar: revisa adaptación disponible${cursoActivo ? " · " + cursoActivo : ""}` : "Versión escolar: no sugerida";
   document.getElementById("adaptDesc").textContent = adaptOk
     ? (raw.adaptacion_escolar_mensaje || "Revisa si SonarIA tiene una adaptación escolar disponible antes de descartar la canción por completo.")
     : (raw.adaptacion_escolar_mensaje || "No se recomienda usar esta canción directamente en aula.");
@@ -768,7 +769,7 @@ function openPedagogia(){ openModal("Pedagogía", schoolVersionAccepted ? "Plani
 async function fetchContext(){
   if(contextCache) return contextCache;
   if(!lastAnalysis && !titulo.value.trim()) throw new Error("Primero indica una canción o realiza un análisis.");
-  const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto_analizado || texto.value || "").trim() };
+  const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto_analizado || texto.value || "").trim(), themes:(lastAnalysis?.temas_detectados || []), resultado:(lastAnalysis?.resultado || "") };
   const res = await fetch(API_URL + "/contexto", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(body) });
   const data = await res.json().catch(() => ({}));
   if(!res.ok) throw new Error(data.detail || "No se pudo cargar el contexto.");
@@ -983,6 +984,14 @@ texto.addEventListener("paste", () => {
   }, 120);
 });
 
+
+function currentAnalysisCourseCode(){
+  const selected = currentPedagogySelection();
+  if(selected && (selected.curso_codigo || selected.curso)) return String(selected.curso_codigo || selected.curso || "");
+  const stored = getStoredCourses();
+  return stored.length ? String(stored[0]) : "";
+}
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const ok = await syncSessionWithBackend();
@@ -993,7 +1002,7 @@ form.addEventListener("submit", async (e) => {
   try{
     let textoParaEnviar = texto.value.trim();
     if(buscarLetra.checked && titulo.value.trim() && !textoParaEnviar) textoParaEnviar = "";
-    const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses };
+    const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses, curso_objetivo: currentAnalysisCourseCode() };
     const res = await fetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(payload) });
     const raw = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(raw.detail || "No fue posible analizar la canción.");
