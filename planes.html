@@ -14,19 +14,17 @@
       --bg:#04101f;
       --bg2:#081a31;
       --panel:rgba(255,255,255,.05);
+      --panel-strong:rgba(255,255,255,.07);
       --line:rgba(255,255,255,.10);
       --text:#f5f7fb;
       --muted:#9fb0c7;
       --green:#22c55e;
       --green2:#14d68f;
-      --orange:#ff8000;
+      --orange:#ff8a00;
       --orange2:#ff5a00;
       --blue:#4b82ff;
       --mp-blue:#1400a5;
       --mp-cyan:#00b1ea;
-      --f1-blue-1:#081a3a;
-      --f1-blue-2:#0f3c88;
-      --f1-blue-3:#1b6fd1;
       --shadow:0 24px 60px rgba(0,0,0,.35);
       --radius:26px;
       --max:1160px;
@@ -41,7 +39,7 @@
       color:var(--text);
       background:
         radial-gradient(circle at top left, rgba(75,130,255,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(255,128,0,.10), transparent 18%),
+        radial-gradient(circle at top right, rgba(255,138,0,.10), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
@@ -130,7 +128,7 @@
     .btn-home{
       background:linear-gradient(135deg,var(--orange),var(--orange2));
       color:#111827;
-      box-shadow:0 12px 30px rgba(255,128,0,.22);
+      box-shadow:0 12px 30px rgba(255,138,0,.22);
     }
 
     .hero{
@@ -213,7 +211,7 @@
 
     .banner.show{display:block}
     .banner.ok{border-color:rgba(20,214,143,.22); background:linear-gradient(180deg, rgba(20,214,143,.12), rgba(255,255,255,.03))}
-    .banner.pending{border-color:rgba(255,128,0,.24); background:linear-gradient(180deg, rgba(255,128,0,.10), rgba(255,255,255,.03))}
+    .banner.pending{border-color:rgba(255,138,0,.24); background:linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,255,255,.03))}
     .banner.error{border-color:rgba(255,116,116,.24); background:linear-gradient(180deg, rgba(255,116,116,.10), rgba(255,255,255,.03))}
     .banner strong{display:block; margin-bottom:6px; font-size:1rem}
     .banner p{margin:0; color:#dce6f5; line-height:1.72}
@@ -388,10 +386,10 @@
     }
 
     .toggle-btn.active{
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:white;
-      border-color:rgba(255,128,0,.38);
-      box-shadow:0 10px 24px rgba(255,90,0,.24);
+      background:linear-gradient(135deg, rgba(0,177,234,.18), rgba(75,130,255,.18));
+      color:#f5fbff;
+      border-color:rgba(0,177,234,.28);
+      box-shadow:0 10px 24px rgba(0,177,234,.14);
     }
 
     .mp-button{
@@ -400,10 +398,10 @@
       border:none;
       border-radius:26px;
       cursor:pointer;
-      background:linear-gradient(135deg,var(--f1-blue-1),var(--f1-blue-2),var(--f1-blue-3));
-      border:2px solid rgba(75,130,255,.30);
-      box-shadow:0 25px 60px rgba(27,111,209,.24);
-      color:white;
+      background:linear-gradient(180deg,#ffffff,#f4f9ff);
+      border:2px solid rgba(0,177,234,0.40);
+      box-shadow:0 25px 60px rgba(0,177,234,0.22);
+      color:#0b1730;
       padding:16px 20px;
       display:flex;
       align-items:center;
@@ -414,7 +412,7 @@
 
     .mp-button:hover{
       transform:translateY(-2px) scale(1.01);
-      box-shadow:0 30px 68px rgba(27,111,209,.30);
+      box-shadow:0 30px 68px rgba(0,177,234,0.26);
     }
 
     .mp-button:disabled{
@@ -432,16 +430,16 @@
     .mp-logo{
       background:white;
       border-radius:18px;
-      padding:10px 12px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.18);
-      min-width:104px;
+      padding:12px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.15);
+      min-width:96px;
       display:flex;
       align-items:center;
       justify-content:center;
     }
 
     .mp-logo img{
-      width:76px;
+      width:70px;
       height:auto;
       display:block;
     }
@@ -453,29 +451,24 @@
       text-align:left;
     }
 
-    .mp-copy small,
-    .mp-copy strong,
-    .mp-copy span{
-      color:white;
-    }
-
     .mp-copy small{
       font-size:12px;
+      color:#2d5f81;
       font-weight:800;
-      opacity:.9;
     }
 
     .mp-copy strong{
       font-size:20px;
+      color:var(--mp-blue);
       font-weight:900;
       line-height:1.15;
     }
 
     .mp-copy span{
       font-size:14px;
+      color:#375571;
       margin-top:4px;
       font-weight:700;
-      opacity:.92;
     }
 
     .mp-check{
@@ -485,9 +478,9 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      background:rgba(255,255,255,0.15);
+      background:rgba(0,177,234,0.15);
       font-size:22px;
-      color:white;
+      color:var(--mp-blue);
       flex:0 0 auto;
     }
 
@@ -534,8 +527,8 @@
       .price strong{ font-size:2.5rem; }
       .mp-button{ min-height:122px; padding:16px; }
       .mp-left{ gap:14px; }
-      .mp-logo{ min-width:86px; }
-      .mp-logo img{ width:62px; }
+      .mp-logo{ min-width:82px; }
+      .mp-logo img{ width:58px; }
       .mp-copy strong{ font-size:17px; }
     }
   </style>
@@ -671,7 +664,7 @@
           <button id="btnPro" class="mp-button" type="button">
             <div class="mp-left">
               <div class="mp-logo">
-                <img src="/MP_RGB_HANDSHAKE_color_vertical.png" alt="Mercado Pago">
+                <img src="/mercadopago-logo.png" alt="Mercado Pago">
               </div>
 
               <div class="mp-copy">
