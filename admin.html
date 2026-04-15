@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin | SonarIA</title>
+  <title>Admin Pro | SonarIA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
       radial-gradient(circle at top right, rgba(54,124,255,.08), transparent 16%),
       linear-gradient(180deg,var(--bg),var(--bg2));
     }
-    .wrap{max-width:1380px;margin:0 auto;padding:22px}
+    .wrap{max-width:1440px;margin:0 auto;padding:22px}
     .topbar,.actions{display:flex;gap:14px;flex-wrap:wrap}
     .topbar{justify-content:space-between;align-items:center;margin-bottom:18px}
     .brand h1{margin:0;font-size:2rem;letter-spacing:-.06em}
@@ -32,6 +32,9 @@
       background:#253245;color:#fff
     }
     .btn.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22}
+    .btn.green{background:linear-gradient(135deg,var(--aston),#5be5d4);color:#071a18}
+    .btn.danger{background:linear-gradient(135deg,var(--danger),#ff635e);color:#fff}
+    .btn.small{min-height:38px;padding:0 12px;border-radius:12px;font-size:13px}
     .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
     .card{
       background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);
@@ -58,7 +61,9 @@
     .status{margin:12px 0 0;font-weight:800}
     .status.error{color:#ffd3d3}
     .status.ok{color:#d8fff7}
+    .muted{color:var(--muted)}
     code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:8px}
+    .row-actions{display:flex;gap:8px;flex-wrap:wrap}
     @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:14px}table{display:block;overflow:auto}}
   </style>
@@ -67,8 +72,8 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <h1>Sonar<span>IA</span> Admin</h1>
-        <p>Vista rápida de usuarios Free/Pro y suscripciones activas.</p>
+        <h1>Sonar<span>IA</span> Admin Pro</h1>
+        <p>Usuarios, suscripciones y control manual de planes.</p>
       </div>
       <div class="actions">
         <button class="btn" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
@@ -86,21 +91,22 @@
     <div class="tables">
       <section class="panel">
         <h2>Usuarios recientes</h2>
-        <p>Debes tener tu correo dentro de <code>ADMIN_EMAILS</code> en Render para ver esta pantalla.</p>
+        <p>Puedes activar o quitar Pro manualmente sin depender del webhook.</p>
         <div style="overflow:auto">
           <table>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Email</th>
                 <th>Nombre</th>
                 <th>Plan</th>
                 <th>Estado</th>
                 <th>Cadencia</th>
-                <th>Creado</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody id="usersBody">
-              <tr><td colspan="6">Cargando…</td></tr>
+              <tr><td colspan="7">Cargando…</td></tr>
             </tbody>
           </table>
         </div>
@@ -108,7 +114,7 @@
 
       <section class="panel">
         <h2>Suscripciones</h2>
-        <p>Registro de mensual y anual en Mercado Pago.</p>
+        <p>Registro Mercado Pago.</p>
         <div style="overflow:auto">
           <table>
             <thead>
@@ -153,18 +159,36 @@
       return `<span class="pill ${cls}">${status || "—"}</span>`;
     }
 
-    async function fetchJson(path){
+    async function fetchJson(path, options={}){
       const token = getToken();
       if(!token){
         window.location.href = "/login.html";
         throw new Error("No hay sesión activa");
       }
-      const res = await fetch(API + path, {
-        headers: { "Authorization": "Bearer " + token }
-      });
+      const headers = Object.assign({}, options.headers || {}, { "Authorization": "Bearer " + token });
+      const res = await fetch(API + path, Object.assign({}, options, { headers }));
       const data = await res.json().catch(() => ({}));
       if(!res.ok) throw new Error(data.detail || "No se pudo cargar la vista admin");
       return data;
+    }
+
+    async function forcePlan(userId, action, cadence="monthly"){
+      const status = document.getElementById("status");
+      status.className = "status";
+      status.textContent = "Aplicando cambio...";
+      try{
+        await fetchJson(`/admin/${action}/${userId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cadence })
+        });
+        status.className = "status ok";
+        status.textContent = "Cambio aplicado correctamente.";
+        await loadAdmin();
+      }catch(err){
+        status.className = "status error";
+        status.textContent = err.message;
+      }
     }
 
     async function loadAdmin(){
@@ -187,14 +211,21 @@
         const users = statsData.recent_users || [];
         document.getElementById("usersBody").innerHTML = users.length ? users.map(u => `
           <tr>
+            <td>${u.id ?? "—"}</td>
             <td>${u.email || "—"}</td>
             <td>${u.name || "—"}</td>
             <td>${pillPlan(u.plan)}</td>
             <td>${pillStatus(u.plan_status)}</td>
             <td>${u.plan_cadence || "—"}</td>
-            <td>${u.created_at ? new Date(u.created_at).toLocaleString() : "—"}</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn small green" onclick="forcePlan(${u.id}, 'set-pro', 'monthly')">Dar Pro mensual</button>
+                <button class="btn small primary" onclick="forcePlan(${u.id}, 'set-pro', 'annual')">Dar Pro anual</button>
+                <button class="btn small danger" onclick="forcePlan(${u.id}, 'remove-pro')">Quitar Pro</button>
+              </div>
+            </td>
           </tr>
-        `).join("") : `<tr><td colspan="6">No hay usuarios para mostrar.</td></tr>`;
+        `).join("") : `<tr><td colspan="7">No hay usuarios para mostrar.</td></tr>`;
 
         const subs = subsData.items || [];
         document.getElementById("subsBody").innerHTML = subs.length ? subs.map(r => `
@@ -213,7 +244,7 @@
       }catch(err){
         status.className = "status error";
         status.textContent = err.message;
-        document.getElementById("usersBody").innerHTML = `<tr><td colspan="6">No fue posible cargar usuarios.</td></tr>`;
+        document.getElementById("usersBody").innerHTML = `<tr><td colspan="7">No fue posible cargar usuarios.</td></tr>`;
         document.getElementById("subsBody").innerHTML = `<tr><td colspan="6">No fue posible cargar suscripciones.</td></tr>`;
       }
     }
