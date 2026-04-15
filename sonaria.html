@@ -317,6 +317,22 @@ let schoolVersionAccepted = false;
 let selectedPedagogyIndex = 0;
 let selectedPedagogyCourseCode = "";
 
+let lastAutoLyricsKey = "";
+let lastAutoLyricsText = "";
+let userEditedLyrics = false;
+
+function currentSongKey(titleValue, artistValue){
+  return `${String(titleValue||"").trim().toLowerCase()}::${String(artistValue||"").trim().toLowerCase()}`;
+}
+function shouldIgnoreTextareaForNewSearch(){
+  const currentKey = currentSongKey(titulo.value, artista.value);
+  const currentText = String(texto.value || "").trim();
+  if(!currentText) return false;
+  if(userEditedLyrics) return false;
+  return !!(lastAutoLyricsText && currentText === lastAutoLyricsText && currentKey !== lastAutoLyricsKey);
+}
+
+
 function userScope(){
   const raw = (user?.email || "guest").toLowerCase().replace(/[^a-z0-9]/g,"_");
   return raw || "guest";
@@ -477,7 +493,13 @@ function badgeForResult(result){
 
 function renderAnalysis(raw){
   lastAnalysis = raw;
-  texto.value = raw.texto || raw.texto_analizado || texto.value;
+  const incomingText = raw.texto || raw.texto_analizado || texto.value;
+  texto.value = incomingText;
+  if(raw.fuente_usada && !String(raw.fuente_usada).toLowerCase().includes("manual")){
+    lastAutoLyricsKey = currentSongKey(raw.titulo || titulo.value, raw.artista || artista.value);
+    lastAutoLyricsText = String(incomingText || "").trim();
+    userEditedLyrics = false;
+  }
   if((raw.pedagogia_opciones || [])[0]){ selectedPedagogyCourseCode = String((raw.pedagogia_opciones[0].curso_codigo || raw.pedagogia_opciones[0].curso || "")); selectedPedagogyIndex = 0; }
   const [badgeClass,badgeText,veredictClass] = badgeForResult(raw.resultado || "");
   const badge = document.getElementById("resultBadge"); badge.className = "badge " + badgeClass; badge.textContent = badgeText;
@@ -970,12 +992,14 @@ statsBtn.addEventListener("click", openStats);
 if(typeof suggestBtn !== "undefined" && suggestBtn) suggestBtn.addEventListener("click", openSuggestions);
 voiceBtn.addEventListener("click", startVoiceSearch);
 const logoutBtn = document.getElementById("logoutBtn"); if(logoutBtn) logoutBtn.addEventListener("click", logout);
-clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; clearResult(); setStatus(""); });
+clearBtn.addEventListener("click", () => { titulo.value=""; artista.value=""; texto.value=""; buscarLetra.checked=true; contextoEscolar.checked=true; lastAutoLyricsKey=""; lastAutoLyricsText=""; userEditedLyrics=false; clearResult(); setStatus(""); });
 texto.addEventListener("input", () => {
   if(texto.value.trim()) buscarLetra.checked = false;
+  userEditedLyrics = true;
 });
 texto.addEventListener("paste", () => {
   buscarLetra.checked = false;
+  userEditedLyrics = true;
   setTimeout(() => {
     if(texto.value.trim()){
       setStatus("Letra pegada. Iniciando análisis...", "info");
@@ -1001,6 +1025,10 @@ form.addEventListener("submit", async (e) => {
   setLoading(true); setStatus("Analizando canción...", "info"); translationCache=null; contextCache=null;
   try{
     let textoParaEnviar = texto.value.trim();
+    if(shouldIgnoreTextareaForNewSearch()){
+      textoParaEnviar = "";
+      buscarLetra.checked = true;
+    }
     if(buscarLetra.checked && titulo.value.trim() && !textoParaEnviar) textoParaEnviar = "";
     const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses, curso_objetivo: currentAnalysisCourseCode() };
     const res = await fetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(payload) });
