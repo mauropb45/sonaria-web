@@ -1137,3 +1137,68 @@ syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProMusicF
 </script>
 </body>
 </html>
+
+
+
+/* ===== MEJORAS CONTRASTE Y UX ===== */
+
+.bar{
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#eef2f7,#e3e9f2);
+  overflow:hidden;
+  position:relative;
+}
+
+.bar::after{
+  content:"Sin análisis";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:10px;
+  color:#8a97ab;
+  font-weight:700;
+}
+
+.fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--aston),var(--yellow),var(--ferrari));
+  transition:width .4s ease;
+}
+
+.panel-analizar{
+  background:linear-gradient(180deg, #ffffff, #f3f7fd);
+  border:1px solid rgba(54,124,255,.15);
+  box-shadow:0 12px 30px rgba(54,124,255,.08);
+}
+
+input, textarea{
+  background:#ffffff;
+  border:1px solid rgba(17,24,39,.12);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
+}
+
+.btn-analizar{
+  background:linear-gradient(135deg,var(--mclaren),#ff9b1f);
+  color:#1a1a1a;
+  font-weight:900;
+  box-shadow:0 6px 18px rgba(255,135,0,.35);
+}
+
+.btn-analizar:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(255,135,0,.45);
+}
+
+.empty-state{
+  padding:16px;
+  border-radius:14px;
+  background:#f8fbff;
+  border:1px dashed rgba(54,124,255,.25);
+  color:#4b5d75;
+  text-align:center;
+}
+
