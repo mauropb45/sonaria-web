@@ -1,889 +1,255 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Pro | MejorarIA</title>
-  <meta name="description" content="Panel Admin Pro de MejorarIA con control de usuarios, etapas y leads." />
+  <title>Admin Pro | SonarIA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#030711;
-      --bg2:#08111d;
-      --panel:rgba(255,255,255,.055);
-      --panel2:rgba(255,255,255,.035);
-      --line:rgba(255,255,255,.10);
-      --text:#edf3fb;
-      --muted:#98abc2;
-      --green:#16d38f;
-      --blue:#4e86ff;
-      --blue2:#6bc7ff;
-      --orange:#ff8a00;
-      --red:#ff6b6b;
-      --yellow:#f7ca45;
-      --purple:#8e7dff;
-      --shadow:0 24px 70px rgba(0,0,0,.40);
-      --radius:24px;
-      --max:1440px;
+      --bg:#07111f;--bg2:#0b1a31;--panel:#131d2b;--panel2:#182334;--line:rgba(255,255,255,.08);
+      --text:#eef3fb;--muted:#9fb0c8;--mclaren:#ff8700;--blue:#367cff;--aston:#00d2be;--danger:#e10600;
+      --shadow:0 24px 60px rgba(0,0,0,.34);--radius:22px;
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
     body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
+      margin:0;font-family:Inter,sans-serif;color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(78,134,255,.16), transparent 18%),
-        radial-gradient(circle at top right, rgba(255,138,0,.11), transparent 16%),
-        radial-gradient(circle at bottom right, rgba(22,211,143,.09), transparent 18%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
-      overflow-x:hidden;
+      radial-gradient(circle at top left, rgba(255,135,0,.08), transparent 18%),
+      radial-gradient(circle at top right, rgba(54,124,255,.08), transparent 16%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
     }
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.012) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.012) 1px, transparent 1px);
-      background-size:34px 34px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.25), transparent 82%);
-    }
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, transparent 0%, rgba(78,134,255,.10) 49.8%, rgba(78,134,255,.10) 50.2%, transparent 100%);
-      opacity:.16;
-    }
-
-    .wrap{max-width:var(--max); margin:0 auto; padding:20px 18px 56px; position:relative; z-index:1;}
-    .card{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(8px);
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      margin-bottom:18px;
-    }
-    .brand{display:flex; flex-direction:column; gap:4px; text-decoration:none; color:inherit}
-    .brand-title{
-      margin:0;
-      font-family:'Orbitron',sans-serif;
-      font-size:clamp(1.8rem,3vw,3rem);
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      display:flex; align-items:center; gap:12px;
-    }
-    .brand-title .accent{
-      color:var(--green);
-      text-shadow:0 0 18px rgba(22,211,143,.32);
-    }
-    .brand-sub{
-      color:#d2dded;
-      font-size:.9rem;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      opacity:.9;
-    }
-    .brand-tags{
-      color:var(--muted);
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .nav-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .wrap{max-width:1440px;margin:0 auto;padding:22px}
+    .topbar,.actions{display:flex;gap:14px;flex-wrap:wrap}
+    .topbar{justify-content:space-between;align-items:center;margin-bottom:18px}
+    .brand h1{margin:0;font-size:2rem;letter-spacing:-.06em}
+    .brand h1 span{color:var(--mclaren)}
+    .brand p{margin:6px 0 0;color:var(--muted)}
     .btn{
-      min-height:46px; padding:0 16px; border:none; border-radius:14px;
-      font:inherit; font-weight:800; cursor:pointer;
-      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-      display:inline-flex; align-items:center; justify-content:center; gap:9px;
+      border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;
+      background:#253245;color:#fff
     }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),#ff5b00); color:#111827; box-shadow:0 12px 28px rgba(255,138,0,.24)}
-    .btn-blue{background:linear-gradient(135deg,var(--blue),var(--blue2)); color:white; box-shadow:0 12px 28px rgba(78,134,255,.24)}
-    .btn-green{background:linear-gradient(135deg,var(--green),#47ebb0); color:#05121a; box-shadow:0 12px 28px rgba(22,211,143,.20)}
-    .btn-ghost{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--line)}
-    .btn-danger{background:linear-gradient(135deg,#ff6b6b,#ff3d3d); color:white}
-    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none}
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.15fr .85fr;
-      gap:18px;
-      margin-bottom:18px;
+    .btn.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22}
+    .btn.green{background:linear-gradient(135deg,var(--aston),#5be5d4);color:#071a18}
+    .btn.danger{background:linear-gradient(135deg,var(--danger),#ff635e);color:#fff}
+    .btn.small{min-height:38px;padding:0 12px;border-radius:12px;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .card{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:18px
     }
-    .hero-main,.hero-side{padding:24px}
-    .eyebrow{
-      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
-      background:rgba(78,134,255,.12); border:1px solid rgba(78,134,255,.22); color:#dce8ff;
-      font-size:.82rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px;
+    .card small{display:block;color:#cfdcf0;font-weight:800;margin-bottom:8px}
+    .card strong{font-size:2rem;line-height:1}
+    .tables{display:grid;grid-template-columns:1fr;gap:18px}
+    .panel{
+      background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:18px
     }
-    .hero h1{
-      margin:0 0 12px; font-family:'Orbitron',sans-serif; font-size:clamp(2rem,4vw,3.6rem);
-      line-height:.94; letter-spacing:.03em; text-transform:uppercase;
-    }
-    .hero p{margin:0; color:var(--muted); line-height:1.8}
-    .hero-grid{
-      display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px;
-    }
-    .stat{
-      padding:16px; border-radius:18px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08);
-      position:relative; overflow:hidden;
-    }
-    .stat::after{
-      content:""; position:absolute; inset:auto -20px -20px auto; width:90px; height:90px; border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,.10), transparent 70%);
-    }
-    .stat strong{display:block; font-size:1.55rem; margin-bottom:6px}
-    .stat span{color:var(--muted); line-height:1.55; font-size:.92rem}
-
-    .theme-matrix{
-      display:grid; gap:12px;
-    }
-    .theme-chip{
-      padding:14px 16px; border-radius:18px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08);
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .theme-chip strong{display:block; font-size:.95rem}
-    .theme-chip span{display:block; color:var(--muted); font-size:.9rem; line-height:1.6}
-    .theme-icon{
-      width:42px; height:42px; border-radius:14px; display:grid; place-items:center; font-size:1.15rem;
-      background:rgba(78,134,255,.10); border:1px solid rgba(78,134,255,.18)
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap:18px;
-      align-items:start;
-    }
-    .stack{display:grid; gap:18px}
-
-    .section{padding:22px}
-    .section-head{
-      display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px; flex-wrap:wrap;
-    }
-    .section-title{
-      margin:0;
-      font-size:1.45rem;
-      letter-spacing:-.04em;
-    }
-    .section-copy{
-      color:var(--muted); line-height:1.72; margin-top:6px; font-size:.95rem;
-    }
-
-    .status-bar{
-      min-height:24px; font-weight:800; line-height:1.55;
-    }
-
-    .toolbar{
-      display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;
-    }
-    .field{
-      display:grid; gap:7px; min-width:180px; flex:1 1 180px;
-    }
-    .field label{font-size:.88rem; font-weight:700; color:#dce7f7}
-    input[type='text'], input[type='email'], select, textarea{
-      width:100%; border:none; outline:none; border-radius:14px; padding:13px 14px;
-      background:rgba(255,255,255,.05); color:var(--text); border:1px solid rgba(255,255,255,.08); font:inherit;
-    }
-    textarea{min-height:110px; resize:vertical}
-    input::placeholder, textarea::placeholder{color:#8fa2ba}
-
-    .user-stage-board{
-      display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:14px;
-    }
-    .stage-card{
-      padding:16px; border-radius:18px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.07);
-      position:relative;
-    }
-    .stage-card strong{display:block; font-size:1.2rem; margin-bottom:6px}
-    .stage-card span{color:var(--muted); font-size:.9rem; line-height:1.6}
-    .stage-card.pending{border-color:rgba(247,202,69,.25)}
-    .stage-card.free{border-color:rgba(78,134,255,.22)}
-    .stage-card.pro{border-color:rgba(22,211,143,.24)}
-    .stage-card.deleted{border-color:rgba(255,107,107,.22)}
-
-    .table-wrap{
-      overflow:auto;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.025);
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:860px;
-    }
-    th, td{
-      padding:14px 12px;
-      text-align:left;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      vertical-align:top;
-      font-size:.93rem;
-    }
-    th{
-      font-size:.8rem;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:#cdd9ea;
-      background:rgba(255,255,255,.03);
-      position:sticky;
-      top:0;
-      z-index:1;
-    }
-    tr:hover td{background:rgba(255,255,255,.025)}
-
-    .user-cell{
-      display:flex; align-items:flex-start; gap:10px;
-    }
-    .avatar{
-      width:38px; height:38px; border-radius:50%; overflow:hidden; background:rgba(255,255,255,.08);
-      display:grid; place-items:center; font-weight:900; color:#d7fff0; flex:0 0 auto;
-    }
-    .avatar img{width:100%; height:100%; object-fit:cover; display:block}
-    .user-main strong{display:block; margin-bottom:4px}
-    .user-main span{color:var(--muted); font-size:.88rem}
-
-    .pill{
-      display:inline-flex; align-items:center; gap:7px;
-      padding:7px 10px; border-radius:999px; font-size:.78rem; font-weight:800;
-      border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.05); color:#dce8ff;
-      white-space:nowrap;
-    }
-    .pill.pending{background:rgba(247,202,69,.12); border-color:rgba(247,202,69,.22); color:#ffecb0}
-    .pill.free{background:rgba(78,134,255,.10); border-color:rgba(78,134,255,.20); color:#dbe7ff}
-    .pill.pro{background:rgba(22,211,143,.12); border-color:rgba(22,211,143,.22); color:#dbffef}
-    .pill.deleted{background:rgba(255,107,107,.10); border-color:rgba(255,107,107,.20); color:#ffd6d6}
-
-    .action-row{display:flex; gap:8px; flex-wrap:wrap}
-    .mini-btn{
-      min-height:34px; padding:0 12px; border:none; border-radius:11px; font:inherit; font-weight:800; cursor:pointer;
-      background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.08);
-    }
-    .mini-btn.mail{background:rgba(78,134,255,.12); border-color:rgba(78,134,255,.22)}
-    .mini-btn.delete{background:rgba(255,107,107,.12); border-color:rgba(255,107,107,.22)}
-    .mini-btn:hover{opacity:.92}
-
-    .lead-list{display:grid; gap:12px}
-    .lead-card{
-      padding:16px; border-radius:18px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.07);
-    }
-    .lead-top{
-      display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; flex-wrap:wrap;
-    }
-    .lead-card h3{margin:0; font-size:1rem}
-    .lead-meta{color:var(--muted); font-size:.88rem; line-height:1.6}
-    .lead-copy{color:#dbe7f5; line-height:1.72; margin-top:10px}
-    .lead-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
-
-    .mail-box{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(78,134,255,.08);
-      border:1px solid rgba(78,134,255,.20);
-      color:#dce7ff;
-      line-height:1.7;
-    }
-
-    .footer-note{
-      margin-top:18px;
-      text-align:center;
-      color:#d8e3f1;
-      font-weight:800;
-    }
-    .footer-note small{
-      display:block; color:var(--muted); font-weight:500; margin-top:8px; line-height:1.7;
-    }
-
-    @media (max-width: 1100px){
-      .hero, .layout{grid-template-columns:1fr}
-      .hero-grid, .user-stage-board{grid-template-columns:1fr 1fr}
-    }
-    @media (max-width: 720px){
-      .wrap{padding:16px 14px 46px}
-      .topbar{flex-direction:column; align-items:stretch}
-      .nav-actions{width:100%}
-      .nav-actions .btn{width:100%}
-      .hero-main,.hero-side,.section{padding:18px}
-      .hero-grid, .user-stage-board{grid-template-columns:1fr}
-      .toolbar{display:grid}
-      .section-title{font-size:1.26rem}
-      .hero h1{font-size:2rem}
-    }
+    .panel h2{margin:0 0 8px;font-size:1.25rem}
+    .panel p{margin:0 0 14px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top}
+    th{color:#d9e6f8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    td{color:#eef3fb}
+    .pill{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900}
+    .pill.free{background:rgba(54,124,255,.14);color:#dbe8ff}
+    .pill.pro{background:rgba(0,210,190,.14);color:#d8fff7}
+    .pill.pending{background:rgba(255,135,0,.14);color:#ffe3bf}
+    .pill.cancelled{background:rgba(225,6,0,.14);color:#ffd5d3}
+    .status{margin:12px 0 0;font-weight:800}
+    .status.error{color:#ffd3d3}
+    .status.ok{color:#d8fff7}
+    .muted{color:var(--muted)}
+    code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:8px}
+    .row-actions{display:flex;gap:8px;flex-wrap:wrap}
+    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:14px}table{display:block;overflow:auto}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <a href="/index.html" class="brand">
-        <h1 class="brand-title">
-          <span>Admin</span>
-          <span class="accent">Command</span>
-        </h1>
-        <div class="brand-sub">MEJORARIA • SONARIA • CONTROL TÁCTICO</div>
-        <div class="brand-tags">Beatles • Star Wars • FBI/SWAT • Cámaras • Rastreadores • Informática • English • Formula 1</div>
-      </a>
-
-      <div class="nav-actions">
-        <button class="btn btn-ghost" onclick="window.location.href='/index.html'">Home</button>
-        <button class="btn btn-blue" onclick="window.location.href='/sonaria.html'">Ir a SonarIA</button>
-        <button class="btn btn-primary" onclick="reloadAll()">Actualizar panel</button>
+      <div class="brand">
+        <h1>Sonar<span>IA</span> Admin Pro</h1>
+        <p>Usuarios, suscripciones y control manual de planes.</p>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
+        <button class="btn primary" onclick="loadAdmin()">Actualizar</button>
       </div>
     </div>
 
-    <section class="hero">
-      <div class="card hero-main">
-        <div class="eyebrow">CONTROL ROOM • LIVE STATUS</div>
-        <h1>Panel Admin Pro para vigilar etapas, usuarios y pendientes.</h1>
-        <p>
-          Este panel prioriza visibilidad táctica: en qué etapa está cada usuario, qué leads están pendientes y qué acciones puedes ejecutar ahora sin perder tiempo.
-        </p>
-
-        <div class="hero-grid">
-          <div class="stat">
-            <strong id="statTotalUsers">0</strong>
-            <span>usuarios detectados</span>
-          </div>
-          <div class="stat">
-            <strong id="statPending">0</strong>
-            <span>pendientes por seguimiento</span>
-          </div>
-          <div class="stat">
-            <strong id="statPro">0</strong>
-            <span>usuarios ya en pro</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card hero-side">
-        <div class="theme-matrix">
-          <div class="theme-chip">
-            <div>
-              <strong>Scanner mode</strong>
-              <span>Interfaz tipo cámara táctica para leer el estado del sistema rápido.</span>
-            </div>
-            <div class="theme-icon">📡</div>
-          </div>
-          <div class="theme-chip">
-            <div>
-              <strong>Stage tracking</strong>
-              <span>Visual claro para saber si el usuario está pending, free, pro o eliminado.</span>
-            </div>
-            <div class="theme-icon">🎯</div>
-          </div>
-          <div class="theme-chip">
-            <div>
-              <strong>Action deck</strong>
-              <span>Botones directos para preparar correos, gestionar usuarios y limpiar pendientes.</span>
-            </div>
-            <div class="theme-icon">🛠️</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card section" style="margin-bottom:18px;">
-      <div class="section-head">
-        <div>
-          <h2 class="section-title">Etapas del sistema</h2>
-          <div class="section-copy">Resumen visual de dónde está hoy cada persona dentro del flujo.</div>
-        </div>
-        <div class="status-bar" id="topStatus"></div>
-      </div>
-
-      <div class="user-stage-board">
-        <div class="stage-card pending">
-          <strong id="boardPending">0</strong>
-          <span>Pending • leads por responder o usuarios con seguimiento pendiente.</span>
-        </div>
-        <div class="stage-card free">
-          <strong id="boardFree">0</strong>
-          <span>Free • usuarios con acceso activo pero aún no pro.</span>
-        </div>
-        <div class="stage-card pro">
-          <strong id="boardPro">0</strong>
-          <span>Pro • usuarios ya activados o con plan pagado/activo.</span>
-        </div>
-        <div class="stage-card deleted">
-          <strong id="boardDeleted">0</strong>
-          <span>Eliminados • enviados a papelera lógica desde admin.</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="layout">
-      <div class="stack">
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <h2 class="section-title">Radar de usuarios</h2>
-              <div class="section-copy">Puedes ver claramente la etapa de cada usuario y aplicar acciones rápidas.</div>
-            </div>
-          </div>
-
-          <div class="toolbar">
-            <div class="field">
-              <label for="userSearch">Buscar usuario</label>
-              <input id="userSearch" type="text" placeholder="nombre, correo o etapa">
-            </div>
-            <div class="field">
-              <label for="stageFilter">Filtrar etapa</label>
-              <select id="stageFilter">
-                <option value="all">Todas</option>
-                <option value="pending">Pending</option>
-                <option value="free">Free</option>
-                <option value="pro">Pro</option>
-                <option value="deleted">Eliminados</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Etapa</th>
-                  <th>Plan</th>
-                  <th>Sesión</th>
-                  <th>Alta</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="usersTableBody">
-                <tr><td colspan="6">Cargando usuarios...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <h2 class="section-title">Mensajes a pendientes</h2>
-              <div class="section-copy">Aquí se prepara el correo para quienes siguen en pending. Si configuras email en backend, se envía directo. Si no, deja el texto listo para copiar.</div>
-            </div>
-          </div>
-
-          <div class="mail-box" id="mailHelpBox">
-            Tu backend actual necesita endpoints admin y configuración de correo para enviar mensajes reales. Este panel está preparado para ambas cosas: envío real si existe backend, o plantilla lista para copiar/usar.
-          </div>
-
-          <div class="toolbar" style="margin-top:14px;">
-            <div class="field">
-              <label for="mailSubject">Asunto</label>
-              <input id="mailSubject" type="text" value="Tu acceso a MejorarIA y SonarIA sigue pendiente">
-            </div>
-          </div>
-          <div class="field">
-            <label for="mailBody">Cuerpo base</label>
-            <textarea id="mailBody">Hola {{name}},
-
-Veo que tu proceso con MejorarIA / SonarIA sigue en estado pendiente.
-
-Quería escribirte para ayudarte a completar la siguiente etapa y que puedas usar la plataforma con claridad.
-
-Si quieres, puedo orientarte con:
-- acceso
-- uso inicial
-- plan adecuado
-- próximos pasos
-
-Quedo atento.
-
-Saludos,
-Mauricio Pinto Basso
-MejorarIA</textarea>
-          </div>
-        </section>
-      </div>
-
-      <div class="stack">
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <h2 class="section-title">Lead tracker</h2>
-              <div class="section-copy">Vista clara de leads o pendientes de contacto, con acciones rápidas.</div>
-            </div>
-          </div>
-
-          <div class="toolbar">
-            <div class="field">
-              <label for="leadFilter">Filtrar pendientes</label>
-              <select id="leadFilter">
-                <option value="all">Todos</option>
-                <option value="pending">Solo pending</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="leadList" class="lead-list">
-            <div class="lead-card">Cargando leads...</div>
-          </div>
-        </section>
-
-        <section class="card section">
-          <div class="section-head">
-            <div>
-              <h2 class="section-title">Notas del comando</h2>
-              <div class="section-copy">Lectura rápida del estado general del sistema.</div>
-            </div>
-          </div>
-
-          <div class="lead-list" id="intelNotes">
-            <div class="lead-card">
-              <h3>Modo actual</h3>
-              <div class="lead-copy">Esperando datos del backend para determinar si el radar de usuarios y los leads están operativos.</div>
-            </div>
-          </div>
-        </section>
-      </div>
+    <div class="grid">
+      <div class="card"><small>Total usuarios</small><strong id="statTotal">—</strong></div>
+      <div class="card"><small>Usuarios Free</small><strong id="statFree">—</strong></div>
+      <div class="card"><small>Usuarios Pro</small><strong id="statPro">—</strong></div>
+      <div class="card"><small>Pro activos</small><strong id="statActive">—</strong></div>
     </div>
 
-    <div class="footer-note">
-      Admin Pro • Tactical visibility for MejorarIA
-      <small>Diseño inspirado en música, interfaces tácticas, rastreo, informática, sci-fi clásico y velocidad visual clara.</small>
+    <div class="tables">
+      <section class="panel">
+        <h2>Usuarios recientes</h2>
+        <p>Puedes activar o quitar Pro manualmente sin depender del webhook.</p>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Plan</th>
+                <th>Estado</th>
+                <th>Cadencia</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody">
+              <tr><td colspan="7">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Suscripciones</h2>
+        <p>Registro Mercado Pago.</p>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Email pagador</th>
+                <th>Cadencia</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Referencia</th>
+              </tr>
+            </thead>
+            <tbody id="subsBody">
+              <tr><td colspan="6">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
+
+    <div id="status" class="status"></div>
   </div>
 
   <script>
     const API = "https://sonaria-api.onrender.com";
 
-    let allUsers = [];
-    let allLeads = [];
-
     function getToken(){
-      return (
-        localStorage.getItem("mejoraria_token") ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("access_token") ||
-        ""
-      );
+      return localStorage.getItem("mejoraria_token")
+        || localStorage.getItem("token")
+        || localStorage.getItem("access_token")
+        || "";
     }
 
-    function getUser() {
-      try {
-        return JSON.parse(localStorage.getItem("mejoraria_user") || "{}");
-      } catch {
-        return {};
-      }
+    function pillPlan(plan){
+      const p = (plan || "free").toLowerCase();
+      return `<span class="pill ${p === 'pro' ? 'pro' : 'free'}">${p.toUpperCase()}</span>`;
     }
 
-    function setTopStatus(message, isError=false){
-      const box = document.getElementById("topStatus");
-      box.textContent = message || "";
-      box.style.color = isError ? "#ffd6d6" : "#dfffee";
+    function pillStatus(status){
+      const s = (status || "").toLowerCase();
+      const cls = s === "active" ? "pro" : (s === "pending" || s === "paused" ? "pending" : (s === "cancelled" ? "cancelled" : "free"));
+      return `<span class="pill ${cls}">${status || "—"}</span>`;
     }
 
-    function normalizeText(value){
-      return (value || "").toString().trim().toLowerCase();
-    }
-
-    function formatDate(value){
-      if(!value) return "—";
-      try{
-        const d = new Date(value);
-        if (Number.isNaN(d.getTime())) return value;
-        return d.toLocaleString("es-CL");
-      }catch{
-        return value;
-      }
-    }
-
-    function inferUserStage(user){
-      const plan = normalizeText(user.plan);
-      const deleted = !!user.deleted;
-      const pending = !!user.pending;
-      if (deleted) return "deleted";
-      if (plan === "pro" || normalizeText(user.status) === "active") return "pro";
-      if (pending) return "pending";
-      return "free";
-    }
-
-    function stageLabel(stage){
-      if(stage === "pro") return "Pro";
-      if(stage === "pending") return "Pending";
-      if(stage === "deleted") return "Eliminado";
-      return "Free";
-    }
-
-    function stagePill(stage){
-      return `<span class="pill ${stage}">${stageLabel(stage)}</span>`;
-    }
-
-    function buildAvatar(user){
-      const picture = user.picture || "";
-      const name = user.name || user.email || "U";
-      if (picture) {
-        return `<div class="avatar"><img src="${picture}" alt="${name}"></div>`;
-      }
-      return `<div class="avatar">${name.charAt(0).toUpperCase()}</div>`;
-    }
-
-    function renderUsers(){
-      const tbody = document.getElementById("usersTableBody");
-      const search = normalizeText(document.getElementById("userSearch").value);
-      const stageFilter = document.getElementById("stageFilter").value;
-
-      const filtered = allUsers.filter(user => {
-        const stage = inferUserStage(user);
-        const blob = normalizeText(`${user.name || ""} ${user.email || ""} ${stage} ${user.plan || ""}`);
-        const searchOk = !search || blob.includes(search);
-        const stageOk = stageFilter === "all" || stage === stageFilter;
-        return searchOk && stageOk;
-      });
-
-      if(!filtered.length){
-        tbody.innerHTML = `<tr><td colspan="6">No hay usuarios que coincidan con ese filtro.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(user => {
-        const stage = inferUserStage(user);
-        const sessionVersion = user.session_version ?? "—";
-        return `
-          <tr>
-            <td>
-              <div class="user-cell">
-                ${buildAvatar(user)}
-                <div class="user-main">
-                  <strong>${user.name || "Sin nombre"}</strong>
-                  <span>${user.email || "Sin email"}</span>
-                </div>
-              </div>
-            </td>
-            <td>${stagePill(stage)}</td>
-            <td>${stagePill((normalizeText(user.plan)==="pro") ? "pro" : "free")}</td>
-            <td>${sessionVersion}</td>
-            <td>${formatDate(user.created_at)}</td>
-            <td>
-              <div class="action-row">
-                <button class="mini-btn mail" onclick="prepareMailForUser('${(user.email||"").replace(/'/g,"\\'")}', '${(user.name||"").replace(/'/g,"\\'")}')">Mail</button>
-                <button class="mini-btn delete" onclick="trashUser(${user.id})">Eliminar</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    function renderLeads(){
-      const holder = document.getElementById("leadList");
-      const filter = document.getElementById("leadFilter").value;
-
-      const filtered = allLeads.filter(lead => {
-        if(filter === "pending"){
-          return normalizeText(lead.stage || "pending") === "pending";
-        }
-        return true;
-      });
-
-      if(!filtered.length){
-        holder.innerHTML = `<div class="lead-card">No hay leads disponibles.</div>`;
-        return;
-      }
-
-      holder.innerHTML = filtered.map(lead => {
-        const stage = normalizeText(lead.stage || "pending");
-        const subject = encodeURIComponent(document.getElementById("mailSubject").value || "Seguimiento MejorarIA");
-        const body = encodeURIComponent(buildMailText(lead.name || lead.nombre || "", lead.email || ""));
-        const email = lead.email || "";
-        return `
-          <div class="lead-card">
-            <div class="lead-top">
-              <div>
-                <h3>${lead.name || lead.nombre || "Lead sin nombre"}</h3>
-                <div class="lead-meta">${email || "sin email"} • ${lead.asignatura || "sin asignatura"} • ${lead.nivel || "sin nivel"} • ${formatDate(lead.created_at)}</div>
-              </div>
-              ${stagePill(stage)}
-            </div>
-            <div class="lead-copy"><strong>Problema:</strong> ${lead.problema || "—"}</div>
-            ${lead.intento ? `<div class="lead-copy"><strong>Intentó:</strong> ${lead.intento}</div>` : ""}
-            ${lead.solucion_ideal ? `<div class="lead-copy"><strong>Solución ideal:</strong> ${lead.solucion_ideal}</div>` : ""}
-            <div class="lead-actions">
-              <button class="mini-btn mail" onclick="prepareMailForLead(${lead.id}, '${(email).replace(/'/g,"\\'")}', '${((lead.name||lead.nombre||"")).replace(/'/g,"\\'")}')">Enviar / preparar mail</button>
-              ${email ? `<a class="mini-btn" href="mailto:${email}?subject=${subject}&body=${body}">Abrir mail</a>` : ""}
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function buildMailText(name, email){
-      const template = document.getElementById("mailBody").value || "";
-      return template
-        .replaceAll("{{name}}", name || "docente")
-        .replaceAll("{{email}}", email || "");
-    }
-
-    function prepareMailForUser(email, name){
-      if(!email){
-        alert("Este usuario no tiene email.");
-        return;
-      }
-      const subject = document.getElementById("mailSubject").value || "Seguimiento MejorarIA";
-      const body = buildMailText(name, email);
-      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    }
-
-    async function prepareMailForLead(id, email, name){
-      if(!email){
-        alert("Este lead no tiene email.");
-        return;
-      }
-      const token = getToken();
-      const subject = document.getElementById("mailSubject").value || "Seguimiento MejorarIA";
-      const body = buildMailText(name, email);
-
-      try{
-        const res = await fetch(API + `/admin/leads/${id}/email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({ subject, body })
-        });
-        const data = await res.json().catch(() => ({}));
-        if(res.ok && data.ok){
-          setTopStatus("Correo enviado correctamente desde backend.");
-          reloadAll();
-          return;
-        }
-      }catch(e){
-        console.error(e);
-      }
-
-      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      setTopStatus("Backend sin envío configurado. Se abrió tu cliente de correo.", false);
-    }
-
-    async function trashUser(userId){
-      const token = getToken();
-      if(!token){
-        alert("No hay sesión activa.");
-        return;
-      }
-      const ok = confirm("¿Eliminar este usuario? Se recomienda usar esto solo cuando sea necesario.");
-      if(!ok) return;
-
-      try{
-        const res = await fetch(API + `/admin/users/${userId}/trash`, {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer " + token
-          }
-        });
-        const data = await res.json().catch(() => ({}));
-        if(!res.ok || !data.ok){
-          throw new Error(data.detail || data.message || "No se pudo eliminar el usuario");
-        }
-        setTopStatus("Usuario enviado a eliminación lógica.");
-        reloadAll();
-      }catch(error){
-        setTopStatus(error.message || "Error al eliminar usuario", true);
-      }
-    }
-
-    function updateBoards(){
-      const counts = {pending:0, free:0, pro:0, deleted:0};
-      allUsers.forEach(user => {
-        const stage = inferUserStage(user);
-        counts[stage] = (counts[stage] || 0) + 1;
-      });
-      counts.pending += allLeads.filter(l => normalizeText(l.stage || "pending") === "pending").length;
-
-      document.getElementById("boardPending").textContent = counts.pending || 0;
-      document.getElementById("boardFree").textContent = counts.free || 0;
-      document.getElementById("boardPro").textContent = counts.pro || 0;
-      document.getElementById("boardDeleted").textContent = counts.deleted || 0;
-
-      document.getElementById("statTotalUsers").textContent = allUsers.length || 0;
-      document.getElementById("statPending").textContent = counts.pending || 0;
-      document.getElementById("statPro").textContent = counts.pro || 0;
-
-      const notes = [];
-      if(counts.pending > 0){
-        notes.push(`<div class="lead-card"><h3>Seguimiento pendiente</h3><div class="lead-copy">Hay <strong>${counts.pending}</strong> elementos en pending. Conviene revisar mails y etapas antes de que se enfríen.</div></div>`);
-      }
-      if(counts.pro > 0){
-        notes.push(`<div class="lead-card"><h3>Conversión activa</h3><div class="lead-copy">Ya hay <strong>${counts.pro}</strong> usuarios en pro. Muestra clara de avance real del producto.</div></div>`);
-      }
-      if(!notes.length){
-        notes.push(`<div class="lead-card"><h3>Lectura inicial</h3><div class="lead-copy">Aún no hay suficiente información para una lectura estratégica más fina.</div></div>`);
-      }
-      document.getElementById("intelNotes").innerHTML = notes.join("");
-    }
-
-    async function loadOverview(){
+    async function fetchJson(path, options={}){
       const token = getToken();
       if(!token){
         window.location.href = "/login.html";
-        return;
+        throw new Error("No hay sesión activa");
       }
+      const headers = Object.assign({}, options.headers || {}, { "Authorization": "Bearer " + token });
+      const res = await fetch(API + path, Object.assign({}, options, { headers }));
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.detail || "No se pudo cargar la vista admin");
+      return data;
+    }
 
-      const user = getUser();
-      if(user && user.email){
-        setTopStatus(`Sesión activa: ${user.email}`);
+    async function forcePlan(userId, action, cadence="monthly"){
+      const status = document.getElementById("status");
+      status.className = "status";
+      status.textContent = "Aplicando cambio...";
+      try{
+        await fetchJson(`/admin/${action}/${userId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cadence })
+        });
+        status.className = "status ok";
+        status.textContent = "Cambio aplicado correctamente.";
+        await loadAdmin();
+      }catch(err){
+        status.className = "status error";
+        status.textContent = err.message;
       }
+    }
 
-      let overviewLoaded = false;
+    async function loadAdmin(){
+      const status = document.getElementById("status");
+      status.className = "status";
+      status.textContent = "Cargando datos admin…";
 
       try{
-        const res = await fetch(API + "/admin/overview", {
-          headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json().catch(() => ({}));
-        if(res.ok && data.ok){
-          allUsers = data.users || [];
-          allLeads = data.leads || [];
-          overviewLoaded = true;
-          renderUsers();
-          renderLeads();
-          updateBoards();
-          setTopStatus("Radar operativo. Datos cargados correctamente.");
-        }
-      }catch(e){
-        console.error(e);
-      }
+        const [statsData, subsData] = await Promise.all([
+          fetchJson("/admin/stats"),
+          fetchJson("/admin/subscriptions")
+        ]);
 
-      if(!overviewLoaded){
-        setTopStatus("El backend actual no tiene /admin/overview. El diseño ya está listo, pero debes subir el app.py admin para que opere completo.", true);
-        document.getElementById("usersTableBody").innerHTML = `<tr><td colspan="6">Falta el endpoint /admin/overview en backend.</td></tr>`;
-        document.getElementById("leadList").innerHTML = `<div class="lead-card">Falta el endpoint /admin/overview o /admin/leads en backend.</div>`;
+        const s = statsData.stats || {};
+        document.getElementById("statTotal").textContent = s.total ?? 0;
+        document.getElementById("statFree").textContent = s.free ?? 0;
+        document.getElementById("statPro").textContent = s.pro ?? 0;
+        document.getElementById("statActive").textContent = (s.monthly_active ?? 0) + (s.annual_active ?? 0);
+
+        const users = statsData.recent_users || [];
+        document.getElementById("usersBody").innerHTML = users.length ? users.map(u => `
+          <tr>
+            <td>${u.id ?? "—"}</td>
+            <td>${u.email || "—"}</td>
+            <td>${u.name || "—"}</td>
+            <td>${pillPlan(u.plan)}</td>
+            <td>${pillStatus(u.plan_status)}</td>
+            <td>${u.plan_cadence || "—"}</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn small green" onclick="forcePlan(${u.id}, 'set-pro', 'monthly')">Dar Pro mensual</button>
+                <button class="btn small primary" onclick="forcePlan(${u.id}, 'set-pro', 'annual')">Dar Pro anual</button>
+                <button class="btn small danger" onclick="forcePlan(${u.id}, 'remove-pro')">Quitar Pro</button>
+              </div>
+            </td>
+          </tr>
+        `).join("") : `<tr><td colspan="7">No hay usuarios para mostrar.</td></tr>`;
+
+        const subs = subsData.items || [];
+        document.getElementById("subsBody").innerHTML = subs.length ? subs.map(r => `
+          <tr>
+            <td>${r.user_id ?? "—"}</td>
+            <td>${r.payer_email || "—"}</td>
+            <td>${r.cadence || "—"}</td>
+            <td>${r.amount ?? "—"}</td>
+            <td>${pillStatus(r.status)}</td>
+            <td style="max-width:280px;word-break:break-word">${r.external_reference || "—"}</td>
+          </tr>
+        `).join("") : `<tr><td colspan="6">No hay suscripciones registradas.</td></tr>`;
+
+        status.className = "status ok";
+        status.textContent = "Vista admin cargada correctamente.";
+      }catch(err){
+        status.className = "status error";
+        status.textContent = err.message;
+        document.getElementById("usersBody").innerHTML = `<tr><td colspan="7">No fue posible cargar usuarios.</td></tr>`;
+        document.getElementById("subsBody").innerHTML = `<tr><td colspan="6">No fue posible cargar suscripciones.</td></tr>`;
       }
     }
 
-    function reloadAll(){
-      loadOverview();
-    }
-
-    document.getElementById("userSearch").addEventListener("input", renderUsers);
-    document.getElementById("stageFilter").addEventListener("change", renderUsers);
-    document.getElementById("leadFilter").addEventListener("change", renderLeads);
-
-    loadOverview();
+    loadAdmin();
   </script>
 </body>
 </html>
