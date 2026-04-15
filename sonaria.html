@@ -546,77 +546,10 @@ const statsBtn = document.getElementById("statsBtn");
 const coursesBtn = document.getElementById("coursesBtn");
 const voiceBtn = document.getElementById("voiceBtn");
 
-
-function selectedCourseCode(){
-  const stored = getStoredCourses();
-  if(selectedPedagogyCourseCode) return selectedPedagogyCourseCode;
-  return stored[0] || "";
-}
-function selectedCourseLabel(){
-  const code = selectedCourseCode();
-  const hit = COURSE_LIST.find(x => x[0] === code);
-  return hit ? hit[1] : (code || "Curso sugerido");
-}
-function nl2brSafe(v){
-  return escapeHtml(String(v || "")).replace(/\n/g, "<br>");
-}
-function buildFrontendContextData(){
-  if(!lastAnalysis) return null;
-  const title = lastAnalysis.titulo || titulo.value || "la canción";
-  const artist = lastAnalysis.artista || artista.value || "artista no indicado";
-  const temas = Array.isArray(lastAnalysis.temas_detectados) ? lastAnalysis.temas_detectados : [];
-  const ideas = [
-    `${title} de ${artist} fue revisada por SonarIA considerando lenguaje, sensibilidad y pertinencia escolar.`,
-    temas.length ? `Temas detectados: ${temas.join(", ")}.` : "No se detectaron temas fuertes fuera de la expresión musical general.",
-    `Curso activo: ${selectedCourseLabel()}.`
-  ];
-  return {
-    contexto: ideas.join(" "),
-    metadatos: [
-      `Fuente usada: ${lastAnalysis.fuente_usada || "Texto ingresado manualmente"}`,
-      `Edad sugerida: ${lastAnalysis.edad_sugerida || "—"}`,
-      `Resultado: ${lastAnalysis.resultado || "—"}`
-    ],
-    temas_detectados: temas,
-    fuente: ""
-  };
-}
-function buildFallbackTranslation(text){
-  return String(text || "").split(/\n+/).map(x => x.trim()).filter(Boolean).slice(0, 40).map(line => ({
-    original: line,
-    traducida: "Traducción automática no disponible en esta versión. Usa esta línea como apoyo para lectura guiada."
-  }));
-}
-function buildSchoolVersionFromFrontend(){
-  if(!lastAnalysis) return null;
-  const baseText = String(lastAnalysis.texto || lastAnalysis.texto_analizado || texto.value || "");
-  const replacements = Array.isArray(lastAnalysis.version_escolar_reemplazos) ? lastAnalysis.version_escolar_reemplazos : [];
-  const badWords = ["fuck","shit","bitch","asshole","mierda","puta","culiao","ctm","conchetumare"];
-  const map = {"fuck":"hey","shit":"rayos","bitch":"persona","asshole":"pesado","mierda":"rayos","puta":"pucha","culiao":"compa","ctm":"rayos","conchetumare":"caramba"};
-  let htmlText = escapeHtml(baseText);
-  const found = [];
-  badWords.forEach(word => {
-    const rx = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-    if(rx.test(baseText)){
-      const repl = map[word] || "...";
-      found.push({original: word, sugerida: repl});
-      htmlText = htmlText.replace(rx, `<span class="school-mark">${repl}</span>`);
-    }
-  });
-  return {
-    possible: found.length > 0,
-    message: found.length > 0
-      ? "La canción no se recomienda en su versión original, pero SonarIA detecta una adaptación escolar posible para trabajo mediado."
-      : "No se detectaron cambios críticos para una versión escolar.",
-    html: `<div style="white-space:pre-wrap;">${htmlText || "Sin letra disponible."}</div>`,
-    replacements: replacements.length ? replacements : found
-  };
-}
-
 const COURSE_LIST = [
   ["1B","1° básico",6],["2B","2° básico",7],["3B","3° básico",8],["4B","4° básico",9],
   ["5B","5° básico",10],["6B","6° básico",11],["7B","7° básico",12],["8B","8° básico",13],
-  ["1M","I° medio",14],["2M","II° medio",15],["3M","III° medio",16],["4M","IV° medio",17]
+  ["IM","I° medio",14],["IIM","II° medio",15],["IIIM","III° medio",16],["IVM","IV° medio",18]
 ];
 
 function escapeHtml(v){ return String(v || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"','&quot;').replaceAll("'","&#039;"); }
@@ -777,7 +710,7 @@ function renderAnalysis(raw){
   if((compat.cursos_compatibles||[]).length) parts.push("Compatibles: " + compat.cursos_compatibles.join(", "));
   if((compat.cursos_no_recomendados||[]).length) parts.push("No recomendados: " + compat.cursos_no_recomendados.join(", "));
   if(compat.resumen) parts.push(compat.resumen);
-  document.getElementById("compatCursos").textContent = parts.join(" · ") || (getStoredCourses().length ? `Curso activo: ${selectedCourseLabel()}` : "Sin datos");
+  document.getElementById("compatCursos").textContent = parts.join(" · ") || "Sin datos";
   document.getElementById("riskTotalText").textContent = `${raw.risk_percent ?? 0}%`;
   document.getElementById("riskSensitiveText").textContent = `${raw.risk_sensitive ?? 0}%`;
   document.getElementById("riskSchoolText").textContent = `${raw.risk_school ?? 0}%`;
@@ -831,7 +764,7 @@ function buildCoursesHtml(){
     </div>`;
 }
 window.saveCoursesFromModal = function(){ const values = Array.from(document.querySelectorAll('#modalBody .course-card input:checked')).map(el => el.value); saveStoredCourses(values); closeModal(); showToast("Cursos guardados"); };
-function openCursos(){ if(!isPro()){ openModal("Mis cursos · Pro", "Disponible en la experiencia completa.", `<div class="item"><b>En Pro</b><div class="meta">Guardas tus cursos y SonarIA ajusta OA, edad referencial y alternativas pedagógicas según ese tramo.</div></div>`); return; } openModal("Mis cursos", `Estos cursos orientan el OA y la recomendación por edad. Curso activo: ${escapeHtml(selectedCourseLabel())}.`, buildCoursesHtml()); }
+function openCursos(){ if(!isPro()){ openModal("Mis cursos · Pro", "Disponible en la experiencia completa.", `<div class="item"><b>En Pro</b><div class="meta">Guardas tus cursos y SonarIA ajusta OA, edad referencial y alternativas pedagógicas según ese tramo.</div></div>`); return; } openModal("Mis cursos", "Estos cursos orientan el OA y la recomendación por edad.", buildCoursesHtml()); }
 
 function buildPedagogiaSelector(options){
   if(!options.length) return "";
@@ -852,39 +785,6 @@ function renderPedagogiaOption(opt){
     <div class="item" style="margin-top:14px;"><b>Actividades para clase</b><div class="overlay-list">${(ped.actividades_clase || []).map(q => `<div>${escapeHtml(q)}</div>`).join("") || '<div>Sin actividades sugeridas.</div>'}</div></div>
     <div class="item" style="margin-top:14px;"><b>Responsabilidad docente</b><div class="meta">${escapeHtml(lastAnalysis?.disclaimer_docente || 'El bienestar de los estudiantes es prioritario y la decisión final siempre corresponde al docente.')}</div></div>`;
 }
-
-function buildPedagogiaFallbackOptions(){
-  if(!lastAnalysis) return [];
-  const code = lastAnalysis.curso_recomendado || selectedCourseCode() || "1B";
-  const label = lastAnalysis.curso_recomendado_label || selectedCourseLabel();
-  const preguntas = [
-    "¿Qué emoción o mensaje principal comunica la canción?",
-    "¿Qué elementos musicales refuerzan ese mensaje?",
-    "¿Qué mediación necesita este repertorio para el aula?"
-  ];
-  const analisis = [
-    "Reconocer pulso, timbre, intensidad y forma general.",
-    "Relacionar música y texto en función del contexto escolar.",
-    "Argumentar si la canción es pertinente para el curso."
-  ];
-  const actividades = (lastAnalysis.resultado || "").includes("No apta")
-    ? ["Analizar críticamente por qué no conviene usar la versión original.", "Comparar con una adaptación escolar posible."]
-    : ["Escucha guiada por secciones.", "Análisis breve del mensaje y recursos musicales.", "Actividad de cierre o reflexión escrita."];
-  return [{
-    curso_codigo: code,
-    curso: label,
-    edad_referencial: lastAnalysis.edad_sugerida || "",
-    oa_id: lastAnalysis.oa_code || "OA",
-    oa_desc: lastAnalysis.oa_text || "Relacionar escucha, análisis y expresión musical con contexto y propósito.",
-    pedagogia: {
-      enfoque: lastAnalysis.enfoque_sugerido || "Apreciación y análisis guiado",
-      preguntas_guiadas: preguntas,
-      ideas_analisis_musical: analisis,
-      actividades_clase: actividades
-    }
-  }];
-}
-
 function currentPedagogyOptions(){
   if(!lastAnalysis) return [];
   const opts = schoolVersionAccepted ? ((lastAnalysis.pedagogia_version_escolar_opciones || lastAnalysis.pedagogia_opciones || [])) : (lastAnalysis.pedagogia_opciones || []);
@@ -900,8 +800,7 @@ function currentPedagogyOptions(){
       pedagogia: single
     }];
   }
-  const fallback = buildPedagogiaFallbackOptions();
-  return fallback;
+  return [];
 }
 function syncSelectedPedagogyWithOptions(){
   const options = currentPedagogyOptions();
@@ -1076,22 +975,15 @@ window.downloadTeacherPdf = function(){
 function openPedagogia(){ openModal("Pedagogía", schoolVersionAccepted ? "Planificación construida sobre la versión escolar aceptada." : "Elige un curso sugerido y revisa actividades ajustadas para ese tramo.", buildPedagogiaHtml()); }
 
 
-
 async function fetchContext(){
   if(contextCache) return contextCache;
   if(!lastAnalysis && !titulo.value.trim()) throw new Error("Primero indica una canción o realiza un análisis.");
-  try{
-    const body = { titulo:(lastAnalysis?.titulo || titulo.value || "").trim(), artista:(lastAnalysis?.artista || artista.value || "").trim(), texto:(lastAnalysis?.texto || texto.value || "").trim() };
-    const res = await fetch(API_URL + "/contexto", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(body) });
-    const data = await res.json().catch(() => ({}));
-    if(res.ok && data) { contextCache = data; return data; }
-  }catch(_){}
-  contextCache = buildFrontendContextData();
+  contextCache = buildContextFromFrontend();
   return contextCache;
 }
 async function openContexto(){
   try{
-    openModal("Datos canción", "Buscando datos útiles para clase...", '<div class="empty">Cargando...</div>');
+    openModal("Datos canción", "Preparando datos útiles para clase...", '<div class="empty">Cargando...</div>');
     const data = await fetchContext();
     const referenciaHtml = data.fuente
       ? `<div class="item" style="margin-top:12px;"><b>Referencia</b><div class="meta"><a href="${escapeHtml(data.fuente)}" target="_blank" rel="noopener noreferrer">Abrir búsqueda o fuente</a></div></div>`
@@ -1100,27 +992,22 @@ async function openContexto(){
       ? `<div class="item" style="margin-top:12px;"><b>Temas para trabajar</b><div class="meta">${data.temas_detectados.map(x => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div></div>`
       : "";
     const metaHtml = (data.metadatos || []).length
-      ? `<div class="item" style="margin-top:12px;"><b>Curiosidades / pistas</b><div class="meta">${data.metadatos.map(x => escapeHtml(x)).join(" · ")}</div></div>`
+      ? `<div class="item" style="margin-top:12px;"><b>Pistas docentes</b><div class="meta">${data.metadatos.map(x => escapeHtml(x)).join(" · ")}</div></div>`
       : "";
     openModal(
       "Datos canción",
-      "Curiosidades, referencia y datos útiles para abrir conversación en clases.",
-      `<div class="item"><b>Dato útil para clase</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>${metaHtml}${referenciaHtml}${temasHtml}`
+      "Lectura rápida para abrir conversación pedagógica.",
+      `<div class="item"><b>Contexto útil</b><div class="meta">${escapeHtml(data.contexto || "Sin contexto disponible.")}</div></div>${metaHtml}${referenciaHtml}${temasHtml}`
     );
   }catch(err){
     setStatus(err.message, "error");
   }
 }
+
 async function fetchTranslation(){
   if(translationCache) return translationCache;
-  const content = (lastAnalysis?.texto || texto.value || "").trim();
-  if(!content) throw new Error("No hay letra para traducir.");
-  try{
-    const res = await fetch(API_URL + "/traducir", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify({ texto: content }) });
-    const data = await res.json().catch(() => ({}));
-    if(res.ok && data && data.ok !== false) { translationCache = data; return data; }
-  }catch(_){}
-  translationCache = { ok:true, pairs: buildFallbackTranslation(content) };
+  const pairs = buildTranslationPairsFromFrontend();
+  translationCache = { ok:true, pairs };
   return translationCache;
 }
 async function openTranslate(){
@@ -1129,41 +1016,19 @@ async function openTranslate(){
     openModal("Traducción", "Preparando versión bilingüe...", '<div class="empty">Cargando...</div>');
     const data = await fetchTranslation();
     const pairs = data.pairs || [];
-    openModal("Traducción", "Versión bilingüe para lectura guiada.", `<div class="translate-pairs">${pairs.map(p => `<div class="pair"><strong>${escapeHtml(p.original)}</strong><div>${escapeHtml(p.traducida || "")}</div></div>`).join("") || '<div class="empty">No fue posible construir la traducción.</div>'}</div>`);
-  }catch(err){ setStatus(err.message, "error"); }
-}
-
-
-function buildSchoolVersionHtml(){
-(){
-  if(translationCache) return translationCache;
-  const content = (lastAnalysis?.texto_analizado || texto.value || "").trim();
-  if(!content) throw new Error("No hay letra para traducir.");
-  const res = await fetch(API_URL + "/traducir", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify({ texto: content }) });
-  const data = await res.json().catch(() => ({}));
-  if(!res.ok || data.ok === false) throw new Error(data.detail || "No se pudo traducir la letra.");
-  translationCache = data; return data;
-}
-async function openTranslate(){
-  if(!isPro()){ openModal("Traducción · Pro", "Disponible en la experiencia completa.", `<div class="item"><b>En Pro</b><div class="meta">Obtienes lectura bilingüe dentro de SonarIA sin salir del flujo pedagógico.</div></div>`); return; }
-  try{
-    openModal("Traducción", "Preparando versión bilingüe...", '<div class="empty">Cargando...</div>');
-    const data = await fetchTranslation();
-    const pairs = data.pairs || [];
-    openModal("Traducción", "Versión bilingüe para lectura guiada.", `<div class="translate-pairs">${pairs.map(p => `<div class="pair"><strong>${escapeHtml(p.original)}</strong><div>${escapeHtml(p.traducida || "")}</div></div>`).join("") || '<div class="empty">No fue posible construir la traducción.</div>'}</div>`);
+    openModal("Traducción", "Vista bilingüe de apoyo para lectura guiada.", `<div class="translate-pairs">${pairs.map(p => `<div class="pair"><strong>${escapeHtml(p.original)}</strong><div>${escapeHtml(p.traducida || "")}</div></div>`).join("") || '<div class="empty">No fue posible construir la traducción.</div>'}</div>`);
   }catch(err){ setStatus(err.message, "error"); }
 }
 
 function buildSchoolVersionHtml(){
   if(!lastAnalysis) return '<div class="empty">Analiza una canción antes de abrir esta ventana.</div>';
-  const school = buildSchoolVersionFromFrontend();
-  const adaptOk = !!(lastAnalysis.adaptacion_escolar_posible ?? lastAnalysis.adaptation_possible ?? school?.possible);
-  const adaptMsg = lastAnalysis.adaptacion_escolar_mensaje || lastAnalysis.adaptation_message || school?.message || 'No se recomienda intentar una versión escolar para esta canción.';
+  const adaptOk = !!(lastAnalysis.adaptacion_escolar_posible ?? lastAnalysis.adaptation_possible);
+  const adaptMsg = lastAnalysis.adaptacion_escolar_mensaje || lastAnalysis.adaptation_message || 'No se recomienda intentar una versión escolar para esta canción.';
   if(!adaptOk){
     return `<div class="item"><b>Versión escolar no sugerida</b><div class="meta">${escapeHtml(adaptMsg)}</div></div>`;
   }
-  const reps = (lastAnalysis.version_escolar_reemplazos || lastAnalysis.replacements || school?.replacements || []).filter(r => !/[\\[\]\(\)\?\+\*\|]/.test(String(r.original || "")));
-  const adaptedText = lastAnalysis.version_escolar_html || (lastAnalysis.adapted_lyrics ? `<pre style="white-space:pre-wrap;margin:0;font:inherit;">${escapeHtml(lastAnalysis.adapted_lyrics)}</pre>` : (school?.html || '<div class="empty">Sin cambios sugeridos.</div>'));
+  const reps = (lastAnalysis.version_escolar_reemplazos || lastAnalysis.replacements || []).filter(r => !/[\\[\]\(\)\?\+\*\|]/.test(String(r.original || "")));
+  const adaptedText = lastAnalysis.version_escolar_html || (lastAnalysis.adapted_lyrics ? `<pre style="white-space:pre-wrap;margin:0;font:inherit;">${escapeHtml(lastAnalysis.adapted_lyrics)}</pre>` : '<div class="empty">Sin cambios sugeridos.</div>');
   const currentCourse = escapeHtml((currentPedagogySelection()?.curso || currentPedagogyOptions()?.[0]?.curso || 'Curso sugerido'));
   const courseButtons = (currentPedagogyOptions() || []).length
     ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${currentPedagogyOptions().map((opt,idx)=>{ const code=String(opt.curso_codigo || opt.curso || ""); const active = code === selectedPedagogyCourseCode || idx===selectedPedagogyIndex; return `<button class="small-btn use ${active ? 'ped-course-active' : ''}" onclick="selectPedagogiaOption(${idx}); closeModal(); setTimeout(openVersionEscolar, 20);">${escapeHtml(opt.curso)}</button>`; }).join("")}</div>` : '';
@@ -1326,7 +1191,7 @@ form.addEventListener("submit", async (e) => {
   try{
     let textoParaEnviar = texto.value.trim();
     if(buscarLetra.checked && titulo.value.trim() && !textoParaEnviar) textoParaEnviar = "";
-    const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses, curso_objetivo: selectedCourseCode() };
+    const payload = { titulo: titulo.value.trim(), artista: artista.value.trim(), texto: textoParaEnviar, buscar_letra: buscarLetra.checked, contexto_escolar: contextoEscolar.checked, cursos: courses };
     const res = await fetch(ANALYZE_URL, { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken}, body: JSON.stringify(payload) });
     let raw = await res.json().catch(() => ({}));
     if(!res.ok) throw new Error(raw.detail || "No fue posible analizar la canción.");
