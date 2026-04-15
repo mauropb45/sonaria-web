@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contacto | MejorarIA</title>
-<meta name="description" content="Cuéntanos tu necesidad docente y exploremos una solución construida contigo.">
+<meta name="description" content="Cuéntanos un problema docente real. Si tiene potencial, puede transformarse en una nueva herramienta dentro de MejorarIA.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -13,22 +13,27 @@
   --text:#f5f7fb;
   --muted:#9eafc8;
   --line:rgba(255,255,255,.08);
-  --f1-red:#e10600;
-  --f1-blue:#3b82f6;
-  --f1-purple:#6d28d9;
+  --green:#23e3a1;
+  --cyan:#6ee7ff;
+  --orange:#ff8000;
+  --orange2:#ff5a00;
+  --blue:#3b82f6;
+  --purple:#6d28d9;
   --radius:26px;
   --shadow:0 24px 70px rgba(0,0,0,.34);
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
   margin:0;
   font-family:'Inter',sans-serif;
   color:var(--text);
   background:
-    radial-gradient(circle at top left, rgba(225,6,0,.10), transparent 20%),
-    radial-gradient(circle at top right, rgba(59,130,246,.12), transparent 18%),
+    radial-gradient(circle at top left, rgba(59,130,246,.10), transparent 20%),
+    radial-gradient(circle at bottom right, rgba(255,128,0,.08), transparent 18%),
     linear-gradient(180deg,var(--bg),var(--bg2));
   min-height:100vh;
+  overflow-x:hidden;
 }
 body::before{
   content:"";
@@ -39,43 +44,47 @@ body::before{
     linear-gradient(rgba(255,255,255,.014) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px);
   background-size:36px 36px;
-  mask-image:linear-gradient(to bottom, rgba(255,255,255,.28), transparent 80%);
+  mask-image:linear-gradient(to bottom, rgba(255,255,255,.30), transparent 80%);
 }
 .container{
-  max-width:1100px;
+  max-width:1040px;
   margin:auto;
-  padding:22px 20px 80px;
+  padding:20px 18px 72px;
   position:relative;
   z-index:1;
 }
-.logo-link{text-decoration:none;color:inherit}
-.logo-wrap{display:flex; flex-direction:column; gap:2px}
-.logo{
-  font-size:2.5rem;
-  font-weight:900;
-  letter-spacing:-1.2px;
-  line-height:1;
-  display:flex;
-  gap:6px;
-  align-items:center;
-}
-.logo span{
-  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.logo-sub{
-  color:var(--muted);
-  font-size:.76rem;
-  font-weight:700;
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
 .nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:28px;
-  gap:16px;
+  gap:14px;
+  margin-bottom:18px;
 }
+.logo-link{text-decoration:none;color:inherit}
+.logo-wrap{display:flex;flex-direction:column;gap:2px}
+.logo{
+  font-size:2.5rem;
+  font-weight:900;
+  letter-spacing:-1.4px;
+  line-height:1;
+}
+.logo span{
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.logo-sub{
+  font-size:.82rem;
+  color:var(--muted);
+  font-weight:700;
+}
+.nav-actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
   min-height:48px;
   padding:0 18px;
@@ -84,7 +93,7 @@ body::before{
   font:inherit;
   font-weight:800;
   cursor:pointer;
-  transition:transform .18s ease, background .18s ease;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
 }
 .btn:hover{transform:translateY(-1px)}
 .btn-ghost{
@@ -92,25 +101,13 @@ body::before{
   color:var(--text);
   border:1px solid var(--line);
 }
-.btn-f1{
-  background:linear-gradient(135deg,var(--f1-purple),var(--f1-blue));
-  color:white;
-  box-shadow:0 14px 34px rgba(59,130,246,.18);
+.btn-primary{
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  color:#101418;
+  box-shadow:0 14px 34px rgba(255,128,0,.24);
 }
-.grid{
-  display:grid;
-  grid-template-columns:.92fr 1.08fr;
-  gap:20px;
-}
-.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.info,.form{
-  padding:28px;
-}
+.hero{display:grid;grid-template-columns:1fr .9fr;gap:18px;margin-bottom:18px}
+.hero-main,.hero-side,.form-card{padding:26px}
 .eyebrow{
   display:inline-flex;
   align-items:center;
@@ -122,90 +119,84 @@ body::before{
   color:#dce8ff;
   font-size:.84rem;
   font-weight:800;
-  margin-bottom:14px;
 }
-h1,h2{margin:0 0 10px; letter-spacing:-.04em}
-h1{font-size:2.4rem}
-h2{font-size:1.45rem}
-p{
-  margin:0 0 12px;
+.hero h1{
+  margin:14px 0 10px;
+  font-size:clamp(2.55rem,5.4vw,4.2rem);
+  line-height:.94;
+  letter-spacing:-.08em;
+}
+.hero p,.form-copy{
+  margin:0;
   color:var(--muted);
-  line-height:1.82;
-}
-.list{
-  display:grid;
-  gap:12px;
-  margin-top:16px;
-}
-.item{
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:15px 16px;
-}
-.item strong{display:block; margin-bottom:6px}
-.item span{color:var(--muted); line-height:1.68}
-.input-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-input,textarea,select{
-  width:100%;
-  min-height:48px;
-  padding:13px 14px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  color:white;
-  font:inherit;
-  outline:none;
-}
-textarea{min-height:160px; resize:vertical}
-input:focus,textarea:focus,select:focus{
-  border-color:rgba(59,130,246,.32);
-  box-shadow:0 0 0 4px rgba(59,130,246,.10);
-}
-label{
-  display:block;
-  font-size:.92rem;
-  font-weight:700;
-  margin-bottom:8px;
-}
-.field{margin-bottom:14px}
-.helper{
-  font-size:.84rem;
-  color:var(--muted);
-  margin-top:6px;
-}
-.actions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:8px;
-}
-.preview{
-  margin-top:18px;
-  background:linear-gradient(135deg, rgba(225,6,0,.10), rgba(109,40,217,.10), rgba(59,130,246,.10));
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:18px;
-}
-.preview h3{
-  margin:0 0 8px;
+  line-height:1.76;
   font-size:1rem;
 }
-.preview pre{
-  margin:0;
-  white-space:pre-wrap;
-  font-family:inherit;
-  color:#d9e6f8;
-  line-height:1.72;
+.list{display:grid;gap:10px;margin-top:16px}
+.item{
+  padding:14px 15px;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.07);
+  color:#dce8ff;
+  line-height:1.64;
 }
-@media(max-width:900px){
-  .grid,.input-grid{grid-template-columns:1fr}
-  .nav{flex-direction:column; align-items:stretch}
-  .nav .btn{width:100%}
+.form-card h2{margin:0 0 8px;font-size:1.7rem;letter-spacing:-.04em}
+.form-grid{display:grid;gap:12px;margin-top:18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:grid;gap:7px}
+.field label{font-size:.92rem;color:#dce8ff;font-weight:700}
+input,select,textarea{
+  width:100%;
+  border:none;
+  outline:none;
+  border-radius:16px;
+  padding:14px 15px;
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.08);
+  font:inherit;
+}
+textarea{min-height:150px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#90a0b6}
+.helper{
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dce8ff;
+  line-height:1.68;
+}
+.status{
+  display:none;
+  padding:14px 16px;
+  border-radius:18px;
+  line-height:1.65;
+  font-weight:700;
+}
+.status.show{display:block}
+.status.ok{
+  background:rgba(35,227,161,.10);
+  border:1px solid rgba(35,227,161,.20);
+  color:#d9ffef;
+}
+.status.error{
+  background:rgba(255,107,107,.08);
+  border:1px solid rgba(255,107,107,.20);
+  color:#ffd7d7;
+}
+.footer{text-align:center;margin-top:20px;color:#d7e2f1;font-weight:800}
+.footer small{display:block;margin-top:8px;color:var(--muted);font-weight:500;line-height:1.7}
+@media(max-width:980px){.hero,.two{grid-template-columns:1fr}}
+@media(max-width:720px){
+  .container{padding:16px 14px 56px}
+  .nav{flex-direction:column;align-items:stretch}
+  .nav-actions{width:100%}
+  .nav-actions .btn{width:100%}
+  .hero-main,.hero-side,.form-card{padding:20px}
+  .logo{font-size:2.15rem}
+  .hero h1{font-size:2.3rem}
+  .btn{width:100%}
 }
 </style>
 </head>
@@ -215,157 +206,158 @@ label{
     <a href="index.html" class="logo-link">
       <div class="logo-wrap">
         <div class="logo">Mejorar<span>IA</span></div>
-        <div class="logo-sub">Volver al home</div>
+        <div class="logo-sub">Co-creación de soluciones docentes</div>
       </div>
     </a>
-
-    <button class="btn btn-ghost" onclick="window.location.href='login.html'">Iniciar sesión</button>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="window.location.href='index.html'">Volver al inicio</button>
+      <button class="btn btn-primary" onclick="window.location.href='sonaria.html'">Ir a SonarIA</button>
+    </div>
   </div>
 
-  <div class="grid">
-    <section class="card info">
-      <div class="eyebrow">🏎️ Co-construcción de soluciones</div>
-      <h1>Construyamos una solución contigo</h1>
-      <p>
-        MejorarIA nace desde una necesidad docente real y quiere crecer del mismo modo:
-        escuchando problemas concretos del aula y transformándolos en herramientas útiles.
-      </p>
-      <p>
-        Si tu asignatura o contexto necesita apoyo en planificación, análisis, práctica, evaluación o toma de decisiones pedagógicas,
-        cuéntanos tu caso.
-      </p>
-
+  <section class="hero">
+    <div class="card hero-main">
+      <div class="eyebrow">💬 Problemas reales del aula</div>
+      <h1>Cuéntame tu problema docente.</h1>
+      <p>Si es un problema real, puede transformarse en una herramienta útil dentro de MejorarIA. No buscamos llenar formularios: buscamos detectar necesidades que merezcan una solución concreta.</p>
       <div class="list">
-        <div class="item">
-          <strong>Qué tipo de casos nos interesan</strong>
-          <span>Problemas reales, repetidos, que hoy te quitan tiempo o te obligan a resolver manualmente algo que podría mejorarse con una herramienta.</span>
-        </div>
-        <div class="item">
-          <strong>Qué recibirás</strong>
-          <span>Un mensaje base bien estructurado para proponer tu caso con claridad y facilitar una conversación de trabajo seria.</span>
-        </div>
-        <div class="item">
-          <strong>Cómo se enviará</strong>
-          <span>El formulario abrirá tu correo con un asunto y un mensaje pre-escritos, ya completados con lo que tú ingreses.</span>
-        </div>
+        <div class="item">Esto no es soporte técnico. Es una puerta para nuevas herramientas.</div>
+        <div class="item">Puedes escribir aunque todavía no tengas la solución clara.</div>
+        <div class="item">Lo importante es que el problema exista de verdad en tu práctica.</div>
       </div>
-    </section>
+    </div>
 
-    <section class="card form">
-      <h2>Cuéntanos tu necesidad docente</h2>
-      <p>Completa esto y luego presiona “Enviar propuesta”.</p>
+    <div class="card hero-side" style="padding:26px">
+      <div class="eyebrow">🧭 Qué nos sirve saber</div>
+      <div class="list" style="margin-top:14px">
+        <div class="item">Qué asignatura o contexto enseñas.</div>
+        <div class="item">Qué dificultad se repite o te obliga a improvisar.</div>
+        <div class="item">Qué has intentado y qué esperas de una solución ideal.</div>
+      </div>
+    </div>
+  </section>
 
-      <div class="input-grid">
+  <section class="card form-card">
+    <h2>Describamos el caso</h2>
+    <p class="form-copy">Mientras más concreto seas, mejor podremos detectar si esto tiene potencial para convertirse en una herramienta real.</p>
+
+    <form id="leadForm" class="form-grid">
+      <div class="two">
         <div class="field">
           <label for="nombre">Nombre</label>
           <input id="nombre" type="text" placeholder="Tu nombre">
         </div>
         <div class="field">
-          <label for="correo">Correo</label>
-          <input id="correo" type="email" placeholder="tu@correo.com">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="tu@email.com">
         </div>
       </div>
 
-      <div class="input-grid">
+      <div class="two">
         <div class="field">
-          <label for="asignatura">Asignatura / área</label>
-          <input id="asignatura" type="text" placeholder="Música, Lenguaje, Historia...">
+          <label for="asignatura">Asignatura</label>
+          <select id="asignatura">
+            <option value="">Selecciona una opción</option>
+            <option>Música</option>
+            <option>Lenguaje</option>
+            <option>Matemática</option>
+            <option>Ciencias</option>
+            <option>Historia</option>
+            <option>Otra</option>
+          </select>
         </div>
         <div class="field">
-          <label for="contexto">Curso o contexto</label>
-          <input id="contexto" type="text" placeholder="7° básico, media, clases particulares...">
+          <label for="nivel">Nivel o contexto</label>
+          <input id="nivel" type="text" placeholder="Ej: 5° básico, media, talleres, formación docente">
         </div>
       </div>
 
       <div class="field">
-        <label for="problema">¿Qué problema quieres resolver?</label>
-        <textarea id="problema" placeholder="Describe la dificultad real que enfrentas como docente..."></textarea>
-        <div class="helper">Piensa en algo concreto, repetido y que hoy te quite tiempo o complique tu trabajo.</div>
+        <label for="problema">Problema principal</label>
+        <textarea id="problema" placeholder="Ej: Me cuesta encontrar material adecuado para cierta edad sin perder profundidad pedagógica."></textarea>
       </div>
 
       <div class="field">
-        <label for="impacto">¿Qué cambiaría si existiera una solución?</label>
-        <textarea id="impacto" placeholder="Ahorro de tiempo, mejor selección de material, mejor evaluación, más claridad pedagógica..."></textarea>
+        <label for="intento">¿Qué has intentado?</label>
+        <textarea id="intento" placeholder="Ej: He buscado manualmente, usado recursos sueltos o adaptado material a mano."></textarea>
       </div>
 
-      <div class="actions">
-        <button class="btn btn-f1" onclick="sendProposal()">Enviar propuesta</button>
-        <button class="btn btn-ghost" onclick="fillExample()">Cargar ejemplo</button>
+      <div class="field">
+        <label for="solucion_ideal">¿Cómo sería la solución ideal?</label>
+        <textarea id="solucion_ideal" placeholder="Ej: Me gustaría una herramienta que filtre, analice y sugiera opciones listas para usar."></textarea>
       </div>
 
-      <div class="preview">
-        <h3>Vista previa del mensaje</h3>
-        <pre id="previewText">Aquí aparecerá tu propuesta pre-escrita.</pre>
-      </div>
-    </section>
+      <div class="helper">No prometemos construir todo. Pero sí escuchar problemas que merezcan una solución real.</div>
+
+      <button id="submitBtn" class="btn btn-primary" type="submit">Enviar propuesta</button>
+      <div id="statusBox" class="status"></div>
+    </form>
+  </section>
+
+  <div class="footer">
+    La IA acompaña. Educar es cuidar.
+    <small>Si este problema puede transformarse en una solución útil, te contactaremos para seguir la conversación.</small>
   </div>
 </div>
 
 <script>
-const DESTINO = "mauropb45@gmail.com";
+const API = "https://sonaria-api.onrender.com";
 
-function buildMessage(){
-  const nombre = document.getElementById("nombre").value.trim() || "[Tu nombre]";
-  const correo = document.getElementById("correo").value.trim() || "[Tu correo]";
-  const asignatura = document.getElementById("asignatura").value.trim() || "[Asignatura / área]";
-  const contexto = document.getElementById("contexto").value.trim() || "[Curso o contexto]";
-  const problema = document.getElementById("problema").value.trim() || "[Describe aquí tu problema docente]";
-  const impacto = document.getElementById("impacto").value.trim() || "[Describe aquí el impacto esperado]";
-
-  const subject = `Propuesta de solución docente - ${asignatura}`;
-  const body = `Hola, equipo de MejorarIA:
-
-Mi nombre es ${nombre}.
-Mi correo es: ${correo}.
-
-Quiero proponer una posible solución para el área de ${asignatura}.
-Mi contexto docente es: ${contexto}.
-
-Problema que hoy enfrento:
-${problema}
-
-Si existiera una solución, me ayudaría a:
-${impacto}
-
-Me interesa conversar si esta necesidad podría explorarse o co-construirse con ustedes.
-
-Quedo atento/a.
-${nombre}`;
-
-  return { subject, body };
+function setStatus(message, type){
+  const box = document.getElementById("statusBox");
+  box.textContent = message;
+  box.className = "status show " + type;
 }
 
-function updatePreview(){
-  const data = buildMessage();
-  document.getElementById("previewText").textContent =
-`Asunto:
-${data.subject}
+document.getElementById("leadForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-Mensaje:
-${data.body}`;
-}
+  const submitBtn = document.getElementById("submitBtn");
+  const payload = {
+    nombre: document.getElementById("nombre").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    asignatura: document.getElementById("asignatura").value,
+    nivel: document.getElementById("nivel").value.trim(),
+    problema: document.getElementById("problema").value.trim(),
+    intento: document.getElementById("intento").value.trim(),
+    solucion_ideal: document.getElementById("solucion_ideal").value.trim()
+  };
 
-function sendProposal(){
-  const data = buildMessage();
-  const url = `mailto:${DESTINO}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent(data.body)}`;
-  window.location.href = url;
-}
+  if(!payload.email){
+    setStatus("Necesitamos un email para poder responderte.", "error");
+    return;
+  }
 
-function fillExample(){
-  document.getElementById("nombre").value = "Mauricio";
-  document.getElementById("correo").value = "tu@correo.com";
-  document.getElementById("asignatura").value = "Lenguaje";
-  document.getElementById("contexto").value = "7° básico";
-  document.getElementById("problema").value = "Me cuesta seleccionar textos o canciones adecuados para ciertas edades y luego justificar pedagógicamente por qué sí o por qué no usarlos en clase.";
-  document.getElementById("impacto").value = "Ahorraría tiempo, tomaría decisiones con más respaldo y podría planificar experiencias más pertinentes para mis estudiantes.";
-  updatePreview();
-}
+  if(!payload.problema){
+    setStatus("Cuéntanos al menos el problema principal para evaluar tu caso.", "error");
+    return;
+  }
 
-["nombre","correo","asignatura","contexto","problema","impacto"].forEach(id=>{
-  document.getElementById(id).addEventListener("input", updatePreview);
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Enviando...";
+
+  try {
+    const res = await fetch(API + "/leads", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if(!res.ok || !data.ok){
+      throw new Error(data.detail || "No fue posible enviar tu propuesta ahora.");
+    }
+
+    document.getElementById("leadForm").reset();
+    setStatus("Gracias. Revisaré tu caso y, si tiene potencial real de solución, te contactaré.", "ok");
+  } catch (error) {
+    setStatus(error.message || "Ocurrió un error al enviar tu propuesta.", "error");
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Enviar propuesta";
+  }
 });
-
-updatePreview();
 </script>
 </body>
 </html>
