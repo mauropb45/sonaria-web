@@ -1,255 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Pro | SonarIA</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#07111f;--bg2:#0b1a31;--panel:#131d2b;--panel2:#182334;--line:rgba(255,255,255,.08);
-      --text:#eef3fb;--muted:#9fb0c8;--mclaren:#ff8700;--blue:#367cff;--aston:#00d2be;--danger:#e10600;
-      --shadow:0 24px 60px rgba(0,0,0,.34);--radius:22px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;font-family:Inter,sans-serif;color:var(--text);
-      background:
-      radial-gradient(circle at top left, rgba(255,135,0,.08), transparent 18%),
-      radial-gradient(circle at top right, rgba(54,124,255,.08), transparent 16%),
-      linear-gradient(180deg,var(--bg),var(--bg2));
-    }
-    .wrap{max-width:1440px;margin:0 auto;padding:22px}
-    .topbar,.actions{display:flex;gap:14px;flex-wrap:wrap}
-    .topbar{justify-content:space-between;align-items:center;margin-bottom:18px}
-    .brand h1{margin:0;font-size:2rem;letter-spacing:-.06em}
-    .brand h1 span{color:var(--mclaren)}
-    .brand p{margin:6px 0 0;color:var(--muted)}
-    .btn{
-      border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;
-      background:#253245;color:#fff
-    }
-    .btn.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22}
-    .btn.green{background:linear-gradient(135deg,var(--aston),#5be5d4);color:#071a18}
-    .btn.danger{background:linear-gradient(135deg,var(--danger),#ff635e);color:#fff}
-    .btn.small{min-height:38px;padding:0 12px;border-radius:12px;font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-    .card{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:18px
-    }
-    .card small{display:block;color:#cfdcf0;font-weight:800;margin-bottom:8px}
-    .card strong{font-size:2rem;line-height:1}
-    .tables{display:grid;grid-template-columns:1fr;gap:18px}
-    .panel{
-      background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);
-      box-shadow:var(--shadow);padding:18px
-    }
-    .panel h2{margin:0 0 8px;font-size:1.25rem}
-    .panel p{margin:0 0 14px;color:var(--muted)}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top}
-    th{color:#d9e6f8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-    td{color:#eef3fb}
-    .pill{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900}
-    .pill.free{background:rgba(54,124,255,.14);color:#dbe8ff}
-    .pill.pro{background:rgba(0,210,190,.14);color:#d8fff7}
-    .pill.pending{background:rgba(255,135,0,.14);color:#ffe3bf}
-    .pill.cancelled{background:rgba(225,6,0,.14);color:#ffd5d3}
-    .status{margin:12px 0 0;font-weight:800}
-    .status.error{color:#ffd3d3}
-    .status.ok{color:#d8fff7}
-    .muted{color:var(--muted)}
-    code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:8px}
-    .row-actions{display:flex;gap:8px;flex-wrap:wrap}
-    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:14px}table{display:block;overflow:auto}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Command | MejorarIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07111f;--bg2:#0b1a31;--panel:#111c2b;--panel2:#152235;--line:rgba(255,255,255,.08);
+  --text:#eef3fb;--muted:#9fb0c8;--ferrari:#e10600;--mclaren:#ff8700;--green:#28e08f;--blue:#367cff;--yellow:#f3c74b;
+  --shadow:0 24px 60px rgba(0,0,0,.34);--radius:22px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,sans-serif;color:var(--text);background:
+radial-gradient(circle at top left, rgba(255,135,0,.09), transparent 18%),
+radial-gradient(circle at top right, rgba(54,124,255,.09), transparent 18%),
+linear-gradient(180deg,var(--bg),var(--bg2));}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:
+linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom, rgba(255,255,255,.3), transparent 80%);}
+.wrap{max-width:1480px;margin:0 auto;padding:22px;position:relative;z-index:1}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.brand h1{margin:0;font-size:2.8rem;line-height:.92;letter-spacing:-.07em;font-weight:900}
+.brand h1 .green{color:var(--green)}
+.brand .sub{margin-top:6px;color:#cad8eb;font-size:.85rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.brand .line{margin-top:4px;color:var(--muted);font-size:.82rem}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer}
+.btn.ghost{background:#1f2b3e;color:#fff}.btn.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22}.btn.blue{background:linear-gradient(135deg,var(--blue),#5c9bff);color:#fff}.btn.green{background:linear-gradient(135deg,var(--green),#5be5d4);color:#071a18}.btn.danger{background:linear-gradient(135deg,var(--ferrari),#ff635e);color:#fff}
+.btn.small{min-height:38px;padding:0 12px;border-radius:12px;font-size:13px}
+.hero{display:grid;grid-template-columns:1.25fr .9fr;gap:16px;margin-bottom:18px}
+.card,.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero-main{padding:20px}.hero-main .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(54,124,255,.12);border:1px solid rgba(54,124,255,.24);font-weight:900;font-size:.78rem;color:#dce8ff}
+.hero-main h2{margin:14px 0 10px;font-size:3.15rem;line-height:.93;letter-spacing:-.07em;max-width:780px}
+.hero-main p{margin:0;color:#c8d6e8;line-height:1.75;max-width:760px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.stat{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+.stat strong{display:block;font-size:1.8rem;line-height:1}.stat span{display:block;color:#c8d6e8;font-size:.84rem;margin-top:8px}
+.hero-side{padding:16px;display:grid;gap:12px}.micro{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}.micro strong{display:block;margin-bottom:6px}.micro span{color:#c8d6e8;line-height:1.6;font-size:.92rem}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+.panel{padding:18px}.panel h3{margin:0 0 8px;font-size:1.35rem}.panel p{margin:0 0 14px;color:var(--muted);line-height:1.65}
+.controls{display:grid;grid-template-columns:1fr 220px;gap:10px;margin-bottom:12px}
+input,select{width:100%;border:none;outline:none;border-radius:14px;background:#0b1420;color:var(--text);border:1px solid rgba(255,255,255,.08);padding:13px 14px;font:inherit}
+table{width:100%;border-collapse:collapse;font-size:14px} th,td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top} th{color:#d9e6f8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}.pill.free{background:rgba(54,124,255,.14);color:#dbe8ff}.pill.pro{background:rgba(0,210,190,.14);color:#d8fff7}.pill.pending{background:rgba(255,135,0,.14);color:#ffe3bf}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap}.status{margin:12px 0 0;font-weight:800}.status.error{color:#ffd3d3}.status.ok{color:#d8fff7}
+.intel{display:grid;gap:14px}.intel-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}.intel-card strong{display:block;margin-bottom:6px}.intel-card span{color:#c8d6e8;line-height:1.7}
+@media(max-width:1180px){.hero,.grid{grid-template-columns:1fr}} @media(max-width:760px){.controls{grid-template-columns:1fr}.hero-main h2{font-size:2.2rem}.hero-stats{grid-template-columns:1fr}.wrap{padding:14px}table{display:block;overflow:auto}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <h1>Sonar<span>IA</span> Admin Pro</h1>
-        <p>Usuarios, suscripciones y control manual de planes.</p>
-      </div>
-      <div class="actions">
-        <button class="btn" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
-        <button class="btn primary" onclick="loadAdmin()">Actualizar</button>
-      </div>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>ADMIN <span class="green">COMMAND</span></h1>
+      <div class="sub">MEJORARIA · SONARIA · CONTROL TÁCTICO</div>
+      <div class="line">BEATLES · STAR WARS · FBI/SWAT · CÁMARAS · RASTREADORES · INFORMÁTICA · ENGLISH · FÓRMULA 1</div>
     </div>
-
-    <div class="grid">
-      <div class="card"><small>Total usuarios</small><strong id="statTotal">—</strong></div>
-      <div class="card"><small>Usuarios Free</small><strong id="statFree">—</strong></div>
-      <div class="card"><small>Usuarios Pro</small><strong id="statPro">—</strong></div>
-      <div class="card"><small>Pro activos</small><strong id="statActive">—</strong></div>
+    <div class="actions">
+      <button class="btn ghost" onclick="window.location.href='/index.html'">Home</button>
+      <button class="btn blue" onclick="window.location.href='/sonaria.html'">Ir a SonarIA</button>
+      <button class="btn primary" onclick="loadAdmin()">Actualizar panel</button>
     </div>
-
-    <div class="tables">
-      <section class="panel">
-        <h2>Usuarios recientes</h2>
-        <p>Puedes activar o quitar Pro manualmente sin depender del webhook.</p>
-        <div style="overflow:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Nombre</th>
-                <th>Plan</th>
-                <th>Estado</th>
-                <th>Cadencia</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="usersBody">
-              <tr><td colspan="7">Cargando…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="panel">
-        <h2>Suscripciones</h2>
-        <p>Registro Mercado Pago.</p>
-        <div style="overflow:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>User ID</th>
-                <th>Email pagador</th>
-                <th>Cadencia</th>
-                <th>Monto</th>
-                <th>Estado</th>
-                <th>Referencia</th>
-              </tr>
-            </thead>
-            <tbody id="subsBody">
-              <tr><td colspan="6">Cargando…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <div id="status" class="status"></div>
   </div>
 
-  <script>
-    const API = "https://sonaria-api.onrender.com";
+  <section class="hero">
+    <div class="card hero-main">
+      <div class="eyebrow">CONTROL ROOM · LIVE STATUS</div>
+      <h2>PANEL ADMIN PRO PARA VIGILAR ETAPAS, USUARIOS Y PLANES.</h2>
+      <p>Interfaz tipo sala de control para revisar rápidamente qué usuarios están free, cuáles ya están en Pro y aplicar acciones manuales cuando haga falta.</p>
+      <div class="hero-stats">
+        <div class="stat"><strong id="statTotal">0</strong><span>usuarios detectados</span></div>
+        <div class="stat"><strong id="statFree">0</strong><span>cuentas free</span></div>
+        <div class="stat"><strong id="statPro">0</strong><span>cuentas pro</span></div>
+      </div>
+    </div>
+    <div class="card hero-side">
+      <div class="micro"><strong>Scanner mode</strong><span>Lectura rápida del estado de usuarios y planes.</span></div>
+      <div class="micro"><strong>Stage tracking</strong><span>Visual claro para saber en qué etapa está cada cuenta.</span></div>
+      <div class="micro"><strong>Action deck</strong><span>Botones directos para dar Pro mensual, anual o quitar Pro.</span></div>
+    </div>
+  </section>
 
-    function getToken(){
-      return localStorage.getItem("mejoraria_token")
-        || localStorage.getItem("token")
-        || localStorage.getItem("access_token")
-        || "";
-    }
+  <div class="grid">
+    <section class="panel">
+      <h3>Radar de usuarios</h3>
+      <p>Puedes filtrar y actuar sobre las cuentas activas.</p>
+      <div class="controls">
+        <input id="userFilter" type="text" placeholder="nombre, correo o etapa">
+        <select id="planFilter">
+          <option value="">Todas</option>
+          <option value="free">Free</option>
+          <option value="pro">Pro</option>
+        </select>
+      </div>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Etapa</th>
+              <th>Plan</th>
+              <th>Alta</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersBody">
+            <tr><td colspan="5">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
 
-    function pillPlan(plan){
-      const p = (plan || "free").toLowerCase();
-      return `<span class="pill ${p === 'pro' ? 'pro' : 'free'}">${p.toUpperCase()}</span>`;
-    }
+    <section class="intel">
+      <div class="panel">
+        <h3>Inteligencia operativa</h3>
+        <p>Este admin está pensado para verte a ti, no al usuario final. Se prioriza claridad y rapidez de acción.</p>
+        <div class="intel-card">
+          <strong>Qué sí hace</strong>
+          <span>Leer usuarios, ver estado de plan y dar o quitar Pro manualmente desde backend.</span>
+        </div>
+        <div class="intel-card">
+          <strong>Qué conviene después</strong>
+          <span>Agregar eliminación, correo a pending y overrides compartidos desde base de datos.</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
-    function pillStatus(status){
-      const s = (status || "").toLowerCase();
-      const cls = s === "active" ? "pro" : (s === "pending" || s === "paused" ? "pending" : (s === "cancelled" ? "cancelled" : "free"));
-      return `<span class="pill ${cls}">${status || "—"}</span>`;
-    }
-
-    async function fetchJson(path, options={}){
-      const token = getToken();
-      if(!token){
-        window.location.href = "/login.html";
-        throw new Error("No hay sesión activa");
-      }
-      const headers = Object.assign({}, options.headers || {}, { "Authorization": "Bearer " + token });
-      const res = await fetch(API + path, Object.assign({}, options, { headers }));
-      const data = await res.json().catch(() => ({}));
-      if(!res.ok) throw new Error(data.detail || "No se pudo cargar la vista admin");
-      return data;
-    }
-
-    async function forcePlan(userId, action, cadence="monthly"){
-      const status = document.getElementById("status");
-      status.className = "status";
-      status.textContent = "Aplicando cambio...";
-      try{
-        await fetchJson(`/admin/${action}/${userId}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cadence })
-        });
-        status.className = "status ok";
-        status.textContent = "Cambio aplicado correctamente.";
-        await loadAdmin();
-      }catch(err){
-        status.className = "status error";
-        status.textContent = err.message;
-      }
-    }
-
-    async function loadAdmin(){
-      const status = document.getElementById("status");
-      status.className = "status";
-      status.textContent = "Cargando datos admin…";
-
-      try{
-        const [statsData, subsData] = await Promise.all([
-          fetchJson("/admin/stats"),
-          fetchJson("/admin/subscriptions")
-        ]);
-
-        const s = statsData.stats || {};
-        document.getElementById("statTotal").textContent = s.total ?? 0;
-        document.getElementById("statFree").textContent = s.free ?? 0;
-        document.getElementById("statPro").textContent = s.pro ?? 0;
-        document.getElementById("statActive").textContent = (s.monthly_active ?? 0) + (s.annual_active ?? 0);
-
-        const users = statsData.recent_users || [];
-        document.getElementById("usersBody").innerHTML = users.length ? users.map(u => `
-          <tr>
-            <td>${u.id ?? "—"}</td>
-            <td>${u.email || "—"}</td>
-            <td>${u.name || "—"}</td>
-            <td>${pillPlan(u.plan)}</td>
-            <td>${pillStatus(u.plan_status)}</td>
-            <td>${u.plan_cadence || "—"}</td>
-            <td>
-              <div class="row-actions">
-                <button class="btn small green" onclick="forcePlan(${u.id}, 'set-pro', 'monthly')">Dar Pro mensual</button>
-                <button class="btn small primary" onclick="forcePlan(${u.id}, 'set-pro', 'annual')">Dar Pro anual</button>
-                <button class="btn small danger" onclick="forcePlan(${u.id}, 'remove-pro')">Quitar Pro</button>
-              </div>
-            </td>
-          </tr>
-        `).join("") : `<tr><td colspan="7">No hay usuarios para mostrar.</td></tr>`;
-
-        const subs = subsData.items || [];
-        document.getElementById("subsBody").innerHTML = subs.length ? subs.map(r => `
-          <tr>
-            <td>${r.user_id ?? "—"}</td>
-            <td>${r.payer_email || "—"}</td>
-            <td>${r.cadence || "—"}</td>
-            <td>${r.amount ?? "—"}</td>
-            <td>${pillStatus(r.status)}</td>
-            <td style="max-width:280px;word-break:break-word">${r.external_reference || "—"}</td>
-          </tr>
-        `).join("") : `<tr><td colspan="6">No hay suscripciones registradas.</td></tr>`;
-
-        status.className = "status ok";
-        status.textContent = "Vista admin cargada correctamente.";
-      }catch(err){
-        status.className = "status error";
-        status.textContent = err.message;
-        document.getElementById("usersBody").innerHTML = `<tr><td colspan="7">No fue posible cargar usuarios.</td></tr>`;
-        document.getElementById("subsBody").innerHTML = `<tr><td colspan="6">No fue posible cargar suscripciones.</td></tr>`;
-      }
-    }
-
-    loadAdmin();
-  </script>
+<script>
+const API = "https://sonaria-api.onrender.com";
+function getToken(){
+  return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
+}
+function pillPlan(plan){
+  const p = (plan || "free").toLowerCase();
+  return `<span class="pill ${p === 'pro' ? 'pro' : 'free'}">${p.toUpperCase()}</span>`;
+}
+function pillStatus(status){
+  const s = (status || "").toLowerCase();
+  const cls = s === "active" ? "pro" : (s === "pending" || s === "paused" ? "pending" : "free");
+  return `<span class="pill ${cls}">${status || "—"}</span>`;
+}
+async function fetchJson(path, options={}){
+  const token = getToken();
+  if(!token){ window.location.href = "/login.html"; throw new Error("No hay sesión activa"); }
+  const headers = Object.assign({}, options.headers || {}, { "Authorization": "Bearer " + token });
+  const res = await fetch(API + path, Object.assign({}, options, { headers }));
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok) throw new Error(data.detail || "No se pudo cargar la vista admin");
+  return data;
+}
+async function forcePlan(userId, action, cadence="monthly"){
+  const status = document.getElementById("status");
+  status.className = "status"; status.textContent = "Aplicando cambio...";
+  try{
+    await fetchJson(`/admin/${action}/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cadence })
+    });
+    status.className = "status ok"; status.textContent = "Cambio aplicado correctamente.";
+    await loadAdmin();
+  }catch(err){
+    status.className = "status error"; status.textContent = err.message;
+  }
+}
+let allUsers = [];
+function renderUsers(){
+  const filter = (document.getElementById("userFilter").value || "").toLowerCase().trim();
+  const planFilter = document.getElementById("planFilter").value || "";
+  const filtered = allUsers.filter(u => {
+    const hay = `${u.email||""} ${u.name||""} ${u.plan||""} ${u.plan_status||""}`.toLowerCase();
+    if(filter && !hay.includes(filter)) return false;
+    if(planFilter && (u.plan || "").toLowerCase() !== planFilter) return false;
+    return true;
+  });
+  document.getElementById("usersBody").innerHTML = filtered.length ? filtered.map(u => `
+    <tr>
+      <td><strong>${u.name || "Sin nombre"}</strong><br><span style="color:#9fb0c8">${u.email || "—"}</span></td>
+      <td>${pillStatus(u.plan_status || (u.plan === "pro" ? "active" : "free"))}</td>
+      <td>${pillPlan(u.plan)}</td>
+      <td>${u.created_at ? new Date(u.created_at).toLocaleDateString("es-CL") : "—"}</td>
+      <td><div class="row-actions">
+        <button class="btn small green" onclick="forcePlan(${u.id}, 'set-pro', 'monthly')">Dar Pro mensual</button>
+        <button class="btn small blue" onclick="forcePlan(${u.id}, 'set-pro', 'annual')">Dar Pro anual</button>
+        <button class="btn small danger" onclick="forcePlan(${u.id}, 'remove-pro')">Quitar Pro</button>
+      </div></td>
+    </tr>`).join("") : `<tr><td colspan="5">No hay coincidencias.</td></tr>`;
+}
+async function loadAdmin(){
+  const status = document.getElementById("status");
+  status.className = "status"; status.textContent = "Escaneando datos...";
+  try{
+    const data = await fetchJson("/admin/stats");
+    const s = data.stats || {};
+    allUsers = data.recent_users || [];
+    document.getElementById("statTotal").textContent = s.total ?? 0;
+    document.getElementById("statFree").textContent = s.free ?? 0;
+    document.getElementById("statPro").textContent = s.pro ?? 0;
+    renderUsers();
+    status.className = "status ok"; status.textContent = "Panel táctico cargado.";
+  }catch(err){
+    status.className = "status error";
+    status.textContent = err.message + " · Si el backend aún no tiene endpoints admin, reemplaza también app.py.";
+    document.getElementById("usersBody").innerHTML = `<tr><td colspan="5">No fue posible cargar usuarios.</td></tr>`;
+  }
+}
+document.getElementById("userFilter").addEventListener("input", renderUsers);
+document.getElementById("planFilter").addEventListener("change", renderUsers);
+loadAdmin();
+</script>
 </body>
 </html>
