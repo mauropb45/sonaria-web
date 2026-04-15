@@ -131,7 +131,103 @@ input,textarea{width:100%;border:none;outline:none;border-radius:14px;background
   from{opacity:0;transform:translateY(8px)}
   to{opacity:.78;transform:translateY(0)}
 }
-        </style>
+        
+/* ===== Ajustes finos de contraste ===== */
+.bar{
+  height:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#d9e3f0,#e8eef6);
+  overflow:hidden;
+  position:relative;
+  border:1px solid rgba(17,24,39,.06);
+}
+.bar::after{
+  content:"Sin análisis";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:10px;
+  color:#6f8098;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--aston),var(--yellow),var(--ferrari));
+  transition:width .4s ease;
+}
+.fill[style*="width: 0"], .fill[style*="width:0"]{opacity:.9}
+
+.analysis.card{
+  background:linear-gradient(180deg,#ffffff,#eef4fb);
+  border:1px solid rgba(54,124,255,.16);
+  box-shadow:0 14px 34px rgba(54,124,255,.10);
+}
+.analysis input,
+.analysis textarea{
+  background:#ffffff;
+  border:1px solid rgba(17,24,39,.14);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
+}
+.analysis .section-copy{
+  color:#52657e;
+}
+.analysis .micro-btn.blue{
+  background:linear-gradient(135deg,var(--mclaren),#ff9b1f);
+  color:#1a1a1a;
+  box-shadow:0 8px 20px rgba(255,135,0,.24);
+}
+.analysis .micro-btn.gray{
+  background:#eef3fb;
+  color:#1b2940;
+  border:1px solid rgba(17,24,39,.08);
+}
+.analysis .micro-btn.red{
+  background:linear-gradient(135deg,var(--ferrari),#b5120d);
+  color:#fff;
+}
+.analysis .opt{
+  background:#f8fbff;
+  border:1px solid rgba(17,24,39,.08);
+}
+
+.verdict .info-card:nth-of-type(1){
+  background:linear-gradient(180deg, rgba(54,124,255,.08), rgba(255,255,255,.98));
+  border-color:rgba(54,124,255,.18);
+}
+.verdict .info-card:nth-of-type(2){
+  background:linear-gradient(180deg, rgba(243,199,75,.12), rgba(255,255,255,.98));
+  border-color:rgba(243,199,75,.24);
+}
+.verdict .info-card.adaptation{
+  background:linear-gradient(180deg, rgba(255,135,0,.09), rgba(255,255,255,.98));
+  border-color:rgba(255,135,0,.18);
+}
+.verdict .info-card:last-of-type{
+  background:linear-gradient(180deg, rgba(225,6,0,.06), rgba(255,255,255,.98));
+  border-color:rgba(225,6,0,.12);
+}
+
+#proFactCard{
+  background:linear-gradient(180deg, rgba(243,199,75,.16), rgba(255,255,255,.98)) !important;
+  border-color:rgba(243,199,75,.28) !important;
+}
+#proFactCard strong{color:#6a4b10}
+#proFactText{color:#5f7088}
+
+.empty-state{
+  padding:16px;
+  border-radius:14px;
+  background:#f8fbff;
+  border:1px dashed rgba(54,124,255,.24);
+  color:#4b5d75;
+  text-align:center;
+}
+
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1077,23 +1173,21 @@ function showWelcomeResponsibility(){
 }
 
 
-const MUSIC_FACTS = [
-  "1940: Glenn Miller consolidó el swing como fenómeno de masas en plena era de grandes bandas.",
-  "1954: el rock and roll empezó a cambiar la cultura popular con una fuerza inédita en la radio juvenil.",
-  "1963: The Beatles detonaron una nueva etapa en la música popular y la composición de canciones.",
-  "1969: el festival de Woodstock quedó como símbolo de una generación y de la música en vivo.",
-  "1975: Queen llevó la ambición de estudio a otro nivel con himnos de gran construcción vocal.",
-  "1977: Star Wars convirtió su música en parte central del relato cinematográfico moderno.",
-  "1983: el videoclip pasó a dominar la conversación musical en la era MTV.",
-  "1987: el CD consolidó una nueva forma de escuchar y coleccionar música.",
-  "1991: el grunge cambió el tono del rock comercial con una estética más cruda.",
-  "1997: la producción digital empezó a redefinir cómo se componía y editaba música.",
-  "2001: el intercambio digital cambió para siempre la distribución musical.",
-  "2007: los smartphones comenzaron a cambiar también la forma de descubrir canciones.",
-  "2011: el streaming pasó de ser alternativa a convertirse en hábito masivo.",
-  "2016: la música viral en redes comenzó a influir directamente en los rankings globales.",
-  "2020: la educación musical y los conciertos migraron fuerte a formatos híbridos y remotos."
-];
+const MUSIC_FACTS = {
+  "01-01":"Un día como hoy, en 1953, nació Margo Timmins, voz de Cowboy Junkies, una banda clave del folk-rock alternativo.",
+  "02-14":"Un día como hoy, en 1972, nació Rob Thomas, vocalista de Matchbox Twenty, referente del pop rock de fines de los 90.",
+  "03-21":"Un día como hoy, en 1949, nació Eddie Money, recordado por himnos radiales del rock estadounidense.",
+  "04-15":"Un día como hoy, en 1894, nació Bessie Smith, una de las voces más influyentes del blues del siglo XX.",
+  "05-24":"Un día como hoy, en 1941, nació Bob Dylan, figura central de la canción de autor moderna.",
+  "06-18":"Un día como hoy, en 1942, nació Paul McCartney, pieza fundamental en la historia de la música popular.",
+  "07-06":"Un día como hoy, en 1957, The Quarrymen tocaron en Liverpool y John Lennon conoció a Paul McCartney.",
+  "08-16":"Un día como hoy, en 1977, murió Elvis Presley, uno de los íconos más grandes del rock and roll.",
+  "09-29":"Un día como hoy, en 1942, nació Ian McShane; en música, esta fecha suele recordarse por lanzamientos de fines de septiembre en la era del vinilo.",
+  "10-09":"Un día como hoy, en 1940, nació John Lennon, una figura decisiva en la historia de la composición popular.",
+  "11-30":"Un día como hoy, en 1982, se lanzó Thriller de Michael Jackson, uno de los discos más influyentes de la historia.",
+  "12-08":"Un día como hoy, en 1980, murió John Lennon; una fecha muy recordada en la historia del rock.",
+  "default":"Un día como hoy, alguna canción cambió la historia: compartir contexto musical en clase ayuda a conectar mejor con los estudiantes."
+};
 
 function showProMusicFact(){
   const card = document.getElementById("proFactCard");
@@ -1104,8 +1198,8 @@ function showProMusicFact(){
     return;
   }
   const now = new Date();
-  const index = (now.getDate() + now.getMonth() * 3) % MUSIC_FACTS.length;
-  text.textContent = MUSIC_FACTS[index];
+  const key = `${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+  text.textContent = MUSIC_FACTS[key] || MUSIC_FACTS.default;
   card.style.display = "block";
 }
 
@@ -1137,68 +1231,3 @@ syncSessionWithBackend().then(() => { showWelcomeResponsibility(); showProMusicF
 </script>
 </body>
 </html>
-
-
-
-/* ===== MEJORAS CONTRASTE Y UX ===== */
-
-.bar{
-  height:10px;
-  border-radius:999px;
-  background:linear-gradient(90deg,#eef2f7,#e3e9f2);
-  overflow:hidden;
-  position:relative;
-}
-
-.bar::after{
-  content:"Sin análisis";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  font-size:10px;
-  color:#8a97ab;
-  font-weight:700;
-}
-
-.fill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--aston),var(--yellow),var(--ferrari));
-  transition:width .4s ease;
-}
-
-.panel-analizar{
-  background:linear-gradient(180deg, #ffffff, #f3f7fd);
-  border:1px solid rgba(54,124,255,.15);
-  box-shadow:0 12px 30px rgba(54,124,255,.08);
-}
-
-input, textarea{
-  background:#ffffff;
-  border:1px solid rgba(17,24,39,.12);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
-}
-
-.btn-analizar{
-  background:linear-gradient(135deg,var(--mclaren),#ff9b1f);
-  color:#1a1a1a;
-  font-weight:900;
-  box-shadow:0 6px 18px rgba(255,135,0,.35);
-}
-
-.btn-analizar:hover{
-  transform:translateY(-1px);
-  box-shadow:0 10px 22px rgba(255,135,0,.45);
-}
-
-.empty-state{
-  padding:16px;
-  border-radius:14px;
-  background:#f8fbff;
-  border:1px dashed rgba(54,124,255,.25);
-  color:#4b5d75;
-  text-align:center;
-}
-
