@@ -2,39 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Análisis pedagógico musical</title>
-  <meta name="description" content="SonarIA analiza canciones para orientar su uso pedagógico en contexto escolar." />
+  <title>SonarIA | Panel docente</title>
+  <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#f5f7fb;
-      --bg2:#eef4fb;
-      --panel:#ffffff;
-      --panel-2:#f7faff;
-      --line:#dbe6f3;
-      --line-strong:#c9d7ea;
-      --text:#122033;
-      --muted:#5f738c;
-      --green:#22c55e;
-      --green2:#14d68f;
-      --yellow:#facc15;
-      --yellow2:#f59e0b;
-      --red:#ff5a5f;
-      --red2:#ff7a59;
-      --blue:#4b82ff;
-      --cyan:#67e8f9;
+      --bg:#06101c;
+      --bg2:#0b1627;
+      --panel:rgba(255,255,255,.05);
+      --panel2:rgba(255,255,255,.035);
+      --line:rgba(255,255,255,.10);
+      --text:#eef2f7;
+      --muted:#a3b3c8;
+      --green:#14d68f;
       --orange:#ff8a00;
-      --orange2:#ff5a00;
-      --shadow:0 18px 46px rgba(14,35,72,.10);
-      --radius:24px;
-      --max:1360px;
-      --safeTop:env(safe-area-inset-top);
-      --safeBottom:env(safe-area-inset-bottom);
+      --orange2:#ff6500;
+      --blue:#4b82ff;
+      --yellow:#f3c74b;
+      --red:#ff7474;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+      --radius:26px;
+      --max:1200px;
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
@@ -42,296 +38,181 @@
       font-family:'Inter',sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(75,130,255,.10), transparent 18%),
-        radial-gradient(circle at top right, rgba(255,138,0,.08), transparent 18%),
+        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,214,143,.09), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
-      min-height:100vh;
       overflow-x:hidden;
     }
-
     body::before{
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(rgba(18,32,51,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(18,32,51,.03) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.70), transparent 88%);
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
     }
-
-    .wrap{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:calc(18px + var(--safeTop)) 18px calc(110px + var(--safeBottom));
-      position:relative;
-      z-index:1;
-    }
-
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,251,255,.96));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:14px;
-      margin-bottom:18px;
-      flex-wrap:wrap;
-    }
-
-    .brand-link{
-      text-decoration:none;
-      color:inherit;
-      display:inline-flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brand{font-size:2.1rem;font-weight:900;letter-spacing:-.07em;line-height:1}
-    .brand .ia{color:#18b369;text-shadow:0 0 18px rgba(24,179,105,.15)}
-    .brand-sub{color:var(--muted);font-size:.86rem;font-weight:700;margin-top:4px}
-
-    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
-
-    .btn{
-      border:none;border-radius:16px;min-height:48px;padding:0 18px;font:inherit;font-weight:800;
-      cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .btn:hover{ transform:translateY(-1px); }
-    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
-    .btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line)}
-    .btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#07131e;box-shadow:0 14px 34px rgba(20,214,143,.18)}
-    .btn-orange{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#111827;box-shadow:0 12px 30px rgba(255,138,0,.18)}
-    .btn-blue{background:linear-gradient(135deg,var(--blue),#7ca6ff);color:white;box-shadow:0 12px 30px rgba(75,130,255,.18)}
-
-    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;margin-bottom:18px}
-    .hero-main,.hero-side-card{padding:22px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(75,130,255,.10);border:1px solid rgba(75,130,255,.16);color:#264870;font-size:.82rem;font-weight:800;margin-bottom:14px}
-    .hero h1{margin:0 0 10px;font-size:clamp(2.3rem,4vw,4.2rem);line-height:.94;letter-spacing:-.08em;max-width:800px}
-    .hero p{margin:0;color:var(--muted);line-height:1.78;font-size:1rem}
-    .hero-pills{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-    .hero-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#35506f;font-size:.86rem;font-weight:800}
-
-    .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 0}
-    .qa{border:1px solid var(--line);border-radius:20px;background:var(--panel);min-height:86px;padding:14px;color:var(--text);cursor:pointer;text-align:left;transition:transform .16s ease,border-color .16s ease, background .16s ease}
-    .qa:hover{transform:translateY(-2px);border-color:var(--line-strong);background:#f8fbff}
-    .qa strong{display:block;font-size:.98rem;margin-bottom:6px}
-    .qa span{display:block;color:var(--muted);font-size:.86rem;line-height:1.45}
-
-    .user-card{display:grid;gap:14px}
-    .user-head{display:flex;gap:12px;align-items:center}
-    .avatar{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg, rgba(75,130,255,.18), rgba(103,232,249,.18));border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;font-size:1.2rem;font-weight:900;color:#24415f;flex:0 0 auto}
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px 22px 80px;position:relative;z-index:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+    .brand{display:flex;flex-direction:column;gap:4px}
+    .brand-title{margin:0;font-size:clamp(2.2rem,4vw,3.6rem);font-weight:900;letter-spacing:-.06em;line-height:.92}
+    .brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,214,143,.35)}
+    .brand-sub{color:#d7fff0;font-size:.96rem;font-weight:800}
+    .nav-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{min-height:48px;padding:0 18px;border:none;border-radius:16px;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;display:inline-flex;align-items:center;justify-content:center}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.75;cursor:not-allowed;transform:none}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
+    .btn-green{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c;box-shadow:0 12px 28px rgba(20,214,143,.20)}
+    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line)}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-bottom:18px}
+    .hero-main,.hero-side,.panel,.results,.cta{padding:26px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dce8ff;font-size:.84rem;font-weight:800;margin-bottom:14px}
+    .hero h1{margin:0 0 12px;font-size:clamp(2.3rem,4.8vw,4.2rem);line-height:.93;letter-spacing:-.07em}
+    .hero p{margin:0;color:var(--muted);line-height:1.8;font-size:1rem}
+    .user-strip{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .user-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:900;color:#d7fff0;flex:0 0 auto}
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-    .user-meta strong{display:block;font-size:1rem}
-    .user-meta span{display:block;color:var(--muted);line-height:1.55;word-break:break-word}
-    .plan-chip{display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-size:.8rem;font-weight:800;background:#fff;border:1px solid var(--line);color:#35506f}
-    .plan-chip.pro{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.20);color:#16794a}
-
-    .status{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;line-height:1.55;font-weight:700}
-    .status.show{display:block}
-    .status.error{background:rgba(255,107,107,.10);border:1px solid rgba(255,107,107,.20);color:#a33333}
-    .status.info{background:rgba(59,130,246,.10);border:1px solid rgba(59,130,246,.18);color:#2354a2}
-    .status.success{background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.18);color:#16794a}
-
-    .main-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:18px;align-items:start}
-    .panel,.results{padding:20px}
-    .panel-head,.results-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px}
-    .panel-head h2,.results-head h2,.section-title{margin:0;font-size:1.55rem;letter-spacing:-.04em}
-    .muted{color:var(--muted);line-height:1.65;font-size:.95rem}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;font-size:.88rem;white-space:nowrap}
-
-    .form-grid{display:grid;gap:14px}
+    .user-name{font-weight:800;line-height:1.2}
+    .user-email{color:var(--muted);font-size:.92rem;margin-top:3px}
+    .pill{padding:7px 11px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff;display:inline-flex;align-items:center;gap:8px}
+    .pill.pro{background:rgba(20,214,143,.12);border-color:rgba(20,214,143,.22);color:#d9ffe9}
+    .mini-grid{display:grid;gap:12px}
+    .mini{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}
+    .mini strong{display:block;margin-bottom:7px;font-size:.98rem}
+    .mini span{color:var(--muted);line-height:1.7;font-size:.95rem}
+    .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .panel h2,.results h2,.cta h2{margin:0;font-size:1.55rem;letter-spacing:-.04em}
+    .panel-head,.results-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .muted{color:var(--muted);line-height:1.75}
+    .form-grid{display:grid;gap:12px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .field{display:grid;gap:7px}
-    .field label{font-size:.93rem;font-weight:800;color:#1b3047}
-    input[type="text"], textarea, select{
-      width:100%;border-radius:16px;border:1px solid var(--line);background:#fff;color:var(--text);padding:14px 14px;font:inherit;outline:none;
-      transition:border-color .16s ease, box-shadow .16s ease, background .16s ease;
-    }
-    input[type="text"]:focus, textarea:focus, select:focus{border-color:rgba(75,130,255,.45);box-shadow:0 0 0 4px rgba(75,130,255,.10);background:#fff}
-    textarea{min-height:240px;resize:vertical;line-height:1.6}
-
-    .checks{display:grid;gap:10px}
-    .check{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--panel-2);border:1px solid var(--line);color:#35506f;line-height:1.55;cursor:pointer}
-    .check input{margin-top:3px;transform:scale(1.08);accent-color:#22c55e}
+    .field label{font-size:.9rem;color:#dce8ff;font-weight:700}
+    input[type='text'], textarea{width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit}
+    textarea{min-height:190px;resize:vertical}
+    input::placeholder, textarea::placeholder{color:#90a0b6}
+    .checks{display:grid;gap:10px;margin-top:4px}
+    .check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);color:#dce8ff;line-height:1.6;font-size:.95rem}
+    .check input{margin-top:3px;accent-color:var(--green)}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .hint-bar{padding:12px 14px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);font-size:.9rem;line-height:1.6}
-
-    .course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .course-chip{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);font-size:.88rem;font-weight:700;color:#35506f;cursor:pointer}
-    .course-chip input{accent-color:#4b82ff}
-
-    .badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-    .soft-pill{display:none;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#35506f;font-size:.82rem;font-weight:800}
+    .hint-bar{margin-top:2px;padding:14px 16px;border-radius:16px;background:rgba(75,130,255,.08);border:1px solid rgba(75,130,255,.18);color:#dce8ff;font-weight:700;line-height:1.6}
+    .status{min-height:24px;font-weight:800;line-height:1.5}
+    .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .soft-pill{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#dce8ff;display:none}
     .soft-pill.show{display:inline-flex}
-
-    .summary-card{padding:16px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,250,255,.96));border:1px solid var(--line);margin-bottom:14px}
-    .summary-title{font-size:1.2rem;font-weight:900;margin-bottom:8px;letter-spacing:-.03em}
-    .summary-copy{margin:0;color:#314963;line-height:1.72}
-
-    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-    .metric{padding:14px;border-radius:18px;background:var(--panel-2);border:1px solid var(--line)}
-    .metric strong{display:block;font-size:.84rem;color:#24415f;margin-bottom:7px}
-    .metric span{display:block;color:var(--muted);line-height:1.55;font-size:.96rem;font-weight:700}
-
-    .traffic{padding:16px;border-radius:20px;background:var(--panel-2);border:1px solid var(--line);margin-bottom:14px}
-    .traffic-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-    .lights{display:flex;gap:8px}
-    .light{width:16px;height:16px;border-radius:50%;background:#eef3f8;border:1px solid var(--line);box-shadow:none}
-    .light.active.red{ background:linear-gradient(135deg,var(--red),var(--red2)); box-shadow:0 0 0 4px rgba(255,90,95,.12), 0 0 18px rgba(255,90,95,.18); }
-    .light.active.yellow{ background:linear-gradient(135deg,var(--yellow),var(--yellow2)); box-shadow:0 0 0 4px rgba(250,204,21,.12), 0 0 18px rgba(250,204,21,.16); }
-    .light.active.green{ background:linear-gradient(135deg,var(--green),var(--green2)); box-shadow:0 0 0 4px rgba(34,197,94,.12), 0 0 18px rgba(34,197,94,.16); }
-
+    .summary-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .summary-title{margin:0 0 8px;font-size:1.5rem;letter-spacing:-.04em}
+    .summary-copy{margin:0;color:#d7e2f1;line-height:1.78}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+    .metric{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .metric strong{display:block;margin-bottom:6px;color:#dce8ff;font-size:.92rem}
+    .metric span{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
+    .traffic{padding:16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .traffic-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .lights{display:flex;gap:10px}
+    .light{width:18px;height:18px;border-radius:50%;opacity:.25;background:rgba(255,255,255,.08);transition:.2s ease}
+    .light.active.red{background:var(--red);opacity:1;box-shadow:0 0 14px rgba(255,116,116,.40)}
+    .light.active.yellow{background:var(--yellow);opacity:1;box-shadow:0 0 14px rgba(243,199,75,.35)}
+    .light.active.green{background:var(--green);opacity:1;box-shadow:0 0 14px rgba(20,214,143,.35)}
     .bars{display:grid;gap:12px}
-    .bar-row{display:grid;gap:7px}
-    .bar-label{display:flex;justify-content:space-between;gap:12px;color:#24415f;font-weight:800;font-size:.9rem}
-    .bar{width:100%;height:14px;border-radius:999px;overflow:hidden;background:#e9f0f8;border:1px solid var(--line);box-shadow:inset 0 1px 2px rgba(14,35,72,.07)}
-    .bar-fill{width:0%;height:100%;border-radius:999px;transition:width .35s ease;background:linear-gradient(135deg,var(--blue),var(--cyan))}
-    #riskSensitiveFill{ background:linear-gradient(135deg,var(--yellow),var(--yellow2)); }
-    #riskSchoolFill{ background:linear-gradient(135deg,var(--green),var(--green2)); }
-
-    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-    .info-card{padding:14px;border-radius:18px;background:var(--panel-2);border:1px solid var(--line);min-height:122px}
-    .info-card strong{display:block;margin-bottom:10px;font-size:.92rem;color:#1b3047}
-    .chips{display:flex;flex-wrap:wrap;gap:8px}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;background:rgba(75,130,255,.08);border:1px solid rgba(75,130,255,.16);color:#284d77;font-size:.8rem;font-weight:800}
+    .bar-row{display:grid;gap:6px}
+    .bar-label{display:flex;justify-content:space-between;gap:10px;color:#dce8ff;font-size:.9rem;font-weight:700}
+    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .35s ease}
+    .info-grid{display:grid;gap:12px}
+    .info-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+    .info-card strong{display:block;margin-bottom:7px;color:#dce8ff}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff}
     .list{display:grid;gap:8px}
-    .list-item{padding:10px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);color:#314963;line-height:1.6;font-size:.92rem;white-space:pre-wrap}
-
-    .section-block{margin-top:14px;padding:16px;border-radius:20px;background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,250,255,.96));border:1px solid var(--line)}
-    .section-block.card{box-shadow:var(--shadow)}
-    .section-block-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-    .section-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .block-copy{min-height:150px;padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line);color:#314963;line-height:1.68;white-space:pre-wrap}
-
-    .translation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    .translation-col{padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);min-height:180px}
-    .translation-col strong{display:block;margin-bottom:10px;font-size:.9rem}
-    .translation-box{white-space:pre-wrap;line-height:1.65;color:#314963;font-size:.94rem}
-
-    .ped-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-    .history-list{display:grid;gap:10px}
-    .history-item{padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-    .history-item strong{display:block;margin-bottom:4px}
-    .history-item span{display:block;color:var(--muted);font-size:.9rem;line-height:1.55}
-    .history-actions{display:flex;gap:8px;flex-wrap:wrap}
-
-    .overlay{position:fixed;inset:0;background:rgba(14,35,72,.42);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000;backdrop-filter:blur(8px)}
-    .overlay.show{display:flex}
-    .overlay-box{width:min(560px,100%);padding:26px;border-radius:28px;background:#fff;border:1px solid var(--line);box-shadow:0 28px 80px rgba(14,35,72,.18)}
-    .overlay-badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.20);color:#16794a;font-size:.8rem;font-weight:800;margin-bottom:12px}
-    .overlay-box h3{margin:0 0 10px;font-size:1.7rem;letter-spacing:-.04em}
-    .overlay-box p{margin:0;color:var(--muted);line-height:1.8}
-    .overlay-list{display:grid;gap:10px;margin:16px 0 0}
-    .overlay-list div{padding:12px 14px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);color:#27425f;font-weight:700}
-    .overlay-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-
-    .mobile-dock{position:fixed;left:12px;right:12px;bottom:calc(12px + var(--safeBottom));display:none;gap:8px;padding:10px;border-radius:22px;background:rgba(255,255,255,.94);border:1px solid var(--line);box-shadow:0 18px 46px rgba(14,35,72,.12);backdrop-filter:blur(12px);z-index:999}
-    .dock-btn{flex:1 1 0;min-height:52px;border:none;border-radius:16px;background:#fff;border:1px solid var(--line);color:#27425f;font:inherit;font-weight:800;font-size:.82rem;cursor:pointer}
-
-    @media (max-width: 1140px){ .hero,.main-grid{grid-template-columns:1fr} }
-    @media (max-width: 900px){ .course-grid,.quick-actions,.metrics,.info-grid,.translation-grid,.ped-toolbar,.two{grid-template-columns:1fr} }
-    @media (max-width: 760px){
-      .wrap{padding:calc(14px + var(--safeTop)) 14px calc(120px + var(--safeBottom))}
-      .topbar{align-items:stretch}
-      .top-actions{width:100%}
-      .top-actions .btn{width:100%}
-      .hero-main,.hero-side-card,.panel,.results,.overlay-box{padding:18px}
-      .brand{font-size:1.95rem}
-      .actions .btn{width:100%}
-      .mobile-dock{display:flex}
+    .list-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#d7e2f1;line-height:1.65}
+    .cta{margin-top:18px;background:radial-gradient(circle at top right, rgba(255,138,0,.16), transparent 22%), linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04))}
+    .cta-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .history-list{display:grid;gap:10px;margin-top:14px}
+    .history-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);line-height:1.55}
+    .history-title{font-weight:800}
+    .history-sub{color:var(--muted);font-size:.92rem}
+    .history-badge{margin-top:7px;font-size:.82rem;color:#dce8ff}
+    .overlay{position:fixed;inset:0;background:rgba(4,12,22,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+    .overlay-box{width:min(92vw,560px);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:28px;color:#f5f7fb}
+    .overlay-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.24);font-weight:800;font-size:.84rem;margin-bottom:14px}
+    .overlay h3{margin:0 0 10px;font-size:2rem;line-height:1;letter-spacing:-.04em}
+    .overlay p{margin:0 0 18px;color:#cfd9e8;line-height:1.75}
+    .overlay-list{display:grid;gap:10px;margin-bottom:18px}
+    .overlay-list div{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .overlay-actions{display:flex;gap:12px;flex-wrap:wrap}
+    @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){
+      .wrap{padding:18px 14px 56px}
+      .topbar{flex-direction:column;align-items:stretch}
+      .nav-actions{width:100%}
+      .nav-actions .btn{width:100%}
+      .hero-main,.hero-side,.panel,.results,.cta{padding:20px}
+      .two,.metrics{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-
   <div class="wrap">
     <div class="topbar">
-      <a href="/index.html" class="brand-link">
-        <div>
-          <div class="brand">Sonar<span class="ia">IA</span></div>
-          <div class="brand-sub">Análisis pedagógico musical</div>
-        </div>
+      <a href="/index.html" class="brand">
+        <h1 class="brand-title">Sonar<span class="ia">IA</span></h1>
+        <div class="brand-sub">Evaluador pedagógico musical</div>
       </a>
-
-      <div class="top-actions">
-        <button id="btnPlanesTop" class="btn btn-ghost" type="button">Planes</button>
-        <button id="btnUpgradeTop" class="btn btn-green" type="button">Desbloquear Pro</button>
-        <button id="btnLogoutTop" class="btn btn-orange" type="button">Cerrar sesión</button>
+      <div class="nav-actions">
+        <button id="btnPlanesTop" class="btn btn-ghost" type="button">Ver planes</button>
+        <button id="btnUpgradeTop" class="btn btn-primary" type="button">Desbloquear Pro</button>
       </div>
     </div>
 
     <section class="hero">
       <div class="card hero-main">
-        <div class="eyebrow">🎓 SonarIA en producción</div>
-        <h1>Analiza canciones con criterio docente, en una interfaz clara y rápida.</h1>
-        <p>
-          SonarIA orienta el uso escolar de canciones considerando lenguaje, contexto y mediación pedagógica.
-          Esta versión mezcla claridad de dashboard con una interacción tipo app: blanca, limpia y lista para usar.
-        </p>
+        <div class="eyebrow">🎓 IA para decisiones pedagógicas</div>
+        <h1>Evalúa canciones con criterio escolar, contexto y claridad.</h1>
+        <p>SonarIA te ayuda a revisar lenguaje explícito, señales sensibles y adecuación pedagógica antes de usar una canción en clases. La experiencia free entrega valor real; la Pro profundiza.</p>
 
-        <div class="hero-pills">
-          <div class="hero-pill">🧠 Lectura pedagógica</div>
-          <div class="hero-pill">🎵 Letra automática o manual</div>
-          <div class="hero-pill">📘 Actividades por curso</div>
-          <div class="hero-pill">📄 PDF real</div>
-        </div>
-
-        <div class="quick-actions">
-          <button class="qa" type="button" data-scroll="#analysisCard">
-            <strong>Analizar</strong>
-            <span>Ir directo al formulario</span>
-          </button>
-          <button class="qa" type="button" data-scroll="#pedagogiaCard">
-            <strong>Pedagogía</strong>
-            <span>OA, preguntas y actividades</span>
-          </button>
-          <button class="qa" type="button" data-scroll="#translationCard">
-            <strong>Traducción</strong>
-            <span>Vista bilingüe por líneas</span>
-          </button>
-          <button class="qa" type="button" data-scroll="#historyCard">
-            <strong>Historial</strong>
-            <span>Recuperar análisis recientes</span>
-          </button>
+        <div class="user-strip">
+          <div class="user-meta">
+            <div id="userAvatar" class="avatar">S</div>
+            <div>
+              <div id="userName" class="user-name">Cargando usuario...</div>
+              <div id="userEmail" class="user-email">Validando sesión...</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <div id="trialPlan" class="pill">...</div>
+            <div id="trialCounter" class="pill">Preparando...</div>
+          </div>
         </div>
       </div>
 
-      <div class="card hero-side-card">
-        <div class="user-card">
-          <div class="user-head">
-            <div id="userAvatar" class="avatar">S</div>
-            <div class="user-meta">
-              <strong id="userName">Usuario</strong>
-              <span id="userEmail">—</span>
-            </div>
+      <div class="card hero-side">
+        <div class="mini-grid">
+          <div class="mini">
+            <strong>Free con valor real</strong>
+            <span id="trialCopy">Analiza canciones, prueba el flujo y conoce el potencial pedagógico de SonarIA.</span>
           </div>
-
-          <div id="trialPlan" class="plan-chip">Plan Free</div>
-
-          <div class="list-item">
-            <strong id="trialCopy">Sesión validada</strong><br>
-            <span id="upgradeCopy">Accede a SonarIA con tu cuenta y mantén continuidad de uso.</span>
+          <div class="mini">
+            <strong>Experiencia Pro</strong>
+            <span id="upgradeCopy">Más continuidad, más profundidad y una experiencia preparada para uso docente real.</span>
           </div>
-
-          <div class="list-item">
-            <strong>Uso disponible</strong><br>
-            <span id="trialCounter">Cargando…</span>
+          <div class="mini">
+            <strong>La IA acompaña. Educar es cuidar.</strong>
+            <span>La responsabilidad final siempre es humana. SonarIA orienta decisiones, no reemplaza el criterio profesional docente.</span>
           </div>
-
-          <div id="statusBox" class="status"></div>
         </div>
       </div>
     </section>
 
     <section class="main-grid">
-      <section id="analysisCard" class="card panel">
+      <section class="card panel">
         <div class="panel-head">
           <div>
             <h2>Analizar canción</h2>
@@ -355,70 +236,29 @@
             <label for="texto">Letra</label>
             <textarea id="texto" placeholder="Pega aquí la letra o deja este espacio vacío para que SonarIA intente buscarla automáticamente."></textarea>
           </div>
-<div class="card">
-  <h3>🎓 Cursos</h3>
 
-  <select id="cursos" multiple style="width:100%; height:120px;">
-    <option value="1B">1° Básico</option>
-    <option value="2B">2° Básico</option>
-    <option value="3B">3° Básico</option>
-    <option value="4B">4° Básico</option>
-    <option value="5B">5° Básico</option>
-    <option value="6B">6° Básico</option>
-    <option value="7B">7° Básico</option>
-    <option value="8B">8° Básico</option>
-    <option value="1M">1° Medio</option>
-    <option value="2M">2° Medio</option>
-    <option value="3M">3° Medio</option>
-    <option value="4M">4° Medio</option>
-  </select>
-
-  <br><br>
-
-  <label>Curso objetivo:</label>
-  <select id="curso_objetivo">
-    <option value="">Auto</option>
-    <option value="1B">1° Básico</option>
-    <option value="2B">2° Básico</option>
-    <option value="3B">3° Básico</option>
-    <option value="4B">4° Básico</option>
-    <option value="5B">5° Básico</option>
-    <option value="6B">6° Básico</option>
-    <option value="7B">7° Básico</option>
-    <option value="8B">8° Básico</option>
-    <option value="1M">1° Medio</option>
-    <option value="2M">2° Medio</option>
-    <option value="3M">3° Medio</option>
-    <option value="4M">4° Medio</option>
-  </select>
-</div>
           <div class="checks">
             <label class="check">
               <input id="buscarLetra" type="checkbox" checked>
               <span><strong>Buscar letra automáticamente</strong><br>Si no pegas la letra, SonarIA intentará encontrarla con el título y artista.</span>
             </label>
-
             <label class="check">
               <input id="contextoEscolar" type="checkbox" checked>
               <span><strong>Priorizar contexto escolar</strong><br>La respuesta se orientará al uso pedagógico y a la mediación docente.</span>
             </label>
           </div>
 
-          <div class="field">
-            <label>Cursos a considerar</label>
-            <div id="courseGrid" class="course-grid"></div>
-          </div>
-
           <div class="actions">
             <button id="analyzeBtn" class="btn btn-green" type="submit">Analizar canción</button>
-            <button id="translateBtnInline" class="btn btn-blue" type="button">Traducir</button>
-            <button id="pdfBtnInline" class="btn btn-ghost" type="button">Descargar PDF</button>
             <button id="clearBtn" class="btn btn-ghost" type="button">Limpiar</button>
+            <button id="btnUpgrade" class="btn btn-ghost" type="button">Desbloquear Pro</button>
           </div>
 
           <div class="hint-bar">
-            Enter analiza desde título o artista. En la caja de letra usa <strong>Ctrl/Cmd + Enter</strong>. Si tu backend no tiene una función activa, la interfaz te lo dirá en lugar de fingir que funcionó.
+            Enter analiza desde título o artista. En la caja de letra usa <strong>Ctrl/Cmd + Enter</strong>.
           </div>
+
+          <div id="statusBox" class="status"></div>
         </form>
       </section>
 
@@ -488,109 +328,30 @@
             <strong>Temas detectados</strong>
             <div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div>
           </div>
-
           <div class="info-card">
             <strong>Contextos detectados</strong>
             <div id="contextList" class="list"><div class="list-item">Aún no hay datos.</div></div>
           </div>
-
           <div class="info-card">
             <strong>Observaciones pedagógicas</strong>
             <div id="observaciones" class="list-item">Sin datos.</div>
           </div>
-
           <div class="info-card">
             <strong>Enfoque sugerido</strong>
             <div id="enfoque" class="list-item">Sin datos.</div>
           </div>
         </div>
+
+        <div class="history-list" id="historyList"></div>
       </section>
     </section>
 
-    <section id="pedagogiaCard" class="section-block card">
-      <div class="section-block-head">
-        <div>
-          <div class="section-title">Pedagogía</div>
-          <div class="muted">OA, actividades y preguntas según el curso seleccionado.</div>
-        </div>
-        <div class="section-actions">
-          <button id="btnCopyPedagogia" class="btn btn-ghost" type="button">Copiar</button>
-        </div>
-      </div>
-
-      <div class="ped-toolbar">
-        <div class="field">
-          <label for="cursoSelector">Curso para visualizar</label>
-          <select id="cursoSelector"></select>
-        </div>
-
-        <div class="field">
-          <label for="modoPedagogia">Vista</label>
-          <select id="modoPedagogia">
-            <option value="actividades">Actividades sugeridas</option>
-            <option value="preguntas">Preguntas guiadas</option>
-            <option value="oa">OA sugerido</option>
-            <option value="completa">Vista completa</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="pedagogiaOutput" class="block-copy">Primero analiza una canción para ver contenido aquí.</div>
-    </section>
-
-    <section id="translationCard" class="section-block card">
-      <div class="section-block-head">
-        <div>
-          <div class="section-title">Traducción y vista bilingüe</div>
-          <div class="muted">La traducción es de apoyo docente. El análisis debe basarse en el idioma original.</div>
-        </div>
-        <div class="section-actions">
-          <button id="btnTranslate" class="btn btn-ghost" type="button">Traducir</button>
-          <button id="btnCopyTranslation" class="btn btn-ghost" type="button">Copiar</button>
-        </div>
-      </div>
-
-      <div class="translation-grid">
-        <div class="translation-col">
-          <strong>Texto original</strong>
-          <div id="translationOriginal" class="translation-box">Aún no hay letra cargada.</div>
-        </div>
-        <div class="translation-col">
-          <strong>Traducción al español</strong>
-          <div id="translationSpanish" class="translation-box">Primero analiza una canción o pega una letra.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-block card">
-      <div class="section-block-head">
-        <div>
-          <div class="section-title">Informe y exportación</div>
-          <div class="muted">El PDF usa el endpoint real <code>/export/pdf</code> del backend.</div>
-        </div>
-        <div class="section-actions">
-          <button id="btnCopySummary" class="btn btn-ghost" type="button">Copiar resumen</button>
-          <button id="btnExportPdf" class="btn btn-green" type="button">Descargar PDF</button>
-        </div>
-      </div>
-
-      <div id="reportPreview" class="block-copy">Aquí se preparará el resumen docente del análisis.</div>
-    </section>
-
-    <section id="historyCard" class="section-block card">
-      <div class="section-block-head">
-        <div>
-          <div class="section-title">Historial reciente</div>
-          <div class="muted">Guardado local en este navegador para acceso rápido.</div>
-        </div>
-        <div class="section-actions">
-          <button id="btnHistorial" class="btn btn-ghost" type="button">Actualizar</button>
-          <button id="btnClearHistory" class="btn btn-ghost" type="button">Vaciar</button>
-        </div>
-      </div>
-
-      <div id="historyPanel" class="history-list">
-        <div class="list-item">Todavía no tienes análisis guardados en este navegador.</div>
+    <section class="card cta">
+      <h2>SonarIA Pro</h2>
+      <div class="muted">La experiencia gratuita ya entrega valor. La versión Pro elimina límites y prepara el camino para una experiencia más completa y más útil para el trabajo docente real.</div>
+      <div class="cta-actions">
+        <button id="btnPlanesBottom" class="btn btn-primary" type="button">Ir a planes</button>
+        <button id="btnHistorial" class="btn btn-ghost" type="button">Ver historial</button>
       </div>
     </section>
   </div>
@@ -602,8 +363,8 @@
       <p id="overlayText">Pasa de una experiencia base a una experiencia más completa dentro de SonarIA.</p>
       <div class="overlay-list">
         <div>Uso continuo de la herramienta</div>
-        <div>Experiencia más fluida y docente</div>
         <div>Base para funciones más avanzadas</div>
+        <div>Experiencia pensada para uso docente real</div>
       </div>
       <div class="overlay-actions">
         <button class="btn btn-green" type="button" onclick="window.location.href='planes.html'">Ver planes</button>
@@ -612,27 +373,13 @@
     </div>
   </div>
 
-  <div class="mobile-dock">
-    <button class="dock-btn" type="button" data-scroll="#analysisCard">Analizar</button>
-    <button class="dock-btn" type="button" data-scroll="#pedagogiaCard">Pedagogía</button>
-    <button class="dock-btn" type="button" data-scroll="#translationCard">Traducción</button>
-    <button class="dock-btn" type="button" data-scroll="#historyCard">Historial</button>
-  </div>
-
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
-    const TRANSLATE_URL = API_BASE + "/traducir";
-    const PDF_URL = API_BASE + "/export/pdf";
     const DEMO_LIMIT = 3;
 
-    const COURSE_OPTIONS = [
-      ["1B","1° básico"],["2B","2° básico"],["3B","3° básico"],["4B","4° básico"],
-      ["5B","5° básico"],["6B","6° básico"],["7B","7° básico"],["8B","8° básico"],
-      ["1M","1° medio"],["2M","2° medio"],["3M","3° medio"],["4M","4° medio"]
-    ];
-
+    const form = document.getElementById("analysisForm");
     const titulo = document.getElementById("titulo");
     const artista = document.getElementById("artista");
     const texto = document.getElementById("texto");
@@ -640,8 +387,8 @@
     const contextoEscolar = document.getElementById("contextoEscolar");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const clearBtn = document.getElementById("clearBtn");
-    const statusBox = document.getElementById("statusBox");
 
+    const statusBox = document.getElementById("statusBox");
     const resultBadge = document.getElementById("resultBadge");
     const summaryTitle = document.getElementById("summaryTitle");
     const summaryCopy = document.getElementById("summaryCopy");
@@ -675,379 +422,28 @@
     const trialPlan = document.getElementById("trialPlan");
     const trialCounter = document.getElementById("trialCounter");
     const upgradeCopy = document.getElementById("upgradeCopy");
-
-    const historyPanel = document.getElementById("historyPanel");
-    const pedagogiaOutput = document.getElementById("pedagogiaOutput");
-    const cursoSelector = document.getElementById("cursoSelector");
-    const modoPedagogia = document.getElementById("modoPedagogia");
-    const translationOriginal = document.getElementById("translationOriginal");
-    const translationSpanish = document.getElementById("translationSpanish");
-    const reportPreview = document.getElementById("reportPreview");
-    const courseGrid = document.getElementById("courseGrid");
+    const historyList = document.getElementById("historyList");
 
     let authToken = "";
     let user = { plan: "free" };
-    let currentAnalysis = null;
-    let selectedCourses = [];
-
-    function escapeHtml(value){
-      return String(value ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
     }
+    function getUsage(){ return Number(localStorage.getItem("sonaria_demo_uses") || "0"); }
+    function setUsage(value){ localStorage.setItem("sonaria_demo_uses", String(value)); }
+    function getRemainingUsage(){ return Math.max(0, DEMO_LIMIT - getUsage()); }
 
-    function getStoredUser(){
-      try{return JSON.parse(localStorage.getItem("mejoraria_user") || "{}");}catch{return {};}
-    }
-
-    function setStatus(message, type = "info"){
+    function setStatus(message, type){
       statusBox.textContent = message;
-      statusBox.className = "status show " + type;
+      statusBox.style.color = type === "success" ? "#b7ffd1" : type === "error" ? "#ffd7d7" : "#dce8ff";
     }
-
-    function clearStatus(){
-      statusBox.textContent = "";
-      statusBox.className = "status";
-    }
-
-    function showOverlay(title, text){
-      document.getElementById("overlayTitle").textContent = title;
-      document.getElementById("overlayText").textContent = text;
-      document.getElementById("proOverlay").classList.add("show");
-    }
-
-    function hideOverlay(){
-      document.getElementById("proOverlay").classList.remove("show");
-    }
-
-    function forceRelogin(message){
-      localStorage.setItem("mejoraria_logout_message", message || "Debes volver a iniciar sesión.");
-      localStorage.removeItem("mejoraria_token");
-      localStorage.removeItem("token");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("mejoraria_user");
-      window.location.href = "/login.html";
-    }
-
-    function getUsageState(){
-      try{return JSON.parse(localStorage.getItem("sonaria_usage_state") || "{}");}catch{return {};}
-    }
-
-    function setUsageState(state){
-      localStorage.setItem("sonaria_usage_state", JSON.stringify(state));
-    }
-
-    function getTodayKey(){
-      const now = new Date();
-      return [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-");
-    }
-
-    function getRemainingUsage(){
-      const state = getUsageState();
-      const today = getTodayKey();
-      if(state.day !== today){
-        setUsageState({ day: today, count: 0 });
-        return DEMO_LIMIT;
-      }
-      return Math.max(DEMO_LIMIT - (state.count || 0), 0);
-    }
-
-    function incrementUsage(){
-      if((user.plan || "free") === "pro") return;
-      const state = getUsageState();
-      const today = getTodayKey();
-      if(state.day !== today){
-        setUsageState({ day: today, count: 1 });
-      }else{
-        setUsageState({ day: today, count: (state.count || 0) + 1 });
-      }
-      updateUserPanel();
-    }
-
-    function updateUserPanel(){
-      const plan = (user.plan || localStorage.getItem("mejoraria_plan") || "free").toLowerCase();
-      if(plan === "pro"){
-        trialPlan.textContent = "Plan Pro";
-        trialPlan.className = "plan-chip pro";
-        trialCopy.textContent = "Tu cuenta Pro está activa.";
-        trialCounter.textContent = "Uso sin límite.";
-        upgradeCopy.textContent = "SonarIA está listo para uso continuo y más profundo.";
-      }else{
-        const remaining = getRemainingUsage();
-        trialPlan.textContent = "Plan Free";
-        trialPlan.className = "plan-chip";
-        trialCopy.textContent = "Estás usando la versión base.";
-        trialCounter.textContent = `Te quedan ${remaining} análisis gratuitos hoy.`;
-        upgradeCopy.textContent = remaining > 0
-          ? "Prueba SonarIA y luego desbloquea Pro para continuidad de uso."
-          : "Llegaste al límite gratuito de hoy. Desbloquea Pro para seguir usando la herramienta.";
-      }
-    }
-
-    async function syncSessionWithBackend(){
-      authToken = getToken();
-      if(!authToken){
-        forceRelogin("Debes iniciar sesión para usar SonarIA.");
-        return false;
-      }
-
-      try{
-        const res = await fetch(ME_URL, { headers: { "Authorization": "Bearer " + authToken } });
-        const data = await res.json().catch(() => ({}));
-
-        if(res.status === 401){
-          forceRelogin(data.detail || "Tu sesión expiró o fue reemplazada.");
-          return false;
-        }
-        if(!res.ok || !data.user){
-          setStatus("No fue posible validar tu sesión.", "error");
-          return false;
-        }
-
-        user = data.user;
-        localStorage.setItem("mejoraria_user", JSON.stringify(user));
-        if(user.plan) localStorage.setItem("mejoraria_plan", user.plan);
-
-        userName.textContent = user.name || user.email || "Usuario";
-        userEmail.textContent = user.email || "";
-        if(user.picture){
-          userAvatar.innerHTML = '<img src="' + user.picture + '" alt="avatar">';
-        }else{
-          userAvatar.textContent = (user.email || "S").charAt(0).toUpperCase();
-        }
-
-        updateUserPanel();
-        return true;
-      }catch(error){
-        const localUser = getStoredUser();
-        if(localUser && localUser.email){
-          user = localUser;
-          userName.textContent = user.name || user.email || "Usuario";
-          userEmail.textContent = user.email || "";
-          userAvatar.textContent = (user.email || "S").charAt(0).toUpperCase();
-          updateUserPanel();
-        }
-        setStatus("No fue posible conectar con el backend.", "error");
-        return false;
-      }
-    }
-
-    function renderCourseControls(){
-      courseGrid.innerHTML = COURSE_OPTIONS.map(([code,label]) => `
-        <label class="course-chip">
-          <input type="checkbox" value="${code}" onchange="toggleCourse('${code}', this.checked)">
-          <span>${label}</span>
-        </label>
-      `).join("");
-      cursoSelector.innerHTML = '<option value="">Curso principal / automático</option>' + COURSE_OPTIONS.map(([code,label]) => `<option value="${code}">${label}</option>`).join('');
-    }
-
-    window.toggleCourse = function(code, checked){
-      if(checked){
-        if(!selectedCourses.includes(code)) selectedCourses.push(code);
-      }else{
-        selectedCourses = selectedCourses.filter(x => x !== code);
-      }
-      if(currentAnalysis) renderPedagogia();
-    }
+    function clearStatus(){ statusBox.textContent = ""; }
 
     function clearPills(){
       pillAutoLyric.classList.remove("show");
       pillManualText.classList.remove("show");
       pillFallback.classList.remove("show");
-    }
-
-    function activateTraffic(result){
-      lightRed.className = "light";
-      lightYellow.className = "light";
-      lightGreen.className = "light";
-      const value = String(result || "").toLowerCase();
-      if(value.includes("roja") || value.includes("no apta") || value.includes("🔴")){
-        lightRed.className = "light active red";
-      }else if(value.includes("mediación") || value.includes("supervisión") || value.includes("🟠") || value.includes("🟡")){
-        lightYellow.className = "light active yellow";
-      }else{
-        lightGreen.className = "light active green";
-      }
-    }
-
-    function buildReportPreview(raw){
-      const lines = [];
-      lines.push("INFORME SONARIA");
-      lines.push("");
-      lines.push("Canción: " + (titulo.value.trim() || "—"));
-      lines.push("Artista: " + (artista.value.trim() || "—"));
-      lines.push("Resultado: " + (raw.resultado || "—"));
-      lines.push("Edad sugerida: " + (raw.edad_sugerida || "—"));
-      lines.push("");
-      lines.push("Resumen:");
-      lines.push(raw.resumen || "Sin resumen.");
-      lines.push("");
-      lines.push("Observaciones pedagógicas:");
-      lines.push(raw.observaciones_pedagogicas || "Sin observaciones.");
-      lines.push("");
-      lines.push("Enfoque sugerido:");
-      lines.push(raw.enfoque_sugerido || "Sin enfoque sugerido.");
-      return lines.join("\n");
-    }
-
-    function renderAnalysis(raw){
-      resultBadge.textContent = raw.resultado || "Resultado";
-      summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
-      summaryCopy.textContent = raw.resumen || "Análisis completado.";
-      edadSugerida.textContent = raw.edad_sugerida || "—";
-      fuenteUsada.textContent = raw.fuente_usada || "—";
-      lecturaSugerida.textContent = raw.lectura_sugerida || "—";
-      if(raw.texto) texto.value = raw.texto;
-
-      const temas = Array.isArray(raw.temas_detectados) ? raw.temas_detectados : [];
-      themesWrap.innerHTML = temas.length ? temas.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("") : '<span class="chip">Sin datos</span>';
-
-      const contextos = Array.isArray(raw.contextos_detectados) ? raw.contextos_detectados : [];
-      contextList.innerHTML = contextos.length ? contextos.map(c => `<div class="list-item">${escapeHtml(c)}</div>`).join("") : '<div class="list-item">No se detectaron contextos destacados.</div>';
-
-      observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
-      enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
-
-      const total = Math.min(raw.risk_percent ?? 0, 100);
-      const sensitive = Math.min(raw.risk_sensitive ?? 0, 100);
-      const school = Math.min(raw.risk_school ?? 0, 100);
-      riskPercent.textContent = total + "%";
-      riskSensitive.textContent = sensitive + "%";
-      riskSchool.textContent = school + "%";
-      riskTotalFill.style.width = total + "%";
-      riskSensitiveFill.style.width = sensitive + "%";
-      riskSchoolFill.style.width = school + "%";
-      activateTraffic(raw.resultado || "");
-
-      currentAnalysis = raw;
-      renderPedagogia();
-      reportPreview.textContent = buildReportPreview(raw);
-      translationOriginal.textContent = (texto.value || "").trim() || "Aún no hay letra cargada.";
-      translationSpanish.textContent = "Presiona “Traducir” para pedir una vista bilingüe al backend.";
-    }
-
-    function getSelectedPedagogyBundle(){
-      if(!currentAnalysis) return null;
-      const all = Array.isArray(currentAnalysis.pedagogia_opciones) ? currentAnalysis.pedagogia_opciones : [];
-      const selected = cursoSelector.value || selectedCourses[0] || "";
-      let bundle = selected ? all.find(x => x.course_code === selected) : null;
-      if(!bundle) bundle = all[0] || {
-        course_label: selected || "—",
-        oa: currentAnalysis.oa_sugerido || "OA sugerido no disponible aún.",
-        preguntas: Array.isArray(currentAnalysis.preguntas_guiadas) ? currentAnalysis.preguntas_guiadas : [],
-        actividades: Array.isArray(currentAnalysis.actividades_sugeridas) ? currentAnalysis.actividades_sugeridas : []
-      };
-      return bundle;
-    }
-
-    function renderPedagogia(){
-      if(!currentAnalysis){
-        pedagogiaOutput.textContent = "Primero analiza una canción para ver contenido aquí.";
-        return;
-      }
-      const bundle = getSelectedPedagogyBundle();
-      const modo = modoPedagogia.value;
-      if(!bundle){
-        pedagogiaOutput.textContent = "No hay pedagogía disponible.";
-        return;
-      }
-
-      if(modo === "oa"){
-        pedagogiaOutput.textContent = [bundle.course_label ? ("Curso: " + bundle.course_label) : "", bundle.oa || "OA sugerido no disponible."].filter(Boolean).join("\n\n");
-        return;
-      }
-      if(modo === "preguntas"){
-        pedagogiaOutput.textContent = (bundle.preguntas?.length ? bundle.preguntas.map(x => "• " + x).join("\n") : "Sin preguntas sugeridas.");
-        return;
-      }
-      if(modo === "actividades"){
-        pedagogiaOutput.textContent = (bundle.actividades?.length ? bundle.actividades.map(x => "• " + x).join("\n") : "Sin actividades sugeridas.");
-        return;
-      }
-
-      pedagogiaOutput.textContent = [
-        bundle.course_label ? ("Curso: " + bundle.course_label) : "",
-        "OA sugerido:",
-        bundle.oa || "—",
-        "",
-        "Preguntas guiadas:",
-        ...(bundle.preguntas?.length ? bundle.preguntas.map(x => "• " + x) : ["Sin preguntas sugeridas."]),
-        "",
-        "Actividades sugeridas:",
-        ...(bundle.actividades?.length ? bundle.actividades.map(x => "• " + x) : ["Sin actividades sugeridas."])
-      ].join("\n");
-    }
-
-    function saveHistoryItem(payload, raw){
-      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      const entry = {
-        id: Date.now(),
-        titulo: payload.titulo || "",
-        artista: payload.artista || "",
-        resultado: raw.resultado || "",
-        edad: raw.edad_sugerida || "",
-        resumen: raw.resumen || "",
-        texto: raw.texto || payload.texto || "",
-        cursos: payload.cursos || [],
-        savedAt: new Date().toISOString()
-      };
-      const filtered = items.filter(x => !(x.titulo === entry.titulo && x.artista === entry.artista && x.resultado === entry.resultado));
-      filtered.unshift(entry);
-      localStorage.setItem("sonaria_history", JSON.stringify(filtered.slice(0, 20)));
-      renderHistory();
-    }
-
-    function renderHistory(){
-      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      if(!items.length){
-        historyPanel.innerHTML = '<div class="list-item">Todavía no tienes análisis guardados en este navegador.</div>';
-        return;
-      }
-      historyPanel.innerHTML = items.slice(0, 8).map(item => {
-        const dt = new Date(item.savedAt);
-        const label = isNaN(dt) ? "—" : dt.toLocaleString("es-CL");
-        return `
-          <div class="history-item">
-            <div>
-              <strong>${escapeHtml(item.titulo || "Sin título")} — ${escapeHtml(item.artista || "Sin artista")}</strong>
-              <span>${escapeHtml(item.resultado || "Sin resultado")} · ${escapeHtml(item.edad || "—")} · ${escapeHtml(label)}</span>
-            </div>
-            <div class="history-actions">
-              <button class="btn btn-ghost" type="button" onclick="loadHistoryItem(${Number(item.id)})">Cargar</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    window.loadHistoryItem = function(id){
-      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      const item = items.find(x => Number(x.id) === Number(id));
-      if(!item) return;
-      titulo.value = item.titulo || "";
-      artista.value = item.artista || "";
-      texto.value = item.texto || "";
-      selectedCourses = Array.isArray(item.cursos) ? item.cursos : [];
-      syncSelectedCourseCheckboxes();
-      clearPills();
-      pillManualText.classList.add("show");
-      setStatus("Historial cargado en el formulario. Puedes volver a analizar.", "success");
-      document.getElementById("analysisCard").scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function syncSelectedCourseCheckboxes(){
-      document.querySelectorAll('#courseGrid input[type="checkbox"]').forEach(input => {
-        input.checked = selectedCourses.includes(input.value);
-      });
-      renderPedagogia();
     }
 
     function clearResult(){
@@ -1067,129 +463,154 @@
       riskTotalFill.style.width = "0%";
       riskSensitiveFill.style.width = "0%";
       riskSchoolFill.style.width = "0%";
-      activateTraffic("");
-      pedagogiaOutput.textContent = "Primero analiza una canción para ver contenido aquí.";
-      translationOriginal.textContent = "Aún no hay letra cargada.";
-      translationSpanish.textContent = "Primero analiza una canción o pega una letra.";
-      reportPreview.textContent = "Aquí se preparará el resumen docente del análisis.";
-      currentAnalysis = null;
+      lightRed.className = "light";
+      lightYellow.className = "light";
+      lightGreen.className = "light";
     }
 
-    async function requestTranslation(){
-      const original = (texto.value || "").trim();
-      if(!original){
-        setStatus("No hay letra para traducir.", "error");
-        return;
-      }
-      const ok = await syncSessionWithBackend();
-      if(!ok) return;
-      setStatus("Solicitando traducción...", "info");
-      translationOriginal.textContent = original;
-      translationSpanish.textContent = "Traduciendo…";
-      try{
-        const res = await fetch(TRANSLATE_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken},
-          body: JSON.stringify({ texto: original })
-        });
-        const data = await res.json().catch(() => ({}));
-        if(!res.ok) throw new Error(data.detail || "La traducción no está disponible todavía en esta versión.");
-        if(Array.isArray(data.pares) && data.pares.length){
-          translationSpanish.textContent = data.pares.map(pair => `${pair.original || ""}\n→ ${pair.traducido || ""}`).join("\n\n");
-        }else if(typeof data.traduccion === "string" && data.traduccion.trim()){
-          translationSpanish.textContent = data.traduccion.trim();
-        }else{
-          translationSpanish.textContent = "El backend respondió, pero no entregó una traducción usable.";
-        }
-        setStatus("Traducción lista.", "success");
-      }catch(error){
-        translationSpanish.textContent = "No fue posible obtener traducción desde el backend.";
-        setStatus(error.message || "No fue posible traducir.", "error");
-      }
+    function activateTraffic(resultado){
+      lightRed.className = "light";
+      lightYellow.className = "light";
+      lightGreen.className = "light";
+      const txt = (resultado || "").toLowerCase();
+      if (txt.includes("no apta")) lightRed.className = "light active red";
+      else if (txt.includes("supervisión") || txt.includes("supervision")) lightYellow.className = "light active yellow";
+      else lightGreen.className = "light active green";
     }
 
-    async function exportPdf(){
-      if(!currentAnalysis){
-        setStatus("Primero analiza una canción antes de exportar.", "error");
-        return;
-      }
-      const ok = await syncSessionWithBackend();
-      if(!ok) return;
-      const payload = {
-        titulo: titulo.value.trim(),
-        artista: artista.value.trim(),
-        semaforo: currentAnalysis.resultado || "",
-        explicacion: currentAnalysis.resumen || "",
-        sugerencia: pedagogiaOutput.textContent || "",
-        resultado: currentAnalysis.resultado || "",
-        edad: currentAnalysis.edad_sugerida || "",
-        observaciones: currentAnalysis.observaciones_pedagogicas || "",
-        enfoque: currentAnalysis.enfoque_sugerido || "",
-        texto_original: (texto.value || "").trim(),
-        traduccion: translationSpanish.textContent || ""
-      };
-      try{
-        setStatus("Generando PDF...", "info");
-        const res = await fetch(PDF_URL, {
-          method: "POST",
-          headers: {"Content-Type":"application/json","Authorization":"Bearer " + authToken},
-          body: JSON.stringify(payload)
-        });
-        if(!res.ok){
-          let message = "El PDF real aún no está activo en backend.";
-          try{ const data = await res.json(); message = data.detail || message; }catch{}
-          throw new Error(message);
-        }
-        const blob = await res.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "sonaria.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-        setStatus("PDF descargado correctamente.", "success");
-      }catch(error){
-        setStatus(error.message || "No fue posible exportar el PDF.", "error");
-      }
+    function showOverlay(title, text){
+      document.getElementById("overlayTitle").textContent = title || "Desbloquea SonarIA Pro";
+      document.getElementById("overlayText").textContent = text || "Pasa de una experiencia base a una experiencia más completa.";
+      document.getElementById("proOverlay").style.display = "flex";
     }
+    function hideOverlay(){ document.getElementById("proOverlay").style.display = "none"; }
 
-    function copyText(value, successMessage){
-      const txt = String(value || "").trim();
-      if(!txt){ setStatus("No hay contenido para copiar.", "error"); return; }
-      navigator.clipboard.writeText(txt)
-        .then(() => setStatus(successMessage || "Copiado.", "success"))
-        .catch(() => setStatus("No fue posible copiar.", "error"));
-    }
-
-    document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
-    document.getElementById("btnUpgradeTop").addEventListener("click", () => showOverlay("Desbloquea SonarIA Pro", "Pasa de una experiencia base a una experiencia más completa y sin límites."));
-    document.getElementById("btnLogoutTop").addEventListener("click", () => {
-      localStorage.setItem("mejoraria_logout_message", "Sesión cerrada correctamente.");
+    function forceRelogin(message){
       localStorage.removeItem("mejoraria_token");
       localStorage.removeItem("token");
       localStorage.removeItem("access_token");
-      localStorage.removeItem("mejoraria_user");
-      window.location.href = "/login.html";
-    });
+      setStatus(message || "Tu sesión ya no es válida. Debes volver a iniciar sesión.", "error");
+      setTimeout(() => { window.location.href = "login.html"; }, 1400);
+    }
 
-    document.getElementById("btnTranslate").addEventListener("click", requestTranslation);
-    document.getElementById("translateBtnInline").addEventListener("click", requestTranslation);
-    document.getElementById("btnExportPdf").addEventListener("click", exportPdf);
-    document.getElementById("pdfBtnInline").addEventListener("click", exportPdf);
-    document.getElementById("btnCopyTranslation").addEventListener("click", () => copyText(translationSpanish.textContent, "Traducción copiada."));
-    document.getElementById("btnCopySummary").addEventListener("click", () => copyText(reportPreview.textContent, "Resumen copiado."));
-    document.getElementById("btnCopyPedagogia").addEventListener("click", () => copyText(pedagogiaOutput.textContent, "Pedagogía copiada."));
-    document.getElementById("btnHistorial").addEventListener("click", renderHistory);
-    document.getElementById("btnClearHistory").addEventListener("click", () => {
-      localStorage.removeItem("sonaria_history");
-      renderHistory();
-      setStatus("Historial local eliminado.", "success");
-    });
+    function updateUserPanel(){
+      const remaining = getRemainingUsage();
+      trialPlan.textContent = ((user.plan || "free").toUpperCase());
+      trialPlan.className = "pill " + ((user.plan || "free") === "pro" ? "pro" : "");
 
-    cursoSelector.addEventListener("change", renderPedagogia);
-    modoPedagogia.addEventListener("change", renderPedagogia);
+      if((user.plan || "free") === "pro"){
+        trialCounter.textContent = "Uso ilimitado";
+        trialCopy.textContent = "Tu cuenta Pro está activa. Puedes analizar sin límite dentro de esta experiencia.";
+        upgradeCopy.textContent = "Tu cuenta ya está en modo Pro. Próximamente iremos sumando más profundidad y nuevas capas.";
+        document.getElementById("btnUpgrade").style.display = "inline-flex";
+        document.getElementById("btnUpgrade").textContent = "Cuenta Pro activa";
+        document.getElementById("btnUpgrade").disabled = true;
+        document.getElementById("btnUpgradeTop").style.display = "none";
+      }else{
+        trialCounter.textContent = remaining + " análisis disponibles";
+        trialCopy.textContent = "La experiencia gratuita te permite probar SonarIA con un número acotado de análisis.";
+        upgradeCopy.textContent = "Desbloquea Pro para quitar el límite y preparar el camino para una experiencia más potente.";
+        document.getElementById("btnUpgrade").style.display = "inline-flex";
+        document.getElementById("btnUpgrade").textContent = "Desbloquear Pro";
+        document.getElementById("btnUpgrade").disabled = false;
+        document.getElementById("btnUpgradeTop").style.display = "inline-flex";
+      }
+    }
+
+    function renderHistory(){
+      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      if(!items.length){ historyList.innerHTML = ""; return; }
+      historyList.innerHTML = items.slice(0, 5).map(item => `
+        <div class="history-item">
+          <div class="history-title">${escapeHtml(item.titulo)}</div>
+          <div class="history-sub">${escapeHtml(item.artista)} · ${new Date(item.fecha).toLocaleString("es-CL")}</div>
+          <div class="history-badge">${escapeHtml(item.badge)}</div>
+        </div>
+      `).join("");
+    }
+
+    function saveHistoryItem(item){
+      const current = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      current.unshift(item);
+      localStorage.setItem("sonaria_history", JSON.stringify(current.slice(0, 10)));
+    }
+
+    function escapeHtml(str){
+      return String(str || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
+    }
+
+    async function syncSessionWithBackend(){
+      authToken = getToken();
+      if(!authToken){ forceRelogin("Debes iniciar sesión para usar SonarIA."); return false; }
+
+      try{
+        const res = await fetch(ME_URL, { headers: { "Authorization": "Bearer " + authToken } });
+        const data = await res.json().catch(() => ({}));
+
+        if(res.status === 401){
+          forceRelogin(data.detail || "Tu sesión expiró o fue reemplazada.");
+          return false;
+        }
+        if(!res.ok || !data.user){
+          setStatus("No fue posible validar tu sesión.", "error");
+          return false;
+        }
+
+        user = data.user;
+        userName.textContent = user.name || user.email || "Usuario";
+        userEmail.textContent = user.email || "";
+        if(user.picture) userAvatar.innerHTML = '<img src="' + user.picture + '" alt="avatar">';
+        else userAvatar.textContent = (user.email || "S").charAt(0).toUpperCase();
+
+        updateUserPanel();
+        return true;
+      }catch(error){
+        setStatus("No fue posible conectar con el backend.", "error");
+        return false;
+      }
+    }
+
+    function renderAnalysis(raw){
+      resultBadge.textContent = raw.resultado || "Resultado";
+      summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
+      summaryCopy.textContent = raw.resumen || "Análisis completado.";
+      edadSugerida.textContent = raw.edad_sugerida || "—";
+      fuenteUsada.textContent = raw.fuente_usada || "—";
+      lecturaSugerida.textContent = raw.lectura_sugerida || "—";
+
+      if (raw.texto) texto.value = raw.texto;
+
+      const temas = Array.isArray(raw.temas_detectados) ? raw.temas_detectados : [];
+      themesWrap.innerHTML = temas.length ? temas.map(t => `<span class="chip">${escapeHtml(t)}</span>`).join("") : '<span class="chip">Sin datos</span>';
+
+      const contextos = Array.isArray(raw.contextos_detectados) ? raw.contextos_detectados : [];
+      contextList.innerHTML = contextos.length ? contextos.map(c => `<div class="list-item">${escapeHtml(c)}</div>`).join("") : '<div class="list-item">No se detectaron contextos destacados.</div>';
+
+      observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
+      enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
+
+      riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
+      riskSensitive.textContent = (raw.risk_sensitive ?? 0) + "%";
+      riskSchool.textContent = (raw.risk_school ?? 0) + "%";
+      riskTotalFill.style.width = Math.min(raw.risk_percent ?? 0, 100) + "%";
+      riskSensitiveFill.style.width = Math.min(raw.risk_sensitive ?? 0, 100) + "%";
+      riskSchoolFill.style.width = Math.min(raw.risk_school ?? 0, 100) + "%";
+
+      activateTraffic(raw.resultado || "");
+    }
+
+    document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
+    document.getElementById("btnPlanesBottom").addEventListener("click", () => window.location.href = "planes.html");
+    document.getElementById("btnUpgradeTop").addEventListener("click", () => showOverlay("Desbloquea SonarIA Pro", "Pasa de una experiencia base a una experiencia más completa y sin límites."));
+    document.getElementById("btnUpgrade").addEventListener("click", () => {
+      if((user.plan || "free") === "pro") return;
+      showOverlay("Desbloquea SonarIA Pro", "Quita límites y prepara el camino para una experiencia docente más potente.");
+    });
+    document.getElementById("btnHistorial").addEventListener("click", () => {
+      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
+      if(!items.length){ alert("Todavía no tienes análisis guardados en este navegador."); return; }
+      alert("Historial reciente cargado en la columna derecha.");
+    });
 
     clearBtn.addEventListener("click", () => {
       titulo.value = "";
@@ -1197,25 +618,16 @@
       texto.value = "";
       buscarLetra.checked = true;
       contextoEscolar.checked = true;
-      selectedCourses = [];
-      syncSelectedCourseCheckboxes();
-      cursoSelector.value = "";
       clearPills();
       clearStatus();
       clearResult();
     });
 
-    document.querySelectorAll("[data-scroll]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const target = document.querySelector(btn.getAttribute("data-scroll"));
-        if(target) target.scrollIntoView({ behavior:"smooth", block:"start" });
-      });
-    });
-
-    document.getElementById("analysisForm").addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const ok = await syncSessionWithBackend();
       if(!ok) return;
+
       if((user.plan || "free") !== "pro" && getRemainingUsage() <= 0){
         setStatus("Has alcanzado el límite gratuito. Desbloquea SonarIA para usarlo sin límite.", "error");
         showOverlay("Límite gratuito alcanzado", "Ya probaste el valor de SonarIA. Desbloquea Pro para seguir usando la herramienta sin límite.");
@@ -1225,65 +637,99 @@
       clearStatus();
       clearPills();
       setStatus("Analizando canción...", "info");
-      analyzeBtn.disabled = true;
 
       try{
         let textoParaEnviar = texto.value.trim();
-        if(buscarLetra.checked && titulo.value.trim()) textoParaEnviar = "";
+
+        if (buscarLetra.checked && titulo.value.trim()) {
+          textoParaEnviar = "";
+        }
 
         const payload = {
           titulo: titulo.value.trim(),
           artista: artista.value.trim(),
           texto: textoParaEnviar,
-          buscar_letra: !!buscarLetra.checked,
-          contexto_escolar: !!contextoEscolar.checked,
-          cursos: selectedCourses
+          buscar_letra: buscarLetra.checked,
+          contexto_escolar: contextoEscolar.checked
         };
 
-        const res = await fetch(ANALYZE_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json","Authorization":"Bearer " + authToken},
+        if(payload.texto.length >= 20) pillManualText.classList.add("show");
+
+        analyzeBtn.disabled = true;
+        analyzeBtn.textContent = "Analizando...";
+
+        const response = await fetch(ANALYZE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
           body: JSON.stringify(payload)
         });
-        const raw = await res.json().catch(() => ({}));
-        if(res.status === 401){ forceRelogin(raw.detail || "Tu sesión expiró o fue reemplazada."); return; }
-        if(!res.ok){ throw new Error(raw.detail || "No fue posible analizar la canción."); }
 
-        if(payload.texto.trim()) pillManualText.classList.add("show");
-        else if(raw.texto && raw.texto.trim()) pillAutoLyric.classList.add("show");
-        else pillFallback.classList.add("show");
+        if(response.status === 401){
+          const data401 = await response.json().catch(() => ({}));
+          forceRelogin(data401.detail || "Tu sesión ya no es válida.");
+          return;
+        }
+
+        if(!response.ok){
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || "No fue posible analizar la canción.");
+        }
+
+        const raw = await response.json();
+
+        if(raw.letra_encontrada) pillAutoLyric.classList.add("show");
+        if(raw.fallback_inteligente) pillFallback.classList.add("show");
 
         renderAnalysis(raw);
-        saveHistoryItem(payload, raw);
-        incrementUsage();
-        setStatus("Análisis completado.", "success");
+
+        if(raw.fuente_usada && raw.fuente_usada !== "Texto ingresado por el usuario" && raw.fuente_usada !== "Sin letra automática"){
+          setStatus("Letra encontrada automáticamente desde " + raw.fuente_usada + " ✔", "success");
+        }else{
+          setStatus("Análisis completado correctamente.", "success");
+        }
+
+        if((user.plan || "free") !== "pro") setUsage(getUsage() + 1);
+        updateUserPanel();
+
+        saveHistoryItem({
+          titulo: payload.titulo || "Canción sin título",
+          artista: payload.artista || "Artista no indicado",
+          badge: raw.resultado || raw.resumen || "Análisis",
+          fecha: new Date().toISOString()
+        });
+        renderHistory();
+
       }catch(error){
-        setStatus(error.message || "No fue posible analizar la canción.", "error");
+        setStatus(error.message || "Ocurrió un error en el análisis.", "error");
       }finally{
         analyzeBtn.disabled = false;
+        analyzeBtn.textContent = "Analizar canción";
       }
     });
 
-    titulo.addEventListener("keydown", (e) => { if(e.key === "Enter"){ e.preventDefault(); document.getElementById("analysisForm").requestSubmit(); } });
-    artista.addEventListener("keydown", (e) => { if(e.key === "Enter"){ e.preventDefault(); document.getElementById("analysisForm").requestSubmit(); } });
-    texto.addEventListener("keydown", (e) => { if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); document.getElementById("analysisForm").requestSubmit(); } });
-    document.getElementById("proOverlay").addEventListener("click", (e) => { if(e.target.id === "proOverlay") hideOverlay(); });
-
-    (async function boot(){
-      renderCourseControls();
-      clearResult();
-      renderHistory();
-      const localUser = getStoredUser();
-      if(localUser && localUser.email){
-        user = localUser;
-        userName.textContent = user.name || user.email || "Usuario";
-        userEmail.textContent = user.email || "";
-        if(user.picture){ userAvatar.innerHTML = '<img src="' + user.picture + '" alt="avatar">'; }
-        else{ userAvatar.textContent = (user.email || "S").charAt(0).toUpperCase(); }
+    document.addEventListener("keydown", function(e){
+      const active = document.activeElement;
+      if((active === titulo || active === artista) && e.key === "Enter"){
+        e.preventDefault();
+        form.requestSubmit();
       }
-      updateUserPanel();
-      await syncSessionWithBackend();
-    })();
+      if(active === texto && e.key === "Enter" && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    window.addEventListener("load", async () => {
+      clearResult();
+      const ok = await syncSessionWithBackend();
+      if(ok){
+        updateUserPanel();
+        renderHistory();
+      }
+    });
   </script>
 </body>
 </html>
