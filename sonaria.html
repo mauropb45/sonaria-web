@@ -6,31 +6,30 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | TEST</title>
+  <title>SonarIA | Panel docente</title>
   <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  
   <style>
     :root{
-      --bg:#06101c;
-      --bg2:#0b1627;
-      --panel:rgba(255,255,255,.05);
-      --panel2:rgba(255,255,255,.035);
-      --line:rgba(255,255,255,.10);
-      --text:#eef2f7;
-      --muted:#a3b3c8;
-      --green:#14d68f;
+      --bg:#f5f7fb;
+      --bg2:#ffffff;
+      --panel:#ffffff;
+      --panel2:#fbfcff;
+      --line:#d9e1ee;
+      --text:#132033;
+      --muted:#66768c;
+      --green:#14b86f;
       --orange:#ff8a00;
       --orange2:#ff6500;
       --blue:#4b82ff;
-      --yellow:#f3c74b;
-      --red:#ff7474;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-      --radius:26px;
-      --max:1200px;
+      --yellow:#f2c34d;
+      --red:#ef5a5a;
+      --shadow:0 18px 42px rgba(14,28,57,.08);
+      --radius:24px;
+      --max:1320px;
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -39,9 +38,9 @@
       font-family:'Inter',sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255,138,0,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(20,214,143,.09), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        radial-gradient(circle at top left, rgba(255,138,0,.08), transparent 18%),
+        radial-gradient(circle at top right, rgba(20,184,111,.08), transparent 18%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.10), transparent 18%),
         linear-gradient(180deg,var(--bg),var(--bg2));
       overflow-x:hidden;
     }
@@ -51,112 +50,132 @@
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.35), transparent 78%);
+        linear-gradient(rgba(18,32,51,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18,32,51,.03) 1px, transparent 1px);
+      background-size:36px 36px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.8), transparent 78%);
     }
     a{text-decoration:none;color:inherit}
     .wrap{max-width:var(--max);margin:0 auto;padding:24px 22px 80px;position:relative;z-index:1}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
     .brand{display:flex;flex-direction:column;gap:4px}
     .brand-title{margin:0;font-size:clamp(2.2rem,4vw,3.6rem);font-weight:900;letter-spacing:-.06em;line-height:.92}
-    .brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,214,143,.35)}
-    .brand-sub{color:#d7fff0;font-size:.96rem;font-weight:800}
+    .brand-title .ia{color:var(--green);text-shadow:0 0 22px rgba(20,184,111,.25)}
+    .brand-sub{color:#2a8f64;font-size:.96rem;font-weight:800}
     .nav-actions{display:flex;gap:10px;flex-wrap:wrap}
     .btn{min-height:48px;padding:0 18px;border:none;border-radius:16px;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;display:inline-flex;align-items:center;justify-content:center}
     .btn:hover{transform:translateY(-1px)}
     .btn:disabled{opacity:.75;cursor:not-allowed;transform:none}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.28)}
-    .btn-green{background:linear-gradient(135deg,var(--green),#38e1a1);color:#07131c;box-shadow:0 12px 28px rgba(20,214,143,.20)}
-    .btn-ghost{background:rgba(255,255,255,.05);color:var(--text);border:1px solid var(--line)}
-    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid rgba(255,255,255,.09);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-bottom:18px}
+    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#111827;box-shadow:0 12px 28px rgba(255,138,0,.22)}
+    .btn-green{background:linear-gradient(135deg,var(--green),#42cf91);color:#07131c;box-shadow:0 12px 28px rgba(20,184,111,.18)}
+    .btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line)}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-bottom:18px}
     .hero-main,.hero-side,.panel,.results,.cta{padding:26px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#dce8ff;font-size:.84rem;font-weight:800;margin-bottom:14px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #d8e6ff;color:#3d5fa8;font-size:.84rem;font-weight:800;margin-bottom:14px}
     .hero h1{margin:0 0 12px;font-size:clamp(2.3rem,4.8vw,4.2rem);line-height:.93;letter-spacing:-.07em}
     .hero p{margin:0;color:var(--muted);line-height:1.8;font-size:1rem}
-    .user-strip{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .user-strip{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px;padding:14px 16px;border-radius:18px;background:#f8fbff;border:1px solid var(--line)}
     .user-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    .avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:900;color:#d7fff0;flex:0 0 auto}
+    .avatar{width:42px;height:42px;border-radius:50%;background:#e9f1fb;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:900;color:#2a8f64;flex:0 0 auto}
     .avatar img{width:100%;height:100%;object-fit:cover;display:block}
     .user-name{font-weight:800;line-height:1.2}
     .user-email{color:var(--muted);font-size:.92rem;margin-top:3px}
-    .pill{padding:7px 11px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff;display:inline-flex;align-items:center;gap:8px}
-    .pill.pro{background:rgba(20,214,143,.12);border-color:rgba(20,214,143,.22);color:#d9ffe9}
+    .pill{padding:7px 11px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid var(--line);background:#fff;color:#2e435f;display:inline-flex;align-items:center;gap:8px}
+    .pill.pro{background:#e9fbf2;border-color:#b8efd5;color:#0d7b4d}
     .mini-grid{display:grid;gap:12px}
-    .mini{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}
+    .mini{padding:16px 18px;border-radius:18px;background:#f8fbff;border:1px solid var(--line)}
     .mini strong{display:block;margin-bottom:7px;font-size:.98rem}
     .mini span{color:var(--muted);line-height:1.7;font-size:.95rem}
-    .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .main-grid{display:grid;grid-template-columns:1fr 1.12fr;gap:18px}
     .panel h2,.results h2,.cta h2{margin:0;font-size:1.55rem;letter-spacing:-.04em}
     .panel-head,.results-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;flex-wrap:wrap}
     .muted{color:var(--muted);line-height:1.75}
     .form-grid{display:grid;gap:12px}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .field{display:grid;gap:7px}
-    .field label{font-size:.9rem;color:#dce8ff;font-weight:700}
-    input[type='text'], textarea{width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08);font:inherit}
+    .field label{font-size:.9rem;color:#2e435f;font-weight:700}
+    input[type='text'], textarea, select{
+      width:100%;border:none;outline:none;border-radius:16px;padding:14px 15px;background:#fff;color:var(--text);
+      border:1px solid var(--line);font:inherit
+    }
     textarea{min-height:190px;resize:vertical}
     input::placeholder, textarea::placeholder{color:#90a0b6}
     .checks{display:grid;gap:10px;margin-top:4px}
-    .check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);color:#dce8ff;line-height:1.6;font-size:.95rem}
+    .check{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:#f8fbff;border:1px solid var(--line);color:#2e435f;line-height:1.6;font-size:.95rem}
     .check input{margin-top:3px;accent-color:var(--green)}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .hint-bar{margin-top:2px;padding:14px 16px;border-radius:16px;background:rgba(75,130,255,.08);border:1px solid rgba(75,130,255,.18);color:#dce8ff;font-weight:700;line-height:1.6}
+    .hint-bar{margin-top:2px;padding:14px 16px;border-radius:16px;background:#eef4ff;border:1px solid #d8e6ff;color:#385b9e;font-weight:700;line-height:1.6}
     .status{min-height:24px;font-weight:800;line-height:1.5}
     .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-    .soft-pill{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#dce8ff;display:none}
+    .soft-pill{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid var(--line);background:#fff;color:#425a79;display:none}
     .soft-pill.show{display:inline-flex}
-    .summary-card{padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .summary-card{padding:18px;border-radius:20px;background:#f8fbff;border:1px solid var(--line);margin-bottom:14px}
     .summary-title{margin:0 0 8px;font-size:1.5rem;letter-spacing:-.04em}
-    .summary-copy{margin:0;color:#d7e2f1;line-height:1.78}
+    .summary-copy{margin:0;color:#314861;line-height:1.78}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
-    .metric{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-    .metric strong{display:block;margin-bottom:6px;color:#dce8ff;font-size:.92rem}
+    .metric{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+    .metric strong{display:block;margin-bottom:6px;color:#4b5e78;font-size:.92rem}
     .metric span{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
-    .traffic{padding:16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin-bottom:14px}
+    .traffic{padding:16px;border-radius:20px;background:#fff;border:1px solid var(--line);margin-bottom:14px}
     .traffic-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
     .lights{display:flex;gap:10px}
-    .light{width:18px;height:18px;border-radius:50%;opacity:.25;background:rgba(255,255,255,.08);transition:.2s ease}
-    .light.active.red{background:var(--red);opacity:1;box-shadow:0 0 14px rgba(255,116,116,.40)}
-    .light.active.yellow{background:var(--yellow);opacity:1;box-shadow:0 0 14px rgba(243,199,75,.35)}
-    .light.active.green{background:var(--green);opacity:1;box-shadow:0 0 14px rgba(20,214,143,.35)}
+    .light{width:18px;height:18px;border-radius:50%;opacity:.35;background:#e6ebf3;transition:.2s ease}
+    .light.active.red{background:var(--red);opacity:1;box-shadow:0 0 14px rgba(239,90,90,.28)}
+    .light.active.yellow{background:var(--yellow);opacity:1;box-shadow:0 0 14px rgba(243,195,77,.28)}
+    .light.active.green{background:var(--green);opacity:1;box-shadow:0 0 14px rgba(20,184,111,.28)}
     .bars{display:grid;gap:12px}
     .bar-row{display:grid;gap:6px}
-    .bar-label{display:flex;justify-content:space-between;gap:10px;color:#dce8ff;font-size:.9rem;font-weight:700}
-    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .bar-label{display:flex;justify-content:space-between;gap:10px;color:#39516b;font-size:.9rem;font-weight:700}
+    .bar{height:11px;border-radius:999px;background:linear-gradient(90deg, rgba(20,184,111,.18), rgba(243,195,77,.18), rgba(239,90,90,.18));overflow:hidden;border:1px solid #e8eef6}
     .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red));transition:width .35s ease}
-    .info-grid{display:grid;gap:12px}
-    .info-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-    .info-card strong{display:block;margin-bottom:7px;color:#dce8ff}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .info-card{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+    .info-card strong{display:block;margin-bottom:7px;color:#2f4a67}
     .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#dce8ff}
+    .chip{padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800;border:1px solid var(--line);background:#fff;color:#35516f}
     .list{display:grid;gap:8px}
-    .list-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#d7e2f1;line-height:1.65}
-    .cta{margin-top:18px;background:radial-gradient(circle at top right, rgba(255,138,0,.16), transparent 22%), linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.04))}
+    .list-item{padding:12px 14px;border-radius:14px;background:#f8fbff;border:1px solid var(--line);color:#314861;line-height:1.65}
+    .subsection{margin-top:14px}
+    .subsection h3{margin:0 0 10px;font-size:1rem;letter-spacing:-.02em}
+    .cta{margin-top:18px;background:radial-gradient(circle at top right, rgba(255,138,0,.12), transparent 22%), linear-gradient(180deg, #fff, #fbfcff)}
     .cta-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .history-list{display:grid;gap:10px;margin-top:14px}
-    .history-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);line-height:1.55}
+    .history-item{padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);line-height:1.55}
     .history-title{font-weight:800}
     .history-sub{color:var(--muted);font-size:.92rem}
-    .history-badge{margin-top:7px;font-size:.82rem;color:#dce8ff}
-    .overlay{position:fixed;inset:0;background:rgba(4,12,22,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
-    .overlay-box{width:min(92vw,560px);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:28px;color:#f5f7fb}
-    .overlay-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.24);font-weight:800;font-size:.84rem;margin-bottom:14px}
+    .history-badge{margin-top:7px;font-size:.82rem;color:#3d5877}
+    .overlay{position:fixed;inset:0;background:rgba(17,29,47,.48);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+    .overlay-box{width:min(92vw,560px);background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.18);padding:28px;color:var(--text)}
+    .overlay-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#e9fbf2;border:1px solid #b8efd5;font-weight:800;font-size:.84rem;margin-bottom:14px}
     .overlay h3{margin:0 0 10px;font-size:2rem;line-height:1;letter-spacing:-.04em}
-    .overlay p{margin:0 0 18px;color:#cfd9e8;line-height:1.75}
+    .overlay p{margin:0 0 18px;color:#50657e;line-height:1.75}
     .overlay-list{display:grid;gap:10px;margin-bottom:18px}
-    .overlay-list div{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .overlay-list div{padding:12px 14px;border-radius:16px;background:#f8fbff;border:1px solid var(--line)}
     .overlay-actions{display:flex;gap:12px;flex-wrap:wrap}
-    @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}}
+    .course-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    .course-btn{
+      border:1px solid var(--line); background:#fff; color:#3d5877; border-radius:12px; padding:10px 12px; font-weight:800; cursor:pointer;
+      transition:.18s ease
+    }
+    .course-btn.active{background:#ebfff5;border-color:#9ce3bf;color:#0c7b4c;box-shadow:0 8px 18px rgba(20,184,111,.12)}
+    .pedagogia-select{margin-top:8px}
+    .translation-pair{padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line)}
+    .translation-original{font-weight:700;color:#21344b;white-space:pre-wrap}
+    .translation-tr{margin-top:6px;color:#5a6f88;white-space:pre-wrap}
+    .school-box{padding:16px;border-radius:18px;background:#fffdf2;border:1px solid #f3e1a1}
+    .school-preview{white-space:pre-wrap;line-height:1.75;color:#4c3f15}
+    mark.school-mark{background:#fff176;padding:0 .18em;border-radius:.2em}
+    .empty-note{color:#7d8da3;font-style:italic}
+    @media (max-width:1120px){.main-grid{grid-template-columns:1fr}.course-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
     @media (max-width:720px){
       .wrap{padding:18px 14px 56px}
       .topbar{flex-direction:column;align-items:stretch}
       .nav-actions{width:100%}
       .nav-actions .btn{width:100%}
+      .hero,.grid-2{grid-template-columns:1fr}
       .hero-main,.hero-side,.panel,.results,.cta{padding:20px}
-      .two,.metrics{grid-template-columns:1fr}
+      .two,.metrics,.course-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -177,7 +196,7 @@
       <div class="card hero-main">
         <div class="eyebrow">🎓 IA para decisiones pedagógicas</div>
         <h1>Evalúa canciones con criterio escolar, contexto y claridad.</h1>
-        <p>SonarIA te ayuda a revisar lenguaje explícito, señales sensibles y adecuación pedagógica antes de usar una canción en clases. La experiencia free entrega valor real; la Pro profundiza.</p>
+        <p>SonarIA te ayuda a revisar lenguaje explícito, señales sensibles, contenido implícito y posibles usos pedagógicos antes de usar una canción en clases.</p>
 
         <div class="user-strip">
           <div class="user-meta">
@@ -197,16 +216,16 @@
       <div class="card hero-side">
         <div class="mini-grid">
           <div class="mini">
-            <strong>Free con valor real</strong>
+            <strong id="todayCardTitle">Cuenta Free</strong>
             <span id="trialCopy">Analiza canciones, prueba el flujo y conoce el potencial pedagógico de SonarIA.</span>
+          </div>
+          <div class="mini">
+            <strong id="calendarTitle">📅 Hoy en SonarIA</strong>
+            <span id="calendarContent">Cargando efeméride musical...</span>
           </div>
           <div class="mini">
             <strong>Experiencia Pro</strong>
             <span id="upgradeCopy">Más continuidad, más profundidad y una experiencia preparada para uso docente real.</span>
-          </div>
-          <div class="mini">
-            <strong>La IA acompaña. Educar es cuidar.</strong>
-            <span>La responsabilidad final siempre es humana. SonarIA orienta decisiones, no reemplaza el criterio profesional docente.</span>
           </div>
         </div>
       </div>
@@ -217,7 +236,7 @@
         <div class="panel-head">
           <div>
             <h2>Analizar canción</h2>
-            <div class="muted">Ingresa título, artista o pega la letra para obtener una orientación pedagógica base.</div>
+            <div class="muted">Ingresa título, artista o pega la letra para obtener una orientación pedagógica completa.</div>
           </div>
         </div>
 
@@ -238,6 +257,16 @@
             <textarea id="texto" placeholder="Pega aquí la letra o deja este espacio vacío para que SonarIA intente buscarla automáticamente."></textarea>
           </div>
 
+          <div class="field">
+            <label>Cursos a considerar</label>
+            <div id="courseGrid" class="course-grid"></div>
+          </div>
+
+          <div class="field pedagogia-select">
+            <label for="cursoSelector">Curso objetivo pedagógico</label>
+            <select id="cursoSelector"></select>
+          </div>
+
           <div class="checks">
             <label class="check">
               <input id="buscarLetra" type="checkbox" checked>
@@ -256,7 +285,7 @@
           </div>
 
           <div class="hint-bar">
-            Enter analiza desde título o artista. En la caja de letra usa <strong>Ctrl/Cmd + Enter</strong>.
+            Enter analiza desde título o artista. En la caja de letra usa <strong>Ctrl/Cmd + Enter</strong>. También puedes cambiar el curso objetivo para actualizar la pedagogía sugerida.
           </div>
 
           <div id="statusBox" class="status"></div>
@@ -300,11 +329,11 @@
 
         <div class="traffic">
           <div class="traffic-head">
-            <strong>Semáforo</strong>
+            <strong>Semáforo y barras de riesgo</strong>
             <div class="lights">
-              <div id="lightRed" class="light"></div>
-              <div id="lightYellow" class="light"></div>
               <div id="lightGreen" class="light"></div>
+              <div id="lightYellow" class="light"></div>
+              <div id="lightRed" class="light"></div>
             </div>
           </div>
 
@@ -314,17 +343,17 @@
               <div class="bar"><div id="riskTotalFill" class="bar-fill"></div></div>
             </div>
             <div class="bar-row">
-              <div class="bar-label"><span>Contenido sensible</span><span id="riskSensitive">0%</span></div>
+              <div class="bar-label"><span>Sensibilidad</span><span id="riskSensitive">0%</span></div>
               <div class="bar"><div id="riskSensitiveFill" class="bar-fill"></div></div>
             </div>
             <div class="bar-row">
-              <div class="bar-label"><span>Uso escolar</span><span id="riskSchool">0%</span></div>
+              <div class="bar-label"><span>Adecuación escolar</span><span id="riskSchool">0%</span></div>
               <div class="bar"><div id="riskSchoolFill" class="bar-fill"></div></div>
             </div>
           </div>
         </div>
 
-        <div class="info-grid">
+        <div class="grid-2">
           <div class="info-card">
             <strong>Temas detectados</strong>
             <div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div>
@@ -333,27 +362,68 @@
             <strong>Contextos detectados</strong>
             <div id="contextList" class="list"><div class="list-item">Aún no hay datos.</div></div>
           </div>
+        </div>
+
+        <div class="subsection">
           <div class="info-card">
             <strong>Observaciones pedagógicas</strong>
             <div id="observaciones" class="list-item">Sin datos.</div>
           </div>
+        </div>
+
+        <div class="subsection">
           <div class="info-card">
             <strong>Enfoque sugerido</strong>
             <div id="enfoque" class="list-item">Sin datos.</div>
           </div>
         </div>
 
-        <div class="history-list" id="historyList"></div>
+        <div class="subsection">
+          <div class="info-card">
+            <strong>Pedagogía sugerida</strong>
+            <div id="pedagogiaOutput" class="list-item empty-note">Aún no hay pedagogía disponible.</div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="info-card">
+            <strong>Adaptación escolar sugerida</strong>
+            <div id="adaptacionMsg" class="list-item empty-note">Aún no hay adaptación sugerida.</div>
+            <div id="adaptacionCambios" class="list" style="margin-top:10px;"></div>
+            <div id="adaptacionHtmlWrap" class="school-box" style="margin-top:10px; display:none;">
+              <div id="adaptacionHtml" class="school-preview"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="info-card">
+            <strong>Traducción lineada</strong>
+            <div id="translationWrap" class="list">
+              <div class="list-item empty-note">Aún no hay traducción disponible.</div>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
 
     <section class="card cta">
-      <h2>SonarIA Pro</h2>
-      <div class="muted">La experiencia gratuita ya entrega valor. La versión Pro elimina límites y prepara el camino para una experiencia más completa y más útil para el trabajo docente real.</div>
-      <div class="cta-actions">
-        <button id="btnPlanesBottom" class="btn btn-primary" type="button">Ir a planes</button>
-        <button id="btnHistorial" class="btn btn-ghost" type="button">Ver historial</button>
+      <div class="results-head">
+        <div>
+          <h2>Herramientas docentes rápidas</h2>
+          <div class="muted">Acciones útiles para seguir trabajando la canción.</div>
+        </div>
       </div>
+
+      <div class="cta-actions">
+        <button id="btnYoutube" class="btn btn-ghost" type="button">Ir a YouTube</button>
+        <button id="btnTranslate" class="btn btn-ghost" type="button">Traducir letra</button>
+        <button id="btnPdf" class="btn btn-green" type="button">Exportar PDF</button>
+        <button id="btnHistorial" class="btn btn-ghost" type="button">Ver historial reciente</button>
+        <button id="btnPlanesBottom" class="btn btn-primary" type="button">Ver planes</button>
+      </div>
+
+      <div id="historyList" class="history-list"></div>
     </section>
   </div>
 
@@ -364,7 +434,7 @@
       <p id="overlayText">Pasa de una experiencia base a una experiencia más completa dentro de SonarIA.</p>
       <div class="overlay-list">
         <div>Uso continuo de la herramienta</div>
-        <div>Base para funciones más avanzadas</div>
+        <div>Planificación más profunda</div>
         <div>Experiencia pensada para uso docente real</div>
       </div>
       <div class="overlay-actions">
@@ -378,7 +448,14 @@
     const API_BASE = "https://sonaria-api.onrender.com";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
+    const PDF_URL = API_BASE + "/export/pdf";
+    const TRANSLATE_URL = API_BASE + "/traducir";
     const DEMO_LIMIT = 3;
+    const COURSE_OPTIONS = [
+      ["1B","1° básico"],["2B","2° básico"],["3B","3° básico"],["4B","4° básico"],
+      ["5B","5° básico"],["6B","6° básico"],["7B","7° básico"],["8B","8° básico"],
+      ["IM","I° medio"],["IIM","II° medio"],["IIIM","III° medio"],["IVM","IV° medio"]
+    ];
 
     const form = document.getElementById("analysisForm");
     const titulo = document.getElementById("titulo");
@@ -388,6 +465,8 @@
     const contextoEscolar = document.getElementById("contextoEscolar");
     const analyzeBtn = document.getElementById("analyzeBtn");
     const clearBtn = document.getElementById("clearBtn");
+    const courseGrid = document.getElementById("courseGrid");
+    const cursoSelector = document.getElementById("cursoSelector");
 
     const statusBox = document.getElementById("statusBox");
     const resultBadge = document.getElementById("resultBadge");
@@ -400,6 +479,12 @@
     const contextList = document.getElementById("contextList");
     const observaciones = document.getElementById("observaciones");
     const enfoque = document.getElementById("enfoque");
+    const pedagogiaOutput = document.getElementById("pedagogiaOutput");
+    const adaptacionMsg = document.getElementById("adaptacionMsg");
+    const adaptacionCambios = document.getElementById("adaptacionCambios");
+    const adaptacionHtmlWrap = document.getElementById("adaptacionHtmlWrap");
+    const adaptacionHtml = document.getElementById("adaptacionHtml");
+    const translationWrap = document.getElementById("translationWrap");
 
     const riskPercent = document.getElementById("riskPercent");
     const riskSensitive = document.getElementById("riskSensitive");
@@ -424,9 +509,13 @@
     const trialCounter = document.getElementById("trialCounter");
     const upgradeCopy = document.getElementById("upgradeCopy");
     const historyList = document.getElementById("historyList");
+    const calendarContent = document.getElementById("calendarContent");
+    const todayCardTitle = document.getElementById("todayCardTitle");
 
     let authToken = "";
     let user = { plan: "free" };
+    let currentAnalysis = null;
+    let selectedCourses = [];
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
@@ -437,7 +526,7 @@
 
     function setStatus(message, type){
       statusBox.textContent = message;
-      statusBox.style.color = type === "success" ? "#b7ffd1" : type === "error" ? "#ffd7d7" : "#dce8ff";
+      statusBox.style.color = type === "success" ? "#13814e" : type === "error" ? "#c73939" : "#32527c";
     }
     function clearStatus(){ statusBox.textContent = ""; }
 
@@ -447,7 +536,32 @@
       pillFallback.classList.remove("show");
     }
 
+    function escapeHtml(str){
+      return String(str || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
+    }
+
+    function renderCourseControls(){
+      courseGrid.innerHTML = COURSE_OPTIONS.map(([code,label]) => `
+        <button class="course-btn ${selectedCourses.includes(code) ? "active" : ""}" data-code="${code}" type="button">${label}</button>
+      `).join("");
+      cursoSelector.innerHTML = '<option value="">Curso objetivo / automático</option>' + COURSE_OPTIONS.map(([code,label]) => `<option value="${code}">${label}</option>`).join('');
+      if(selectedCourses.length && !selectedCourses.includes(cursoSelector.value)){
+        cursoSelector.value = selectedCourses[0];
+      }
+      courseGrid.querySelectorAll(".course-btn").forEach(btn => {
+        btn.addEventListener("click", () => toggleCourse(btn.dataset.code));
+      });
+    }
+
+    function toggleCourse(code){
+      if(selectedCourses.includes(code)) selectedCourses = selectedCourses.filter(x => x !== code);
+      else selectedCourses.push(code);
+      renderCourseControls();
+      renderPedagogia();
+    }
+
     function clearResult(){
+      currentAnalysis = null;
       resultBadge.textContent = "Sin análisis";
       summaryTitle.textContent = "Esperando análisis";
       summaryCopy.textContent = "Completa el formulario para obtener una orientación base sobre la canción.";
@@ -458,6 +572,12 @@
       contextList.innerHTML = '<div class="list-item">Aún no hay datos.</div>';
       observaciones.textContent = "Sin datos.";
       enfoque.textContent = "Sin datos.";
+      pedagogiaOutput.textContent = "Aún no hay pedagogía disponible.";
+      adaptacionMsg.textContent = "Aún no hay adaptación sugerida.";
+      adaptacionCambios.innerHTML = "";
+      adaptacionHtml.innerHTML = "";
+      adaptacionHtmlWrap.style.display = "none";
+      translationWrap.innerHTML = '<div class="list-item empty-note">Aún no hay traducción disponible.</div>';
       riskPercent.textContent = "0%";
       riskSensitive.textContent = "0%";
       riskSchool.textContent = "0%";
@@ -467,6 +587,7 @@
       lightRed.className = "light";
       lightYellow.className = "light";
       lightGreen.className = "light";
+      calendarContent.textContent = "Cargando efeméride musical...";
     }
 
     function activateTraffic(resultado){
@@ -475,7 +596,7 @@
       lightGreen.className = "light";
       const txt = (resultado || "").toLowerCase();
       if (txt.includes("no apta")) lightRed.className = "light active red";
-      else if (txt.includes("supervisión") || txt.includes("supervision")) lightYellow.className = "light active yellow";
+      else if (txt.includes("mediación") || txt.includes("mediacion") || txt.includes("supervisión") || txt.includes("supervision")) lightYellow.className = "light active yellow";
       else lightGreen.className = "light active green";
     }
 
@@ -501,16 +622,18 @@
 
       if((user.plan || "free") === "pro"){
         trialCounter.textContent = "Uso ilimitado";
-        trialCopy.textContent = "Tu cuenta Pro está activa. Puedes analizar sin límite dentro de esta experiencia.";
-        upgradeCopy.textContent = "Tu cuenta ya está en modo Pro. Próximamente iremos sumando más profundidad y nuevas capas.";
+        trialCopy.textContent = "Tu cuenta Pro está activa. Puedes analizar sin límite y planificar con más profundidad.";
+        upgradeCopy.textContent = "Tu cuenta ya está en modo Pro. Priorizamos continuidad, estabilidad y mejoras seguras.";
+        todayCardTitle.textContent = "Cuenta Pro";
         document.getElementById("btnUpgrade").style.display = "inline-flex";
         document.getElementById("btnUpgrade").textContent = "Cuenta Pro activa";
         document.getElementById("btnUpgrade").disabled = true;
         document.getElementById("btnUpgradeTop").style.display = "none";
       }else{
         trialCounter.textContent = remaining + " análisis disponibles";
-        trialCopy.textContent = "La experiencia gratuita te permite probar SonarIA con un número acotado de análisis.";
+        trialCopy.textContent = "Con Pro puedes tener herramientas que ayuden más a tu planificación, adaptación y continuidad de uso.";
         upgradeCopy.textContent = "Desbloquea Pro para quitar el límite y preparar el camino para una experiencia más potente.";
+        todayCardTitle.textContent = "Cuenta Free";
         document.getElementById("btnUpgrade").style.display = "inline-flex";
         document.getElementById("btnUpgrade").textContent = "Desbloquear Pro";
         document.getElementById("btnUpgrade").disabled = false;
@@ -534,10 +657,6 @@
       const current = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
       current.unshift(item);
       localStorage.setItem("sonaria_history", JSON.stringify(current.slice(0, 10)));
-    }
-
-    function escapeHtml(str){
-      return String(str || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
     }
 
     async function syncSessionWithBackend(){
@@ -571,13 +690,88 @@
       }
     }
 
+    function renderTranslationFromPairs(pairs){
+      const usable = Array.isArray(pairs) ? pairs : [];
+      if(!usable.length){
+        translationWrap.innerHTML = '<div class="list-item empty-note">Aún no hay traducción disponible.</div>';
+        return;
+      }
+      translationWrap.innerHTML = usable.map(pair => `
+        <div class="translation-pair">
+          <div class="translation-original">${escapeHtml(pair.original || "")}</div>
+          <div class="translation-tr">${escapeHtml(pair.traducida || pair.traducido || "")}</div>
+        </div>
+      `).join("");
+    }
+
+    function getSelectedPedagogyBundle(){
+      if(!currentAnalysis) return null;
+      const all = Array.isArray(currentAnalysis.pedagogia_opciones) ? currentAnalysis.pedagogia_opciones : [];
+      const selected = cursoSelector.value || currentAnalysis.curso_objetivo_aplicado || selectedCourses[0] || "";
+      let raw = selected ? all.find(x => (x.curso_codigo || "") === selected) : null;
+      if(!raw) raw = all[0] || null;
+      if(!raw) return null;
+
+      const ped = raw.pedagogia || {};
+      const oaRec = ped.oa_recomendado || {};
+      return {
+        course_code: raw.curso_codigo || "",
+        course_label: raw.curso || "—",
+        enfoque: ped.enfoque || "",
+        oa: [oaRec.id ? (oaRec.id + " — ") : "", oaRec.desc || raw.oa_desc || "OA sugerido no disponible aún."].join("").trim(),
+        preguntas: Array.isArray(ped.preguntas_guiadas) ? ped.preguntas_guiadas : [],
+        actividades: Array.isArray(ped.actividades_clase) ? ped.actividades_clase : []
+      };
+    }
+
+    function renderPedagogia(){
+      const bundle = getSelectedPedagogyBundle();
+      if(!bundle){
+        pedagogiaOutput.textContent = "Aún no hay pedagogía disponible para los cursos seleccionados.";
+        return;
+      }
+      pedagogiaOutput.textContent = [
+        bundle.course_label ? ("Curso: " + bundle.course_label) : "",
+        bundle.enfoque ? ("Enfoque: " + bundle.enfoque) : "",
+        "",
+        "OA sugerido:",
+        bundle.oa || "—",
+        "",
+        "Preguntas guiadas:",
+        ...(bundle.preguntas?.length ? bundle.preguntas.map(x => "• " + x) : ["Sin preguntas sugeridas."]),
+        "",
+        "Actividades sugeridas:",
+        ...(bundle.actividades?.length ? bundle.actividades.map(x => "• " + x) : ["Sin actividades sugeridas."])
+      ].join("\n");
+    }
+
+    function renderAdaptacion(raw){
+      adaptacionMsg.textContent = raw.adaptacion_escolar || "Sin adaptación sugerida.";
+      const cambios = Array.isArray(raw.adaptacion_cambios) ? raw.adaptacion_cambios : [];
+      adaptacionCambios.innerHTML = cambios.length ? cambios.map(item => `
+        <div class="list-item"><strong>${escapeHtml(item.original || "")}</strong> → ${escapeHtml(item.sugerida || "")}</div>
+      `).join("") : '<div class="list-item empty-note">No se detectaron cambios automáticos relevantes.</div>';
+
+      if(raw.adaptacion_escolar_html && raw.adaptacion_escolar_html.trim()){
+        adaptacionHtmlWrap.style.display = "block";
+        adaptacionHtml.innerHTML = raw.adaptacion_escolar_html;
+      } else {
+        adaptacionHtmlWrap.style.display = "none";
+        adaptacionHtml.innerHTML = "";
+      }
+    }
+
     function renderAnalysis(raw){
+      currentAnalysis = raw;
+      if(raw.curso_objetivo_aplicado) cursoSelector.value = raw.curso_objetivo_aplicado;
+
       resultBadge.textContent = raw.resultado || "Resultado";
       summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
       summaryCopy.textContent = raw.resumen || "Análisis completado.";
       edadSugerida.textContent = raw.edad_sugerida || "—";
       fuenteUsada.textContent = raw.fuente_usada || "—";
       lecturaSugerida.textContent = raw.lectura_sugerida || "—";
+      calendarContent.textContent = raw.efemeride || "Sin efeméride disponible hoy.";
 
       if (raw.texto) texto.value = raw.texto;
 
@@ -598,6 +792,104 @@
       riskSchoolFill.style.width = Math.min(raw.risk_school ?? 0, 100) + "%";
 
       activateTraffic(raw.resultado || "");
+      renderPedagogia();
+      renderAdaptacion(raw);
+      renderTranslationFromPairs(raw.traduccion_lineada || []);
+    }
+
+    async function requestTranslation(){
+      const ok = await syncSessionWithBackend();
+      if(!ok) return;
+
+      const baseText = (texto.value || "").trim();
+      if(!baseText){
+        setStatus("Primero debes tener una letra cargada para traducir.", "error");
+        return;
+      }
+
+      setStatus("Generando traducción lineada...", "info");
+      try{
+        const res = await fetch(TRANSLATE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
+          body: JSON.stringify({ texto: baseText })
+        });
+
+        if(res.status === 401){
+          const data401 = await res.json().catch(() => ({}));
+          forceRelogin(data401.detail || "Tu sesión ya no es válida.");
+          return;
+        }
+
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          throw new Error(data.detail || "No fue posible traducir la letra.");
+        }
+
+        const pares = Array.isArray(data.pares) && data.pares.length ? data.pares : (Array.isArray(data.pairs) ? data.pairs : []);
+        renderTranslationFromPairs(pares);
+        setStatus("Traducción lineada actualizada.", "success");
+      }catch(error){
+        setStatus(error.message || "No fue posible traducir la letra.", "error");
+      }
+    }
+
+    async function exportPdf(){
+      const ok = await syncSessionWithBackend();
+      if(!ok) return;
+
+      const payload = {
+        titulo: titulo.value.trim(),
+        artista: artista.value.trim(),
+        texto: (texto.value || "").trim(),
+        cursos: selectedCourses,
+        curso_objetivo: cursoSelector.value || ""
+      };
+
+      try{
+        setStatus("Generando PDF...", "info");
+        const res = await fetch(PDF_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + authToken
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if(res.status === 401){
+          const data401 = await res.json().catch(() => ({}));
+          forceRelogin(data401.detail || "Tu sesión ya no es válida.");
+          return;
+        }
+
+        if(!res.ok){
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "No fue posible exportar el PDF.");
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "sonaria.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus("PDF descargado correctamente.", "success");
+      }catch(error){
+        setStatus(error.message || "No fue posible exportar el PDF.", "error");
+      }
+    }
+
+    function getYoutubeUrl(){
+      if(currentAnalysis?.youtube_url) return currentAnalysis.youtube_url;
+      const query = encodeURIComponent(`${titulo.value || ""} ${artista.value || ""}`.trim());
+      return "https://www.youtube.com/results?search_query=" + query;
     }
 
     document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
@@ -610,8 +902,13 @@
     document.getElementById("btnHistorial").addEventListener("click", () => {
       const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
       if(!items.length){ alert("Todavía no tienes análisis guardados en este navegador."); return; }
-      alert("Historial reciente cargado en la columna derecha.");
+      alert("Historial reciente cargado en la parte inferior.");
     });
+    document.getElementById("btnTranslate").addEventListener("click", requestTranslation);
+    document.getElementById("btnPdf").addEventListener("click", exportPdf);
+    document.getElementById("btnYoutube").addEventListener("click", () => window.open(getYoutubeUrl(), "_blank"));
+
+    cursoSelector.addEventListener("change", renderPedagogia);
 
     clearBtn.addEventListener("click", () => {
       titulo.value = "";
@@ -619,6 +916,8 @@
       texto.value = "";
       buscarLetra.checked = true;
       contextoEscolar.checked = true;
+      selectedCourses = [];
+      renderCourseControls();
       clearPills();
       clearStatus();
       clearResult();
@@ -641,17 +940,16 @@
 
       try{
         let textoParaEnviar = texto.value.trim();
-
-        if (buscarLetra.checked && titulo.value.trim()) {
-          textoParaEnviar = "";
-        }
+        if (buscarLetra.checked && titulo.value.trim()) textoParaEnviar = "";
 
         const payload = {
           titulo: titulo.value.trim(),
           artista: artista.value.trim(),
           texto: textoParaEnviar,
           buscar_letra: buscarLetra.checked,
-          contexto_escolar: contextoEscolar.checked
+          contexto_escolar: contextoEscolar.checked,
+          cursos: selectedCourses,
+          curso_objetivo: cursoSelector.value || ""
         };
 
         if(payload.texto.length >= 20) pillManualText.classList.add("show");
@@ -724,6 +1022,7 @@
     });
 
     window.addEventListener("load", async () => {
+      renderCourseControls();
       clearResult();
       const ok = await syncSessionWithBackend();
       if(ok){
