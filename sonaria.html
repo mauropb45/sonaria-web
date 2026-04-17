@@ -43,6 +43,7 @@
     h1{margin:0 0 10px;font-size:clamp(2rem,4vw,3.3rem);line-height:.95;letter-spacing:-.06em}
     .muted{color:var(--muted);line-height:1.65}
     .quickline{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .theme-helper{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:.82rem;color:#475569;font-weight:700}
     .main-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
     .field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:.9rem;font-weight:700;color:#334155}
     input[type='text'], textarea, select{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;color:var(--text);outline:none}
@@ -76,7 +77,8 @@
         </div>
       </a>
       <div class="rightbar">
-        <select id="themeSelect" title="Tema visual">
+        <div class="theme-helper">🎨 Personaliza tus colores</div>
+        <select id="themeSelect" title="Tema visual" aria-label="Tema visual de SonarIA">
           <option value="brisa">Brisa clara</option>
           <option value="aurora">Aurora suave</option>
           <option value="atardecer">Atardecer cálido</option>
@@ -93,12 +95,13 @@
       <div class="card hero-main">
         <div class="eyebrow">🎓 IA para decisiones pedagógicas reales</div>
         <h1>Entra y usa SonarIA directo.</h1>
-        <div class="muted">Analiza la canción, revisa semáforo, trabaja pedagogía, mira una probadita de la adaptación escolar y exporta un PDF más útil.</div>
+        <div class="muted">Analiza la canción, revisa semáforo, trabaja pedagogía, visualiza la versión escolar y exporta un PDF más útil.</div>
         <div class="quickline">
           <span class="chip">🎤 Búsqueda por voz</span>
           <span class="chip">🧑‍🏫 Pedagogía con presencia</span>
           <span class="chip">📄 PDF pedagógico</span>
           <span class="chip">🎬 Botón YouTube</span>
+          <span class="chip">🎨 Colores personalizables</span>
         </div>
       </div>
       <div class="card hero-side">
@@ -147,7 +150,7 @@
             <button id="pdfBtn" class="btn btn-primary" type="button">Exportar PDF</button>
             <button id="btnUpgradeInline" class="btn btn-ghost" type="button">Desbloquear Pro</button>
           </div>
-          <div class="hint" id="statusBox">Enter en búsqueda rápida o en artista también analiza. En free tienes 3 intentos, pero igual verás una probadita de adaptación escolar.</div>
+          <div class="hint" id="statusBox">Enter en búsqueda rápida o en artista también analiza. En free tienes 3 intentos y aun así verás una muestra útil de la versión escolar.</div>
         </form>
       </section>
 
@@ -187,13 +190,13 @@
 
     <section class="main-grid" style="margin-top:16px">
       <section class="card block">
-        <div class="section-title"><h2>Traducción y versión escolar</h2><span id="adaptBadge" class="chip">Probadita visible</span></div>
+        <div class="section-title"><h2>Traducción y versión escolar</h2><span id="adaptBadge" class="chip">Versión escolar</span></div>
         <div id="adaptPreview" class="preview-card">Aún no hay adaptación disponible.</div>
         <div style="height:10px"></div>
         <div id="changesList" class="list"><div class="list-item">Aquí aparecerán los cambios sugeridos y el contexto.</div></div>
       </section>
       <section class="card block">
-        <div class="section-title"><h2>Línea original + línea traducida</h2><span class="chip">En Pro se expande</span></div>
+        <div class="section-title"><h2>Línea original + línea traducida</h2><span class="chip">Lectura bilingüe</span></div>
         <div id="translationWrap" class="list"><div class="list-item">Aún no hay traducción disponible.</div></div>
       </section>
     </section>
@@ -257,8 +260,10 @@
       const planPill = el("planPill");
       const isPro = user.plan === "pro";
       planPill.textContent = isPro ? "Plan Pro" : `Free · ${remainingUses()} intento(s)`;
+      planPill.title = isPro ? "Cuenta Pro activa" : "Plan Free con 3 intentos de análisis";
       planPill.className = "planpill" + (isPro ? " pro" : "");
-      ["btnUpgradeTop","btnUpgradeInline"].forEach(id => el(id).classList.toggle("hidden", isPro));
+      const showUpgrade = !isPro && remainingUses() <= 0;
+      ["btnUpgradeTop","btnUpgradeInline"].forEach(id => el(id).classList.toggle("hidden", !showUpgrade));
       el("btnPlansTop").classList.toggle("hidden", isPro);
     }
 
@@ -299,7 +304,7 @@
       const adapt = data.adaptacion || {changes:[],preview_html:"Aún no hay adaptación disponible."};
       const isPro = user.plan === "pro";
       const preview = adapt.preview_html || "Aún no hay adaptación disponible.";
-      el("adaptPreview").innerHTML = isPro ? preview : `${preview}<hr style="border:none;border-top:1px solid #fcd34d;margin:12px 0"><strong>En Pro</strong> ves la adaptación completa, más cambios y mejor integración al PDF.`;
+      el("adaptPreview").innerHTML = isPro ? preview : `${preview}<hr style="border:none;border-top:1px solid #fcd34d;margin:12px 0"><strong>En Pro</strong> accedes a la adaptación completa y a una integración más profunda en el PDF.`;
       const changes = (adapt.changes || []).slice(0, isPro ? 10 : 3).map(ch => `<strong>${ch.original}</strong> → <mark>${ch.replacement}</mark><br><span style="color:#6b7280">${ch.context}</span>`);
       renderList("changesList", changes, "No hubo cambios sugeridos.");
     }
@@ -315,7 +320,7 @@
         div.innerHTML = `<div class="orig">${row.original || ""}</div><div class="trans">${row.translated || "Traducción breve no disponible"}</div>`;
         wrap.appendChild(div);
       });
-      if(!isPro){ const d = document.createElement("div"); d.className = "list-item"; d.innerHTML = 'En <strong>Pro</strong> se muestra más líneas y mejor integración con la adaptación escolar.'; wrap.appendChild(d); }
+      if(!isPro){ const d = document.createElement("div"); d.className = "list-item"; d.innerHTML = 'En <strong>Pro</strong> se despliegan más líneas y una integración más completa con la versión escolar.'; wrap.appendChild(d); }
     }
 
     function renderThemes(themes){
@@ -400,7 +405,7 @@
         renderTranslation(data);
         renderEfemeride(data.efemeride || null);
         saveHistory({titulo: body.titulo, artista: body.artista, resultado: data.resultado});
-        setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro ve pedagogía, PDF completo y más líneas de traducción." : "Análisis listo. En free ya viste una probadita de adaptación y traducción; en Pro se amplía y entra completo al PDF.", "success");
+        setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro ve pedagogía, PDF completo y más líneas de traducción." : "Análisis listo. En free ya viste una muestra útil de adaptación y traducción; en Pro se amplía y entra completo al PDF.", "success");
       }catch(err){ setStatus(err.message || "Error de análisis", "error"); }
     }
 
@@ -423,7 +428,7 @@
       const query = `${titulo.value.trim()} ${artista.value.trim()}`.trim() || voiceQuery.value.trim();
       if(!query){ setStatus("Escribe canción y artista primero.", "error"); return; }
       window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
-      setStatus("Abriendo YouTube. En Pro lo orientamos mejor al trabajo con letra y adaptación.");
+      setStatus("Abriendo YouTube. En Pro se profundiza mejor el trabajo con letra y adaptación.");
     }
 
     function initVoice(){
