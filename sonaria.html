@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,1313 +7,449 @@
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
-  <meta name="description" content="Evalúa canciones con criterio pedagógico, traducción y versión escolar en SonarIA." />
+  <meta name="description" content="Evalúa canciones con criterio pedagógico y contexto escolar en SonarIA." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f5f7fb;
-      --bg-soft:#eef2f7;
-      --card:#ffffff;
-      --card-soft:#fafbfd;
-      --text:#1f2937;
-      --muted:#667085;
-      --line:#e5e7eb;
-      --shadow:0 16px 40px rgba(17,24,39,.06);
-      --primary:#4b82ff;
-      --primary-soft:#eef4ff;
-      --green:#22c55e;
-      --yellow:#f3c74b;
-      --orange:#ff8a00;
-      --orange-2:#ff5a00;
-      --danger:#e10600;
-      --radius:24px;
-      --max:1320px;
-    }
-    body.theme-claro{
-      --bg:#f5f7fb;
-      --bg-soft:#eef2f7;
-      --card:#ffffff;
-      --card-soft:#fafbfd;
-      --text:#1f2937;
-      --muted:#667085;
-      --line:#e5e7eb;
-      --shadow:0 16px 40px rgba(17,24,39,.06);
-      --primary:#4b82ff;
-      --primary-soft:#eef4ff;
-      --green:#22c55e;
-      --yellow:#f3c74b;
-      --orange:#ff8a00;
-      --orange-2:#ff5a00;
-      --danger:#e10600;
-    }
-    body.theme-mclaren{
-      --bg:#f7f6f3;
-      --bg-soft:#f2efe9;
-      --card:#ffffff;
-      --card-soft:#fffaf5;
-      --text:#2a2a2a;
-      --muted:#6f6a63;
-      --line:#ece7de;
-      --shadow:0 16px 40px rgba(57,32,10,.07);
-      --primary:#ff8000;
-      --primary-soft:#fff2e5;
-      --green:#22c55e;
-      --yellow:#f3c74b;
-      --orange:#ff8000;
-      --orange-2:#ff5a00;
-      --danger:#d83b01;
-    }
-    body.theme-ferrari{
-      --bg:#f6f5f7;
-      --bg-soft:#efedf1;
-      --card:#ffffff;
-      --card-soft:#fffafb;
-      --text:#27212a;
-      --muted:#746d77;
-      --line:#e9e5eb;
-      --shadow:0 16px 40px rgba(64,22,22,.06);
-      --primary:#e10600;
-      --primary-soft:#fff0ef;
-      --green:#22c55e;
-      --yellow:#f3c74b;
-      --orange:#ff6a00;
-      --orange-2:#e10600;
-      --danger:#e10600;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      background:linear-gradient(180deg,var(--bg),var(--bg-soft));
-      color:var(--text);
-    }
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,.55), transparent 28%),
-        radial-gradient(circle at top right, rgba(255,255,255,.45), transparent 22%),
-        linear-gradient(rgba(0,0,0,.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,.015) 1px, transparent 1px);
-      background-size:auto,auto,36px 36px,36px 36px;
-      opacity:.6;
-    }
-    a{text-decoration:none;color:inherit}
-    .wrap{max-width:var(--max);margin:0 auto;padding:22px 18px 68px;position:relative;z-index:1}
-    .topbar{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      align-items:center;
-      gap:14px;
-      margin-bottom:18px;
-      padding:12px 16px;
-      background:rgba(255,255,255,.72);
-      border:1px solid rgba(255,255,255,.75);
-      border-radius:22px;
-      backdrop-filter:blur(12px);
-      box-shadow:var(--shadow);
-    }
-    .brand{display:flex;flex-direction:column;gap:3px}
-    .brand-title{margin:0;font-size:2rem;font-weight:900;letter-spacing:-.06em}
-    .brand-title .ia{color:var(--primary)}
-    .brand-sub{font-size:.92rem;color:var(--muted);font-weight:700}
-    .theme-select{
-      min-height:42px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:var(--card);
-      color:var(--text);
-      padding:0 12px;
-      font:inherit;
-      font-weight:700;
-    }
-    .userbar{
-      display:flex;
-      justify-content:flex-end;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .userpill,.planpill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:42px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:var(--card);
-      font-weight:700;
-      box-shadow:0 6px 18px rgba(17,24,39,.04);
-    }
-    .planpill.pro{
-      background:#ecfdf3;
-      border-color:#cfead9;
-      color:#166534;
-    }
-    .planpill.free{
-      background:#fff7ed;
-      border-color:#fed7aa;
-      color:#9a3412;
-    }
-    .btn{
-      min-height:46px;
-      border:none;
-      border-radius:16px;
-      font:inherit;
-      font-weight:800;
-      padding:0 16px;
-      cursor:pointer;
-      transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      color:#fff;
-      background:linear-gradient(135deg,var(--orange),var(--orange-2));
-      box-shadow:0 12px 26px rgba(255,138,0,.22);
-    }
-    .btn-secondary{
-      background:var(--primary-soft);
-      color:var(--primary);
-      border:1px solid color-mix(in srgb, var(--primary) 18%, white);
-    }
-    .btn-ghost{
-      background:var(--card);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-    .btn-success{
-      background:linear-gradient(135deg,#22c55e,#16a34a);
-      color:#fff;
-      box-shadow:0 12px 24px rgba(34,197,94,.18);
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:1.02fr .98fr;
-      gap:18px;
-    }
-    .column{
-      display:grid;
-      gap:18px;
-      align-content:start;
-    }
-    .card{
-      background:linear-gradient(180deg,var(--card),var(--card-soft));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-    }
-    .section-title{
-      margin:0 0 8px;
-      font-size:1.45rem;
-      letter-spacing:-.04em;
-    }
-    .section-sub{
-      margin:0;
-      color:var(--muted);
-      line-height:1.72;
-    }
-    .hero-compact{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
-    }
-    .hero-compact .lead{
-      max-width:740px;
-    }
-    .hero-compact h2{
-      margin:0 0 8px;
-      font-size:2rem;
-      line-height:1;
-      letter-spacing:-.06em;
-    }
-    .hero-compact p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.72;
-    }
-    .mini-tags{display:flex;gap:8px;flex-wrap:wrap}
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:38px;
-      padding:0 12px;
-      border-radius:999px;
-      background:var(--primary-soft);
-      color:var(--primary);
-      font-size:.86rem;
-      font-weight:800;
-      border:1px solid color-mix(in srgb, var(--primary) 15%, white);
-    }
-    .form-grid{display:grid;gap:14px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .field{display:grid;gap:7px}
-    .field label{font-size:.92rem;font-weight:800;color:var(--text)}
-    .field-wrap{display:flex;gap:8px}
-    input[type='text'], textarea{
-      width:100%;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--text);
-      border-radius:16px;
-      padding:14px 14px;
-      font:inherit;
-      outline:none;
-      box-shadow:inset 0 1px 2px rgba(0,0,0,.02);
-    }
-    input[type='text']:focus, textarea:focus{
-      border-color:color-mix(in srgb, var(--primary) 35%, #dbeafe);
-      box-shadow:0 0 0 4px color-mix(in srgb, var(--primary) 10%, white);
-    }
-    textarea{min-height:220px;resize:vertical}
-    .voice-btn{
-      width:46px;
-      min-width:46px;
-      padding:0;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--text);
-      font-size:1.08rem;
-    }
-    .checks{display:grid;gap:10px}
-    .check{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px 14px;
-      border-radius:16px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:var(--text);
-      line-height:1.65;
-    }
-    .check input{margin-top:4px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .course-box{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:#fff;
-      padding:14px;
-    }
-    .course-grid{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:8px;
-      margin-top:10px;
-    }
-    .course-chip{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      min-height:40px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-size:.88rem;
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
-    }
-    .course-chip input{display:none}
-    .course-chip.active{
-      background:var(--primary-soft);
-      border-color:color-mix(in srgb, var(--primary) 20%, white);
-      color:var(--primary);
-    }
-    .status{
-      min-height:24px;
-      font-weight:700;
-      color:var(--muted);
-    }
-    .metric-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:14px;
-    }
-    .metric{
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:#fff;
-      padding:14px;
-    }
-    .metric strong{display:block;font-size:.86rem;color:var(--muted);margin-bottom:6px}
-    .metric span{font-size:1.08rem;font-weight:900}
-    .result-banner{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      padding:16px 18px;
-      border-radius:18px;
-      background:var(--primary-soft);
-      border:1px solid color-mix(in srgb, var(--primary) 15%, white);
-      margin-bottom:12px;
-    }
-    .result-banner h3{margin:0 0 4px;font-size:1.2rem}
-    .result-banner p{margin:0;color:var(--muted);line-height:1.65}
-    .traffic{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:#fff;
-      padding:16px;
-      margin-top:14px;
-    }
-    .lights{display:flex;gap:10px;margin-bottom:12px}
-    .light{
-      width:18px;height:18px;border-radius:50%;background:#e5e7eb;opacity:.5;
-    }
-    .light.active.red{background:#ef4444;opacity:1;box-shadow:0 0 12px rgba(239,68,68,.35)}
-    .light.active.yellow{background:#f59e0b;opacity:1;box-shadow:0 0 12px rgba(245,158,11,.35)}
-    .light.active.green{background:#22c55e;opacity:1;box-shadow:0 0 12px rgba(34,197,94,.35)}
-    .bar-row{display:grid;gap:6px;margin-bottom:10px}
-    .bar-head{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;font-weight:800}
-    .bar{
-      height:10px;border-radius:999px;background:#eff2f5;overflow:hidden;border:1px solid #edf0f3;
-    }
-    .bar-fill{
-      height:100%;
-      width:0;
-      border-radius:999px;
-      background:linear-gradient(90deg,#22c55e,#f3c74b,#ef4444);
-      transition:width .35s ease;
-    }
-    .list{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-    .list-item{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px 15px;
-      background:#fff;
-      line-height:1.68;
-    }
-    .pedagogy-main{
-      display:grid;
-      gap:14px;
-      margin-top:14px;
-    }
-    .pedagogy-highlight{
-      border:1px solid #dbe7ff;
-      background:linear-gradient(180deg,#f4f8ff,#ffffff);
-      border-radius:20px;
-      padding:18px;
-    }
-    .pedagogy-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
-    .ped-card{
-      border:1px solid var(--line);
-      background:#fff;
-      border-radius:18px;
-      padding:16px;
-    }
-    .ped-card h4{margin:0 0 10px;font-size:1.02rem}
-    .ped-card ul{margin:0;padding-left:18px;display:grid;gap:8px}
-    .translation-pairs{
-      display:grid;
-      gap:12px;
-      margin-top:14px;
-      max-height:760px;
-      overflow:auto;
-      padding-right:4px;
-    }
-    .pair{
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-      background:#fff;
-    }
-    .pair-top{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      margin-bottom:8px;
-      flex-wrap:wrap;
-    }
-    .pair-line{font-size:.82rem;font-weight:900;color:var(--muted)}
-    .pair-badge{
-      padding:6px 10px;
-      border-radius:999px;
-      background:#fff8db;
-      color:#8a6d00;
-      border:1px solid #f8e7a0;
-      font-size:.75rem;
-      font-weight:900;
-    }
-    .pair-row{
-      display:grid;
-      gap:6px;
-      margin-bottom:8px;
-    }
-    .pair-label{
-      font-size:.78rem;
-      color:var(--muted);
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-    }
-    .pair-text{
-      line-height:1.72;
-    }
-    .hl{
-      background:#fff3a3;
-      padding:1px 3px;
-      border-radius:4px;
-      font-weight:800;
-    }
-    .lock-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-    .lock-btn{
-      min-height:48px;
-      border-radius:16px;
-      border:1px dashed #d5d9df;
-      background:#fbfbfc;
-      color:#4b5563;
-      font-weight:900;
-    }
-    .calendar-box{
-      display:grid;
-      gap:12px;
-    }
-    .calendar-head{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .calendar{
-      display:grid;
-      grid-template-columns:repeat(7,minmax(0,1fr));
-      gap:8px;
-    }
-    .cal-day-name, .cal-cell{
-      text-align:center;
-      padding:10px 8px;
-      border-radius:14px;
-      font-size:.86rem;
-    }
-    .cal-day-name{
-      font-weight:900;
-      color:var(--muted);
-      background:#fff;
-      border:1px solid var(--line);
-    }
-    .cal-cell{
-      min-height:52px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#fff;
-      border:1px solid var(--line);
-      position:relative;
-      font-weight:800;
-    }
-    .cal-cell.today{
-      background:var(--primary-soft);
-      border-color:color-mix(in srgb, var(--primary) 22%, white);
-      color:var(--primary);
-    }
-    .cal-cell.holiday::after{
-      content:"•";
-      position:absolute;
-      right:8px;
-      top:2px;
-      color:var(--danger);
-      font-size:1.1rem;
-      line-height:1;
-    }
-    .history-list{display:grid;gap:10px;margin-top:12px}
-    .history-item{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px 14px;
-      background:#fff;
-    }
-    .hidden{display:none !important}
-    @media (max-width:1180px){
-      .grid{grid-template-columns:1fr}
-    }
-    @media (max-width:820px){
-      .topbar{grid-template-columns:1fr;align-items:stretch}
-      .userbar{justify-content:flex-start}
-      .row,.pedagogy-grid,.lock-grid,.metric-grid{grid-template-columns:1fr}
-      .course-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    }
+      --bg:#f6f7fb;--bg-grad1:#eef2ff;--bg-grad2:#fff7ed;--bg-grad3:#eff6ff;
+      --card:#ffffff;--soft:#f8fafc;--line:#e5e7eb;--text:#1f2937;--muted:#6b7280;
+      --green:#22c55e;--orange:#f97316;--orange2:#fb923c;--blue:#60a5fa;--yellow:#facc15;--purple:#a78bfa;
+      --shadow:0 16px 40px rgba(15,23,42,.08);--radius:22px;--max:1220px;
+      --mark:#fff59d;
+    }
+    body.theme-brisa{--bg:#f6f8fc;--bg-grad1:#eef5ff;--bg-grad2:#f8fbff;--bg-grad3:#ecfeff;--accent:#60a5fa}
+    body.theme-aurora{--bg:#faf7ff;--bg-grad1:#f3e8ff;--bg-grad2:#ffffff;--bg-grad3:#eef2ff;--accent:#a78bfa}
+    body.theme-atardecer{--bg:#fffaf5;--bg-grad1:#ffedd5;--bg-grad2:#fff7ed;--bg-grad3:#fff;--accent:#fb923c}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} mark{background:var(--mark);padding:0 .12em;border-radius:.2em}
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:
+      radial-gradient(circle at top left,var(--bg-grad1),transparent 28%),
+      radial-gradient(circle at top right,var(--bg-grad2),transparent 28%),
+      radial-gradient(circle at bottom right,var(--bg-grad3),transparent 25%), var(--bg);}
+    .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px 34px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:10}
+    .brand{display:flex;align-items:center;gap:10px}.brand-title{font-weight:900;font-size:1.6rem;letter-spacing:-.05em}.brand-title .ia{color:var(--accent,#60a5fa)}.brand-sub{font-size:.77rem;color:var(--muted);font-weight:700}
+    .rightbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .userpill,.planpill,.btn,select,input,textarea{font:inherit}
+    .userpill,.planpill{background:var(--soft);border:1px solid var(--line);padding:8px 10px;border-radius:999px;font-size:.8rem}
+    .planpill.pro{background:#ecfdf5;color:#166534;border-color:#bbf7d0;font-weight:800}
+    .btn{border:none;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:800;transition:.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn:hover{transform:translateY(-1px)} .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 10px 25px rgba(249,115,22,.2)} .btn-green{background:linear-gradient(135deg,var(--green),#4ade80);color:#052e16;box-shadow:0 10px 25px rgba(34,197,94,.18)} .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)} .btn-soft{background:var(--soft);border:1px solid var(--line);color:var(--text)}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin:16px 0}
+    .card{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:var(--radius)}
+    .hero-main,.hero-side,.block{padding:18px}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;background:#eef2ff;border:1px solid #dbeafe;border-radius:999px;padding:8px 12px;font-size:.82rem;font-weight:800;color:#334155;margin-bottom:10px}
+    h1{margin:0 0 10px;font-size:clamp(2rem,4vw,3.3rem);line-height:.95;letter-spacing:-.06em}
+    .muted{color:var(--muted);line-height:1.65}
+    .quickline{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .main-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+    .field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:.9rem;font-weight:700;color:#334155}
+    input[type='text'], textarea, select{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;color:var(--text);outline:none}
+    textarea{min-height:155px;resize:vertical}
+    .inline{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.inline-voice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+    .courses{display:flex;gap:8px;flex-wrap:wrap}.course-chip{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:.84rem}.course-chip.active{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;font-weight:800}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}.hint{margin-top:8px;background:#eff6ff;border:1px solid #dbeafe;color:#1e3a8a;padding:10px 12px;border-radius:14px;font-size:.9rem}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title h2{margin:0;font-size:1.18rem;letter-spacing:-.03em}
+    .result-head{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--line);margin-bottom:12px}
+    .result-main{font-size:1.1rem;font-weight:900;margin-bottom:6px}
+    .traffic{display:grid;gap:10px;margin-bottom:12px}.bar{height:10px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#facc15,#ef4444);width:0}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line)} .metric strong{display:block;font-size:.82rem;color:#475569;margin-bottom:4px} .metric span{font-weight:900}
+    .list{display:grid;gap:8px}.list-item{padding:11px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);line-height:1.55}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:8px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.82rem;font-weight:800}
+    .ped-grid{display:grid;gap:12px}.ped-card{padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line)} .ped-card h3{margin:0 0 8px;font-size:1rem}
+    .efem-box{padding:14px;border-radius:16px;background:linear-gradient(180deg,#fff,#faf5ff);border:1px solid #eadcff}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}.cal-head,.cal-day{padding:8px 0;text-align:center;border-radius:10px;font-size:.78rem} .cal-head{font-weight:800;color:#64748b} .cal-day{background:#fff;border:1px solid var(--line)} .cal-day.today{background:#e0f2fe;border-color:#7dd3fc;font-weight:900} .cal-day.holiday{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .translation-pair{padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;gap:6px}.translation-pair .orig{font-weight:700}.translation-pair .trans{color:#475569}
+    .preview-card{padding:14px;border-radius:16px;background:#fffbeb;border:1px solid #fde68a;color:#78350f}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.32);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modal-box{width:min(940px,96vw);max-height:88vh;overflow:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:18px}
+    .hidden{display:none!important}
+    @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}.inline{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr}}
+    @media (max-width:720px){.wrap{padding:14px}.topbar{flex-direction:column;align-items:stretch}.rightbar{justify-content:flex-start}.inline,.inline-voice{grid-template-columns:1fr}.actions .btn{flex:1 1 auto}}
   </style>
 </head>
-<body class="theme-claro">
+<body class="theme-brisa">
   <div class="wrap">
     <div class="topbar">
-      <a href="/index.html" class="brand">
-        <div class="brand-title">Sonar<span class="ia">IA</span></div>
-        <div class="brand-sub">Evaluador pedagógico musical</div>
+      <a href="/index.html" class="brand" style="text-decoration:none;color:inherit">
+        <div>
+          <div class="brand-title">Sonar<span class="ia">IA</span></div>
+          <div class="brand-sub">Panel docente</div>
+        </div>
       </a>
-
-      <div>
-        <select id="themeSelect" class="theme-select" aria-label="Tema visual">
-          <option value="theme-claro">Claro docente</option>
-          <option value="theme-mclaren">Creativo McLaren</option>
-          <option value="theme-ferrari">Profesional Ferrari</option>
+      <div class="rightbar">
+        <select id="themeSelect" title="Tema visual">
+          <option value="brisa">Brisa clara</option>
+          <option value="aurora">Aurora suave</option>
+          <option value="atardecer">Atardecer cálido</option>
         </select>
-      </div>
-
-      <div class="userbar">
-        <div id="userPill" class="userpill">Cargando usuario...</div>
-        <div id="planPill" class="planpill free">Plan Free</div>
-        <button id="btnPlanesTop" class="btn btn-ghost" type="button">Planes</button>
+        <div id="userPill" class="userpill">Cargando usuario…</div>
+        <div id="planPill" class="planpill">…</div>
+        <button id="btnHistoryTop" class="btn btn-soft" type="button">Historial</button>
+        <button id="btnPlansTop" class="btn btn-ghost" type="button">Planes</button>
         <button id="btnUpgradeTop" class="btn btn-primary" type="button">Desbloquear Pro</button>
       </div>
     </div>
 
-    <section class="card">
-      <div class="hero-compact">
-        <div class="lead">
-          <h2>Entra y usa SonarIA directo.</h2>
-          <p>Analiza la canción, revisa el semáforo, trabaja pedagogía, construye versión escolar y exporta tu PDF cuando corresponda.</p>
-        </div>
-        <div class="mini-tags">
-          <div class="tag">🎙️ Búsqueda por voz</div>
-          <div class="tag">🧑‍🏫 Pedagogía con presencia</div>
-          <div class="tag">📄 PDF pedagógico</div>
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="eyebrow">🎓 IA para decisiones pedagógicas reales</div>
+        <h1>Entra y usa SonarIA directo.</h1>
+        <div class="muted">Analiza la canción, revisa semáforo, trabaja pedagogía, mira una probadita de la adaptación escolar y exporta un PDF más útil.</div>
+        <div class="quickline">
+          <span class="chip">🎤 Búsqueda por voz</span>
+          <span class="chip">🧑‍🏫 Pedagogía con presencia</span>
+          <span class="chip">📄 PDF pedagógico</span>
+          <span class="chip">🎬 Botón YouTube</span>
         </div>
       </div>
-
-      <div class="grid">
-        <div class="column">
-          <section class="card">
-            <h3 class="section-title">Analizar canción</h3>
-            <p class="section-sub">Ingresa título, artista o pega la letra. Puedes usar voz para dictar rápido el nombre de la canción.</p>
-
-            <form id="analysisForm" class="form-grid">
-              <div class="row">
-                <div class="field">
-                  <label for="titulo">Título</label>
-                  <div class="field-wrap">
-                    <input id="titulo" type="text" placeholder="Ej: Creep" />
-                    <button class="btn voice-btn" type="button" id="voiceTitleBtn" title="Dictar título">🎙️</button>
-                  </div>
-                </div>
-                <div class="field">
-                  <label for="artista">Artista</label>
-                  <div class="field-wrap">
-                    <input id="artista" type="text" placeholder="Ej: Radiohead" />
-                    <button class="btn voice-btn" type="button" id="voiceArtistBtn" title="Dictar artista">🎙️</button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="voiceCombined">Búsqueda por voz rápida</label>
-                <div class="field-wrap">
-                  <input id="voiceCombined" type="text" placeholder='Ej: "Creep de Radiohead"' />
-                  <button class="btn voice-btn" type="button" id="voiceCombinedBtn" title="Dictar título y artista">🎤</button>
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="texto">Letra</label>
-                <textarea id="texto" placeholder="Pega aquí la letra o deja este espacio vacío para que SonarIA intente buscarla automáticamente."></textarea>
-              </div>
-
-              <div class="checks">
-                <label class="check">
-                  <input id="buscarLetra" type="checkbox" checked />
-                  <span><strong>Buscar letra automáticamente</strong><br>Si no pegas la letra, SonarIA intentará encontrarla con el título y artista.</span>
-                </label>
-                <label class="check">
-                  <input id="contextoEscolar" type="checkbox" checked />
-                  <span><strong>Priorizar contexto escolar</strong><br>El análisis y la mediación se orientan a uso docente y pertinencia en aula.</span>
-                </label>
-              </div>
-
-              <div class="course-box">
-                <strong>Mis cursos</strong>
-                <div class="section-sub" style="margin-top:6px">Selecciona los cursos a los que haces clase para que SonarIA proponga OA, preguntas y actividades más pertinentes.</div>
-                <div class="course-grid" id="courseGrid"></div>
-              </div>
-
-              <div class="actions">
-                <button id="analyzeBtn" class="btn btn-success" type="submit">Analizar canción</button>
-                <button id="clearBtn" class="btn btn-ghost" type="button">Limpiar</button>
-                <button id="btnUpgrade" class="btn btn-primary" type="button">Desbloquear Pro</button>
-              </div>
-
-              <div id="statusBox" class="status"></div>
-            </form>
-          </section>
-
-          <section class="card" id="pedagogySection">
-            <h3 class="section-title">Pedagogía</h3>
-            <p class="section-sub">Esta área ahora es protagonista: curso sugerido, OA, preguntas, actividades y clase breve para decidir rápido qué exportar.</p>
-
-            <div id="pedagogyFreeLocks" class="hidden">
-              <div class="lock-grid">
-                <button class="btn lock-btn" type="button">🔒 OA sugeridos Pro</button>
-                <button class="btn lock-btn" type="button">🔒 Preguntas guiadas Pro</button>
-                <button class="btn lock-btn" type="button">🔒 Actividades Pro</button>
-                <button class="btn lock-btn" type="button">🔒 Clase sugerida Pro</button>
-              </div>
-            </div>
-
-            <div id="pedagogyContent" class="pedagogy-main">
-              <div class="pedagogy-highlight">
-                <div class="section-sub">Aún no hay análisis pedagógico. Completa el formulario para activar esta área.</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="card" id="translationSection">
-            <h3 class="section-title">Traducción y versión escolar</h3>
-            <p class="section-sub">Cada bloque muestra línea original y debajo su traducción. Cuando hay adaptación escolar, los cambios aparecen destacados en amarillo.</p>
-
-            <div id="translationFreeLocks" class="hidden">
-              <div class="lock-grid">
-                <button class="btn lock-btn" type="button">🔒 Traducción completa Pro</button>
-                <button class="btn lock-btn" type="button">🔒 Versión escolar Pro</button>
-                <button class="btn lock-btn" type="button">🔒 Cambios destacados Pro</button>
-                <button class="btn lock-btn" type="button">🔒 PDF con adaptación Pro</button>
-              </div>
-            </div>
-
-            <div id="translationContent">
-              <div class="section-sub">Aún no hay traducción disponible.</div>
-            </div>
-          </section>
-        </div>
-
-        <div class="column">
-          <section class="card">
-            <h3 class="section-title">Resultado pedagógico</h3>
-            <p class="section-sub">Semáforo, edad sugerida, riesgos y lectura inicial para decidir si usar o no la canción.</p>
-
-            <div class="result-banner">
-              <div>
-                <h3 id="summaryTitle">Esperando análisis</h3>
-                <p id="summaryCopy">Completa el formulario para obtener una orientación pedagógica base sobre la canción.</p>
-              </div>
-              <div id="resultBadge" class="planpill free">Sin análisis</div>
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric">
-                <strong>Edad sugerida</strong>
-                <span id="edadSugerida">—</span>
-              </div>
-              <div class="metric">
-                <strong>Fuente usada</strong>
-                <span id="fuenteUsada">—</span>
-              </div>
-              <div class="metric">
-                <strong>Curso sugerido</strong>
-                <span id="cursoSugeridoMetric">—</span>
-              </div>
-              <div class="metric">
-                <strong>Enfoque</strong>
-                <span id="enfoqueSugerido">—</span>
-              </div>
-            </div>
-
-            <div class="traffic">
-              <div class="lights">
-                <div id="lightRed" class="light red"></div>
-                <div id="lightYellow" class="light yellow"></div>
-                <div id="lightGreen" class="light green"></div>
-              </div>
-
-              <div class="bar-row">
-                <div class="bar-head"><span>Riesgo general</span><span id="riskOverallLabel">0%</span></div>
-                <div class="bar"><div id="riskOverallBar" class="bar-fill"></div></div>
-              </div>
-
-              <div class="bar-row">
-                <div class="bar-head"><span>Riesgo sensible</span><span id="riskSensitiveLabel">0%</span></div>
-                <div class="bar"><div id="riskSensitiveBar" class="bar-fill"></div></div>
-              </div>
-
-              <div class="bar-row">
-                <div class="bar-head"><span>Pertinencia escolar</span><span id="riskSchoolLabel">0%</span></div>
-                <div class="bar"><div id="riskSchoolBar" class="bar-fill"></div></div>
-              </div>
-            </div>
-
-            <div class="list" id="themesList">
-              <div class="list-item">Todavía no hay temas detectados.</div>
-            </div>
-          </section>
-
-          <section class="card" id="ephemerisCard">
-            <div class="calendar-box">
-              <div class="calendar-head">
-                <div>
-                  <h3 class="section-title" style="margin-bottom:4px">Efeméride y calendario</h3>
-                  <p class="section-sub">Solo en Pro: feriados locales, día actual y una efeméride breve para activar la clase.</p>
-                </div>
-                <button id="btnUpgradeCalendar" class="btn btn-primary" type="button">Ver Pro</button>
-              </div>
-              <div id="ephemerisContent" class="list-item">🔒 Disponible en Pro.</div>
-              <div id="calendarContent"></div>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3 class="section-title">Exportación</h3>
-            <p class="section-sub">Exporta un PDF con resultado, pedagogía, traducción y versión escolar.</p>
-            <div class="actions">
-              <button id="btnPdf" class="btn btn-primary" type="button">Exportar PDF</button>
-              <button id="btnScrollPedagogy" class="btn btn-secondary" type="button">Ir a pedagogía</button>
-            </div>
-            <div id="pdfHint" class="status">En Free el PDF aparece bloqueado como incentivo a Pro.</div>
-          </section>
-
-          <section class="card">
-            <h3 class="section-title">Historial local</h3>
-            <p class="section-sub">Se guarda en tu navegador para reutilizar análisis recientes sin perder tiempo.</p>
-            <div id="historyList" class="history-list">
-              <div class="history-item">Aún no hay análisis guardados.</div>
-            </div>
-          </section>
+      <div class="card hero-side">
+        <div class="section-title"><h2>Hoy en SonarIA</h2></div>
+        <div id="efemerideBox" class="efem-box">
+          <strong id="efemTitle">Cargando…</strong>
+          <div id="efemText" class="muted" style="margin-top:6px">Preparando efeméride musical.</div>
+          <div id="calendarGrid" class="calendar"></div>
         </div>
       </div>
     </section>
+
+    <section class="main-grid">
+      <section class="card block">
+        <div class="section-title"><h2>Analizar canción</h2></div>
+        <form id="analysisForm">
+          <div class="inline-voice">
+            <div class="field" style="margin:0">
+              <label for="voiceQuery">Búsqueda rápida: canción + artista</label>
+              <input id="voiceQuery" type="text" placeholder="Ej: Creep Radiohead" />
+            </div>
+            <button id="voiceBtn" class="btn btn-soft" type="button" title="Dictar canción y artista">🎤</button>
+          </div>
+          <div class="inline" style="margin-top:12px">
+            <div class="field" style="margin:0">
+              <label for="titulo">Título</label>
+              <input id="titulo" type="text" placeholder="Ej: Creep" />
+            </div>
+            <div class="field" style="margin:0">
+              <label for="artista">Artista</label>
+              <input id="artista" type="text" placeholder="Ej: Radiohead" />
+            </div>
+            <button id="ytBtn" class="btn btn-soft" type="button" title="Buscar la canción en YouTube">▶ YouTube</button>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="texto">Letra</label>
+            <textarea id="texto" placeholder="Pega aquí la letra. Si la dejas vacía, SonarIA intentará buscarla automáticamente en la versión free. En Pro, además se integra mejor con letra y adaptación completa."></textarea>
+          </div>
+          <div class="field">
+            <label>Mis cursos</label>
+            <div id="courses" class="courses"></div>
+          </div>
+          <div class="actions">
+            <button id="analyzeBtn" class="btn btn-green" type="submit">Analizar canción</button>
+            <button id="clearBtn" class="btn btn-ghost" type="button">Limpiar</button>
+            <button id="pdfBtn" class="btn btn-primary" type="button">Exportar PDF</button>
+            <button id="btnUpgradeInline" class="btn btn-ghost" type="button">Desbloquear Pro</button>
+          </div>
+          <div class="hint" id="statusBox">Enter en búsqueda rápida o en artista también analiza. En free tienes 3 intentos, pero igual verás una probadita de adaptación escolar.</div>
+        </form>
+      </section>
+
+      <section class="card block">
+        <div class="section-title"><h2>Resultado pedagógico</h2><span id="resultBadge" class="chip">Sin análisis</span></div>
+        <div class="result-head">
+          <div id="summaryTitle" class="result-main">Esperando análisis</div>
+          <div id="summaryCopy" class="muted">Completa el formulario para obtener una orientación pedagógica base.</div>
+        </div>
+        <div class="traffic">
+          <div><div style="display:flex;justify-content:space-between"><span>Riesgo general</span><strong id="riskPercent">0%</strong></div><div class="bar"><div id="riskTotalFill" class="fill"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between"><span>Riesgo sensible</span><strong id="riskSensitive">0%</strong></div><div class="bar"><div id="riskSensitiveFill" class="fill"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between"><span>Pertinencia escolar</span><strong id="riskSchool">0%</strong></div><div class="bar"><div id="riskSchoolFill" class="fill"></div></div></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><strong>Edad sugerida</strong><span id="edadSugerida">—</span></div>
+          <div class="metric"><strong>Fuente usada</strong><span id="fuenteUsada">—</span></div>
+          <div class="metric"><strong>Lectura sugerida</strong><span id="lecturaSugerida">—</span></div>
+        </div>
+        <div style="height:10px"></div>
+        <div class="info-grid">
+          <div class="ped-card"><h3>Temas detectados</h3><div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div></div>
+          <div class="ped-card"><h3>Contextos detectados</h3><div id="contextList" class="list"><div class="list-item">Aún no hay datos.</div></div></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="card block" style="margin-top:16px">
+      <div class="section-title"><h2>Pedagogía</h2><span class="chip">Más visible y útil</span></div>
+      <div id="pedagogiaBox" class="ped-grid">
+        <div class="ped-card"><h3>Curso sugerido</h3><div id="pedCurso" class="muted">Aún no hay análisis pedagógico.</div></div>
+        <div class="ped-card"><h3>OA sugeridos</h3><div id="pedOa" class="list"><div class="list-item">Analiza una canción para ver propuestas.</div></div></div>
+        <div class="ped-card"><h3>Preguntas guiadas</h3><div id="pedPreguntas" class="list"><div class="list-item">Analiza una canción para ver preguntas detonantes.</div></div></div>
+        <div class="ped-card"><h3>Actividades</h3><div id="pedActividades" class="list"><div class="list-item">Analiza una canción para ver actividades sugeridas.</div></div></div>
+      </div>
+    </section>
+
+    <section class="main-grid" style="margin-top:16px">
+      <section class="card block">
+        <div class="section-title"><h2>Traducción y versión escolar</h2><span id="adaptBadge" class="chip">Probadita visible</span></div>
+        <div id="adaptPreview" class="preview-card">Aún no hay adaptación disponible.</div>
+        <div style="height:10px"></div>
+        <div id="changesList" class="list"><div class="list-item">Aquí aparecerán los cambios sugeridos y el contexto.</div></div>
+      </section>
+      <section class="card block">
+        <div class="section-title"><h2>Línea original + línea traducida</h2><span class="chip">En Pro se expande</span></div>
+        <div id="translationWrap" class="list"><div class="list-item">Aún no hay traducción disponible.</div></div>
+      </section>
+    </section>
+  </div>
+
+  <div id="historyModal" class="modal">
+    <div class="modal-box">
+      <div class="section-title"><h2>Historial local</h2><button class="btn btn-ghost" type="button" onclick="closeHistory()">Cerrar</button></div>
+      <div id="historyList" class="list"></div>
+    </div>
   </div>
 
   <script>
-    const API_URL = "https://sonaria-api.onrender.com";
-    const COURSE_OPTIONS = ["1","2","3","4","5","6","7","8","1M","2M","3M","4M"];
-    let currentUser = null;
-    let currentAnalysis = null;
-    let recognition = null;
+    const API_BASE = "https://sonaria-api.onrender.com";
+    const ANALYZE_URL = API_BASE + "/analizar";
+    const ME_URL = API_BASE + "/me";
+    const PDF_URL = API_BASE + "/export/pdf";
+    const DEMO_LIMIT = 3;
+    const COURSES = ["1","2","3","4","5","6","7","8","1M","2M","3M","4M"];
+    const COURSE_LABELS = {"1":"1°","2":"2°","3":"3°","4":"4°","5":"5°","6":"6°","7":"7°","8":"8°","1M":"1M","2M":"2M","3M":"3M","4M":"4M"};
+    let user = {plan:"free",name:"",email:""};
+    let authToken = "";
+    let lastAnalysis = null;
+    let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || '["7","1M"]');
+    let historyItems = JSON.parse(localStorage.getItem("sonaria_history") || '[]');
 
-    function getToken(){
-      return localStorage.getItem("mejoraria_token")
-        || localStorage.getItem("token")
-        || localStorage.getItem("access_token")
-        || "";
-    }
+    const el = id => document.getElementById(id);
+    const form = el("analysisForm");
+    const voiceQuery = el("voiceQuery");
+    const titulo = el("titulo");
+    const artista = el("artista");
+    const texto = el("texto");
+    const statusBox = el("statusBox");
 
-    function saveHistory(item){
-      const current = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      const id = `${item.titulo || ""}::${item.artista || ""}::${Date.now()}`;
-      current.unshift({id, ...item, savedAt:new Date().toISOString()});
-      localStorage.setItem("sonaria_history", JSON.stringify(current.slice(0, 12)));
-      renderHistory();
-    }
+    function getToken(){ return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || ""; }
+    function setStatus(msg, kind="info"){ statusBox.textContent = msg; statusBox.style.color = kind === "error" ? "#b91c1c" : kind === "success" ? "#166534" : "#1d4ed8"; }
+    function getUsage(){ return Number(localStorage.getItem("sonaria_demo_uses") || "0"); }
+    function setUsage(v){ localStorage.setItem("sonaria_demo_uses", String(v)); }
+    function remainingUses(){ return Math.max(0, DEMO_LIMIT - getUsage()); }
 
-    function renderHistory(){
-      const list = document.getElementById("historyList");
-      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      if(!items.length){
-        list.innerHTML = '<div class="history-item">Aún no hay análisis guardados.</div>';
-        return;
-      }
-      list.innerHTML = items.map(item => `
-        <div class="history-item">
-          <strong>${escapeHtml(item.titulo || "Sin título")} — ${escapeHtml(item.artista || "Sin artista")}</strong>
-          <div style="margin-top:6px;color:var(--muted);font-size:.92rem">${escapeHtml(item.resultado || "Sin resultado")} · ${escapeHtml(item.edad_sugerida || "—")}</div>
-          <div style="margin-top:10px">
-            <button class="btn btn-secondary" type="button" onclick="reuseHistory('${item.id}')">Reutilizar</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function reuseHistory(id){
-      const items = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-      const item = items.find(x => x.id === id);
-      if(!item) return;
-      currentAnalysis = item;
-      renderAnalysis(item);
-      document.getElementById("titulo").value = item.titulo || "";
-      document.getElementById("artista").value = item.artista || "";
-      document.getElementById("texto").value = item.texto || "";
-    }
-
-    function escapeHtml(value){
-      return (value || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;");
-    }
-
-    function highlightChanges(text, changes){
-      let safe = escapeHtml(text || "");
-      (changes || []).forEach(ch => {
-        if(!ch || !ch.replacement) return;
-        const escaped = ch.replacement.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        safe = safe.replace(new RegExp(`\\b${escaped}\\b`, "gi"), `<span class="hl">$&</span>`);
-      });
-      return safe;
-    }
-
-    function applyTheme(theme){
-      document.body.className = theme;
-      localStorage.setItem("sonaria_theme", theme);
-      document.getElementById("themeSelect").value = theme;
-    }
-
-    function setStatus(message, isError=false){
-      const el = document.getElementById("statusBox");
-      el.textContent = message || "";
-      el.style.color = isError ? "var(--danger)" : "var(--muted)";
-    }
+    function applyTheme(name){ document.body.className = "theme-" + name; localStorage.setItem("sonaria_theme", name); el("themeSelect").value = name; }
+    el("themeSelect").addEventListener("change", e => applyTheme(e.target.value));
 
     function renderCourses(){
-      const selected = JSON.parse(localStorage.getItem("sonaria_courses") || '["7","8"]');
-      const grid = document.getElementById("courseGrid");
-      grid.innerHTML = COURSE_OPTIONS.map(course => `
-        <label class="course-chip ${selected.includes(course) ? 'active' : ''}">
-          <input type="checkbox" value="${course}" ${selected.includes(course) ? "checked" : ""} />
-          ${course}
-        </label>
-      `).join("");
-      [...grid.querySelectorAll(".course-chip")].forEach(label => {
-        label.addEventListener("click", () => {
-          const input = label.querySelector("input");
-          input.checked = !input.checked;
-          label.classList.toggle("active", input.checked);
-          const values = [...grid.querySelectorAll("input:checked")].map(x => x.value);
-          localStorage.setItem("sonaria_courses", JSON.stringify(values));
-        });
+      const wrap = el("courses"); wrap.innerHTML = "";
+      COURSES.forEach(code => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "course-chip" + (selectedCourses.includes(code) ? " active" : ""); b.textContent = COURSE_LABELS[code] || code;
+        b.onclick = () => {
+          if(selectedCourses.includes(code)) selectedCourses = selectedCourses.filter(x => x !== code);
+          else selectedCourses.push(code);
+          localStorage.setItem("sonaria_courses", JSON.stringify(selectedCourses));
+          renderCourses();
+        };
+        wrap.appendChild(b);
       });
     }
 
-    function getSelectedCourses(){
-      return JSON.parse(localStorage.getItem("sonaria_courses") || '["7","8"]');
-    }
-
-    function setPlanUI(plan){
-      const pill = document.getElementById("planPill");
-      const freeLocks = [
-        document.getElementById("pedagogyFreeLocks"),
-        document.getElementById("translationFreeLocks"),
-      ];
-      if(plan === "pro"){
-        pill.textContent = "Plan Pro";
-        pill.className = "planpill pro";
-        freeLocks.forEach(el => el.classList.add("hidden"));
-        document.getElementById("pdfHint").textContent = "El PDF incluye análisis, pedagogía, traducción y versión escolar.";
-      } else {
-        pill.textContent = "Plan Free";
-        pill.className = "planpill free";
-        freeLocks.forEach(el => el.classList.remove("hidden"));
-        document.getElementById("pdfHint").textContent = "En Free el PDF aparece bloqueado como incentivo a Pro.";
-      }
-    }
-
-    function renderAnalysis(data){
-      currentAnalysis = data;
-      document.getElementById("summaryTitle").textContent = data.resultado || "Resultado";
-      document.getElementById("summaryCopy").textContent = data.justificacion || "Sin justificación.";
-      document.getElementById("resultBadge").textContent = data.resultado || "Sin análisis";
-      document.getElementById("edadSugerida").textContent = data.edad_sugerida || "—";
-      document.getElementById("fuenteUsada").textContent = data.fuente_usada || "—";
-      document.getElementById("cursoSugeridoMetric").textContent = (data.pedagogia && data.pedagogia.curso_sugerido) || "—";
-      document.getElementById("enfoqueSugerido").textContent = data.enfoque_sugerido || "—";
-
-      const lights = {
-        red: document.getElementById("lightRed"),
-        yellow: document.getElementById("lightYellow"),
-        green: document.getElementById("lightGreen"),
-      };
-      Object.values(lights).forEach(x => x.classList.remove("active"));
-      if((data.resultado || "").includes("NO APTA")) lights.red.classList.add("active","red");
-      else if((data.resultado || "").includes("SUPERVISIÓN")) lights.yellow.classList.add("active","yellow");
-      else lights.green.classList.add("active","green");
-
-      const riskOverall = Number(data.risk_percent || 0);
-      const riskSensitive = Number(data.risk_sensitive || 0);
-      const riskSchool = Number(data.risk_school || 0);
-      document.getElementById("riskOverallLabel").textContent = `${riskOverall}%`;
-      document.getElementById("riskSensitiveLabel").textContent = `${riskSensitive}%`;
-      document.getElementById("riskSchoolLabel").textContent = `${riskSchool}%`;
-      document.getElementById("riskOverallBar").style.width = `${riskOverall}%`;
-      document.getElementById("riskSensitiveBar").style.width = `${riskSensitive}%`;
-      document.getElementById("riskSchoolBar").style.width = `${riskSchool}%`;
-
-      const themes = (data.temas_detectados || []).length
-        ? data.temas_detectados.map(t => `<div class="list-item">• ${escapeHtml(t)}</div>`).join("")
-        : '<div class="list-item">Todavía no hay temas detectados.</div>';
-      document.getElementById("themesList").innerHTML = themes;
-
-      renderPedagogy(data);
-      renderTranslation(data);
-      renderEphemeris(data);
-    }
-
-    function renderPedagogy(data){
-      const wrap = document.getElementById("pedagogyContent");
-      const ped = data.pedagogia || {};
-      if(!ped.curso_sugerido){
-        wrap.innerHTML = '<div class="pedagogy-highlight"><div class="section-sub">Aún no hay análisis pedagógico.</div></div>';
-        return;
-      }
-
-      if((currentUser?.plan || "free") !== "pro"){
-        wrap.innerHTML = `
-          <div class="pedagogy-highlight">
-            <strong>Vista previa pedagógica</strong>
-            <div style="margin-top:8px;color:var(--muted)">Curso sugerido: ${escapeHtml(ped.curso_sugerido || "—")}</div>
-            <div style="margin-top:8px;color:var(--muted)">Desbloquea Pro para ver OA, preguntas, actividades y clase sugerida completas.</div>
-          </div>
-        `;
-        return;
-      }
-
-      wrap.innerHTML = `
-        <div class="pedagogy-highlight">
-          <strong>Curso sugerido: ${escapeHtml(ped.curso_sugerido || "—")}</strong>
-          <div style="margin-top:8px;color:var(--muted)">SonarIA tomó tus cursos seleccionados y priorizó uno para trabajar la canción con más intención pedagógica.</div>
-        </div>
-
-        <div class="pedagogy-grid">
-          <div class="ped-card">
-            <h4>OA sugeridos</h4>
-            <ul>${(ped.oa_sugeridos || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
-          </div>
-          <div class="ped-card">
-            <h4>Preguntas guiadas</h4>
-            <ul>${(ped.preguntas || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
-          </div>
-          <div class="ped-card">
-            <h4>Actividades</h4>
-            <ul>${(ped.actividades || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
-          </div>
-          <div class="ped-card">
-            <h4>Clase sugerida</h4>
-            <ul>${(ped.clase_sugerida || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderTranslation(data){
-      const wrap = document.getElementById("translationContent");
-      const translation = data.translation || {};
-      const pairs = translation.pairs || [];
-      if(!pairs.length){
-        wrap.innerHTML = '<div class="section-sub">Aún no hay traducción disponible.</div>';
-        return;
-      }
-
-      if((currentUser?.plan || "free") !== "pro"){
-        wrap.innerHTML = `
-          <div class="pair">
-            <div class="pair-top">
-              <div class="pair-line">Vista previa</div>
-              <div class="pair-badge">🔒 Pro</div>
-            </div>
-            <div class="pair-row">
-              <div class="pair-label">Original</div>
-              <div class="pair-text">${escapeHtml(pairs[0].original || "")}</div>
-            </div>
-            <div class="pair-row">
-              <div class="pair-label">Traducción</div>
-              <div class="pair-text">${escapeHtml(pairs[0].translated || "")}</div>
-            </div>
-            <div class="pair-row">
-              <div class="pair-label">Versión escolar</div>
-              <div class="pair-text">${highlightChanges(pairs[0].adapted || "", pairs[0].changes || [])}</div>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      wrap.innerHTML = `
-        <div class="translation-pairs">
-          ${pairs.map(pair => `
-            <div class="pair">
-              <div class="pair-top">
-                <div class="pair-line">Línea ${pair.line_number}</div>
-                ${(pair.changes || []).length ? '<div class="pair-badge">Cambios destacados</div>' : ''}
-              </div>
-
-              <div class="pair-row">
-                <div class="pair-label">Idioma original</div>
-                <div class="pair-text">${escapeHtml(pair.original || "")}</div>
-              </div>
-
-              <div class="pair-row">
-                <div class="pair-label">Traducción</div>
-                <div class="pair-text">${escapeHtml(pair.translated || "")}</div>
-              </div>
-
-              <div class="pair-row">
-                <div class="pair-label">Versión escolar</div>
-                <div class="pair-text">${highlightChanges(pair.adapted || "", pair.changes || [])}</div>
-              </div>
-
-              <div class="pair-row">
-                <div class="pair-label">Versión escolar traducida</div>
-                <div class="pair-text">${highlightChanges(pair.adapted_translated || "", pair.changes || [])}</div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `;
-    }
-
-    function renderCalendar(data){
-      const calendarData = data.calendar || {};
-      const container = document.getElementById("calendarContent");
-      if(calendarData.locked){
-        container.innerHTML = "";
-        return;
-      }
-
-      const today = new Date(calendarData.today);
-      const year = calendarData.year;
-      const month = calendarData.month;
-      const first = new Date(year, month - 1, 1);
-      const last = new Date(year, month, 0);
-      const startOffset = (first.getDay() + 6) % 7;
-      const holidayMap = new Map((calendarData.holidays || []).map(h => [h.date, h.name]));
-      const dayNames = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"];
-
-      let cells = [];
-      for(let i = 0; i < startOffset; i++) cells.push('<div class="cal-cell" style="visibility:hidden"></div>');
-      for(let day = 1; day <= last.getDate(); day++){
-        const iso = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-        const isToday = iso === calendarData.today;
-        const isHoliday = holidayMap.has(iso);
-        cells.push(`<div class="cal-cell ${isToday ? 'today' : ''} ${isHoliday ? 'holiday' : ''}" title="${isHoliday ? escapeHtml(holidayMap.get(iso)) : ''}">${day}</div>`);
-      }
-
-      container.innerHTML = `
-        <div class="calendar">
-          ${dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join("")}
-          ${cells.join("")}
-        </div>
-        ${(calendarData.holidays || []).length
-          ? `<div class="list" style="margin-top:12px">${(calendarData.holidays || []).slice(0,6).map(h => `<div class="list-item"><strong>${escapeHtml(h.date)}</strong><br>${escapeHtml(h.name)}</div>`).join("")}</div>`
-          : ''
-        }
-      `;
-    }
-
-    function renderEphemeris(data){
-      const ephemeris = data.ephemeris || {};
-      const box = document.getElementById("ephemerisContent");
-      if(ephemeris.locked){
-        box.innerHTML = "🔒 Disponible en Pro.";
-        document.getElementById("btnUpgradeCalendar").classList.remove("hidden");
-        document.getElementById("btnUpgradeCalendar").textContent = "Desbloquear Pro";
-        document.getElementById("calendarContent").innerHTML = "";
-        return;
-      }
-      document.getElementById("btnUpgradeCalendar").classList.add("hidden");
-      box.innerHTML = `<strong>${escapeHtml(ephemeris.title || "Efeméride musical del día")}</strong><br><span style="color:var(--muted)">${escapeHtml(ephemeris.description || "")}</span>`;
-      renderCalendar(data);
+    function renderUser(){
+      el("userPill").textContent = user.name ? `${user.name} · ${user.email}` : "Sesión activa";
+      const planPill = el("planPill");
+      const isPro = user.plan === "pro";
+      planPill.textContent = isPro ? "Plan Pro" : `Free · ${remainingUses()} intento(s)`;
+      planPill.className = "planpill" + (isPro ? " pro" : "");
+      ["btnUpgradeTop","btnUpgradeInline"].forEach(id => el(id).classList.toggle("hidden", isPro));
+      el("btnPlansTop").classList.toggle("hidden", isPro);
     }
 
     async function loadUser(){
-      const token = getToken();
-      if(!token){
-        window.location.href = "/login.html";
-        return;
-      }
-
+      authToken = getToken();
+      if(!authToken){ window.location.href = "/login.html"; return; }
       try{
-        const res = await fetch(API_URL + "/me", {
-          headers: { "Authorization": "Bearer " + token }
-        });
+        const res = await fetch(ME_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json();
-        if(!res.ok || !data.ok){
-          throw new Error(data.detail || "Sesión no válida");
-        }
-        currentUser = data.user;
-        document.getElementById("userPill").textContent = `${data.user.name || "Docente"} · ${data.user.email || ""}`;
-        setPlanUI(data.user.plan || "free");
-      }catch(error){
-        localStorage.setItem("mejoraria_logout_message", error.message || "Tu sesión expiró.");
-        localStorage.removeItem("mejoraria_token");
-        localStorage.removeItem("token");
-        localStorage.removeItem("access_token");
+        if(!res.ok || !data.ok) throw new Error(data.detail || "Sesión inválida");
+        user = data.user || {plan:"free"};
+        renderUser();
+      }catch(e){
+        localStorage.removeItem("mejoraria_token"); localStorage.removeItem("token"); localStorage.removeItem("access_token");
         window.location.href = "/login.html";
       }
     }
 
-    async function analyzeSong(ev){
-      ev.preventDefault();
-      const token = getToken();
-      setStatus("Analizando canción...");
+    function updateBars(total, sensitive, school){
+      el("riskPercent").textContent = `${total}%`; el("riskSensitive").textContent = `${sensitive}%`; el("riskSchool").textContent = `${school}%`;
+      el("riskTotalFill").style.width = `${total}%`; el("riskSensitiveFill").style.width = `${sensitive}%`; el("riskSchoolFill").style.width = `${school}%`;
+    }
 
-      const payload = {
-        titulo: document.getElementById("titulo").value.trim(),
-        artista: document.getElementById("artista").value.trim(),
-        texto: document.getElementById("texto").value.trim(),
-        buscar_letra: document.getElementById("buscarLetra").checked,
-        contexto_escolar: document.getElementById("contextoEscolar").checked,
-        cursos: getSelectedCourses()
-      };
+    function renderList(id, items, emptyText){
+      const box = el(id); box.innerHTML = "";
+      if(!items || !items.length){ box.innerHTML = `<div class="list-item">${emptyText}</div>`; return; }
+      items.forEach(item => { const d = document.createElement("div"); d.className = "list-item"; d.innerHTML = item; box.appendChild(d); });
+    }
 
-      try{
-        const res = await fetch(API_URL + "/analizar", {
-          method: "POST",
-          headers: {
-            "Content-Type":"application/json",
-            "Authorization":"Bearer " + token
-          },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if(!res.ok || !data.ok){
-          throw new Error(data.detail || "No fue posible analizar la canción.");
-        }
+    function renderPedagogia(p){
+      el("pedCurso").textContent = p?.curso_sugerido || "—";
+      renderList("pedOa", (p?.oa_sugeridos || []).map(x => `• ${x}`), "Sin OA sugeridos.");
+      renderList("pedPreguntas", (p?.preguntas || []).map(x => `• ${x}`), "Sin preguntas.");
+      renderList("pedActividades", (p?.actividades || []).map(x => `• ${x}`), "Sin actividades.");
+    }
 
-        document.getElementById("texto").value = data.texto || document.getElementById("texto").value;
-        renderAnalysis(data);
-        saveHistory(data);
-        setStatus("Análisis listo.");
-      }catch(error){
-        setStatus(error.message || "Error al analizar.", true);
+    function renderAdaptacion(data){
+      const adapt = data.adaptacion || {changes:[],preview_html:"Aún no hay adaptación disponible."};
+      const isPro = user.plan === "pro";
+      const preview = adapt.preview_html || "Aún no hay adaptación disponible.";
+      el("adaptPreview").innerHTML = isPro ? preview : `${preview}<hr style="border:none;border-top:1px solid #fcd34d;margin:12px 0"><strong>En Pro</strong> ves la adaptación completa, más cambios y mejor integración al PDF.`;
+      const changes = (adapt.changes || []).slice(0, isPro ? 10 : 3).map(ch => `<strong>${ch.original}</strong> → <mark>${ch.replacement}</mark><br><span style="color:#6b7280">${ch.context}</span>`);
+      renderList("changesList", changes, "No hubo cambios sugeridos.");
+    }
+
+    function renderTranslation(data){
+      const wrap = el("translationWrap"); wrap.innerHTML = "";
+      const rows = data.traduccion || [];
+      const isPro = user.plan === "pro";
+      const maxRows = isPro ? 14 : 4;
+      if(!rows.length){ wrap.innerHTML = '<div class="list-item">Aún no hay traducción disponible.</div>'; return; }
+      rows.slice(0, maxRows).forEach(row => {
+        const div = document.createElement("div"); div.className = "translation-pair";
+        div.innerHTML = `<div class="orig">${row.original || ""}</div><div class="trans">${row.translated || "Traducción breve no disponible"}</div>`;
+        wrap.appendChild(div);
+      });
+      if(!isPro){ const d = document.createElement("div"); d.className = "list-item"; d.innerHTML = 'En <strong>Pro</strong> se muestra más líneas y mejor integración con la adaptación escolar.'; wrap.appendChild(d); }
+    }
+
+    function renderThemes(themes){
+      const wrap = el("themesWrap"); wrap.innerHTML = "";
+      (themes && themes.length ? themes : ["Sin datos"]).forEach(t => { const s = document.createElement("span"); s.className = "chip"; s.textContent = t; wrap.appendChild(s); });
+    }
+
+    function renderEfemeride(obj){
+      el("efemTitle").textContent = obj?.titulo || "Hoy en SonarIA";
+      el("efemText").textContent = obj?.texto || "Hoy puede ser un buen día para iniciar con una escucha guiada breve.";
+      renderCalendar(obj?.fecha || new Date().toISOString().slice(0,10));
+    }
+
+    function renderCalendar(dateStr){
+      const today = new Date(dateStr + "T12:00:00");
+      const year = today.getFullYear(); const month = today.getMonth(); const day = today.getDate();
+      const holidays = new Set(["01-01","05-01","05-21","06-20","07-16","08-15","09-18","09-19","10-31","11-01","12-08","12-25"]);
+      const names = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"]; const grid = el("calendarGrid"); grid.innerHTML = "";
+      names.forEach(n => { const d = document.createElement("div"); d.className = "cal-head"; d.textContent = n; grid.appendChild(d); });
+      const first = new Date(year, month, 1); let offset = (first.getDay() + 6) % 7; const last = new Date(year, month + 1, 0).getDate();
+      for(let i=0;i<offset;i++){ const e = document.createElement("div"); e.className = "cal-day"; e.style.visibility = "hidden"; grid.appendChild(e); }
+      for(let n=1;n<=last;n++){
+        const cell = document.createElement("div"); cell.className = "cal-day"; cell.textContent = n;
+        const k = `${String(month+1).padStart(2,'0')}-${String(n).padStart(2,'0')}`;
+        if(n === day) cell.classList.add("today"); if(holidays.has(k)) cell.classList.add("holiday");
+        grid.appendChild(cell);
       }
+    }
+
+    function saveHistory(item){
+      historyItems = [item, ...historyItems.filter(x => !(x.titulo === item.titulo && x.artista === item.artista))].slice(0, 12);
+      localStorage.setItem("sonaria_history", JSON.stringify(historyItems));
+    }
+    function openHistory(){ renderHistory(); el("historyModal").classList.add("open"); }
+    function closeHistory(){ el("historyModal").classList.remove("open"); }
+    window.closeHistory = closeHistory;
+    function renderHistory(){
+      const wrap = el("historyList"); wrap.innerHTML = "";
+      if(!historyItems.length){ wrap.innerHTML = '<div class="list-item">Aún no hay historial local.</div>'; return; }
+      historyItems.forEach(item => {
+        const d = document.createElement("div"); d.className = "list-item";
+        d.innerHTML = `<strong>${item.titulo || 'Sin título'} — ${item.artista || 'Artista'}</strong><br><span style="color:#6b7280">${item.resultado || 'Sin resultado'}</span><br><button class="btn btn-soft" style="margin-top:8px" type="button">Reutilizar</button>`;
+        d.querySelector("button").onclick = () => { titulo.value = item.titulo || ""; artista.value = item.artista || ""; voiceQuery.value = `${item.titulo || ""} ${item.artista || ""}`.trim(); closeHistory(); };
+        wrap.appendChild(d);
+      });
+    }
+
+    function parseVoiceQuery(value){
+      const raw = (value || "").trim(); if(!raw) return {title:"",artist:""};
+      const parts = raw.split(/\s+-\s+|\s+de\s+/i); if(parts.length >= 2) return {title:parts[0].trim(), artist:parts.slice(1).join(' ').trim()};
+      const tokens = raw.split(/\s+/); if(tokens.length >= 2) return {title:tokens.slice(0,-1).join(' '), artist:tokens.slice(-1).join(' ')};
+      return {title:raw, artist:""};
+    }
+
+    async function analyzeNow(){
+      if(user.plan !== "pro" && remainingUses() <= 0){ setStatus("Ya usaste tus 3 intentos free. Aún puedes revisar historial y pasar a Pro para continuar.", "error"); return; }
+      const body = {titulo: titulo.value.trim(), artista: artista.value.trim(), texto: texto.value.trim(), buscar_letra: true, contexto_escolar: true, cursos: selectedCourses};
+      if(!body.titulo && voiceQuery.value.trim()){
+        const parsed = parseVoiceQuery(voiceQuery.value);
+        body.titulo = parsed.title; body.artista = parsed.artist; titulo.value = parsed.title; artista.value = parsed.artist;
+      }
+      if(!body.titulo && !body.texto){ setStatus("Escribe una canción o pega una letra.", "error"); return; }
+      setStatus("Analizando canción, adaptación, traducción y pedagogía…");
+      try{
+        const res = await fetch(ANALYZE_URL, {method:"POST", headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken}, body: JSON.stringify(body)});
+        const data = await res.json();
+        if(!res.ok || !data.ok) throw new Error(data.detail || "No se pudo analizar.");
+        lastAnalysis = data;
+        if(user.plan !== "pro") setUsage(getUsage() + 1);
+        renderUser();
+        el("resultBadge").textContent = data.resultado || "Análisis listo";
+        el("summaryTitle").textContent = data.resultado || "Análisis listo";
+        el("summaryCopy").textContent = data.resumen || "";
+        el("edadSugerida").textContent = data.edad_sugerida || "—";
+        el("fuenteUsada").textContent = data.fuente_usada || "—";
+        el("lecturaSugerida").textContent = data.lectura_sugerida || "—";
+        updateBars(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0);
+        renderThemes(data.temas_detectados || []);
+        renderList("contextList", (data.contextos_detectados || []).map(x => x), "Sin contextos detectados.");
+        renderPedagogia(data.pedagogia || {});
+        renderAdaptacion(data);
+        renderTranslation(data);
+        renderEfemeride(data.efemeride || null);
+        saveHistory({titulo: body.titulo, artista: body.artista, resultado: data.resultado});
+        setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro ve pedagogía, PDF completo y más líneas de traducción." : "Análisis listo. En free ya viste una probadita de adaptación y traducción; en Pro se amplía y entra completo al PDF.", "success");
+      }catch(err){ setStatus(err.message || "Error de análisis", "error"); }
     }
 
     async function exportPdf(){
-      if(!currentAnalysis){
-        setStatus("Primero debes analizar una canción.", true);
-        return;
-      }
-      if((currentUser?.plan || "free") !== "pro"){
-        setStatus("La exportación PDF es una función Pro.", true);
-        return;
-      }
-
+      if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
+      setStatus(user.plan === "pro" ? "Generando PDF completo…" : "Generando PDF breve con probadita útil…");
+      const payload = {titulo: titulo.value.trim(), artista: artista.value.trim(), texto: texto.value.trim(), cursos: selectedCourses, analysis: lastAnalysis};
       try{
-        setStatus("Generando PDF...");
-        const res = await fetch(API_URL + "/export/pdf", {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
-            "Authorization":"Bearer " + getToken()
-          },
-          body:JSON.stringify({ analysis: currentAnalysis })
-        });
-        if(!res.ok){
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.detail || "No se pudo exportar el PDF.");
-        }
+        const res = await fetch(PDF_URL, {method:"POST", headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken}, body: JSON.stringify(payload)});
+        if(!res.ok) throw new Error("No pude generar el PDF.");
         const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "sonaria_informe.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        setStatus("PDF descargado.");
-      }catch(error){
-        setStatus(error.message || "Error al exportar PDF.", true);
-      }
+        const url = window.URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "sonaria_informe.pdf"; a.click(); window.URL.revokeObjectURL(url);
+        setStatus(user.plan === "pro" ? "PDF completo descargado." : "PDF breve descargado. En Pro incluye traducción y adaptación completa.", "success");
+      }catch(e){ setStatus(e.message || "Error al exportar PDF", "error"); }
     }
 
-    function clearForm(){
-      document.getElementById("analysisForm").reset();
-      document.getElementById("summaryTitle").textContent = "Esperando análisis";
-      document.getElementById("summaryCopy").textContent = "Completa el formulario para obtener una orientación pedagógica base sobre la canción.";
-      document.getElementById("themesList").innerHTML = '<div class="list-item">Todavía no hay temas detectados.</div>';
-      document.getElementById("pedagogyContent").innerHTML = '<div class="pedagogy-highlight"><div class="section-sub">Aún no hay análisis pedagógico. Completa el formulario para activar esta área.</div></div>';
-      document.getElementById("translationContent").innerHTML = '<div class="section-sub">Aún no hay traducción disponible.</div>';
-      document.getElementById("ephemerisContent").innerHTML = ((currentUser?.plan || "free") === "pro") ? "Analiza para cargar el contexto del día." : "🔒 Disponible en Pro.";
-      document.getElementById("calendarContent").innerHTML = "";
-      currentAnalysis = null;
-      setStatus("");
+    function clearForm(){ voiceQuery.value = ""; titulo.value = ""; artista.value = ""; texto.value = ""; lastAnalysis = null; setStatus("Formulario limpio."); }
+    function goPlans(){ window.location.href = "/planes.html"; }
+    function goYoutube(){
+      const query = `${titulo.value.trim()} ${artista.value.trim()}`.trim() || voiceQuery.value.trim();
+      if(!query){ setStatus("Escribe canción y artista primero.", "error"); return; }
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
+      setStatus("Abriendo YouTube. En Pro lo orientamos mejor al trabajo con letra y adaptación.");
     }
 
-    function setupVoice(buttonId, targetId, parser){
-      const button = document.getElementById(buttonId);
-      if(!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)){
-        button.disabled = true;
-        button.title = "Tu navegador no soporta reconocimiento de voz";
-        return;
-      }
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      button.addEventListener("click", () => {
-        recognition = new SpeechRecognition();
-        recognition.lang = "es-CL";
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-        recognition.onresult = (event) => {
-          const transcript = event.results[0][0].transcript.trim();
-          if(parser){
-            parser(transcript);
-          }else{
-            document.getElementById(targetId).value = transcript;
-          }
-        };
-        recognition.onerror = () => setStatus("No se pudo completar el dictado por voz.", true);
-        recognition.start();
-      });
+    function initVoice(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){ el("voiceBtn").disabled = true; el("voiceBtn").title = "Reconocimiento de voz no disponible"; return; }
+      const rec = new SR(); rec.lang = "es-CL"; rec.interimResults = false; rec.maxAlternatives = 1;
+      el("voiceBtn").onclick = () => { setStatus("Escuchando… di canción y artista."); rec.start(); };
+      rec.onresult = ev => {
+        const t = ev.results[0][0].transcript || ""; voiceQuery.value = t;
+        const parsed = parseVoiceQuery(t); titulo.value = parsed.title; artista.value = parsed.artist;
+        setStatus("Voz capturada. Analizando automáticamente…", "success"); analyzeNow();
+      };
+      rec.onerror = () => setStatus("No pude capturar la voz. Puedes escribir la canción manualmente.", "error");
     }
 
-    function parseCombinedVoice(text){
-      document.getElementById("voiceCombined").value = text;
-      const lower = text.toLowerCase();
-      const separators = [" de ", " por ", " - ", " — "];
-      let title = text;
-      let artist = "";
-      for(const sep of separators){
-        if(lower.includes(sep)){
-          const index = lower.indexOf(sep);
-          title = text.slice(0, index).trim();
-          artist = text.slice(index + sep.length).trim();
-          break;
-        }
-      }
-      document.getElementById("titulo").value = title;
-      if(artist) document.getElementById("artista").value = artist;
-    }
-
-    function bindStaticActions(){
-      document.getElementById("analysisForm").addEventListener("submit", analyzeSong);
-      document.getElementById("clearBtn").addEventListener("click", clearForm);
-      document.getElementById("btnPdf").addEventListener("click", exportPdf);
-      document.getElementById("btnScrollPedagogy").addEventListener("click", () => {
-        document.getElementById("pedagogySection").scrollIntoView({behavior:"smooth", block:"start"});
-      });
-      document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "/planes.html");
-      document.getElementById("btnUpgradeTop").addEventListener("click", () => window.location.href = "/planes.html");
-      document.getElementById("btnUpgrade").addEventListener("click", () => window.location.href = "/planes.html");
-      document.getElementById("btnUpgradeCalendar").addEventListener("click", () => window.location.href = "/planes.html");
-      document.getElementById("themeSelect").addEventListener("change", (e) => applyTheme(e.target.value));
-
-      setupVoice("voiceTitleBtn", "titulo");
-      setupVoice("voiceArtistBtn", "artista");
-      setupVoice("voiceCombinedBtn", "voiceCombined", parseCombinedVoice);
-    }
+    form.addEventListener("submit", e => { e.preventDefault(); analyzeNow(); });
+    el("clearBtn").onclick = clearForm;
+    el("pdfBtn").onclick = exportPdf;
+    el("btnPlansTop").onclick = goPlans; el("btnUpgradeTop").onclick = goPlans; el("btnUpgradeInline").onclick = goPlans;
+    el("btnHistoryTop").onclick = openHistory; el("ytBtn").onclick = goYoutube;
+    voiceQuery.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); const parsed = parseVoiceQuery(voiceQuery.value); titulo.value = parsed.title; artista.value = parsed.artist; analyzeNow(); } });
+    artista.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); analyzeNow(); } });
 
     (async function init(){
-      applyTheme(localStorage.getItem("sonaria_theme") || "theme-claro");
-      renderCourses();
-      renderHistory();
-      bindStaticActions();
+      applyTheme(localStorage.getItem("sonaria_theme") || "brisa");
+      renderCourses(); renderHistory(); initVoice(); renderEfemeride({titulo:"Hoy en SonarIA", texto:"Preparando efeméride musical.", fecha:new Date().toISOString().slice(0,10)});
       await loadUser();
     })();
   </script>
