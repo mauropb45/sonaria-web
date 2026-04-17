@@ -16,101 +16,53 @@
       --bg:#f6f7fb;--bg-grad1:#eef2ff;--bg-grad2:#fff7ed;--bg-grad3:#eff6ff;
       --card:#ffffff;--soft:#f8fafc;--line:#e5e7eb;--text:#1f2937;--muted:#6b7280;
       --green:#22c55e;--orange:#f97316;--orange2:#fb923c;--blue:#60a5fa;--yellow:#facc15;--purple:#a78bfa;
-      --accent:#60a5fa;--accent2:#a78bfa;--youtube:#ff0000;--youtube-dark:#cc0000;
-      --shadow:0 16px 40px rgba(15,23,42,.08);--radius:22px;--max:1240px;--mark:#fff59d;
+      --shadow:0 16px 40px rgba(15,23,42,.08);--radius:22px;--max:1220px;
+      --mark:#fff59d;
     }
-    body.theme-brisa{--bg:#f6f8fc;--bg-grad1:#eef5ff;--bg-grad2:#f8fbff;--bg-grad3:#ecfeff;--accent:#60a5fa;--accent2:#7dd3fc}
-    body.theme-aurora{--bg:#faf7ff;--bg-grad1:#f3e8ff;--bg-grad2:#ffffff;--bg-grad3:#eef2ff;--accent:#a78bfa;--accent2:#c084fc}
-    body.theme-atardecer{--bg:#fffaf5;--bg-grad1:#ffedd5;--bg-grad2:#fff7ed;--bg-grad3:#fff;--accent:#fb923c;--accent2:#f59e0b}
+    body.theme-brisa{--bg:#f6f8fc;--bg-grad1:#eef5ff;--bg-grad2:#f8fbff;--bg-grad3:#ecfeff;--accent:#60a5fa}
+    body.theme-aurora{--bg:#faf7ff;--bg-grad1:#f3e8ff;--bg-grad2:#ffffff;--bg-grad3:#eef2ff;--accent:#a78bfa}
+    body.theme-atardecer{--bg:#fffaf5;--bg-grad1:#ffedd5;--bg-grad2:#fff7ed;--bg-grad3:#fff;--accent:#fb923c}
     *{box-sizing:border-box} html{scroll-behavior:smooth} mark{background:var(--mark);padding:0 .12em;border-radius:.2em}
-    body{
-      margin:0;font-family:'Inter',sans-serif;color:var(--text);
-      background:
-        radial-gradient(circle at top left,var(--bg-grad1),transparent 28%),
-        radial-gradient(circle at top right,var(--bg-grad2),transparent 28%),
-        radial-gradient(circle at bottom right,var(--bg-grad3),transparent 25%), var(--bg);
-    }
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:
+      radial-gradient(circle at top left,var(--bg-grad1),transparent 28%),
+      radial-gradient(circle at top right,var(--bg-grad2),transparent 28%),
+      radial-gradient(circle at bottom right,var(--bg-grad3),transparent 25%), var(--bg);}
     .wrap{max-width:var(--max);margin:0 auto;padding:18px 18px 34px}
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(255,255,255,.82);
-      backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:12px 14px;
-      box-shadow:var(--shadow);position:sticky;top:10px;z-index:10
-    }
-    .brand{display:flex;align-items:center;gap:10px}
-    .brand-title{font-weight:900;font-size:1.6rem;letter-spacing:-.05em}.brand-title .ia{color:var(--accent)}
-    .brand-sub{font-size:.77rem;color:var(--muted);font-weight:700}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:10}
+    .brand{display:flex;align-items:center;gap:10px}.brand-title{font-weight:900;font-size:1.6rem;letter-spacing:-.05em}.brand-title .ia{color:var(--accent,#60a5fa)}.brand-sub{font-size:.77rem;color:var(--muted);font-weight:700}
     .rightbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .btn,.planpill,.userpill,select,input,textarea{font:inherit}
+    .userpill,.planpill,.btn,select,input,textarea{font:inherit}
     .userpill,.planpill{background:var(--soft);border:1px solid var(--line);padding:8px 10px;border-radius:999px;font-size:.8rem}
     .planpill.pro{background:#ecfdf5;color:#166534;border-color:#bbf7d0;font-weight:800}
-    .btn{
-      border:none;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:800;transition:.18s ease;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 10px 25px rgba(249,115,22,.2)}
-    .btn-green{background:linear-gradient(135deg,var(--green),#4ade80);color:#052e16;box-shadow:0 10px 25px rgba(34,197,94,.18)}
-    .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
-    .btn-soft{background:var(--soft);border:1px solid var(--line);color:var(--text)}
-    .btn-youtube{background:var(--youtube);color:#fff;box-shadow:0 10px 20px rgba(255,0,0,.18)}
-    .btn-youtube:hover{background:var(--youtube-dark)}
-    .card{background:rgba(255,255,255,.84);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:var(--radius)}
-    .main-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:16px}
+    .btn{border:none;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:800;transition:.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn:hover{transform:translateY(-1px)} .btn-primary{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 10px 25px rgba(249,115,22,.2)} .btn-green{background:linear-gradient(135deg,var(--green),#4ade80);color:#052e16;box-shadow:0 10px 25px rgba(34,197,94,.18)} .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)} .btn-soft{background:var(--soft);border:1px solid var(--line);color:var(--text)}
+        .card{background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow);border-radius:var(--radius)}
     .block{padding:18px}
-    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-    .section-title h2{margin:0;font-size:1.18rem;letter-spacing:-.03em}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;background:#eef2ff;border:1px solid #dbeafe;border-radius:999px;padding:8px 12px;font-size:.82rem;font-weight:800;color:#334155;margin-bottom:10px}
+    h1{margin:0 0 10px;font-size:clamp(2rem,4vw,3.3rem);line-height:.95;letter-spacing:-.06em}
     .muted{color:var(--muted);line-height:1.65}
-    .hero-quick{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{padding:8px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.82rem;font-weight:800}
-    .chip.lock{background:#f8fafc;color:#64748b}
-    .eyebrow{display:inline-flex;gap:8px;align-items:center;background:#eef2ff;border:1px solid #dbeafe;border-radius:999px;padding:8px 12px;font-size:.82rem;font-weight:800;color:#334155}
+    .quickline{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .main-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
     .field{display:grid;gap:6px;margin-bottom:12px}.field label{font-size:.9rem;font-weight:700;color:#334155}
-    input[type='text'], textarea, select, input[type='color']{
-      width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;color:var(--text);outline:none
-    }
+    input[type='text'], textarea, select{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;color:var(--text);outline:none}
     textarea{min-height:155px;resize:vertical}
-    .inline{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
-    .inline-voice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    .hint{margin-top:8px;background:#eff6ff;border:1px solid #dbeafe;color:#1e3a8a;padding:10px 12px;border-radius:14px;font-size:.9rem}
+    .inline{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.inline-voice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+    .courses{display:flex;gap:8px;flex-wrap:wrap}.course-chip{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:.84rem}.course-chip.active{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;font-weight:800}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}.hint{margin-top:8px;background:#eff6ff;border:1px solid #dbeafe;color:#1e3a8a;padding:10px 12px;border-radius:14px;font-size:.9rem}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title h2{margin:0;font-size:1.18rem;letter-spacing:-.03em}
     .result-head{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid var(--line);margin-bottom:12px}
     .result-main{font-size:1.1rem;font-weight:900;margin-bottom:6px}
-    .traffic{display:grid;gap:10px;margin-bottom:12px}
-    .bar{height:10px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#facc15,#ef4444);width:0}
-    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .metric{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line)}
-    .metric strong{display:block;font-size:.82rem;color:#475569;margin-bottom:4px}
-    .metric span{font-weight:900}
-    .list{display:grid;gap:8px}.list-item{padding:11px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);line-height:1.55}
-    .themes{display:flex;gap:8px;flex-wrap:wrap}
-    .ped-grid{display:grid;gap:12px}.ped-card{padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line)}
-    .ped-card h3{margin:0 0 8px;font-size:1rem}
-    .duo-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:16px}
-    .lyrics-box{display:grid;gap:10px}
-    .lyric-pair{padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;gap:6px}
-    .lyric-orig{font-weight:700}
-    .lyric-adapt{color:#334155}
-    .issue-box{display:grid;gap:8px}
-    .issue-title{font-weight:800;color:#1f2937}
-    .preview-card{padding:14px;border-radius:16px;background:#fffbeb;border:1px solid #fde68a;color:#78350f}
-    .efem-box{padding:14px;border-radius:16px;background:linear-gradient(180deg,#fff,#faf5ff);border:1px solid #eadcff}
-    .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
-    .cal-head,.cal-day{padding:8px 0;text-align:center;border-radius:10px;font-size:.78rem}
-    .cal-head{font-weight:800;color:#64748b}.cal-day{background:#fff;border:1px solid var(--line)}
-    .cal-day.today{background:#e0f2fe;border-color:#7dd3fc;font-weight:900}
-    .cal-day.holiday{background:#fef2f2;border-color:#fecaca;color:#991b1b}
-    .floating-pro{margin-top:16px;padding:16px;border-radius:18px;background:linear-gradient(135deg,#fff7ed,#fffbeb);border:1px solid #fed7aa}
-    .floating-pro h3{margin:0 0 8px;font-size:1rem}
+    .traffic{display:grid;gap:10px;margin-bottom:12px}.bar{height:10px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#facc15,#ef4444);width:0}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line)} .metric strong{display:block;font-size:.82rem;color:#475569;margin-bottom:4px} .metric span{font-weight:900}
+    .list{display:grid;gap:8px}.list-item{padding:11px 12px;border-radius:14px;background:#fff;border:1px solid var(--line);line-height:1.55}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:8px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.82rem;font-weight:800}
+    .ped-grid{display:grid;gap:12px}.ped-card{padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line)} .ped-card h3{margin:0 0 8px;font-size:1rem}
+    .efem-box{padding:14px;border-radius:16px;background:linear-gradient(180deg,#fff,#faf5ff);border:1px solid #eadcff}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}.cal-head,.cal-day{padding:8px 0;text-align:center;border-radius:10px;font-size:.78rem} .cal-head{font-weight:800;color:#64748b} .cal-day{background:#fff;border:1px solid var(--line)} .cal-day.today{background:#e0f2fe;border-color:#7dd3fc;font-weight:900} .cal-day.holiday{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .translation-pair{padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);display:grid;gap:6px}.translation-pair .orig{font-weight:700}.translation-pair .trans{color:#475569}
+    .preview-card{padding:14px;border-radius:16px;background:#fffbeb;border:1px solid #fde68a;color:#78350f;line-height:1.65}.preview-card .orig{font-weight:700;color:#1f2937}.preview-card .trans{color:#475569}.preview-card .adapt{background:#fff;border:1px dashed #f59e0b;padding:10px;border-radius:12px}.youtube-btn{background:#FF0000!important;color:#fff!important;border-color:#FF0000!important;box-shadow:0 10px 24px rgba(255,0,0,.18)!important}.youtube-btn:hover{background:#cc0000!important}.pro-lock{display:inline-flex;align-items:center;gap:6px;color:#92400e;background:#fff7ed;border:1px solid #fed7aa;border-radius:999px;padding:7px 10px;font-size:.8rem;font-weight:800}.gain-box{margin-top:16px;padding:14px;border-radius:16px;background:linear-gradient(180deg,#fff7ed,#fffbeb);border:1px solid #fed7aa}.gain-box h3{margin:0 0 8px;font-size:1rem}.gain-box ul{margin:0;padding-left:18px;color:#78350f}.theme-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.color-note{font-size:.8rem;color:var(--muted)}.two-pane{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.modal-box.narrow{width:min(640px,96vw)}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.32);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modal-box{width:min(940px,96vw);max-height:88vh;overflow:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:18px}
     .hidden{display:none!important}
-    .modal{position:fixed;inset:0;background:rgba(15,23,42,.32);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}
-    .modal.open{display:flex}
-    .modal-box{width:min(940px,96vw);max-height:88vh;overflow:auto;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px;padding:18px}
-    .preview-sheet{padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff}
-    .preview-sheet h3{margin:14px 0 8px}
-    .color-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .subgrid-top{display:grid;grid-template-columns:1fr 360px;gap:16px}
-    @media (max-width:1100px){.subgrid-top,.main-grid,.duo-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
-    @media (max-width:720px){.wrap{padding:14px}.topbar{flex-direction:column;align-items:stretch}.rightbar{justify-content:flex-start}.inline,.inline-voice,.color-row{grid-template-columns:1fr}}
+    @media (max-width:980px){.main-grid,.two-pane{grid-template-columns:1fr}.inline{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr}}
+    @media (max-width:720px){.wrap{padding:14px}.topbar{flex-direction:column;align-items:stretch}.rightbar{justify-content:flex-start}.inline,.inline-voice{grid-template-columns:1fr}.actions .btn{flex:1 1 auto}}
   </style>
 </head>
 <body class="theme-brisa">
@@ -123,42 +75,30 @@
         </div>
       </a>
       <div class="rightbar">
+        <div class="theme-controls">
+          <select id="themeSelect" title="Tema visual">
+            <option value="brisa">Brisa clara</option>
+            <option value="aurora">Aurora suave</option>
+            <option value="atardecer">Atardecer cálido</option>
+          </select>
+          <button id="customColorsBtn" class="btn btn-soft hidden" type="button">🎨 Personaliza tus colores</button>
+        </div>
         <div id="userPill" class="userpill">Cargando usuario…</div>
         <div id="planPill" class="planpill">…</div>
-        <button id="btnColorsTop" class="btn btn-soft" type="button">🎨 Personaliza tus colores</button>
         <button id="btnHistoryTop" class="btn btn-soft" type="button">Historial</button>
         <button id="btnPlansTop" class="btn btn-ghost" type="button">Planes</button>
         <button id="btnUpgradeTop" class="btn btn-primary" type="button">Desbloquear Pro</button>
       </div>
     </div>
 
-    <div class="subgrid-top">
-      <section class="card block">
-        <div class="section-title">
-          <div>
-            <div class="eyebrow">🎓 IA para decisiones pedagógicas reales</div>
-            <h2 style="font-size:1.45rem;margin:10px 0 6px">Actúa rápido con SonarIA.</h2>
-            <div class="muted">Busca o pega la canción, define el curso objetivo, revisa pedagogía y exporta con vista previa.</div>
-          </div>
-        </div>
-        <div class="hero-quick" style="margin-top:12px">
-          <span class="chip">🎤 Búsqueda por voz</span>
-          <span class="chip">🧑‍🏫 Curso objetivo</span>
-          <span class="chip">📄 Vista previa PDF</span>
-          <span class="chip">▶ YouTube oficial</span>
-          <span class="chip">🎨 Colores personalizables</span>
-        </div>
-      </section>
-
-      <section class="card block">
-        <div class="section-title"><h2>Hoy en SonarIA</h2></div>
-        <div id="efemerideBox" class="efem-box">
-          <strong id="efemTitle">Hoy en SonarIA</strong>
-          <div id="efemText" class="muted" style="margin-top:6px">Preparando dato musical del día.</div>
-          <div id="calendarGrid" class="calendar"></div>
-        </div>
-      </section>
-    </div>
+    <section class="card block" style="margin-top:16px">
+      <div class="section-title"><h2>Hoy en SonarIA</h2><span id="freeLockEfem" class="pro-lock hidden">🔒 Pro: efemérides ampliadas</span></div>
+      <div id="efemerideBox" class="efem-box">
+        <strong id="efemTitle">Cargando…</strong>
+        <div id="efemText" class="muted" style="margin-top:6px">Preparando efeméride musical.</div>
+        <div id="calendarGrid" class="calendar"></div>
+      </div>
+    </section>
 
     <section class="main-grid">
       <section class="card block">
@@ -171,7 +111,6 @@
             </div>
             <button id="voiceBtn" class="btn btn-soft" type="button" title="Dictar canción y artista">🎤</button>
           </div>
-
           <div class="inline" style="margin-top:12px">
             <div class="field" style="margin:0">
               <label for="titulo">Título</label>
@@ -181,37 +120,23 @@
               <label for="artista">Artista</label>
               <input id="artista" type="text" placeholder="Ej: Radiohead" />
             </div>
-            <button id="ytBtn" class="btn btn-youtube" type="button" title="Buscar la canción en YouTube">▶ YouTube</button>
+            <button id="ytBtn" class="btn btn-soft youtube-btn" type="button" title="Buscar la canción en YouTube">▶ YouTube</button>
           </div>
-
           <div class="field" style="margin-top:12px">
-            <label for="cursoObjetivo">Curso objetivo para esta canción</label>
-            <select id="cursoObjetivo"></select>
-          </div>
-
-          <div class="field">
             <label for="texto">Letra</label>
-            <textarea id="texto" placeholder="Pega aquí la letra. Si la dejas vacía, SonarIA intentará buscarla automáticamente con título y artista."></textarea>
+            <textarea id="texto" placeholder="Pega aquí la letra. Si la dejas vacía, SonarIA intentará buscarla automáticamente en la versión free. En Pro, además se integra mejor con letra y adaptación completa."></textarea>
           </div>
-
+          <div class="field">
+            <label>Mis cursos reales</label>
+            <div id="courses" class="courses"></div>
+          </div>
           <div class="actions">
             <button id="analyzeBtn" class="btn btn-green" type="submit">Analizar canción</button>
             <button id="clearBtn" class="btn btn-ghost" type="button">Limpiar</button>
-            <button id="pdfBtn" class="btn btn-primary" type="button">Vista previa PDF</button>
+            <button id="pdfBtn" class="btn btn-primary" type="button">Exportar PDF</button>
             <button id="btnUpgradeInline" class="btn btn-ghost" type="button">Desbloquear Pro</button>
           </div>
-
-          <div class="hint" id="statusBox">Enter en búsqueda rápida o en artista también analiza. En free hay valor real y funciones Pro aparecen con candado.</div>
-
-          <div id="freeLocksBox" class="floating-pro hidden">
-            <h3>🔒 Lo que podrías ganar si fueras Pro</h3>
-            <div class="hero-quick" style="margin-top:8px">
-              <span class="chip lock">🔒 Adaptación completa</span>
-              <span class="chip lock">🔒 Más líneas traducidas</span>
-              <span class="chip lock">🔒 PDF completo</span>
-              <span class="chip lock">🔒 Colores personalizados</span>
-            </div>
-          </div>
+          <div class="hint" id="statusBox">Selecciona los cursos a los que haces clases. SonarIA hará match con OA y propondrá en qué niveles trabajar la canción según el rango etáreo.</div>
         </form>
       </section>
 
@@ -232,37 +157,46 @@
           <div class="metric"><strong>Lectura sugerida</strong><span id="lecturaSugerida">—</span></div>
         </div>
         <div style="height:10px"></div>
-        <div class="ped-card">
-          <h3>Temas detectados</h3>
-          <div id="themesWrap" class="themes"><span class="chip">Sin datos</span></div>
+        <div class="info-grid">
+          <div class="ped-card"><h3>Temas detectados</h3><div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div></div>
+          <div class="ped-card"><h3>Contextos detectados</h3><div id="contextList" class="list"><div class="list-item">Aún no hay datos.</div></div></div>
         </div>
       </section>
     </section>
 
     <section class="card block" style="margin-top:16px">
-      <div class="section-title"><h2>Pedagogía</h2><span class="chip">Curso objetivo + rango etáreo</span></div>
-      <div class="ped-grid">
-        <div class="ped-card"><h3>Curso sugerido</h3><div id="pedCurso" class="muted">Aún no hay análisis pedagógico.</div></div>
+      <div class="section-title"><h2>Pedagogía por cursos y match MINEDUC</h2><span class="chip">SonarIA propone niveles y OA</span></div>
+      <div id="pedagogiaBox" class="ped-grid">
+        <div class="ped-card"><h3>Cursos sugeridos para trabajar la canción</h3><div id="pedCurso" class="muted">Aún no hay análisis pedagógico.</div></div>
         <div class="ped-card"><h3>OA sugeridos</h3><div id="pedOa" class="list"><div class="list-item">Analiza una canción para ver propuestas.</div></div></div>
         <div class="ped-card"><h3>Preguntas guiadas</h3><div id="pedPreguntas" class="list"><div class="list-item">Analiza una canción para ver preguntas detonantes.</div></div></div>
-        <div class="ped-card"><h3>Actividades y reflexiones</h3><div id="pedActividades" class="list"><div class="list-item">Analiza una canción para ver actividades sugeridas.</div></div></div>
+        <div class="ped-card"><h3>Actividades</h3><div id="pedActividades" class="list"><div class="list-item">Analiza una canción para ver actividades sugeridas.</div></div></div>
       </div>
     </section>
 
-    <section class="duo-grid">
+    <section class="two-pane" style="margin-top:16px">
       <section class="card block">
-        <div class="section-title"><h2>Canción + traducción + versión escolar</h2><span id="adaptBadge" class="chip">Cambios destacados</span></div>
-        <div id="lyricsWrap" class="lyrics-box">
-          <div class="list-item">Aquí aparecerán la letra, la traducción y la versión escolar con cambios destacados en amarillo.</div>
-        </div>
+        <div class="section-title"><h2>Letra, traducción y versión escolar</h2><span id="adaptBadge" class="chip">Versión escolar</span></div>
+        <div id="adaptPreview" class="preview-card">Aún no hay adaptación disponible.</div>
       </section>
+      <section class="card block">
+        <div class="section-title"><h2>Problemas explícitos e implícitos detectados</h2><span id="proDetailLock" class="pro-lock hidden">🔒 Pro: detalle ampliado</span></div>
+        <div id="issuesList" class="list"><div class="list-item">Aquí aparecerán los problemas detectados sin repetir.</div></div>
+      </section>
+    </section>
 
-      <section class="card block">
-        <div class="section-title"><h2>Problemas detectados</h2><span class="chip">Explícitos e implícitos</span></div>
-        <div id="issuesWrap" class="issue-box">
-          <div class="list-item">Aquí aparecerán problemas implícitos y/o explícitos sin repetirlos.</div>
-        </div>
-      </section>
+    <section class="card block" style="margin-top:16px">
+      <div class="section-title"><h2>Cambios sugeridos y contexto</h2><span class="chip">Sin repeticiones</span></div>
+      <div id="changesList" class="list"><div class="list-item">Aquí aparecerán los cambios sugeridos y el contexto.</div></div>
+      <div id="freeGainBox" class="gain-box hidden">
+        <h3>Lo que podrías ganar si fueras Pro</h3>
+        <ul>
+          <li>Efemérides ampliadas y más contexto del día</li>
+          <li>Adaptación escolar completa con más detalle</li>
+          <li>Traducción expandida y mejor integración al PDF</li>
+          <li>Personalización libre de colores del fondo</li>
+        </ul>
+      </div>
     </section>
   </div>
 
@@ -273,28 +207,30 @@
     </div>
   </div>
 
-  <div id="colorsModal" class="modal">
-    <div class="modal-box">
-      <div class="section-title"><h2>Personaliza tus colores</h2><button class="btn btn-ghost" type="button" onclick="closeColors()">Cerrar</button></div>
-      <div id="colorsProInfo" class="list-item" style="margin-bottom:12px">En Pro puedes elegir dos colores y SonarIA combina la interfaz con ellos.</div>
-      <div class="color-row">
-        <div class="field"><label for="color1">Color 1</label><input id="color1" type="color" value="#60a5fa"></div>
-        <div class="field"><label for="color2">Color 2</label><input id="color2" type="color" value="#a78bfa"></div>
-      </div>
-      <div class="actions" style="margin-top:12px">
-        <button id="applyColorsBtn" class="btn btn-primary" type="button">Aplicar colores</button>
-        <button id="resetColorsBtn" class="btn btn-ghost" type="button">Volver al tema base</button>
-      </div>
+  <div id="pdfPreviewModal" class="modal">
+    <div class="modal-box narrow">
+      <div class="section-title"><h2>Vista previa PDF</h2><button class="btn btn-ghost" type="button" onclick="closePdfPreview()">Cerrar</button></div>
+      <div id="pdfPreviewBody" class="list"></div>
+      <div class="actions" style="margin-top:14px"><button id="confirmPdfBtn" class="btn btn-primary" type="button">Descargar PDF</button></div>
     </div>
   </div>
 
-  <div id="pdfPreviewModal" class="modal">
+  <div id="themeModal" class="modal">
+    <div class="modal-box narrow">
+      <div class="section-title"><h2>Personaliza tus colores</h2><button class="btn btn-ghost" type="button" onclick="closeThemeModal()">Cerrar</button></div>
+      <div class="field"><label>Color principal</label><input id="primaryColor" type="color" value="#60a5fa"></div>
+      <div class="field"><label>Color secundario</label><input id="secondaryColor" type="color" value="#fb923c"></div>
+      <div class="color-note">En Pro puedes elegir dos colores y SonarIA ajusta el fondo con esa combinación.</div>
+      <div class="actions" style="margin-top:14px"><button id="applyCustomColorsBtn" class="btn btn-primary" type="button">Aplicar colores</button></div>
+    </div>
+  </div>
+
+  <script>
+
+  <div id="historyModal" class="modal">
     <div class="modal-box">
-      <div class="section-title"><h2>Vista previa PDF</h2><button class="btn btn-ghost" type="button" onclick="closePdfPreview()">Cerrar</button></div>
-      <div id="pdfPreviewContent" class="preview-sheet"></div>
-      <div class="actions" style="margin-top:14px">
-        <button id="downloadPdfBtn" class="btn btn-primary" type="button">Descargar PDF</button>
-      </div>
+      <div class="section-title"><h2>Historial local</h2><button class="btn btn-ghost" type="button" onclick="closeHistory()">Cerrar</button></div>
+      <div id="historyList" class="list"></div>
     </div>
   </div>
 
@@ -303,13 +239,14 @@
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const PDF_URL = API_BASE + "/export/pdf";
-    const COURSE_OPTIONS = ["1","2","3","4","5","6","7","8","1M","2M","3M","4M"];
-    const COURSE_LABELS = {"1":"1° básico","2":"2° básico","3":"3° básico","4":"4° básico","5":"5° básico","6":"6° básico","7":"7° básico","8":"8° básico","1M":"1° medio","2M":"2° medio","3M":"3° medio","4M":"4° medio"};
+    const DEMO_LIMIT = 3;
+    const COURSES = ["1","2","3","4","5","6","7","8","1M","2M","3M","4M"];
+    const COURSE_LABELS = {"1":"1°","2":"2°","3":"3°","4":"4°","5":"5°","6":"6°","7":"7°","8":"8°","1M":"1M","2M":"2M","3M":"3M","4M":"4M"};
     let user = {plan:"free",name:"",email:""};
     let authToken = "";
     let lastAnalysis = null;
-    let historyItems = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
-    let lastPdfPayload = null;
+    let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || '["7","1M"]');
+    let historyItems = JSON.parse(localStorage.getItem("sonaria_history") || '[]');
 
     const el = id => document.getElementById(id);
     const form = el("analysisForm");
@@ -317,34 +254,45 @@
     const titulo = el("titulo");
     const artista = el("artista");
     const texto = el("texto");
-    const cursoObjetivo = el("cursoObjetivo");
     const statusBox = el("statusBox");
 
     function getToken(){ return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || ""; }
-    function setStatus(msg, kind="info"){ statusBox.textContent = msg; statusBox.style.color = kind==="error" ? "#b91c1c" : kind==="success" ? "#166534" : "#1d4ed8"; }
+    function setStatus(msg, kind="info"){ statusBox.textContent = msg; statusBox.style.color = kind === "error" ? "#b91c1c" : kind === "success" ? "#166534" : "#1d4ed8"; }
+    function getUsage(){ return Number(localStorage.getItem("sonaria_demo_uses") || "0"); }
+    function setUsage(v){ localStorage.setItem("sonaria_demo_uses", String(v)); }
+    function remainingUses(){ return Math.max(0, DEMO_LIMIT - getUsage()); }
 
-    function populateCourseSelect(){
-      cursoObjetivo.innerHTML = "";
-      COURSE_OPTIONS.forEach(code => {
-        const op = document.createElement("option");
-        op.value = code;
-        op.textContent = COURSE_LABELS[code] || code;
-        cursoObjetivo.appendChild(op);
+    function applyTheme(name){ document.body.className = "theme-" + name; document.body.style.removeProperty("--bg-grad1"); document.body.style.removeProperty("--bg-grad2"); document.body.style.removeProperty("--bg-grad3"); document.body.style.removeProperty("--accent"); localStorage.setItem("sonaria_theme", name); el("themeSelect").value = name; }
+    el("themeSelect").addEventListener("change", e => applyTheme(e.target.value));
+
+    function renderCourses(){
+      const wrap = el("courses"); wrap.innerHTML = "";
+      COURSES.forEach(code => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "course-chip" + (selectedCourses.includes(code) ? " active" : ""); b.textContent = COURSE_LABELS[code] || code;
+        b.onclick = () => {
+          if(selectedCourses.includes(code)) selectedCourses = selectedCourses.filter(x => x !== code);
+          else selectedCourses.push(code);
+          localStorage.setItem("sonaria_courses", JSON.stringify(selectedCourses));
+          renderCourses();
+        };
+        wrap.appendChild(b);
       });
-      cursoObjetivo.value = localStorage.getItem("sonaria_curso_objetivo") || "1M";
-      cursoObjetivo.addEventListener("change", () => localStorage.setItem("sonaria_curso_objetivo", cursoObjetivo.value));
     }
 
     function renderUser(){
       el("userPill").textContent = user.name ? `${user.name} · ${user.email}` : "Sesión activa";
       const planPill = el("planPill");
       const isPro = user.plan === "pro";
-      planPill.textContent = isPro ? "Plan Pro" : "Cuenta Free";
+      planPill.textContent = isPro ? "Plan Pro" : `Free · ${remainingUses()} intento(s)`;
       planPill.className = "planpill" + (isPro ? " pro" : "");
-      el("btnUpgradeTop").classList.toggle("hidden", isPro);
-      el("btnUpgradeInline").classList.toggle("hidden", isPro);
-      el("freeLocksBox").classList.toggle("hidden", isPro);
-      el("colorsProInfo").textContent = isPro ? "Elige dos colores y SonarIA combinará la interfaz con ellos." : "La personalización avanzada de dos colores está disponible en Pro.";
+      ["btnUpgradeTop","btnUpgradeInline"].forEach(id => el(id).classList.toggle("hidden", isPro));
+      el("btnPlansTop").classList.toggle("hidden", isPro);
+      el("themeSelect").classList.toggle("hidden", isPro);
+      el("customColorsBtn").classList.toggle("hidden", !isPro);
+      el("freeGainBox").classList.toggle("hidden", isPro);
+      el("freeLockEfem").classList.toggle("hidden", isPro);
+      el("proDetailLock").classList.toggle("hidden", isPro);
     }
 
     async function loadUser(){
@@ -362,151 +310,75 @@
       }
     }
 
-    function renderCalendar(dateStr){
-      const today = new Date(dateStr + "T12:00:00");
-      const year = today.getFullYear(), month = today.getMonth(), day = today.getDate();
-      const holidays = new Set(["01-01","05-01","05-21","06-20","07-16","08-15","09-18","09-19","10-12","10-31","11-01","12-08","12-25"]);
-      const names = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"];
-      const grid = el("calendarGrid"); grid.innerHTML = "";
-      names.forEach(n => { const d = document.createElement("div"); d.className = "cal-head"; d.textContent = n; grid.appendChild(d); });
-      const first = new Date(year, month, 1); let offset = (first.getDay() + 6) % 7; const last = new Date(year, month + 1, 0).getDate();
-      for(let i=0;i<offset;i++){ const e = document.createElement("div"); e.className = "cal-day"; e.style.visibility = "hidden"; grid.appendChild(e); }
-      for(let n=1;n<=last;n++){
-        const cell = document.createElement("div");
-        cell.className = "cal-day";
-        cell.textContent = n;
-        const k = `${String(month+1).padStart(2,'0')}-${String(n).padStart(2,'0')}`;
-        if(n === day) cell.classList.add("today");
-        if(holidays.has(k)) cell.classList.add("holiday");
-        grid.appendChild(cell);
-      }
-    }
-
-    function localEfemeride(){
-      const today = new Date();
-      const key = `${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-      const map = {
-        "01-07":"Hoy puedes abrir la clase con una pregunta sobre teoría musical y función tonal.",
-        "03-21":"Buen día para trabajar paisaje sonoro, estaciones y ambiente musical.",
-        "04-17":"Un día como hoy sirve para preguntar qué canción de la vida escolar más les marcó y por qué.",
-        "09-18":"Semana ideal para repertorio chileno, identidad musical y contexto cultural.",
-        "12-22":"Buen momento para cierre de proceso, memoria musical y balance del año."
-      };
-      renderEfemeride({titulo:"Hoy en SonarIA", texto:map[key] || "Hoy puede ser un buen día para iniciar con una escucha guiada breve y una pregunta detonante.", fecha:today.toISOString().slice(0,10)});
-    }
-
-    function renderEfemeride(obj){
-      el("efemTitle").textContent = obj?.titulo || "Hoy en SonarIA";
-      el("efemText").textContent = obj?.texto || "Hoy puede ser un buen día para iniciar con una escucha guiada breve y una pregunta detonante.";
-      renderCalendar(obj?.fecha || new Date().toISOString().slice(0,10));
-    }
-
     function updateBars(total, sensitive, school){
-      el("riskPercent").textContent = `${total}%`;
-      el("riskSensitive").textContent = `${sensitive}%`;
-      el("riskSchool").textContent = `${school}%`;
-      el("riskTotalFill").style.width = `${total}%`;
-      el("riskSensitiveFill").style.width = `${sensitive}%`;
-      el("riskSchoolFill").style.width = `${school}%`;
+      el("riskPercent").textContent = `${total}%`; el("riskSensitive").textContent = `${sensitive}%`; el("riskSchool").textContent = `${school}%`;
+      el("riskTotalFill").style.width = `${total}%`; el("riskSensitiveFill").style.width = `${sensitive}%`; el("riskSchoolFill").style.width = `${school}%`;
     }
 
     function renderList(id, items, emptyText){
       const box = el(id); box.innerHTML = "";
       if(!items || !items.length){ box.innerHTML = `<div class="list-item">${emptyText}</div>`; return; }
-      items.forEach(item => {
-        const d = document.createElement("div");
-        d.className = "list-item";
-        d.innerHTML = item;
-        box.appendChild(d);
-      });
-    }
-
-    function renderThemes(themes){
-      const wrap = el("themesWrap");
-      wrap.innerHTML = "";
-      (themes && themes.length ? themes : ["Sin datos"]).forEach(t => {
-        const s = document.createElement("span");
-        s.className = "chip";
-        s.textContent = t;
-        wrap.appendChild(s);
-      });
+      items.forEach(item => { const d = document.createElement("div"); d.className = "list-item"; d.innerHTML = item; box.appendChild(d); });
     }
 
     function renderPedagogia(p){
-      el("pedCurso").textContent = p?.curso_sugerido || "—";
+      const cursos = p?.cursos_sugeridos || [];
+      el("pedCurso").innerHTML = cursos.length ? cursos.map(x => `• ${x}`).join("<br>") : (p?.curso_sugerido || "—");
       renderList("pedOa", (p?.oa_sugeridos || []).map(x => `• ${x}`), "Sin OA sugeridos.");
       renderList("pedPreguntas", (p?.preguntas || []).map(x => `• ${x}`), "Sin preguntas.");
       renderList("pedActividades", (p?.actividades || []).map(x => `• ${x}`), "Sin actividades.");
     }
 
-    function uniqueProblems(data){
-      const out = [];
-      const seen = new Set();
-      (data.contextos_detectados || []).forEach(x => {
-        const clean = String(x || "").trim();
-        if(clean && !seen.has(clean.toLowerCase())){
-          seen.add(clean.toLowerCase());
-          out.push({kind:"Explícito", text:clean});
-        }
-      });
-      (data.temas_detectados || []).forEach(x => {
-        const clean = String(x || "").trim();
-        if(clean && !seen.has(clean.toLowerCase())){
-          seen.add(clean.toLowerCase());
-          out.push({kind:"Implícito", text:clean});
-        }
-      });
-      return out;
+    function renderAdaptacion(data){
+      const adapt = data.adaptacion || {changes:[],preview_html:"Aún no hay adaptación disponible."};
+      const isPro = user.plan === "pro";
+      const changes = (adapt.changes || []);
+      const limited = changes.slice(0, isPro ? 12 : 4);
+      const htmlPreview = adapt.preview_html || "Aún no hay adaptación disponible.";
+      const pairs = data.traduccion || [];
+      const maxPairs = isPro ? 10 : 4;
+      const pairHtml = pairs.slice(0, maxPairs).map((row, idx) => {
+        const adaptedLine = (adapt.preview_lines || [])[idx] || "";
+        return `<div style="padding:10px 0;border-top:${idx? '1px solid #fde68a':'none'}"><div class="orig">${row.original || ''}</div><div class="trans">${row.translated || ''}</div>${adaptedLine ? `<div class="adapt">${adaptedLine}</div>`:''}</div>`;
+      }).join('');
+      el("adaptPreview").innerHTML = pairHtml || htmlPreview;
+      const mapped = limited.map(ch => `<strong>${ch.original}</strong> → <mark>${ch.replacement}</mark><br><span style="color:#6b7280">${ch.context}</span>`);
+      renderList("changesList", mapped, "No hubo cambios sugeridos.");
     }
 
     function renderIssues(data){
-      const items = uniqueProblems(data).slice(0, 8).map(item => `
-        <div class="list-item">
-          <div class="issue-title">${item.kind}</div>
-          <div>${item.text}</div>
-        </div>
-      `);
-      renderList("issuesWrap", items, "No se detectaron problemas explícitos o implícitos relevantes.");
+      const issues = [];
+      (data.contextos_detectados || []).forEach(x => issues.push(x));
+      (data.temas_detectados || []).forEach(x => issues.push(`Tema detectado: ${x}`));
+      const unique = [...new Set(issues.map(x => String(x).trim()).filter(Boolean))];
+      const max = user.plan === "pro" ? 10 : 5;
+      renderList("issuesList", unique.slice(0, max), "Sin problemas detectados.");
     }
 
-    function renderLyricsAndAdaptation(data){
-      const wrap = el("lyricsWrap");
-      wrap.innerHTML = "";
-      const bilingual = data.traduccion || [];
-      const changes = (data.adaptacion || {}).changes || [];
-      const adaptedPreview = (data.adaptacion || {}).preview_html || "";
-      const maxRows = user.plan === "pro" ? 14 : 6;
+    function renderThemes(themes){
+      const wrap = el("themesWrap"); wrap.innerHTML = "";
+      (themes && themes.length ? themes : ["Sin datos"]).forEach(t => { const s = document.createElement("span"); s.className = "chip"; s.textContent = t; wrap.appendChild(s); });
+    }
 
-      if(adaptedPreview){
-        const d = document.createElement("div");
-        d.className = "preview-card";
-        d.innerHTML = `<strong>Versión escolar</strong><div style="margin-top:8px;line-height:1.7">${adaptedPreview}</div>`;
-        wrap.appendChild(d);
-      }
+    function renderEfemeride(obj){
+      el("efemTitle").textContent = obj?.titulo || "Hoy en SonarIA";
+      el("efemText").textContent = obj?.texto || "Hoy puede ser un buen día para iniciar con una escucha guiada breve.";
+      renderCalendar(obj?.fecha || new Date().toISOString().slice(0,10));
+    }
 
-      if(bilingual.length){
-        bilingual.slice(0, maxRows).forEach(row => {
-          const foundChange = changes.find(ch => (row.original || "").toLowerCase().includes((ch.original || "").toLowerCase()));
-          const div = document.createElement("div");
-          div.className = "lyric-pair";
-          div.innerHTML = `
-            <div class="lyric-orig">${row.original || ""}</div>
-            <div>${row.translated || ""}</div>
-            <div class="lyric-adapt">${foundChange ? `Cambio sugerido: <mark>${foundChange.replacement}</mark>` : ""}</div>
-          `;
-          wrap.appendChild(div);
-        });
-      }
-
-      if(!adaptedPreview && !bilingual.length){
-        wrap.innerHTML = '<div class="list-item">Aquí aparecerán la letra, la traducción y la versión escolar con cambios destacados en amarillo.</div>';
-      }
-
-      if(user.plan !== "pro"){
-        const info = document.createElement("div");
-        info.className = "list-item";
-        info.innerHTML = '🔒 En <strong>Pro</strong> se muestra más líneas, mejor integración de la letra adaptada y más detalle en el PDF.';
-        wrap.appendChild(info);
+    function renderCalendar(dateStr){
+      const today = new Date(dateStr + "T12:00:00");
+      const year = today.getFullYear(); const month = today.getMonth(); const day = today.getDate();
+      const holidays = new Set(["01-01","05-01","05-21","06-20","07-16","08-15","09-18","09-19","10-31","11-01","12-08","12-25"]);
+      const names = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"]; const grid = el("calendarGrid"); grid.innerHTML = "";
+      names.forEach(n => { const d = document.createElement("div"); d.className = "cal-head"; d.textContent = n; grid.appendChild(d); });
+      const first = new Date(year, month, 1); let offset = (first.getDay() + 6) % 7; const last = new Date(year, month + 1, 0).getDate();
+      for(let i=0;i<offset;i++){ const e = document.createElement("div"); e.className = "cal-day"; e.style.visibility = "hidden"; grid.appendChild(e); }
+      for(let n=1;n<=last;n++){
+        const cell = document.createElement("div"); cell.className = "cal-day"; cell.textContent = n;
+        const k = `${String(month+1).padStart(2,'0')}-${String(n).padStart(2,'0')}`;
+        if(n === day) cell.classList.add("today"); if(holidays.has(k)) cell.classList.add("holiday");
+        grid.appendChild(cell);
       }
     }
 
@@ -514,149 +386,43 @@
       historyItems = [item, ...historyItems.filter(x => !(x.titulo === item.titulo && x.artista === item.artista))].slice(0, 12);
       localStorage.setItem("sonaria_history", JSON.stringify(historyItems));
     }
-
+    function openHistory(){ renderHistory(); el("historyModal").classList.add("open"); }
+    function closeHistory(){ el("historyModal").classList.remove("open"); }
+    window.closeHistory = closeHistory;
     function renderHistory(){
-      const wrap = el("historyList");
-      wrap.innerHTML = "";
+      const wrap = el("historyList"); wrap.innerHTML = "";
       if(!historyItems.length){ wrap.innerHTML = '<div class="list-item">Aún no hay historial local.</div>'; return; }
       historyItems.forEach(item => {
-        const d = document.createElement("div");
-        d.className = "list-item";
-        d.innerHTML = `<strong>${item.titulo || "Sin título"} — ${item.artista || "Artista"}</strong><br><span style="color:#6b7280">${item.resultado || "Sin resultado"}</span><br><button class="btn btn-soft" style="margin-top:8px" type="button">Reutilizar</button>`;
-        d.querySelector("button").onclick = () => {
-          titulo.value = item.titulo || "";
-          artista.value = item.artista || "";
-          voiceQuery.value = `${item.titulo || ""} ${item.artista || ""}`.trim();
-          closeHistory();
-        };
+        const d = document.createElement("div"); d.className = "list-item";
+        d.innerHTML = `<strong>${item.titulo || 'Sin título'} — ${item.artista || 'Artista'}</strong><br><span style="color:#6b7280">${item.resultado || 'Sin resultado'}</span><br><button class="btn btn-soft" style="margin-top:8px" type="button">Reutilizar</button>`;
+        d.querySelector("button").onclick = () => { titulo.value = item.titulo || ""; artista.value = item.artista || ""; voiceQuery.value = `${item.titulo || ""} ${item.artista || ""}`.trim(); closeHistory(); };
         wrap.appendChild(d);
       });
     }
 
-    function openHistory(){ renderHistory(); el("historyModal").classList.add("open"); }
-    function closeHistory(){ el("historyModal").classList.remove("open"); }
-    window.closeHistory = closeHistory;
-
-    function openColors(){
-      if(user.plan !== "pro"){
-        setStatus("La personalización avanzada de dos colores está disponible en Pro.");
-      }
-      el("colorsModal").classList.add("open");
-    }
-    function closeColors(){ el("colorsModal").classList.remove("open"); }
-    window.closeColors = closeColors;
-
-    function applyCustomColors(){
-      if(user.plan !== "pro"){ setStatus("La personalización avanzada de dos colores está disponible en Pro."); return; }
-      const c1 = el("color1").value;
-      const c2 = el("color2").value;
-      document.documentElement.style.setProperty("--accent", c1);
-      document.documentElement.style.setProperty("--accent2", c2);
-      document.documentElement.style.setProperty("--orange", c1);
-      document.documentElement.style.setProperty("--orange2", c2);
-      localStorage.setItem("sonaria_custom_colors", JSON.stringify({c1, c2}));
-      setStatus("Colores personalizados aplicados.", "success");
-    }
-
-    function resetCustomColors(){
-      localStorage.removeItem("sonaria_custom_colors");
-      const cls = document.body.className || "theme-brisa";
-      document.documentElement.style.removeProperty("--accent");
-      document.documentElement.style.removeProperty("--accent2");
-      document.documentElement.style.removeProperty("--orange");
-      document.documentElement.style.removeProperty("--orange2");
-      setStatus("Volviste al tema base.", "success");
-    }
-
-    function restoreCustomColors(){
-      const saved = JSON.parse(localStorage.getItem("sonaria_custom_colors") || "null");
-      if(saved && user.plan === "pro"){
-        document.documentElement.style.setProperty("--accent", saved.c1);
-        document.documentElement.style.setProperty("--accent2", saved.c2);
-        document.documentElement.style.setProperty("--orange", saved.c1);
-        document.documentElement.style.setProperty("--orange2", saved.c2);
-        el("color1").value = saved.c1;
-        el("color2").value = saved.c2;
-      }
-    }
-
     function parseVoiceQuery(value){
-      const raw = (value || "").trim();
-      if(!raw) return {title:"", artist:""};
-      const parts = raw.split(/\s+-\s+|\s+de\s+/i);
-      if(parts.length >= 2) return {title:parts[0].trim(), artist:parts.slice(1).join(" ").trim()};
-      const tokens = raw.split(/\s+/);
-      if(tokens.length >= 2) return {title:tokens.slice(0, -1).join(" "), artist:tokens.slice(-1).join(" ")};
+      const raw = (value || "").trim(); if(!raw) return {title:"",artist:""};
+      const parts = raw.split(/\s+-\s+|\s+de\s+/i); if(parts.length >= 2) return {title:parts[0].trim(), artist:parts.slice(1).join(' ').trim()};
+      const tokens = raw.split(/\s+/); if(tokens.length >= 2) return {title:tokens.slice(0,-1).join(' '), artist:tokens.slice(-1).join(' ')};
       return {title:raw, artist:""};
     }
 
-    function goPlans(){ window.location.href = "/planes.html"; }
-    function goYoutube(){
-      const query = `${titulo.value.trim()} ${artista.value.trim()}`.trim() || voiceQuery.value.trim();
-      if(!query){ setStatus("Escribe canción y artista primero.", "error"); return; }
-      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
-      setStatus("Abriendo YouTube. En Pro se profundiza mejor el trabajo con letra y adaptación.");
-    }
-
-    function initVoice(){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SR){ el("voiceBtn").disabled = true; el("voiceBtn").title = "Reconocimiento de voz no disponible"; return; }
-      const rec = new SR();
-      rec.lang = "es-CL";
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      el("voiceBtn").onclick = () => { setStatus("Escuchando… di canción y artista."); rec.start(); };
-      rec.onresult = ev => {
-        const t = ev.results[0][0].transcript || "";
-        voiceQuery.value = t;
-        const parsed = parseVoiceQuery(t);
-        titulo.value = parsed.title;
-        artista.value = parsed.artist;
-        setStatus("Voz capturada. Analizando automáticamente…", "success");
-        analyzeNow();
-      };
-      rec.onerror = () => setStatus("No pude capturar la voz. Puedes escribir la canción manualmente.", "error");
-    }
-
     async function analyzeNow(){
-      const body = {
-        titulo: titulo.value.trim(),
-        artista: artista.value.trim(),
-        texto: texto.value.trim(),
-        buscar_letra: true,
-        contexto_escolar: true,
-        cursos: [cursoObjetivo.value]
-      };
-
+      if(user.plan !== "pro" && remainingUses() <= 0){ setStatus("Ya usaste tus 3 intentos free. Aún puedes revisar historial y pasar a Pro para continuar.", "error"); return; }
+      const body = {titulo: titulo.value.trim(), artista: artista.value.trim(), texto: texto.value.trim(), buscar_letra: true, contexto_escolar: true, cursos: selectedCourses};
       if(!body.titulo && voiceQuery.value.trim()){
         const parsed = parseVoiceQuery(voiceQuery.value);
-        body.titulo = parsed.title;
-        body.artista = parsed.artist;
-        titulo.value = parsed.title;
-        artista.value = parsed.artist;
+        body.titulo = parsed.title; body.artista = parsed.artist; titulo.value = parsed.title; artista.value = parsed.artist;
       }
-
-      if(!body.titulo && !body.texto){
-        setStatus("Escribe una canción o pega una letra.", "error");
-        return;
-      }
-
+      if(!body.titulo && !body.texto){ setStatus("Escribe una canción o pega una letra.", "error"); return; }
       setStatus("Analizando canción, adaptación, traducción y pedagogía…");
-
       try{
-        const res = await fetch(ANALYZE_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken},
-          body: JSON.stringify(body)
-        });
+        const res = await fetch(ANALYZE_URL, {method:"POST", headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken}, body: JSON.stringify(body)});
         const data = await res.json();
         if(!res.ok || !data.ok) throw new Error(data.detail || "No se pudo analizar.");
-
         lastAnalysis = data;
-        if(!texto.value.trim() && data.texto){
-          texto.value = data.texto;
-        }
-
+        if(user.plan !== "pro") setUsage(getUsage() + 1);
+        renderUser();
         el("resultBadge").textContent = data.resultado || "Análisis listo";
         el("summaryTitle").textContent = data.resultado || "Análisis listo";
         el("summaryCopy").textContent = data.resumen || "";
@@ -665,128 +431,102 @@
         el("lecturaSugerida").textContent = data.lectura_sugerida || "—";
         updateBars(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0);
         renderThemes(data.temas_detectados || []);
+        renderList("contextList", (data.contextos_detectados || []).map(x => x), "Sin contextos detectados.");
         renderPedagogia(data.pedagogia || {});
-        renderLyricsAndAdaptation(data);
+        renderAdaptacion(data);
         renderIssues(data);
         renderEfemeride(data.efemeride || null);
         saveHistory({titulo: body.titulo, artista: body.artista, resultado: data.resultado});
-
-        if(!data.texto || (data.texto || "").length < 20){
-          setStatus("No se encontró letra automática. Puedes pegarla manualmente para enriquecer el análisis.", "error");
-        } else {
-          setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro ve mejor profundidad en color, PDF y lectura." : "Análisis listo. En free ves valor real; en Pro se expande el detalle y la personalización.", "success");
-        }
-      }catch(err){
-        setStatus(err.message || "Error de análisis", "error");
-      }
-    }
-
-    function buildPdfPreviewHtml(){
-      if(!lastAnalysis) return "<p>Aún no hay análisis para previsualizar.</p>";
-      const ped = lastAnalysis.pedagogia || {};
-      const changes = ((lastAnalysis.adaptacion || {}).changes || []).slice(0, user.plan === "pro" ? 10 : 3);
-      const tr = (lastAnalysis.traduccion || []).slice(0, user.plan === "pro" ? 10 : 4);
-      return `
-        <h2 style="margin:0">Informe SonarIA</h2>
-        <p><strong>Canción:</strong> ${titulo.value.trim() || "Sin título"}<br><strong>Artista:</strong> ${artista.value.trim() || "Artista no indicado"}</p>
-        <h3>Resultado</h3>
-        <p>${lastAnalysis.resultado || "—"}</p>
-        <h3>Pedagogía</h3>
-        <p><strong>Curso sugerido:</strong> ${ped.curso_sugerido || "—"}</p>
-        <p>${(ped.oa_sugeridos || []).map(x => "• " + x).join("<br>") || "Sin OA."}</p>
-        <p>${(ped.preguntas || []).map(x => "• " + x).join("<br>") || "Sin preguntas."}</p>
-        <p>${(ped.actividades || []).map(x => "• " + x).join("<br>") || "Sin actividades."}</p>
-        <h3>Versión escolar</h3>
-        <div style="line-height:1.7">${(lastAnalysis.adaptacion || {}).preview_html || "Sin adaptación."}</div>
-        <h3>Cambios</h3>
-        <p>${changes.map(ch => `• ${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") || "Sin cambios."}</p>
-        <h3>Traducción</h3>
-        <p>${tr.map(row => `${row.original}<br><span style="color:#64748b">${row.translated || ""}</span>`).join("<br><br>") || "Sin traducción."}</p>
-      `;
+        setStatus(user.plan === "pro" ? "Análisis listo. SonarIA ya cruzó tus cursos con la propuesta pedagógica." : "Análisis listo. En free ya puedes ver adaptación, riesgos y una propuesta pedagógica base.", "success");
+      }catch(err){ setStatus(err.message || "Error de análisis", "error"); }
     }
 
     function openPdfPreview(){
-      if(!lastAnalysis){
-        setStatus("Primero analiza una canción.", "error");
-        return;
-      }
-      lastPdfPayload = {
-        titulo: titulo.value.trim(),
-        artista: artista.value.trim(),
-        texto: texto.value.trim(),
-        cursos: [cursoObjetivo.value],
-        analysis: lastAnalysis
-      };
-      el("pdfPreviewContent").innerHTML = buildPdfPreviewHtml();
+      if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
+      const body = el("pdfPreviewBody");
+      body.innerHTML = "";
+      const items = [
+        `<strong>${titulo.value.trim() || 'Sin título'} — ${artista.value.trim() || 'Artista no indicado'}</strong>`,
+        `Resultado: ${lastAnalysis.resultado || '—'}`,
+        `Edad sugerida: ${lastAnalysis.edad_sugerida || '—'}`,
+        `Cursos sugeridos: ${(lastAnalysis.pedagogia?.cursos_sugeridos || []).join(', ') || lastAnalysis.pedagogia?.curso_sugerido || '—'}`,
+        `OA: ${(lastAnalysis.pedagogia?.oa_sugeridos || []).slice(0,2).join(' | ') || '—'}`,
+        `Cambios visibles: ${(lastAnalysis.adaptacion?.changes || []).length}`
+      ];
+      items.forEach(x => { const d=document.createElement('div'); d.className='list-item'; d.innerHTML=x; body.appendChild(d); });
       el("pdfPreviewModal").classList.add("open");
     }
     function closePdfPreview(){ el("pdfPreviewModal").classList.remove("open"); }
-    window.closePdfPreview = closePdfPreview;
-
-    async function downloadPdf(){
-      if(!lastPdfPayload){ setStatus("No hay vista previa lista.", "error"); return; }
-      setStatus("Generando PDF…");
+    async function exportPdf(){
+      if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
+      setStatus(user.plan === "pro" ? "Generando PDF completo…" : "Generando PDF breve…");
+      const payload = {titulo: titulo.value.trim(), artista: artista.value.trim(), texto: texto.value.trim(), cursos: selectedCourses, analysis: lastAnalysis};
       try{
-        const res = await fetch(PDF_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken},
-          body: JSON.stringify(lastPdfPayload)
-        });
+        const res = await fetch(PDF_URL, {method:"POST", headers:{"Content-Type":"application/json", Authorization:"Bearer " + authToken}, body: JSON.stringify(payload)});
         if(!res.ok) throw new Error("No pude generar el PDF.");
         const blob = await res.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "sonaria_informe.pdf";
-        a.click();
-        window.URL.revokeObjectURL(url);
-        setStatus("PDF descargado.", "success");
-      }catch(e){
-        setStatus(e.message || "Error al exportar PDF", "error");
-      }
+        const url = window.URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "sonaria_informe.pdf"; a.click(); window.URL.revokeObjectURL(url);
+        closePdfPreview();
+        setStatus(user.plan === "pro" ? "PDF completo descargado." : "PDF descargado.", "success");
+      }catch(e){ setStatus(e.message || "Error al exportar PDF", "error"); }
     }
 
-    function clearForm(){
-      voiceQuery.value = "";
-      titulo.value = "";
-      artista.value = "";
-      texto.value = "";
-      lastAnalysis = null;
-      el("lyricsWrap").innerHTML = '<div class="list-item">Aquí aparecerán la letra, la traducción y la versión escolar con cambios destacados en amarillo.</div>';
-      el("issuesWrap").innerHTML = '<div class="list-item">Aquí aparecerán problemas implícitos y/o explícitos sin repetirlos.</div>';
-      setStatus("Formulario limpio.");
+    function clearForm(){ voiceQuery.value = ""; titulo.value = ""; artista.value = ""; texto.value = ""; lastAnalysis = null; setStatus("Formulario limpio."); }
+    function goPlans(){ window.location.href = "/planes.html"; }
+    function goYoutube(){
+      const query = `${titulo.value.trim()} ${artista.value.trim()}`.trim() || voiceQuery.value.trim();
+      if(!query){ setStatus("Escribe canción y artista primero.", "error"); return; }
+      window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
+      setStatus("Abriendo YouTube. En Pro lo orientamos mejor al trabajo con letra y adaptación.");
     }
 
+    function initVoice(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){ el("voiceBtn").disabled = true; el("voiceBtn").title = "Reconocimiento de voz no disponible"; return; }
+      const rec = new SR(); rec.lang = "es-CL"; rec.interimResults = false; rec.maxAlternatives = 1;
+      el("voiceBtn").onclick = () => { setStatus("Escuchando… di canción y artista."); rec.start(); };
+      rec.onresult = ev => {
+        const t = ev.results[0][0].transcript || ""; voiceQuery.value = t;
+        const parsed = parseVoiceQuery(t); titulo.value = parsed.title; artista.value = parsed.artist;
+        setStatus("Voz capturada. Analizando automáticamente…", "success"); analyzeNow();
+      };
+      rec.onerror = () => setStatus("No pude capturar la voz. Puedes escribir la canción manualmente.", "error");
+    }
+
+    function openThemeModal(){ el("themeModal").classList.add("open"); }
+    function closeThemeModal(){ el("themeModal").classList.remove("open"); }
+    window.closeThemeModal = closeThemeModal;
+    function applyCustomColors(){ const p=el("primaryColor").value; const s=el("secondaryColor").value; document.body.className=""; document.body.style.setProperty("--accent", p); document.body.style.setProperty("--bg-grad1", p+"22"); document.body.style.setProperty("--bg-grad2", s+"18"); document.body.style.setProperty("--bg-grad3", p+"12"); localStorage.setItem("sonaria_custom_colors", JSON.stringify({p,s})); closeThemeModal(); }
+    function closeAnyModal(){ closeHistory(); closePdfPreview(); closeThemeModal(); }
+    document.addEventListener("keydown", e => { if(e.key === "Escape") closeAnyModal(); });
     form.addEventListener("submit", e => { e.preventDefault(); analyzeNow(); });
     el("clearBtn").onclick = clearForm;
     el("pdfBtn").onclick = openPdfPreview;
-    el("downloadPdfBtn").onclick = downloadPdf;
-    el("btnPlansTop").onclick = goPlans;
-    el("btnUpgradeTop").onclick = goPlans;
-    el("btnUpgradeInline").onclick = goPlans;
-    el("btnHistoryTop").onclick = openHistory;
-    el("btnColorsTop").onclick = openColors;
-    el("applyColorsBtn").onclick = applyCustomColors;
-    el("resetColorsBtn").onclick = resetCustomColors;
-    el("ytBtn").onclick = goYoutube;
-    voiceQuery.addEventListener("keydown", e => {
-      if(e.key === "Enter"){
-        e.preventDefault();
-        const parsed = parseVoiceQuery(voiceQuery.value);
-        titulo.value = parsed.title;
-        artista.value = parsed.artist;
-        analyzeNow();
-      }
-    });
+    el("confirmPdfBtn").onclick = exportPdf;
+    el("customColorsBtn").onclick = openThemeModal;
+    el("applyCustomColorsBtn").onclick = applyCustomColors;
+    el("btnPlansTop").onclick = goPlans; el("btnUpgradeTop").onclick = goPlans; el("btnUpgradeInline").onclick = goPlans;
+    el("btnHistoryTop").onclick = openHistory; el("ytBtn").onclick = goYoutube;
+    voiceQuery.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); const parsed = parseVoiceQuery(voiceQuery.value); titulo.value = parsed.title; artista.value = parsed.artist; analyzeNow(); } });
     artista.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); analyzeNow(); } });
 
     (async function init(){
-      populateCourseSelect();
-      renderHistory();
-      initVoice();
-      localEfemeride();
+      applyTheme(localStorage.getItem("sonaria_theme") || "brisa");
+      const savedColors = JSON.parse(localStorage.getItem("sonaria_custom_colors") || "null");
+      if(savedColors && savedColors.p && savedColors.s && user.plan === "pro"){
+        document.body.className="";
+      }
+      renderCourses(); renderHistory(); initVoice();
+      try{
+        const res = await fetch(API_BASE + "/efemeride", {headers:{Authorization:"Bearer " + getToken()}});
+        const data = await res.json();
+        renderEfemeride(data);
+      }catch(_){ renderEfemeride({titulo:"Hoy en SonarIA", texto:"Preparando efeméride musical.", fecha:new Date().toISOString().slice(0,10)}); }
       await loadUser();
-      restoreCustomColors();
+      const saved = JSON.parse(localStorage.getItem("sonaria_custom_colors") || "null");
+      if(saved && user.plan === "pro"){
+        el("primaryColor").value = saved.p; el("secondaryColor").value = saved.s; applyCustomColors();
+      }
     })();
   </script>
 </body>
