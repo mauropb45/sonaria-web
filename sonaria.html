@@ -670,7 +670,6 @@
       const course = String(courseLabel || "");
       const low = /^([1-4])°\s*b[aá]sico$/i.test(course);
       const mid = /^([5-8])°\s*b[aá]sico$/i.test(course);
-      const high = /^(I|II|III|IV)°\s*medio$/i.test(course);
       const themeText = (themes && themes.length) ? themes.join(", ") : "la canción";
       if(low){
         return {
@@ -727,9 +726,9 @@
           return {
             curso,
             oa: [...new Set((item.oa || item.oa_sugeridos || []).map(sanitizePedText).filter(Boolean))],
-            preguntas: specific.preguntas,
-            actividades: specific.actividades,
-            reflexiones: specific.reflexiones
+            preguntas: [...new Set(((item.preguntas && item.preguntas.length ? item.preguntas : specific.preguntas) || []).map(sanitizePedText).filter(Boolean))],
+            actividades: [...new Set(((item.actividades && item.actividades.length ? item.actividades : specific.actividades) || []).map(sanitizePedText).filter(Boolean))],
+            reflexiones: [...new Set(((item.reflexiones && item.reflexiones.length ? item.reflexiones : specific.reflexiones) || []).map(sanitizePedText).filter(Boolean))]
           };
         });
       }
