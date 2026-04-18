@@ -241,7 +241,7 @@
             </div>
             <div class="field" style="margin:0">
               <label for="artista">Artista</label>
-              <input id="artista" type="text" placeholder="Ej: Radiohead">
+              <input id="artista" type="text" placeholder="Ej: Radiohead (importante para buscar letra)">
             </div>
             <button id="ytBtn" class="btn btn-youtube" type="button">▶ YouTube</button>
           </div>
@@ -583,10 +583,16 @@
       const today = new Date();
       const key = `${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
       const facts = {
-        "01-30":"Un día como hoy, The Beatles ofrecieron su último concierto público en la azotea de Apple Corps.",
-        "04-17":"Un día como hoy, The Beatles firmaron uno de sus acuerdos decisivos con EMI y comenzó una nueva etapa para la música popular.",
-        "07-06":"Un día como hoy, John Lennon y Paul McCartney se conocieron por primera vez.",
-        "09-18":"Una buena fecha para abrir clases con identidad y música chilena."
+        "01-30":"Un día como hoy, en 1969, The Beatles ofrecieron su último concierto público en la azotea de Apple Corps.",
+        "02-07":"Un día como hoy, en 1964, The Beatles llegaron a Estados Unidos para su primera visita histórica.",
+        "04-17":"Un día como hoy, en 1962, The Beatles consolidaron una etapa decisiva con EMI.",
+        "04-18":"Un día como hoy, en 1956, Elvis Presley ayudaba a instalar el rock and roll en la cultura popular.",
+        "05-26":"Un día como hoy, en 1967, The Beatles lanzaron Sgt. Pepper's Lonely Hearts Club Band en el Reino Unido.",
+        "07-06":"Un día como hoy, en 1957, John Lennon y Paul McCartney se conocieron por primera vez.",
+        "08-29":"Un día como hoy, en 1958, nació Michael Jackson.",
+        "09-18":"Un día como hoy puedes abrir la clase con identidad y música chilena.",
+        "11-30":"Un día como hoy, en 1982, Michael Jackson lanzó Thriller.",
+        "12-08":"Un día como hoy, en 1980, el asesinato de John Lennon sacudió al mundo de la música."
       };
       const fallback = {texto:facts[key] || "Un día como hoy puedes abrir la clase con una escucha comparada y una pregunta breve sobre contexto, emoción o identidad musical.", fecha:new Date().toISOString().slice(0,10)};
       try{
@@ -857,7 +863,9 @@
       showAnalysisPulse(true); setStatus("Analizando canción, pedagogía y adaptación…");
       try{
         const res = await fetch(ANALYZE_URL, {method:"POST", headers:{"Content-Type":"application/json", ...(authToken ? {Authorization:"Bearer " + authToken} : {})}, body:JSON.stringify(body)});
-        const data = await res.json();
+        const raw = await res.text();
+        let data = {};
+        try{ data = raw ? JSON.parse(raw) : {}; }catch(_){ data = {detail: raw || "Respuesta inválida del servidor."}; }
         if(!res.ok) throw new Error(data.detail || "No se pudo analizar.");
         lastAnalysis = data;
         if(!$("texto").value.trim() && data.texto) $("texto").value = data.texto;
@@ -876,7 +884,12 @@
         saveHistory({titulo: body.titulo, artista: body.artista, resultado: data.resultado});
         setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro puede profundizar en la versión escolar." : "Análisis listo. En Pro puedes profundizar más en la versión escolar.", "success");
       }catch(err){
-        setStatus(err.message || "Error al analizar", "error");
+        const msg = String(err && err.message || "");
+        if(msg.toLowerCase().includes("failed to fetch")){
+          setStatus("No pude conectar con el backend o el análisis falló en el servidor. Reintenta en unos segundos.", "error");
+        }else{
+          setStatus(msg || "Error al analizar", "error");
+        }
       }finally{
         showAnalysisPulse(false);
       }
