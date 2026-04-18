@@ -68,7 +68,7 @@
     a{text-decoration:none;color:inherit}
     mark{background:var(--mark);padding:0 .18em;border-radius:6px;color:#111}
     .wrap{max-width:1380px;margin:0 auto;padding:20px 18px 60px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;position:sticky;top:0;padding:10px 0;z-index:20;background:linear-gradient(180deg, rgba(244,247,251,.92), rgba(244,247,251,.72), transparent)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;padding:10px 0;background:linear-gradient(180deg, rgba(244,247,251,.92), rgba(244,247,251,.72), transparent)}
     .brand{display:flex;flex-direction:column;gap:2px}
     .brand-title{margin:0;font-size:clamp(2rem,4.2vw,3.4rem);font-weight:900;letter-spacing:-.07em;line-height:.9}
     .brand-title .ia{color:var(--accent)}
@@ -343,10 +343,10 @@
       <section class="card section section-pedagogia">
         <div class="section-topline">
           <div class="section-title"><span>🎓</span><h3>Pedagogía</h3></div>
-          
+          <button id="togglePedagogia" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
-        <div id="pedTableWrap" class="table-wrap open">
+        <div id="pedTableWrap" class="table-wrap">
           <div class="ped-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen: cursos y OA</strong>
             <table>
@@ -491,7 +491,10 @@
       return `rgb(${r},${g},${b})`;
     }
     function applyFreeTheme(theme){
-      if(user.plan === "pro") return;
+      document.body.style.removeProperty("--accent");
+      document.body.style.removeProperty("--accent2");
+      document.body.style.removeProperty("--bg-main");
+      localStorage.removeItem("sonaria_custom_colors");
       document.body.classList.remove("theme-brisa","theme-aurora","theme-atardecer");
       document.body.classList.add(theme);
       localStorage.setItem("sonaria_theme", theme);
@@ -543,10 +546,9 @@
       $("planPill").className = "pill" + (user.plan === "pro" ? " pro" : "");
       $("btnUpgradeTop").classList.toggle("hidden", user.plan === "pro");
       $("btnPlanesTop").classList.toggle("hidden", user.plan === "pro");
-      $("themeSelect").classList.toggle("hidden", user.plan === "pro");
-      $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🔒 Elige tus colores";
+            $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🔒 Elige tus colores";
       $("btnCustomize").classList.toggle("btn-lock", user.plan !== "pro");
-      ["toggleTranslation"].forEach(id=>{
+      ["togglePedagogia","toggleTranslation"].forEach(id=>{
         const b=$(id); if(!b) return;
         b.textContent = user.plan === "pro" ? "Ver más" : "Ver más 🔒";
         b.classList.toggle("btn-lock", user.plan !== "pro");
@@ -586,7 +588,7 @@
         "07-06":"Un día como hoy, John Lennon y Paul McCartney se conocieron por primera vez.",
         "09-18":"Una buena fecha para abrir clases con identidad y música chilena."
       };
-      const fallback = {texto:facts[key] || "Un día como hoy la música puede abrir una conversación valiosa en el aula.", fecha:new Date().toISOString().slice(0,10)};
+      const fallback = {texto:facts[key] || "Un día como hoy puedes abrir la clase con una escucha comparada y una pregunta breve sobre contexto, emoción o identidad musical.", fecha:new Date().toISOString().slice(0,10)};
       try{
         const res = await fetch(EFEM_URL, {headers: authToken ? {Authorization:"Bearer " + authToken} : {}});
         const data = await res.json();
@@ -903,7 +905,7 @@
     $("btnHistory").onclick = ()=>{ renderHistory(); openModal("historyModal"); };
     $("btnPlanesTop").onclick = ()=> window.location.href = "/planes.html";
     $("btnUpgradeTop").onclick = ()=> window.location.href = "/planes.html";
-    $("btnCustomize").onclick = ()=> user.plan === "pro" ? openModal("colorsModal") : setStatus("En Free puedes elegir tus colores base entre Brisa clara, Aurora suave y Atardecer cálido. La personalización avanzada es Pro.");
+    $("btnCustomize").onclick = ()=> user.plan === "pro" ? openModal("colorsModal") : setStatus("En Free puedes elegir tus colores base desde el selector superior. La personalización avanzada de dos colores es Pro.");
     $("applyColorsBtn").onclick = applyCustomColors;
     $("resetColorsBtn").onclick = resetCustomColors;
     $("btnViewerOk").onclick = ()=> closeViewerModalSafe();
@@ -922,6 +924,7 @@
       if(user.plan !== "pro") setStatus("En Pro, el botón YouTube abre directamente la búsqueda con lyrics.", "info");
     };
     $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value));
+$("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Pedagogía está disponible en Pro.", "info"); return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
     $("toggleTranslation").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Traducción está disponible en Pro.", "info"); return; } const w = $("translationWrap"); const open = w.classList.toggle("open"); $("toggleTranslation").textContent = open ? "Ver menos" : "Ver más"; };
     $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); };
     $("btnVerTraducida").onclick = ()=>{ $("translatedView").classList.add("active"); $("adaptedView").classList.remove("active"); };
