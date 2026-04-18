@@ -96,6 +96,7 @@
     .analysis-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
     .section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
     .section-head h2{margin:0;font-size:1.42rem;letter-spacing:-.04em}
+    .section-head .section-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .muted{color:var(--muted);line-height:1.7}
     .field{display:grid;gap:7px;margin-bottom:12px}
     .field label{font-size:.9rem;font-weight:800;color:#344154}
@@ -162,6 +163,7 @@
     .lyrics-actions{display:flex;gap:10px;flex-wrap:wrap}
     .lyrics-view{display:none}
     .lyrics-view.active{display:grid;gap:10px}
+    .translated-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .lyric-pair{padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line)}
     .lyric-orig{font-weight:800;margin-bottom:6px}
     .lyric-trans{color:#48576f}
@@ -174,7 +176,7 @@
     .hidden{display:none!important}
     .preview-grid{display:grid;gap:12px}
     .summary-btn-row{display:flex;gap:10px;flex-wrap:wrap}
-    @media (max-width:1080px){.top-grid,.analysis-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
+    @media (max-width:1080px){.top-grid,.analysis-grid,.today-layout,.translated-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){.wrap{padding:14px 12px 40px}.topbar{flex-direction:column;align-items:stretch}.top-actions{width:100%}.top-actions .btn,.top-actions .theme-select{width:100%}.inline,.inline-voice{grid-template-columns:1fr}.actions .btn{flex:1 1 100%}}
   </style>
 </head>
@@ -249,31 +251,49 @@
           <div class="today-top">
             <div>
               <div class="pill">📅 Hoy en SonarIA</div>
-              <h2 style="margin:10px 0 6px">Efeméride y tiempo</h2>
-              <div id="efemText" class="muted">Cargando efeméride musical...</div>
-            </div>
-            <div class="clock">
-              <strong id="clockTime">--:--</strong>
-              <span id="clockDate">--</span>
+              <h2 style="margin:10px 0 6px">Agenda y tiempo</h2>
+              <div class="muted">Organiza tu jornada y abre la clase con un dato musical significativo.</div>
             </div>
           </div>
-          <div id="calendarGrid" class="calendar"></div>
-          <div class="hero-note">
-            <strong>Cuidemos a nuestros alumnos</strong>
-            <span>SonarIA contextualiza y adapta, pero la decisión final de usar una canción en aula sigue siendo humana.</span>
+          <div class="today-layout">
+            <div>
+              <div class="fact-card">
+                <strong>🎼 Un día como hoy</strong>
+                <div id="efemFact" class="muted">Cargando efeméride musical...</div>
+              </div>
+              <div id="calendarGrid" class="calendar" style="margin-top:12px"></div>
+            </div>
+            <div style="display:grid;gap:12px">
+              <div class="clock-card">
+                <strong id="clockTime">--:--</strong>
+                <span id="clockDate">--</span>
+              </div>
+              <div class="todo-card">
+                <strong>✅ Para hoy</strong>
+                <ul class="todo-list">
+                  <li>Analizar repertorio para el curso de hoy</li>
+                  <li>Revisar la adaptación escolar si hay lenguaje sensible</li>
+                  <li>Guardar o reutilizar canciones del historial</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
     </section>
 
     <section class="analysis-grid">
-      <section class="card section section-resultado">
+      <section class="card section section-resultado" style="grid-column:1 / -1">
         <div class="section-head">
           <div>
             <h2>Resultado pedagógico</h2>
             <div class="muted">Semáforo, riesgo, temas y criterio base.</div>
           </div>
-          <div id="resultBadge" class="pill">Sin análisis</div>
+          <div class="section-actions">
+            <div id="planPill" class="pill">Cuenta Free</div>
+            <div id="resultBadge" class="pill">Sin análisis</div>
+            <button id="toggleResultado" class="btn btn-ghost btn-lock" type="button">Ver más</button>
+          </div>
         </div>
         <div class="summary-card">
           <div id="summaryTitle" style="font-size:1.5rem;font-weight:900;letter-spacing:-.04em;margin-bottom:8px">Esperando análisis</div>
@@ -281,8 +301,8 @@
         </div>
         <div class="metrics">
           <div class="metric"><strong>Edad sugerida</strong><span id="edadSugerida">—</span></div>
-          <div class="metric"><strong>Fuente usada</strong><span id="fuenteUsada">—</span></div>
           <div class="metric"><strong>Lectura sugerida</strong><span id="lecturaSugerida">—</span></div>
+          <div class="metric"><strong>Cursos sugeridos</strong><span id="cursosSugeridos">—</span></div>
         </div>
         <div class="traffic">
           <div class="traffic-head">
@@ -296,31 +316,12 @@
         <div class="table-card">
           <strong style="display:block;margin-bottom:8px">Temas detectados</strong>
           <div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div>
-          <div class="divider"></div>
-          <strong style="display:block;margin-bottom:8px">Problemas explícitos e implícitos</strong>
-          <div id="issuesSummary" class="list"><div class="list-item">Aquí aparecerán los hallazgos sin repetir.</div></div>
-        </div>
-      </section>
-
-      <section class="card section section-resultado">
-        <div class="section-head">
-          <div>
-            <h2>Resultado pedagógico ampliado</h2>
-            <div class="muted">El gráfico inicial entrega la lectura rápida. En Pro puedes abrir el detalle completo.</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <div id="planPill" class="pill">Cuenta Free</div>
-            <button id="toggleResultado" class="btn btn-ghost btn-lock" type="button">Ver más</button>
-          </div>
-        </div>
-        <div id="quickSummary" class="list">
-          <div class="list-item">El gráfico superior resume el riesgo general, el riesgo sensible y la pertinencia escolar. En Pro puedes abrir la tabla de temas explícitos e implícitos.</div>
         </div>
         <div id="resultadoTableWrap" class="table-wrap">
           <div class="table-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen de detecciones</strong>
             <table>
-              <thead><tr><th>Tipo</th><th>Tema detectado</th></tr></thead>
+              <thead><tr><th>Implícito</th><th>Explícito</th></tr></thead>
               <tbody id="resultadoTableBody"><tr><td colspan="2">Analiza una canción para ver el detalle.</td></tr></tbody>
             </table>
           </div>
@@ -481,17 +482,18 @@
     function applyCustomColors(){
       if(user.plan !== "pro"){ setStatus("La personalización avanzada está disponible en Pro."); return; }
       const c1 = $("color1").value, c2 = $("color2").value;
-      document.documentElement.style.setProperty("--accent", c1);
-      document.documentElement.style.setProperty("--accent2", c2);
-      document.documentElement.style.setProperty("--bg-main", `radial-gradient(circle at top left, ${hexToRgba(c1,.22)}, transparent 22%), radial-gradient(circle at bottom right, ${hexToRgba(c2,.18)}, transparent 20%), linear-gradient(180deg, ${lighten(c1,92)}, ${lighten(c2,90)})`);
+      document.body.classList.remove("theme-brisa","theme-aurora","theme-atardecer");
+      document.body.style.setProperty("--accent", c1);
+      document.body.style.setProperty("--accent2", c2);
+      document.body.style.setProperty("--bg-main", `radial-gradient(circle at top left, ${hexToRgba(c1,.22)}, transparent 22%), radial-gradient(circle at bottom right, ${hexToRgba(c2,.18)}, transparent 20%), linear-gradient(180deg, ${lighten(c1,92)}, ${lighten(c2,90)})`);
       localStorage.setItem("sonaria_custom_colors", JSON.stringify({c1,c2}));
       clearStatus();
     }
     function resetCustomColors(){
       localStorage.removeItem("sonaria_custom_colors");
-      document.documentElement.style.removeProperty("--accent");
-      document.documentElement.style.removeProperty("--accent2");
-      document.documentElement.style.removeProperty("--bg-main");
+      document.body.style.removeProperty("--accent");
+      document.body.style.removeProperty("--accent2");
+      document.body.style.removeProperty("--bg-main");
       const savedTheme = localStorage.getItem("sonaria_theme") || "theme-brisa";
       document.body.classList.remove("theme-brisa","theme-aurora","theme-atardecer");
       document.body.classList.add(savedTheme);
@@ -523,14 +525,20 @@
       $("planPill").className = "pill" + (user.plan === "pro" ? " pro" : "");
       $("btnUpgradeTop").classList.toggle("hidden", user.plan === "pro");
       $("btnPlanesTop").classList.toggle("hidden", user.plan === "pro");
-      $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🎨 Elige tus colores";
+      $("themeSelect").classList.toggle("hidden", user.plan === "pro");
+      $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🔒 Elige tus colores";
       $("btnCustomize").classList.toggle("btn-lock", user.plan !== "pro");
-      $("colorsInfo").textContent = user.plan === "pro" ? "En Pro puedes combinar dos colores y cambiar también el fondo de SonarIA." : "En Free puedes elegir tus colores base entre Brisa clara, Aurora suave y Atardecer cálido. La personalización avanzada está disponible en Pro.";
+      ["toggleResultado","togglePedagogia","toggleTranslation"].forEach(id=>{
+        const b=$(id); if(!b) return;
+        b.textContent = user.plan === "pro" ? "Ver más" : "Ver más 🔒";
+        b.classList.toggle("btn-lock", user.plan !== "pro");
+      });
+      $("colorsInfo").textContent = user.plan === "pro" ? "En Pro puedes combinar dos colores y cambiar también el fondo de SonarIA." : "En Free puedes elegir entre Brisa clara, Aurora suave y Atardecer cálido. La personalización avanzada está disponible en Pro.";
     }
 
     function updateClock(){
       const now = new Date();
-      $("clockTime").textContent = now.toLocaleTimeString("es-CL", {hour:"2-digit", minute:"2-digit"});
+      $("clockTime").textContent = now.toLocaleTimeString("es-CL", {hour:"2-digit", minute:"2-digit"}).replace(':',':');
       $("clockDate").textContent = now.toLocaleDateString("es-CL", {weekday:"short", day:"2-digit", month:"short"});
     }
     function renderCalendar(dateStr){
@@ -562,10 +570,10 @@
       try{
         const res = await fetch(EFEM_URL, {headers: authToken ? {Authorization:"Bearer " + authToken} : {}});
         const data = await res.json();
-        $("efemText").textContent = data.texto || fallback.texto;
+        $("efemFact").textContent = data.texto || fallback.texto;
         renderCalendar(data.fecha || fallback.fecha);
       }catch(_){
-        $("efemText").textContent = fallback.texto;
+        $("efemFact").textContent = fallback.texto;
         renderCalendar(fallback.fecha);
       }
     }
@@ -608,11 +616,12 @@
       return out;
     }
     function renderIssues(data){
-      const items = uniqueProblems(data);
-      $("issuesSummary").innerHTML = items.length ? items.join("") : '<div class="list-item">No se detectaron problemas relevantes.</div>';
-      $("resultadoTableBody").innerHTML = items.length
-        ? items.map(item => item.includes("Explícito") ? `<tr><td>Explícito</td><td>${item.split("<br>")[1].replace("</div>","")}</td></tr>` : `<tr><td>Implícito</td><td>${item.split("<br>")[1].replace("</div>","")}</td></tr>`).join("")
-        : '<tr><td colspan="2">No se detectaron temas relevantes.</td></tr>';
+      const implicitos = [...new Set((data.temas_detectados || []).map(x=>String(x||"").trim()).filter(Boolean))];
+      const explicitos = [...new Set((data.contextos_detectados || []).map(x=>String(x||"").trim()).filter(Boolean))];
+      const len = Math.max(implicitos.length, explicitos.length, 1);
+      let rows = "";
+      for(let i=0;i<len;i++) rows += `<tr><td>${implicitos[i] || "—"}</td><td>${explicitos[i] || "—"}</td></tr>`;
+      $("resultadoTableBody").innerHTML = rows;
     }
 
     function normalizeCourseLabel(label){
@@ -673,16 +682,17 @@
       const changes = data.adaptacion?.changes || [];
       const detected = (data.contextos_detectados || []).slice(0,6);
       const adaptedHtml = data.adaptacion?.adapted_html || '<div class="list-item">No hay letra adaptada disponible.</div>';
+      const changesHtml = changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles.";
       $("translationIntro").innerHTML = `
         <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
-        <div class="list-item"><strong>Cambiado</strong><br>${changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles."}</div>`;
+        <div class="list-item"><strong>Cambiado</strong><br>${changesHtml}</div>`;
       $("adaptedView").innerHTML = `
-        <div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles."}</div>
+        <div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div>
         <div class="list-item">${adaptedHtml}</div>`;
       const translated = data.traduccion || [];
       $("translatedView").innerHTML = translated.length
-        ? `<div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles."}</div>` +
-          translated.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.original || ""}</div><div class="lyric-trans">${row.translated || ""}</div></div>`).join("")
+        ? `<div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div><div class="translated-grid">` +
+          translated.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.original || ""}</div><div class="lyric-trans">${row.translated || ""}</div></div>`).join("") + `</div>`
         : '<div class="list-item">No hay letra traducida disponible.</div>';
     }
 
@@ -692,8 +702,16 @@
     }
     function renderHistory(){
       $("historyList").innerHTML = historyItems.length
-        ? historyItems.map(item => `<div class="list-item"><strong>${item.titulo || "Sin título"} — ${item.artista || "Artista"}</strong><br><span class="muted">${item.resultado || "Sin resultado"}</span></div>`).join("")
+        ? historyItems.map((item,idx) => `<div class="list-item"><strong>${item.titulo || "Sin título"} — ${item.artista || "Artista"}</strong><br><span class="muted">${item.resultado || "Sin resultado"}</span><div class="summary-btn-row" style="margin-top:10px"><button class="btn btn-ghost" type="button" onclick="reuseHistory(${idx})">Reutilizar</button></div></div>`).join("")
         : '<div class="list-item">Aún no hay historial local.</div>';
+    }
+    function reuseHistory(idx){
+      const item = historyItems[idx];
+      if(!item) return;
+      $("titulo").value = item.titulo || "";
+      $("artista").value = item.artista || "";
+      closeModal("historyModal");
+      setStatus("Canción reutilizada desde el historial.", "success");
     }
 
     function buildSummaryModal(){
@@ -736,14 +754,14 @@
         $("summaryTitle").textContent = data.resultado || "Análisis listo";
         $("summaryCopy").textContent = data.resumen || data.justificacion || "";
         $("edadSugerida").textContent = data.edad_sugerida || "—";
-        $("fuenteUsada").textContent = data.fuente_usada || "—";
         $("lecturaSugerida").textContent = data.lectura_sugerida || "—";
         updateTraffic(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0, data.resultado || "");
         renderThemes(data.temas_detectados || []);
         renderIssues(data);
         renderPedagogy(data.pedagogia || {});
+        $("cursosSugeridos").textContent = pedagogyStore.length ? pedagogyStore.map(x=>x.curso).join(", ") : "—";
         renderTranslation(data);
-        if(data.efemeride?.texto) $("efemText").textContent = data.efemeride.texto;
+        if(data.efemeride?.texto) $("efemFact").textContent = data.efemeride.texto;
         saveHistory({titulo: body.titulo, artista: body.artista, resultado: data.resultado});
         setStatus(user.plan === "pro" ? "Análisis listo. Tu cuenta Pro puede profundizar en la versión escolar." : "Análisis listo. En Pro puedes profundizar más en la versión escolar.", "success");
       }catch(err){
@@ -758,16 +776,16 @@
       $("summaryTitle").textContent = "Esperando análisis";
       $("summaryCopy").textContent = "Completa el formulario para obtener una orientación pedagógica inicial.";
       $("resultBadge").textContent = "Sin análisis";
-      $("quickSummary").innerHTML = '<div class="list-item">El gráfico superior resume el riesgo general, el riesgo sensible y la pertinencia escolar. En Pro puedes abrir la tabla de temas explícitos e implícitos.</div>';
+      $("cursosSugeridos").textContent = "—";
       $("resultadoTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver el detalle.</td></tr>';
       $("pedIntro").innerHTML = '<div class="list-item">Cursos sugeridos: aún no hay análisis.</div>';
       $("pedTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver sugerencias.</td></tr>';
       $("pedCourseSelector").innerHTML = '';
       $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
-      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida.</div>';
+      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida en dos columnas.</div>';
       $("adaptedView").innerHTML = '<div class="list-item">No hay letra adaptada disponible.</div>';
       $("translatedView").innerHTML = '<div class="list-item">No hay letra traducida disponible.</div>';
-      renderThemes([]); $("issuesSummary").innerHTML = '<div class="list-item">Aquí aparecerán los hallazgos sin repetir.</div>'; updateTraffic(); clearStatus();
+      renderThemes([]); $("resultadoTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver el detalle.</td></tr>'; updateTraffic(); clearStatus();
     }
 
     $("analysisForm").addEventListener("submit", e => { e.preventDefault(); analyzeNow(); });
