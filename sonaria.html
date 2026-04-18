@@ -148,17 +148,7 @@
     .overlay-list{display:grid;gap:10px;margin-bottom:18px}
     .overlay-list div{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
     .overlay-actions{display:flex;gap:12px;flex-wrap:wrap}
-    .usage-box{display:none;margin-top:12px;padding:14px 16px;border-radius:16px;background:rgba(255,116,116,.10);border:1px solid rgba(255,116,116,.25);color:#ffe1e1;font-weight:700;line-height:1.6}
-    .adapted-box{display:none;margin-top:14px;padding:18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
-    .adapted-head{text-align:center;margin-bottom:14px}
-    .adapted-title{font-size:1.18rem;font-weight:900;letter-spacing:-.03em}
-    .adapted-artist{font-size:.95rem;color:var(--muted);margin-top:4px}
-    .adapted-mark{font-size:.82rem;color:#9ad6ff;font-weight:800;margin-top:6px}
-    .adapted-lyrics{white-space:pre-line;line-height:1.75;color:#e7eef8}
-    .pdf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:flex-end}
-    .preview-frame{width:min(92vw,900px);height:min(84vh,980px);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.10);border-radius:24px;box-shadow:0 24px 70px rgba(0,0,0,.38);padding:20px;color:#f5f7fb;display:flex;flex-direction:column;gap:12px}
-    .preview-embed{flex:1;width:100%;border:none;border-radius:16px;background:#fff}
-        @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}}
+    @media (max-width:980px){.hero,.main-grid{grid-template-columns:1fr}}
     @media (max-width:720px){
       .wrap{padding:18px 14px 56px}
       .topbar{flex-direction:column;align-items:stretch}
@@ -290,7 +280,6 @@
         <div class="summary-card">
           <div id="summaryTitle" class="summary-title">Esperando análisis</div>
           <p id="summaryCopy" class="summary-copy">Completa el formulario para obtener una orientación base sobre la canción.</p>
-          <div id="usoEscolarBox" class="usage-box">⚠️ Uso escolar<br>Esta canción no es directamente apta para el aula. Pero SonarIA puede adaptarla automáticamente para que puedas trabajarla con tus estudiantes de forma segura y contextualizada.</div>
         </div>
 
         <div class="metrics">
@@ -353,21 +342,7 @@
           </div>
         </div>
 
-        <div id="letraAdaptadaBox" class="adapted-box">
-          <div class="adapted-head">
-            <div id="adaptTitle" class="adapted-title"></div>
-            <div id="adaptArtist" class="adapted-artist"></div>
-            <div id="adaptMark" class="adapted-mark">Adaptación realizada por SonarIA</div>
-          </div>
-          <div id="adaptedLyrics" class="adapted-lyrics"></div>
-        </div>
-
         <div class="history-list" id="historyList"></div>
-
-        <div class="pdf-actions">
-          <button id="btnPreviewPDF" class="btn btn-ghost" type="button">Vista previa PDF</button>
-          <button id="btnDownloadPDF" class="btn btn-primary" type="button">Descargar PDF</button>
-        </div>
       </section>
     </section>
 
@@ -395,19 +370,6 @@
         <button class="btn btn-green" type="button" onclick="window.location.href='planes.html'">Ver planes</button>
         <button class="btn btn-ghost" type="button" onclick="hideOverlay()">Seguir mirando</button>
       </div>
-    </div>
-  </div>
-
-  <div id="pdfPreviewModal" class="overlay">
-    <div class="preview-frame">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
-        <h3 style="margin:0;font-size:1.4rem;letter-spacing:-.04em;">Vista previa PDF</h3>
-        <div class="overlay-actions">
-          <button id="btnModalDownloadPDF" class="btn btn-primary" type="button">Descargar PDF</button>
-          <button id="btnClosePDFPreview" class="btn btn-ghost" type="button">Cerrar</button>
-        </div>
-      </div>
-      <iframe id="pdfPreviewFrame" class="preview-embed"></iframe>
     </div>
   </div>
 
@@ -461,23 +423,9 @@
     const trialCounter = document.getElementById("trialCounter");
     const upgradeCopy = document.getElementById("upgradeCopy");
     const historyList = document.getElementById("historyList");
-    const usoEscolarBox = document.getElementById("usoEscolarBox");
-    const letraAdaptadaBox = document.getElementById("letraAdaptadaBox");
-    const adaptTitle = document.getElementById("adaptTitle");
-    const adaptArtist = document.getElementById("adaptArtist");
-    const adaptMark = document.getElementById("adaptMark");
-    const adaptedLyrics = document.getElementById("adaptedLyrics");
-    const btnPreviewPDF = document.getElementById("btnPreviewPDF");
-    const btnDownloadPDF = document.getElementById("btnDownloadPDF");
-    const btnModalDownloadPDF = document.getElementById("btnModalDownloadPDF");
-    const btnClosePDFPreview = document.getElementById("btnClosePDFPreview");
-    const pdfPreviewModal = document.getElementById("pdfPreviewModal");
-    const pdfPreviewFrame = document.getElementById("pdfPreviewFrame");
 
     let authToken = "";
     let user = { plan: "free" };
-    let lastAnalysis = null;
-    let lastPdfBlobUrl = "";
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
@@ -498,11 +446,31 @@
       pillFallback.classList.remove("show");
     }
 
+    function setEmptyTrafficBar(el){
+      if(!el) return;
+      el.style.width = "100%";
+      el.style.opacity = "0.22";
+      el.style.background = "linear-gradient(90deg,var(--green),var(--yellow),var(--red))";
+    }
+
+    function setRiskTrafficBar(el, value){
+      if(!el) return;
+      const risk = Math.max(0, Math.min(Number(value || 0), 100));
+      el.style.opacity = "1";
+      if(risk === 0){
+        el.style.width = "100%";
+        el.style.background = "var(--green)";
+      }else{
+        el.style.width = risk + "%";
+        el.style.background = "linear-gradient(90deg,var(--green),var(--yellow),var(--red))";
+      }
+    }
+
+
     function clearResult(){
       resultBadge.textContent = "Sin análisis";
       summaryTitle.textContent = "Esperando análisis";
       summaryCopy.textContent = "Completa el formulario para obtener una orientación base sobre la canción.";
-      usoEscolarBox.style.display = "none";
       edadSugerida.textContent = "—";
       fuenteUsada.textContent = "—";
       lecturaSugerida.textContent = "—";
@@ -510,41 +478,25 @@
       contextList.innerHTML = '<div class="list-item">Aún no hay datos.</div>';
       observaciones.textContent = "Sin datos.";
       enfoque.textContent = "Sin datos.";
-      riskPercent.textContent = "0%";
-      riskSensitive.textContent = "0%";
-      riskSchool.textContent = "0%";
-      [riskTotalFill, riskSensitiveFill, riskSchoolFill].forEach(fill => {
-        fill.style.width = "100%";
-        fill.style.opacity = "0.18";
-      });
+      riskPercent.textContent = "—";
+      riskSensitive.textContent = "—";
+      riskSchool.textContent = "—";
+      setEmptyTrafficBar(riskTotalFill);
+      setEmptyTrafficBar(riskSensitiveFill);
+      setEmptyTrafficBar(riskSchoolFill);
       lightRed.className = "light";
       lightYellow.className = "light";
       lightGreen.className = "light";
-      letraAdaptadaBox.style.display = "none";
-      adaptTitle.textContent = "";
-      adaptArtist.textContent = "";
-      adaptedLyrics.textContent = "";
-      adaptMark.style.display = "none";
-      lastAnalysis = null;
-      if(lastPdfBlobUrl){
-        URL.revokeObjectURL(lastPdfBlobUrl);
-        lastPdfBlobUrl = "";
-      }
     }
 
-    function activateTraffic(resultado, riskValue){
+    function activateTraffic(resultado){
       lightRed.className = "light";
       lightYellow.className = "light";
       lightGreen.className = "light";
       const txt = (resultado || "").toLowerCase();
-      const risk = Number(riskValue || 0);
-      if (risk <= 0 && txt && !txt.includes("sin análisis")) {
-        lightGreen.className = "light active green";
-        return;
-      }
       if (txt.includes("no apta")) lightRed.className = "light active red";
-      else if (txt.includes("supervisión") || txt.includes("supervision") || txt.includes("mediación") || txt.includes("mediacion")) lightYellow.className = "light active yellow";
-      else if (txt) lightGreen.className = "light active green";
+      else if (txt.includes("supervisión") || txt.includes("supervision")) lightYellow.className = "light active yellow";
+      else lightGreen.className = "light active green";
     }
 
     function showOverlay(title, text){
@@ -640,11 +592,9 @@
     }
 
     function renderAnalysis(raw){
-      lastAnalysis = raw;
       resultBadge.textContent = raw.resultado || "Resultado";
       summaryTitle.textContent = raw.resultado || "Resultado pedagógico";
       summaryCopy.textContent = raw.resumen || "Análisis completado.";
-      usoEscolarBox.style.display = (String(raw.resultado || "").toLowerCase().includes("no apta") && (user.plan || "free") !== "pro") ? "block" : "none";
       edadSugerida.textContent = raw.edad_sugerida || "—";
       fuenteUsada.textContent = raw.fuente_usada || "—";
       lecturaSugerida.textContent = raw.lectura_sugerida || "—";
@@ -660,107 +610,16 @@
       observaciones.textContent = raw.observaciones_pedagogicas || "Sin observaciones.";
       enfoque.textContent = raw.enfoque_sugerido || "Sin enfoque sugerido.";
 
-      const totalRisk = Math.min(Number(raw.risk_percent ?? 0), 100);
-      const sensitiveRisk = Math.min(Number(raw.risk_sensitive ?? 0), 100);
-      const schoolRisk = Math.min(Number(raw.risk_school ?? 0), 100);
-      riskPercent.textContent = totalRisk + "%";
-      riskSensitive.textContent = sensitiveRisk + "%";
-      riskSchool.textContent = schoolRisk + "%";
-      [riskTotalFill, riskSensitiveFill, riskSchoolFill].forEach(fill => fill.style.opacity = "1");
-      riskTotalFill.style.width = Math.max(totalRisk, totalRisk === 0 ? 100 : totalRisk) + "%";
-      riskSensitiveFill.style.width = Math.max(sensitiveRisk, sensitiveRisk === 0 ? 100 : sensitiveRisk) + "%";
-      riskSchoolFill.style.width = Math.max(schoolRisk, schoolRisk === 0 ? 100 : schoolRisk) + "%";
+      riskPercent.textContent = (raw.risk_percent ?? 0) + "%";
+      riskSensitive.textContent = (raw.risk_sensitive ?? 0) + "%";
+      riskSchool.textContent = (raw.risk_school ?? 0) + "%";
+      setRiskTrafficBar(riskTotalFill, raw.risk_percent ?? 0);
+      setRiskTrafficBar(riskSensitiveFill, raw.risk_sensitive ?? 0);
+      setRiskTrafficBar(riskSchoolFill, raw.risk_school ?? 0);
 
-      const adaptedText = extractAdaptedText(raw);
-      const hasAdaptation = !!(((raw.adaptacion || {}).changes || []).length && adaptedText);
-      if(hasAdaptation){
-        letraAdaptadaBox.style.display = "block";
-        adaptTitle.textContent = titulo.value.trim() || raw.titulo || "Canción";
-        adaptArtist.textContent = artista.value.trim() || raw.artista || "";
-        adaptMark.style.display = "block";
-        adaptedLyrics.textContent = adaptedText;
-      }else{
-        letraAdaptadaBox.style.display = "none";
-        adaptTitle.textContent = "";
-        adaptArtist.textContent = "";
-        adaptMark.style.display = "none";
-        adaptedLyrics.textContent = "";
-      }
-
-      activateTraffic(raw.resultado || "", totalRisk);
+      activateTraffic(raw.resultado || "");
     }
 
-
-    function extractAdaptedText(raw){
-      const htmlValue = (((raw || {}).adaptacion || {}).adapted_html || "").trim();
-      if(!htmlValue) return "";
-      const tmp = document.createElement("div");
-      tmp.innerHTML = htmlValue;
-      return (tmp.textContent || tmp.innerText || "").trim();
-    }
-
-    async function requestPdfBlob(){
-      if(!lastAnalysis) throw new Error("Primero analiza una canción.");
-      const response = await fetch(API_BASE + "/export/pdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + authToken
-        },
-        body: JSON.stringify({
-          titulo: titulo.value.trim(),
-          artista: artista.value.trim(),
-          texto: texto.value.trim(),
-          analysis: lastAnalysis
-        })
-      });
-      if(!response.ok){
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.detail || "No fue posible generar el PDF.");
-      }
-      return await response.blob();
-    }
-
-    async function openPdfPreview(){
-      const ok = await syncSessionWithBackend();
-      if(!ok) return;
-      try{
-        setStatus("Preparando vista previa PDF...", "info");
-        const blob = await requestPdfBlob();
-        if(lastPdfBlobUrl) URL.revokeObjectURL(lastPdfBlobUrl);
-        lastPdfBlobUrl = URL.createObjectURL(blob);
-        pdfPreviewFrame.src = lastPdfBlobUrl;
-        pdfPreviewModal.style.display = "flex";
-        setStatus("Vista previa lista.", "success");
-      }catch(error){
-        setStatus(error.message || "No pude abrir la vista previa PDF.", "error");
-      }
-    }
-
-    async function downloadPdfFile(){
-      const ok = await syncSessionWithBackend();
-      if(!ok) return;
-      try{
-        setStatus("Generando PDF...", "info");
-        const blob = await requestPdfBlob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "sonaria_informe.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1200);
-        setStatus("PDF descargado correctamente.", "success");
-      }catch(error){
-        setStatus(error.message || "No fue posible descargar el PDF.", "error");
-      }
-    }
-
-    btnPreviewPDF.addEventListener("click", openPdfPreview);
-    btnDownloadPDF.addEventListener("click", downloadPdfFile);
-    btnModalDownloadPDF.addEventListener("click", downloadPdfFile);
-    btnClosePDFPreview.addEventListener("click", () => { pdfPreviewModal.style.display = "none"; });
     document.getElementById("btnPlanesTop").addEventListener("click", () => window.location.href = "planes.html");
     document.getElementById("btnPlanesBottom").addEventListener("click", () => window.location.href = "planes.html");
     document.getElementById("btnUpgradeTop").addEventListener("click", () => showOverlay("Desbloquea SonarIA Pro", "Pasa de una experiencia base a una experiencia más completa y sin límites."));
@@ -874,10 +733,6 @@
 
     document.addEventListener("keydown", function(e){
       const active = document.activeElement;
-      if(e.key === "Escape"){
-        pdfPreviewModal.style.display = "none";
-        hideOverlay();
-      }
       if((active === titulo || active === artista) && e.key === "Enter"){
         e.preventDefault();
         form.requestSubmit();
