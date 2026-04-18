@@ -178,6 +178,15 @@
     .hidden{display:none!important}
     .preview-grid{display:grid;gap:12px}
     .summary-btn-row{display:flex;gap:10px;flex-wrap:wrap}
+
+.uso-escolar-box{margin-top:12px;padding:14px 16px;border-radius:16px;background:rgba(255,106,106,.10);border:1px solid rgba(255,106,106,.24);color:#a63d3d;font-weight:700;line-height:1.6;display:none}
+.school-sheet{padding:18px 18px 16px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 22px rgba(31,44,74,.05)}
+.school-sheet-head{text-align:center;margin-bottom:14px}
+.school-sheet-title{font-size:1.35rem;font-weight:900;letter-spacing:-.03em}
+.school-sheet-artist{font-size:.95rem;color:var(--muted);margin-top:4px}
+.school-sheet-by{font-size:.8rem;color:#3f6de0;margin-top:6px;font-weight:800}
+.school-sheet-body{white-space:pre-line;line-height:1.8;color:var(--text)}
+.school-sheet-note{padding:12px 14px;border-radius:14px;background:#fff8e8;border:1px solid #f3dd9f;color:#8a6921;font-weight:700}
     
     .today-layout{display:grid;grid-template-columns:1.14fr .86fr;grid-template-areas:"fact clock" "calendar calendar";gap:14px;align-items:stretch}
     .fact-card{grid-area:fact;padding:22px 22px 20px;border-radius:22px;background:#fff;border:1px solid var(--line);line-height:1.8;min-height:100%;box-shadow:0 8px 22px rgba(31,44,74,.06)}
@@ -310,6 +319,7 @@
         <div class="summary-card">
           <div id="summaryTitle" style="font-size:1.5rem;font-weight:900;letter-spacing:-.04em;margin-bottom:8px">Esperando análisis</div>
           <div id="summaryCopy" class="muted">Completa el formulario para obtener una orientación pedagógica inicial.</div>
+          <div id="usoEscolarBox" class="uso-escolar-box">⚠️ <strong>Uso escolar</strong><br>Esta canción no es directamente apta para el aula. Pero SonarIA puede adaptarla automáticamente para que puedas trabajarla con tus estudiantes de forma segura y contextualizada.</div>
         </div>
         <div class="metrics">
           <div class="metric"><strong>Edad sugerida</strong><span id="edadSugerida">—</span></div>
@@ -421,6 +431,7 @@
       <div id="summaryModalContent" class="preview-grid"></div>
       <div class="summary-btn-row" style="margin-top:14px">
         <button id="btnGoSchoolVersion" class="btn btn-green hidden" type="button">Ir a la versión escolar</button>
+        <button id="btnDownloadPdf" class="btn btn-primary" type="button">Descargar PDF</button>
       </div>
     </div>
   </div>
@@ -784,10 +795,11 @@
         <div class="list-item"><strong>Reflexiones</strong><br>${item.reflexiones.length ? item.reflexiones.join("<br>") : "Sin reflexiones sugeridas."}</div>`;
     }
 
+
     function renderTranslation(data){
       const detected = [...new Set((data.contextos_detectados || []).slice(0,6))];
       const themes = [...new Set((data.temas_detectados || []).slice(0,6))];
-      const adaptedHtml = data.adaptacion?.adapted_html || '<div class="list-item">No hay letra adaptada disponible.</div>';
+      const adaptedHtml = data.adaptacion?.adapted_html || '';
       const totalChanges = (data.adaptacion?.changes || []).length;
 
       const categories = [];
@@ -803,18 +815,12 @@
         ? categories.map(c => `• ${c}`).join("<br>")
         : "No hubo adaptaciones visibles en esta canción.";
 
-      const nonApta = String(data.resultado || "").toLowerCase().includes("no apta");
-      const freeCta = (user.plan !== "pro" && nonApta)
-        ? `<div class="list-item"><strong>⚠️ Uso escolar</strong><br>Esta canción no es directamente apta para el aula. <strong>Pero SonarIA puede adaptarla automáticamente</strong> para que puedas trabajarla con tus estudiantes de forma segura y contextualizada.</div>`
-        : "";
-
       $("translationIntro").innerHTML = `
         <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
         <div class="list-item"><strong>Adaptación aplicada</strong><br>${categoryHtml}<br><br><span class="muted">${totalChanges ? `Se realizaron ajustes automáticos para contexto escolar.` : "No se requirieron ajustes visibles en esta canción."}</span></div>
-        ${freeCta}
       `;
 
-      const plainAdapted = adaptedHtml
+      const plainAdapted = (adaptedHtml || "")
         .replace(/<br\s*\/?>/gi, "\n")
         .replace(/<\/div>/gi, "\n")
         .replace(/<[^>]+>/g, "")
@@ -834,31 +840,49 @@
       }
 
       const freeNotice = user.plan !== "pro"
-        ? `<div class="list-item"><strong>Vista parcial Free</strong><br>Estás viendo una muestra de la versión escolar. En Pro accedes a la adaptación y traducción completas.</div>`
+        ? `<div class="school-sheet-note">Vista parcial Free: estás viendo una muestra de la versión escolar. En Pro accedes a la adaptación y traducción completas.</div>`
         : "";
 
       const adaptedPreviewHtml = user.plan === "pro"
         ? adaptedHtml
         : (data.adaptacion?.preview_html || adaptedHtml);
 
-      $("adaptedView").innerHTML = `
-        ${freeNotice}
-        <div class="list-item"><strong>Versión adaptada</strong><br>Se muestra el resultado escolar ya adaptado, sin detallar la receta exacta de cambios.</div>
-        <div class="list-item">${adaptedPreviewHtml}</div>`;
+      const songTitle = $("titulo").value.trim() || "Sin título";
+      const songArtist = $("artista").value.trim() || "Artista no indicado";
+
+      $("adaptedView").innerHTML = adaptedPreviewHtml
+        ? `
+          ${freeNotice}
+          <div class="school-sheet">
+            <div class="school-sheet-head">
+              <div class="school-sheet-title">${songTitle}</div>
+              <div class="school-sheet-artist">${songArtist}</div>
+              <div class="school-sheet-by">Adaptación realizada por SonarIA</div>
+            </div>
+            <div class="school-sheet-body">${adaptedPreviewHtml}</div>
+          </div>`
+        : `<div class="list-item">No hay letra adaptada disponible.</div>`;
 
       const shownPairs = user.plan === "pro" ? pairs : pairs.slice(0, 3);
       $("translatedView").innerHTML = shownPairs.length
         ? `
           ${freeNotice}
-          <div class="list-item"><strong>Versión traducida</strong><br>Esta traducción se construye sobre la <strong>letra adaptada</strong>, no sobre la letra original.</div>
-          <div class="translated-grid">` +
-          shownPairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || "Traducción adaptada no disponible."}</div></div>`).join("") + `</div>`
+          <div class="school-sheet">
+            <div class="school-sheet-head">
+              <div class="school-sheet-title">${songTitle}</div>
+              <div class="school-sheet-artist">${songArtist}</div>
+              <div class="school-sheet-by">Traducción basada en la versión adaptada por SonarIA</div>
+            </div>
+            <div class="translated-grid">` +
+            shownPairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || "Traducción adaptada no disponible."}</div></div>`).join("") + `</div>
+          </div>`
         : `<div class="list-item">${user.plan === "pro" ? "No hay letra traducida disponible." : "En Pro verás la traducción de la versión adaptada."}</div>`;
 
       $("btnVerAdaptada").classList.add("lyrics-toggle-active");
       $("btnVerAdaptada").classList.remove("alt");
       $("btnVerTraducida").classList.remove("lyrics-toggle-active","alt");
     }
+
 
     function saveHistory(item){
       historyItems = [item, ...historyItems.filter(x => !(x.titulo === item.titulo && x.artista === item.artista))].slice(0,12);
@@ -876,6 +900,45 @@
       $("artista").value = item.artista || "";
       closeModal("historyModal");
       setStatus("Canción reutilizada desde el historial.", "success");
+    }
+
+
+    async function downloadPdf(){
+      if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
+      try{
+        setStatus("Preparando PDF...", "info");
+        const res = await fetch(API_BASE + "/export/pdf", {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            ...(authToken ? {Authorization:"Bearer " + authToken} : {})
+          },
+          body: JSON.stringify({
+            titulo: $("titulo").value.trim(),
+            artista: $("artista").value.trim(),
+            texto: $("texto").value.trim(),
+            cursos: selectedCourses,
+            analysis: lastAnalysis
+          })
+        });
+        if(!res.ok){
+          const raw = await res.text();
+          throw new Error(raw || "No se pudo exportar el PDF.");
+        }
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        const safeTitle = ($("titulo").value.trim() || "sonaria_informe").replace(/[^a-z0-9áéíóúñ\-_ ]/gi,"").replace(/\s+/g,"_");
+        a.href = url;
+        a.download = `${safeTitle}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus("PDF descargado.", "success");
+      }catch(err){
+        setStatus(err.message || "No se pudo exportar el PDF.", "error");
+      }
     }
 
     function buildSummaryModal(){
@@ -929,6 +992,8 @@
         $("resultBadge").textContent = data.resultado || "Análisis listo";
         $("summaryTitle").textContent = data.resultado || "Análisis listo";
         $("summaryCopy").textContent = data.resumen || data.justificacion || "";
+        const nonAptaSong = String(data.resultado || "").toLowerCase().includes("no apta");
+        $("usoEscolarBox").style.display = (user.plan !== "pro" && nonAptaSong) ? "block" : "none";
         $("edadSugerida").textContent = data.edad_sugerida || "—";
         $("lecturaSugerida").textContent = data.lectura_sugerida || "—";
         updateTraffic(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0, data.resultado || "");
@@ -972,6 +1037,7 @@
     $("analysisForm").addEventListener("submit", e => { e.preventDefault(); analyzeNow(); });
     $("clearBtn").onclick = clearAll;
     $("btnSummary").onclick = buildSummaryModal;
+      $("btnDownloadPdf").onclick = downloadPdf;
     $("btnHistory").onclick = ()=>{ renderHistory(); openModal("historyModal"); };
     $("btnPlanesTop").onclick = ()=> window.location.href = "/planes.html";
     $("btnUpgradeTop").onclick = ()=> window.location.href = "/planes.html";
