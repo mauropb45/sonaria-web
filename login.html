@@ -1,375 +1,137 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso | MejorarIA</title>
-  <meta name="description" content="Accede a SonarIA dentro de MejorarIA para probar la herramienta.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <style>
-    :root{
-      --bg:#050b14;
-      --bg2:#081224;
-      --text:#f5f7fb;
-      --muted:#9eafc8;
-      --line:rgba(255,255,255,.08);
-    }
+<style>
+  :root{
+    --bg:#f6f9fc;
+    --bg2:#eef4fb;
+    --panel:#ffffff;
+    --panel-soft:rgba(255,255,255,.75);
+    --text:#0f172a;
+    --muted:#6b7a90;
+    --line:rgba(15,23,42,.08);
+    --blue:#4b82ff;
+    --blue-soft:rgba(75,130,255,.10);
+    --shadow:0 20px 60px rgba(15,23,42,.10);
+  }
 
-    *{box-sizing:border-box}
+  *{box-sizing:border-box}
 
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,.12), transparent 20%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-    }
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    background:
+      radial-gradient(circle at top left, rgba(75,130,255,.12), transparent 25%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+  }
 
-    .topbar{
-      width:100%;
-      padding:20px 28px 0 28px;
-    }
+  .topbar{
+    width:100%;
+    padding:20px 28px 0 28px;
+  }
 
-    .brand-link{
-      display:inline-block;
-      text-decoration:none;
-    }
+  .brand-logo{
+    width:320px;
+    max-width:70vw;
+  }
 
-    .brand-logo{
-      display:block;
-      width:320px;
-      max-width:70vw;
-      height:auto;
-    }
+  .stage{
+    min-height:calc(100vh - 110px);
+    display:grid;
+    place-items:center;
+    padding:24px;
+  }
 
-    .stage{
-      min-height:calc(100vh - 110px);
-      display:grid;
-      place-items:center;
-      padding:24px;
-    }
+  .panel{
+    width:100%;
+    max-width:540px;
+    padding:30px;
+    border-radius:26px;
+    background:var(--panel-soft);
+    backdrop-filter:blur(10px);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
 
-    .panel{
-      width:100%;
-      max-width:540px;
-      padding:28px;
-      border-radius:26px;
-      background:linear-gradient(180deg, rgba(8,18,36,.82), rgba(8,18,36,.70));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 24px 70px rgba(0,0,0,.40);
-    }
+  .home{
+    display:inline-block;
+    margin-bottom:16px;
+    color:var(--blue);
+    text-decoration:none;
+    font-weight:700;
+  }
 
-    .home{
-      display:inline-block;
-      margin-bottom:16px;
-      color:#dbe6f5;
-      text-decoration:none;
-      font-weight:700;
-    }
+  .brand{
+    font-size:2.3rem;
+    font-weight:900;
+    letter-spacing:-1px;
+    line-height:1;
+    margin-bottom:6px;
+  }
 
-    .brand{
-      font-size:2.2rem;
-      font-weight:900;
-      letter-spacing:-1px;
-      line-height:1;
-      margin-bottom:4px;
-    }
+  .brand span{
+    background:linear-gradient(135deg,#4b82ff,#6ee7ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
 
-    .brand span{
-      background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
+  .sub{
+    color:var(--muted);
+    line-height:1.7;
+    margin-bottom:18px;
+  }
 
-    .sub{
-      color:var(--muted);
-      line-height:1.7;
-      margin-bottom:18px;
-    }
+  .principle{
+    margin:0 0 18px;
+    padding:16px 18px;
+    border-radius:18px;
+    background:var(--blue-soft);
+    border:1px solid rgba(75,130,255,.15);
+  }
 
-    .principle{
-      margin:0 0 18px;
-      padding:16px 18px;
-      border-radius:18px;
-      background:rgba(255,255,255,.05);
-      border:1px solid var(--line);
-    }
+  .principle strong{
+    display:block;
+    margin-bottom:6px;
+  }
 
-    .principle strong{
-      display:block;
-      margin-bottom:6px;
-    }
+  .principle p{
+    margin:0;
+    color:#1e293b;
+    line-height:1.68;
+    font-size:.96rem;
+  }
 
-    .principle p{
-      margin:0;
-      color:#dbe6f5;
-      line-height:1.68;
-      font-size:.96rem;
-    }
+  .status{
+    display:none;
+    margin-top:16px;
+    padding:12px 14px;
+    border-radius:14px;
+    line-height:1.55;
+  }
 
-    .status{
-      display:none;
-      margin-top:16px;
-      padding:12px 14px;
-      border-radius:14px;
-      line-height:1.55;
-    }
+  .status.show{display:block}
 
-    .status.show{display:block}
+  .status.error{
+    background:rgba(255,107,107,.10);
+    border:1px solid rgba(255,107,107,.25);
+    color:#b91c1c;
+  }
 
-    .status.error{
-      background:rgba(255,107,107,.08);
-      border:1px solid rgba(255,107,107,.2);
-      color:#ffd7d7;
-    }
+  .status.loading{
+    background:rgba(255,138,0,.10);
+    border:1px solid rgba(255,138,0,.25);
+    color:#c2410c;
+  }
 
-    .status.loading{
-      background:rgba(255,138,0,.09);
-      border:1px solid rgba(255,138,0,.2);
-      color:#ffe0bf;
-    }
+  .status.info{
+    background:rgba(75,130,255,.12);
+    border:1px solid rgba(75,130,255,.25);
+    color:#1e3a8a;
+  }
 
-    .status.info{
-      background:rgba(59,130,246,.10);
-      border:1px solid rgba(59,130,246,.22);
-      color:#dce8ff;
-    }
-
-    .note{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.7;
-    }
-
-
-
-    .session-popup{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      background:rgba(3,8,15,.72);
-      backdrop-filter:blur(6px);
-      z-index:9999;
-    }
-
-    .session-popup.show{display:flex}
-
-    .session-popup-card{
-      width:min(92vw,460px);
-      padding:28px;
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(8,18,36,.96), rgba(8,18,36,.88));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 24px 70px rgba(0,0,0,.45);
-    }
-
-    .session-popup-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(59,130,246,.12);
-      border:1px solid rgba(59,130,246,.22);
-      color:#dce8ff;
-      font-size:.82rem;
-      font-weight:800;
-      margin-bottom:14px;
-    }
-
-    .session-popup-card h2{
-      margin:0 0 12px;
-      font-size:1.65rem;
-      letter-spacing:-.03em;
-      line-height:1.1;
-    }
-
-    .session-popup-card p{
-      margin:0;
-      color:#dbe6f5;
-      line-height:1.75;
-    }
-
-    .session-popup-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:20px;
-    }
-
-    .session-popup-btn{
-      border:none;
-      border-radius:14px;
-      min-height:46px;
-      padding:0 18px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .session-popup-btn.primary{
-      background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-      color:#081224;
-    }
-
-    .session-popup-btn.ghost{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.10);
-      color:#f5f7fb;
-    }
-
-    @media (max-width: 640px){
-      .topbar{
-        padding:16px 18px 0 18px;
-      }
-
-      .brand-logo{
-        width:220px;
-        max-width:78vw;
-      }
-
-      .stage{
-        min-height:auto;
-        padding:18px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="topbar">
-    <a href="index.html" class="brand-link" aria-label="Volver al inicio">
-      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
-    </a>
-  </div>
-
-  <div class="stage">
-    <div class="panel">
-      <a class="home" href="index.html">← Volver al inicio</a>
-
-      <div class="brand">Mejorar<span>IA</span></div>
-      <div class="sub">Ingresa para acceder a SonarIA dentro de la plataforma.</div>
-
-      <div class="principle">
-        <strong>La IA acompaña. Educar es cuidar.</strong>
-        <p>La responsabilidad de educar y proteger a los estudiantes es siempre humana.</p>
-      </div>
-
-      <div id="g_id_onload"
-          data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
-          data-callback="handleCredentialResponse">
-      </div>
-
-      <div class="g_id_signin"
-          data-type="standard"
-          data-size="large"
-          data-theme="outline"
-          data-text="continue_with"
-          data-shape="pill"
-          data-logo_alignment="left">
-      </div>
-
-      <div id="statusBox" class="status"></div>
-
-      <div class="note">
-        Tu acceso se valida con Google y luego se registra en el backend de MejorarIA para habilitar tu sesión, tu plan y tu continuidad de uso.
-      </div>
-    </div>
-  </div>
-
-
-
-  <div id="sessionPopup" class="session-popup" aria-hidden="true">
-    <div class="session-popup-card" role="dialog" aria-modal="true" aria-labelledby="sessionPopupTitle">
-      <div class="session-popup-badge">⚠️ Sesión cerrada</div>
-      <h2 id="sessionPopupTitle">Detectamos que tu cuenta se abrió en otro dispositivo</h2>
-      <p id="sessionPopupMessage">Cerramos esta sesión automáticamente para mantener tu cuenta segura y tu experiencia estable.</p>
-      <div class="session-popup-actions">
-        <button class="session-popup-btn primary" type="button" onclick="closeSessionPopup()">Volver a iniciar sesión</button>
-        <button class="session-popup-btn ghost" type="button" onclick="closeSessionPopup()">Entendido</button>
-      </div>
-    </div>
-  </div>
-
-
-  <script>
-    const API_URL = "https://sonaria-api.onrender.com";
-
-    function setStatus(message, type){
-      const box = document.getElementById("statusBox");
-      box.textContent = message;
-      box.className = "status show " + type;
-    }
-
-    function saveSession(data) {
-      localStorage.setItem("mejoraria_token", data.access_token);
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("mejoraria_user", JSON.stringify(data.user || {}));
-
-      if (data.user && data.user.plan) {
-        localStorage.setItem("mejoraria_plan", data.user.plan);
-      }
-    }
-
-    function openSessionPopup(message){
-      const popup = document.getElementById("sessionPopup");
-      const copy = document.getElementById("sessionPopupMessage");
-      if(copy){
-        copy.textContent = message || "Cerramos esta sesión automáticamente para mantener tu cuenta segura y tu experiencia estable.";
-      }
-      if(popup){
-        popup.classList.add("show");
-        popup.setAttribute("aria-hidden", "false");
-      }
-    }
-
-    function closeSessionPopup(){
-      const popup = document.getElementById("sessionPopup");
-      if(popup){
-        popup.classList.remove("show");
-        popup.setAttribute("aria-hidden", "true");
-      }
-    }
-
-    (function showLogoutMessage(){
-      const message = localStorage.getItem("mejoraria_logout_message");
-      if(message){
-        setStatus("Vuelve a iniciar sesión para continuar.", "info");
-        openSessionPopup(message);
-        localStorage.removeItem("mejoraria_logout_message");
-      }
-    })();
-
-    async function handleCredentialResponse(response) {
-      try {
-        setStatus("Validando acceso con MejorarIA...", "loading");
-
-        const res = await fetch(API_URL + "/auth/google", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ credential: response.credential })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.detail || "No fue posible iniciar sesión.");
-        }
-
-        saveSession(data);
-        localStorage.removeItem("mejoraria_logout_message");
-        window.location.href = "/sonaria.html";
-      } catch (error) {
-        setStatus(error.message || "Error al iniciar sesión", "error");
-      }
-    }
-  </script>
-</body>
-</html>
+  .note{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:.92rem;
+    line-height:1.7;
+  }
+</style>
