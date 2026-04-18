@@ -177,13 +177,13 @@
     .preview-grid{display:grid;gap:12px}
     .summary-btn-row{display:flex;gap:10px;flex-wrap:wrap}
     
-    .today-layout{display:grid;grid-template-columns:1.2fr .72fr;grid-template-areas:"fact clock" "calendar calendar";gap:12px;align-items:stretch}
-    .fact-card{grid-area:fact;padding:20px 20px 18px;border-radius:22px;background:#fff;border:1px solid var(--line);line-height:1.78;min-height:100%;box-shadow:0 8px 22px rgba(31,44,74,.06)}
+    .today-layout{display:grid;grid-template-columns:1.14fr .86fr;grid-template-areas:"fact clock" "calendar calendar";gap:14px;align-items:stretch}
+    .fact-card{grid-area:fact;padding:22px 22px 20px;border-radius:22px;background:#fff;border:1px solid var(--line);line-height:1.8;min-height:100%;box-shadow:0 8px 22px rgba(31,44,74,.06)}
     .fact-card strong{display:block;margin-bottom:8px;font-size:1.05rem;letter-spacing:-.02em}
-    .clock-card{grid-area:clock;padding:22px 18px;border-radius:24px;background:linear-gradient(180deg,#ffffff,#f4f8ff);border:1px solid var(--line);text-align:center;box-shadow:0 10px 28px rgba(75,130,255,.10);display:grid;align-content:center;min-height:100%}
+    .clock-card{grid-area:clock;padding:24px 18px;border-radius:24px;background:linear-gradient(180deg,#ffffff,#f4f8ff);border:1px solid var(--line);text-align:center;box-shadow:0 10px 28px rgba(75,130,255,.10);display:grid;align-content:center;min-height:100%}
     .clock-card strong{display:block;font-size:3.3rem;letter-spacing:-.10em;line-height:.90}
     .clock-card span{font-size:1rem;color:var(--muted);font-weight:900;margin-top:8px}
-    .calendar-shell{grid-area:calendar;padding:16px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 22px rgba(31,44,74,.05)}
+    .calendar-shell{grid-area:calendar;padding:18px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 22px rgba(31,44,74,.05)}
     .calendar-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
     .calendar-title strong{font-size:1rem}
 
@@ -267,8 +267,8 @@
           <div class="today-top">
             <div>
               <div class="pill">📅 Hoy en SonarIA</div>
-              <h2 style="margin:10px 0 6px">Agenda y tiempo</h2>
-              <div class="muted">Organiza tu jornada y abre la clase con un dato musical significativo.</div>
+              <h2 style="margin:10px 0 6px">Hoy en SonarIA</h2>
+              <div class="muted">Efeméride, hora actual y calendario del mes en un solo vistazo.</div>
             </div>
           </div>
           <div class="today-layout">
@@ -343,7 +343,7 @@
       <section class="card section section-pedagogia">
         <div class="section-topline">
           <div class="section-title"><span>🎓</span><h3>Pedagogía</h3></div>
-          <button id="togglePedagogia" class="btn btn-ghost btn-lock" type="button">Ver más</button>
+          
         </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
         <div id="pedTableWrap" class="table-wrap open">
@@ -546,7 +546,7 @@
       $("themeSelect").classList.toggle("hidden", user.plan === "pro");
       $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🔒 Elige tus colores";
       $("btnCustomize").classList.toggle("btn-lock", user.plan !== "pro");
-      ["togglePedagogia","toggleTranslation"].forEach(id=>{
+      ["toggleTranslation"].forEach(id=>{
         const b=$(id); if(!b) return;
         b.textContent = user.plan === "pro" ? "Ver más" : "Ver más 🔒";
         b.classList.toggle("btn-lock", user.plan !== "pro");
@@ -922,7 +922,6 @@
       if(user.plan !== "pro") setStatus("En Pro, el botón YouTube abre directamente la búsqueda con lyrics.", "info");
     };
     $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value));
-    $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Pedagogía está disponible en Pro.", "info"); return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
     $("toggleTranslation").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Traducción está disponible en Pro.", "info"); return; } const w = $("translationWrap"); const open = w.classList.toggle("open"); $("toggleTranslation").textContent = open ? "Ver menos" : "Ver más"; };
     $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); };
     $("btnVerTraducida").onclick = ()=>{ $("translatedView").classList.add("active"); $("adaptedView").classList.remove("active"); };
@@ -932,8 +931,7 @@
     
     document.addEventListener("click", (e)=>{
       const modal = document.getElementById("viewerModal");
-      const box = document.getElementById("viewerBox");
-      if(modal && modal.classList.contains("open") && e.target === modal){
+            if(modal && modal.classList.contains("open") && e.target === modal){
         closeViewerModalSafe();
       }
     });
