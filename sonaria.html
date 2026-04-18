@@ -439,6 +439,7 @@
     let historyItems = JSON.parse(localStorage.getItem("sonaria_history") || "[]");
     let lastAnalysis = null;
     let pedagogyStore = [];
+    let autoLyricsLoaded = false;
     const $ = id => document.getElementById(id);
 
     function getToken(){ return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || ""; }
@@ -868,7 +869,7 @@
         try{ data = raw ? JSON.parse(raw) : {}; }catch(_){ data = {detail: raw || "Respuesta inválida del servidor."}; }
         if(!res.ok) throw new Error(data.detail || "No se pudo analizar.");
         lastAnalysis = data;
-        if(!$("texto").value.trim() && data.texto) $("texto").value = data.texto;
+        if(!$("texto").value.trim() && data.texto){ $("texto").value = data.texto; autoLyricsLoaded = true; }
         $("resultBadge").textContent = data.resultado || "Análisis listo";
         $("summaryTitle").textContent = data.resultado || "Análisis listo";
         $("summaryCopy").textContent = data.resumen || data.justificacion || "";
@@ -896,7 +897,7 @@
     }
 
     function clearAll(){
-      $("voiceQuery").value = ""; $("titulo").value = ""; $("artista").value = ""; $("texto").value = ""; lastAnalysis = null; pedagogyStore = [];
+      $("voiceQuery").value = ""; $("titulo").value = ""; $("artista").value = ""; $("texto").value = ""; lastAnalysis = null; pedagogyStore = []; autoLyricsLoaded = false;
       $("summaryTitle").textContent = "Esperando análisis";
       $("summaryCopy").textContent = "Completa el formulario para obtener una orientación pedagógica inicial.";
       $("resultBadge").textContent = "Sin análisis";
@@ -970,6 +971,21 @@ $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver má
       const el = document.getElementById("greetingText");
       if(el) el.textContent = `${saludo}, ${first}`;
     }
+
+
+    function handleSongChange(){
+      if(autoLyricsLoaded){
+        $("texto").value = "";
+        autoLyricsLoaded = false;
+      }
+    }
+
+    $("texto").addEventListener("input", () => {
+      autoLyricsLoaded = false;
+    });
+
+    $("titulo").addEventListener("input", handleSongChange);
+    $("artista").addEventListener("input", handleSongChange);
 
 
     (async function init(){
