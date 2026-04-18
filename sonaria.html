@@ -177,12 +177,15 @@
     .preview-grid{display:grid;gap:12px}
     .summary-btn-row{display:flex;gap:10px;flex-wrap:wrap}
     
-    .today-layout{display:grid;grid-template-columns:1.08fr .92fr;gap:12px;align-items:stretch}
-    .fact-card{padding:18px;border-radius:20px;background:#fff;border:1px solid var(--line);line-height:1.75;min-height:100%}
-    .fact-card strong{display:block;margin-bottom:8px;font-size:1.02rem}
-    .clock-card{padding:20px 18px;border-radius:24px;background:linear-gradient(180deg,#ffffff,#f5f8ff);border:1px solid var(--line);text-align:center;box-shadow:0 10px 28px rgba(75,130,255,.10);display:grid;align-content:center;min-height:100%}
-    .clock-card strong{display:block;font-size:3rem;letter-spacing:-.09em;line-height:.92}
-    .clock-card span{font-size:1rem;color:var(--muted);font-weight:900;margin-top:6px}
+    .today-layout{display:grid;grid-template-columns:1.2fr .72fr;grid-template-areas:"fact clock" "calendar calendar";gap:12px;align-items:stretch}
+    .fact-card{grid-area:fact;padding:20px 20px 18px;border-radius:22px;background:#fff;border:1px solid var(--line);line-height:1.78;min-height:100%;box-shadow:0 8px 22px rgba(31,44,74,.06)}
+    .fact-card strong{display:block;margin-bottom:8px;font-size:1.05rem;letter-spacing:-.02em}
+    .clock-card{grid-area:clock;padding:22px 18px;border-radius:24px;background:linear-gradient(180deg,#ffffff,#f4f8ff);border:1px solid var(--line);text-align:center;box-shadow:0 10px 28px rgba(75,130,255,.10);display:grid;align-content:center;min-height:100%}
+    .clock-card strong{display:block;font-size:3.3rem;letter-spacing:-.10em;line-height:.90}
+    .clock-card span{font-size:1rem;color:var(--muted);font-weight:900;margin-top:8px}
+    .calendar-shell{grid-area:calendar;padding:16px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 22px rgba(31,44,74,.05)}
+    .calendar-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+    .calendar-title strong{font-size:1rem}
 
     @media (max-width:1080px){.top-grid,.analysis-grid,.today-layout,.translated-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){.wrap{padding:14px 12px 40px}.topbar{flex-direction:column;align-items:stretch}.top-actions{width:100%}.top-actions .btn,.top-actions .theme-select{width:100%}.inline,.inline-voice{grid-template-columns:1fr}.actions .btn{flex:1 1 100%}}
@@ -269,16 +272,20 @@
             </div>
           </div>
           <div class="today-layout">
-            <div>
-              <div class="fact-card">
-                <strong>🎼 Un día como hoy</strong>
-                <div id="efemFact" class="muted">Cargando efeméride musical...</div>
-              </div>
-              <div id="calendarGrid" class="calendar" style="margin-top:12px"></div>
+            <div class="fact-card">
+              <strong>🎼 Un día como hoy</strong>
+              <div id="efemFact" class="muted">Cargando efeméride musical...</div>
             </div>
             <div class="clock-card">
               <strong id="clockTime">--:--</strong>
               <span id="clockDate">--</span>
+            </div>
+            <div class="calendar-shell">
+              <div class="calendar-title">
+                <strong>Calendario del mes</strong>
+                <span class="muted" id="calendarMonthLabel"></span>
+              </div>
+              <div id="calendarGrid" class="calendar"></div>
             </div>
           </div>
         </div>
@@ -339,7 +346,7 @@
           <button id="togglePedagogia" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
-        <div id="pedTableWrap" class="table-wrap">
+        <div id="pedTableWrap" class="table-wrap open">
           <div class="ped-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen: cursos y OA</strong>
             <table>
@@ -361,7 +368,7 @@
           <button id="toggleTranslation" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="translationIntro" class="list">
-          <div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida.</div>
+          <div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su traducción basada en la versión escolar.</div>
         </div>
         <div id="translationWrap" class="table-wrap">
           <div class="lyrics-actions">
@@ -498,6 +505,7 @@
       document.body.style.setProperty("--bg-main", `radial-gradient(circle at top left, ${hexToRgba(c1,.22)}, transparent 22%), radial-gradient(circle at bottom right, ${hexToRgba(c2,.18)}, transparent 20%), linear-gradient(180deg, ${lighten(c1,92)}, ${lighten(c2,90)})`);
       localStorage.setItem("sonaria_custom_colors", JSON.stringify({c1,c2}));
       clearStatus();
+      closeModal("colorsModal");
     }
     function resetCustomColors(){
       localStorage.removeItem("sonaria_custom_colors");
@@ -554,6 +562,8 @@
     function renderCalendar(dateStr){
       const now = new Date((dateStr || new Date().toISOString().slice(0,10)) + "T12:00:00");
       const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+      const monthLabel = now.toLocaleDateString("es-CL", {month:"long", year:"numeric"});
+      if($("calendarMonthLabel")) $("calendarMonthLabel").textContent = monthLabel;
       const names = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"];
       const grid = $("calendarGrid"); grid.innerHTML = "";
       names.forEach(n=>{ const x=document.createElement("div"); x.className="cal-head"; x.textContent=n; grid.appendChild(x); });
@@ -745,6 +755,7 @@
         selector.appendChild(chip);
       });
       $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
+      selectPedCourse(0);
     }
     function selectPedCourse(idx){
       const item = pedagogyStore[idx];
@@ -880,7 +891,7 @@
       $("pedTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver sugerencias.</td></tr>';
       $("pedCourseSelector").innerHTML = '';
       $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
-      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida en dos columnas.</div>';
+      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su traducción basada en la versión escolar en dos columnas.</div>';
       $("adaptedView").innerHTML = '<div class="list-item">No hay letra adaptada disponible.</div>';
       $("translatedView").innerHTML = '<div class="list-item">No hay letra traducida disponible.</div>';
       renderThemes([]); $("resultadoTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver el detalle.</td></tr>'; updateTraffic(); clearStatus();
