@@ -116,10 +116,11 @@
     .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
     @keyframes pulse{0%,80%,100%{transform:scale(.5);opacity:.35}40%{transform:scale(1);opacity:1}}
     .today-box{display:grid;gap:12px}
-    .today-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-    .clock{padding:14px 16px;border-radius:20px;background:linear-gradient(180deg,#ffffff,#f5f8ff);border:1px solid var(--line);min-width:132px;text-align:center;box-shadow:0 8px 22px rgba(75,130,255,.10)}
-    .clock strong{display:block;font-size:1.55rem;letter-spacing:-.06em;line-height:1}
-    .clock span{font-size:.8rem;color:var(--muted);font-weight:800}
+    .today-top{display:grid;grid-template-columns:1fr 220px;align-items:start;gap:14px}
+    .greeting{margin:10px 0 2px;font-size:1.02rem;font-weight:900;color:#32425c}
+    .clock{padding:20px 16px;border-radius:24px;background:linear-gradient(180deg,#ffffff,#f5f8ff);border:1px solid var(--line);min-width:180px;text-align:center;box-shadow:0 10px 28px rgba(75,130,255,.12)}
+    .clock strong{display:block;font-size:2.6rem;letter-spacing:-.08em;line-height:.92}
+    .clock span{font-size:1rem;color:var(--muted);font-weight:900;display:block;margin-top:6px}
     .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
     .cal-head,.cal-day{padding:8px 0;text-align:center;border-radius:10px;font-size:.8rem}
     .cal-head{font-weight:800;color:var(--muted)}
@@ -207,6 +208,7 @@
             <div class="pill">🎵 Entrada rápida para el aula</div>
             <h2 style="margin:10px 0 6px">Analizar canción</h2>
             <div class="muted">Entra, analiza y toma decisiones docentes con el menor ruido posible.</div>
+            <div id="greetingBox" class="greeting">Hola.</div>
           </div>
           <div id="analyzingPulse" class="analysis-pulse"><span>Analizando</span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
         </div>
@@ -248,34 +250,15 @@
 
       <section class="card section section-hoy">
         <div class="today-box">
+          <div class="pill">📅 Hoy en SonarIA</div>
           <div class="today-top">
-            <div>
-              <div class="pill">📅 Hoy en SonarIA</div>
-              <h2 style="margin:10px 0 6px">Agenda y tiempo</h2>
-              <div class="muted">Organiza tu jornada y abre la clase con un dato musical significativo.</div>
+            <div class="hero-note">
+              <strong>🎼 Un día como hoy</strong>
+              <div id="efemFact" class="muted">Cargando efeméride musical...</div>
             </div>
-          </div>
-          <div class="today-layout">
-            <div>
-              <div class="fact-card">
-                <strong>🎼 Un día como hoy</strong>
-                <div id="efemFact" class="muted">Cargando efeméride musical...</div>
-              </div>
-              <div id="calendarGrid" class="calendar" style="margin-top:12px"></div>
-            </div>
-            <div style="display:grid;gap:12px">
-              <div class="clock-card">
-                <strong id="clockTime">--:--</strong>
-                <span id="clockDate">--</span>
-              </div>
-              <div class="todo-card">
-                <strong>✅ Para hoy</strong>
-                <ul class="todo-list">
-                  <li>Analizar repertorio para el curso de hoy</li>
-                  <li>Revisar la adaptación escolar si hay lenguaje sensible</li>
-                  <li>Guardar o reutilizar canciones del historial</li>
-                </ul>
-              </div>
+            <div class="clock">
+              <strong id="clockTime">--:--</strong>
+              <span id="clockDate">--</span>
             </div>
           </div>
         </div>
@@ -292,8 +275,7 @@
           <div class="section-actions">
             <div id="planPill" class="pill">Cuenta Free</div>
             <div id="resultBadge" class="pill">Sin análisis</div>
-            <button id="toggleResultado" class="btn btn-ghost btn-lock" type="button">Ver más</button>
-          </div>
+                      </div>
         </div>
         <div class="summary-card">
           <div id="summaryTitle" style="font-size:1.5rem;font-weight:900;letter-spacing:-.04em;margin-bottom:8px">Esperando análisis</div>
@@ -317,7 +299,7 @@
           <strong style="display:block;margin-bottom:8px">Temas detectados</strong>
           <div id="themesWrap" class="chips"><span class="chip">Sin datos</span></div>
         </div>
-        <div id="resultadoTableWrap" class="table-wrap">
+        <div id="resultadoTableWrap" class="table-wrap open">
           <div class="table-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen de detecciones</strong>
             <table>
@@ -333,10 +315,9 @@
       <section class="card section section-pedagogia">
         <div class="section-topline">
           <div class="section-title"><span>🎓</span><h3>Pedagogía</h3></div>
-          <button id="togglePedagogia" class="btn btn-ghost btn-lock" type="button">Ver más</button>
-        </div>
+                  </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
-        <div id="pedTableWrap" class="table-wrap">
+        <div id="pedTableWrap" class="table-wrap open">
           <div class="ped-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen: cursos y OA</strong>
             <table>
@@ -358,7 +339,7 @@
           <button id="toggleTranslation" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="translationIntro" class="list">
-          <div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida.</div>
+          <div class="list-item">Aquí verás lo detectado. En <strong>Ver más</strong> aparecerán los cambios realizados, la letra adaptada y su versión traducida.</div>
         </div>
         <div id="translationWrap" class="table-wrap">
           <div class="lyrics-actions">
@@ -510,6 +491,12 @@
       }
     }
 
+    function buildGreeting(name){
+      const h = new Date().getHours();
+      const base = h < 12 ? "Buenos días" : h < 20 ? "Buenas tardes" : "Buenas noches";
+      return `${base}${name ? ", " + name : ""}`;
+    }
+
     async function loadUser(){
       authToken = getToken();
       if(!authToken){ window.location.href = "/login.html"; return; }
@@ -521,6 +508,8 @@
       }catch(err){
         user = {plan:"free"};
       }
+      const displayName = (user.name || user.email || "docente").split("@")[0];
+      $("greetingBox").textContent = buildGreeting(displayName);
       $("planPill").textContent = user.plan === "pro" ? "Plan Pro" : "Cuenta Free";
       $("planPill").className = "pill" + (user.plan === "pro" ? " pro" : "");
       $("btnUpgradeTop").classList.toggle("hidden", user.plan === "pro");
@@ -528,11 +517,11 @@
       $("themeSelect").classList.toggle("hidden", user.plan === "pro");
       $("btnCustomize").textContent = user.plan === "pro" ? "🎨 Personaliza tu interfaz" : "🔒 Elige tus colores";
       $("btnCustomize").classList.toggle("btn-lock", user.plan !== "pro");
-      ["toggleResultado","togglePedagogia","toggleTranslation"].forEach(id=>{
-        const b=$(id); if(!b) return;
-        b.textContent = user.plan === "pro" ? "Ver más" : "Ver más 🔒";
-        b.classList.toggle("btn-lock", user.plan !== "pro");
-      });
+      const trBtn = $("toggleTranslation");
+      if(trBtn){
+        trBtn.textContent = user.plan === "pro" ? "Ver más" : "Ver más 🔒";
+        trBtn.classList.toggle("btn-lock", user.plan !== "pro");
+      }
       $("colorsInfo").textContent = user.plan === "pro" ? "En Pro puedes combinar dos colores y cambiar también el fondo de SonarIA." : "En Free puedes elegir entre Brisa clara, Aurora suave y Atardecer cálido. La personalización avanzada está disponible en Pro.";
     }
 
@@ -562,19 +551,19 @@
       const key = `${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
       const facts = {
         "01-30":"Un día como hoy, The Beatles dieron su último concierto público en la azotea de Apple Corps.",
-        "04-17":"Un día como hoy, una grabación decisiva puede cambiar para siempre la historia de la música. Usa esta fecha para abrir conversación.",
-        "07-06":"Un día como hoy, John Lennon y Paul McCartney se conocieron.",
+        "04-17":"Un día como hoy, The Beatles avanzaron hacia su primera etapa discográfica con EMI, abriendo una nueva era del pop.",
+        "04-18":"Un día como hoy puedes abrir la clase con una efeméride musical y una escucha breve para contextualizar repertorio.",
+        "07-06":"Un día como hoy, John Lennon y Paul McCartney se conocieron, dando origen a una de las duplas más influyentes de la música popular.",
         "09-18":"Una buena fecha para abrir clases con identidad y música chilena."
       };
-      const fallback = {texto:facts[key] || "Hoy puede ser un buen día para iniciar la clase con una escucha guiada y una pregunta detonante.", fecha:new Date().toISOString().slice(0,10)};
+      const fallback = facts[key] || "Un día como hoy la música puede ser una gran puerta de entrada para iniciar la clase con contexto y escucha activa.";
       try{
         const res = await fetch(EFEM_URL, {headers: authToken ? {Authorization:"Bearer " + authToken} : {}});
         const data = await res.json();
-        $("efemFact").textContent = data.texto || fallback.texto;
-        renderCalendar(data.fecha || fallback.fecha);
+        const txt = String(data.texto || "").trim();
+        $("efemFact").textContent = txt && !/buen día para iniciar la clase/i.test(txt) ? txt : fallback;
       }catch(_){
-        $("efemFact").textContent = fallback.texto;
-        renderCalendar(fallback.fecha);
+        $("efemFact").textContent = fallback;
       }
     }
 
@@ -630,26 +619,61 @@
     function sanitizePedText(text){
       return String(text || "").replace(/^(\d+°\s*b[aá]sico|I°\s*medio|II°\s*medio|III°\s*medio|IV°\s*medio)\s*:\s*/i, "").trim();
     }
-    function buildPedagogyStore(p){
-      if(Array.isArray(p)) return p;
-      const courses = (p?.cursos_sugeridos || []).map(normalizeCourseLabel);
-      if(!courses.length && p?.curso_sugerido) courses.push(normalizeCourseLabel(p.curso_sugerido));
-      return courses.map(course => ({
-        curso: course,
-        oa: (p?.oa_sugeridos || []).map(sanitizePedText),
-        preguntas: [...new Set((p?.preguntas || []).map(sanitizePedText))],
-        actividades: [...new Set((p?.actividades || []).map(sanitizePedText))],
-        reflexiones: [...new Set((p?.reflexiones || []).map(sanitizePedText))]
-      }));
+    function courseLevelFromLabel(label){
+      const s = normalizeCourseLabel(label);
+      if(/^I° medio$/i.test(s)) return 9;
+      if(/^II° medio$/i.test(s)) return 10;
+      if(/^III° medio$/i.test(s)) return 11;
+      if(/^IV° medio$/i.test(s)) return 12;
+      const m = s.match(/^(\d+)/);
+      return m ? parseInt(m[1],10) : 7;
     }
-    function renderPedagogy(p){
-      pedagogyStore = buildPedagogyStore(p).map(item => ({
-        curso: normalizeCourseLabel(item.curso || item.course || ""),
-        oa: [...new Set((item.oa || item.oa_sugeridos || []).map(sanitizePedText).filter(Boolean))],
-        preguntas: [...new Set((item.preguntas || []).map(sanitizePedText).filter(Boolean))],
-        actividades: [...new Set((item.actividades || []).map(sanitizePedText).filter(Boolean))],
-        reflexiones: [...new Set((item.reflexiones || []).map(sanitizePedText).filter(Boolean))]
-      })).filter((item, idx, arr) => item.curso && arr.findIndex(x => x.curso === item.curso) === idx);
+    function courseSpecificBlocks(course, themes=[]){
+      const lvl = courseLevelFromLabel(course);
+      const themeText = themes.length ? themes.join(", ") : "la canción";
+      if(lvl <= 6){
+        return {
+          preguntas:[`¿Qué emoción principal transmite ${themeText}?`,`¿Qué frase sería mejor explicar antes de escucharla con ${course}?`],
+          actividades:["Identificar pulso, tempo o timbre dominante.","Reescribir una frase en lenguaje más adecuado para aula."],
+          reflexiones:["No toda canción se usa igual en todos los cursos.","La mediación docente cambia la forma de escuchar una letra."]
+        };
+      }
+      if(lvl <= 8){
+        return {
+          preguntas:[`¿Qué mensaje explícito e implícito aparece para ${course}?`,`¿Qué elementos musicales refuerzan el sentido de ${themeText}?`],
+          actividades:["Comparar original y versión adaptada en una tabla simple.","Clasificar riesgo, mediación y pertinencia escolar."],
+          reflexiones:["Adaptar una letra no significa perder su valor artístico.","Una canción puede servir pedagógicamente si existe contexto y mediación."]
+        };
+      }
+      return {
+        preguntas:[`¿Qué conflicto cultural, emocional o social abre ${themeText} en ${course}?`,`¿Cómo cambia la recepción escolar al adaptar la letra?`],
+        actividades:["Debate breve con evidencia textual y musical.","Comentario crítico sobre adaptación, censura y criterio docente."],
+        reflexiones:["La pertinencia escolar depende del curso y del objetivo pedagógico.","La mediación docente permite trabajar repertorio complejo con criterio."]
+      };
+    }
+    function buildPedagogyStore(p, data){
+      const themes = [...new Set((data?.temas_detectados || []).map(x=>String(x).trim()).filter(Boolean))];
+      let base = [];
+      if(Array.isArray(p)) base = p;
+      else {
+        const courses = (p?.cursos_sugeridos || []).map(normalizeCourseLabel);
+        if(!courses.length && p?.curso_sugerido) courses.push(normalizeCourseLabel(p.curso_sugerido));
+        base = courses.map(course => ({ curso: course, oa: (p?.oa_sugeridos || []).map(sanitizePedText) }));
+      }
+      return base.map(item => {
+        const curso = normalizeCourseLabel(item.curso || item.course || "");
+        const specifics = courseSpecificBlocks(curso, themes);
+        return {
+          curso,
+          oa: [...new Set((item.oa || item.oa_sugeridos || []).map(sanitizePedText).filter(Boolean))],
+          preguntas: specifics.preguntas,
+          actividades: specifics.actividades,
+          reflexiones: specifics.reflexiones
+        };
+      }).filter((item, idx, arr) => item.curso && arr.findIndex(x => x.curso === item.curso) === idx);
+    }
+    function renderPedagogy(p, data){
+      pedagogyStore = buildPedagogyStore(p, data);
       $("pedIntro").innerHTML = `<div class="list-item">Cursos sugeridos: ${pedagogyStore.length ? pedagogyStore.map(x=>x.curso).join(", ") : "aún no hay análisis."}</div>`;
       $("pedTableBody").innerHTML = pedagogyStore.length
         ? pedagogyStore.map(item => `<tr><td>${item.curso}</td><td>${item.oa[0] || "—"}</td></tr>`).join("")
@@ -665,7 +689,7 @@
         chip.onclick = ()=>selectPedCourse(Number(chip.dataset.courseIndex));
         selector.appendChild(chip);
       });
-      $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
+      selectPedCourse(0);
     }
     function selectPedCourse(idx){
       const item = pedagogyStore[idx];
@@ -673,32 +697,43 @@
       document.querySelectorAll("#pedCourseSelector .ped-course-btn").forEach(x=>x.classList.toggle("active", Number(x.dataset.courseIndex) === idx));
       $("pedDetails").innerHTML = `
         <div class="list-item"><strong>OA</strong><br>${item.oa.length ? item.oa.join("<br>") : "Sin OA sugeridos."}</div>
-        <div class="list-item"><strong>Preguntas</strong><br>${item.preguntas.length ? item.preguntas.join("<br>") : "Sin preguntas sugeridas."}</div>
-        <div class="list-item"><strong>Actividades</strong><br>${item.actividades.length ? item.actividades.join("<br>") : "Sin actividades sugeridas."}</div>
-        <div class="list-item"><strong>Reflexiones</strong><br>${item.reflexiones.length ? item.reflexiones.join("<br>") : "Sin reflexiones sugeridas."}</div>`;
+        <div class="list-item"><strong>Preguntas</strong><br>${item.preguntas.join("<br>")}</div>
+        <div class="list-item"><strong>Actividades</strong><br>${item.actividades.join("<br>")}</div>
+        <div class="list-item"><strong>Reflexiones</strong><br>${item.reflexiones.join("<br>")}</div>`;
     }
 
+    function htmlToLines(html){
+      const raw = String(html || "").replace(/<br\s*\/?/gi, "<br>");
+      return raw.split(/<br>/i).map(s => s.replace(/<[^>]+>/g, "").trim()).filter(Boolean);
+    }
     function renderTranslation(data){
       const changes = data.adaptacion?.changes || [];
       const detected = (data.contextos_detectados || []).slice(0,6);
-      const adaptedHtml = data.adaptacion?.adapted_html || '<div class="list-item">No hay letra adaptada disponible.</div>';
+      const adaptedHtml = data.adaptacion?.adapted_html || '';
+      const adaptedLines = htmlToLines(adaptedHtml);
       const changesHtml = changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles.";
       $("translationIntro").innerHTML = `
-        <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
-        <div class="list-item"><strong>Cambiado</strong><br>${changesHtml}</div>`;
+        <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>`;
       $("adaptedView").innerHTML = `
-        <div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div>
-        <div class="list-item">${adaptedHtml}</div>`;
-      const translated = data.traduccion || [];
-      $("translatedView").innerHTML = translated.length
-        ? `<div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div><div class="translated-grid">` +
-          translated.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.original || ""}</div><div class="lyric-trans">${row.translated || ""}</div></div>`).join("") + `</div>`
+        <div class="list-item"><strong>Lo cambiado</strong><br>${changesHtml}</div>
+        <div class="list-item">${adaptedHtml || 'No hay letra adaptada disponible.'}</div>`;
+      const translated = Array.isArray(data.traduccion) ? data.traduccion : [];
+      const rows = [];
+      if(adaptedLines.length){
+        adaptedLines.forEach((line, idx) => {
+          const src = translated[idx] || {};
+          rows.push({adapted: line, translated: src.translated_adapted || src.translated || ""});
+        });
+      }
+      $("translatedView").innerHTML = rows.length
+        ? `<div class="list-item"><strong>Lo cambiado</strong><br>${changesHtml}</div><div class="translated-grid">` + rows.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || 'Traducción adaptada no disponible aún en backend.'}</div></div>`).join("") + `</div>`
         : '<div class="list-item">No hay letra traducida disponible.</div>';
     }
 
     function saveHistory(item){
       historyItems = [item, ...historyItems.filter(x => !(x.titulo === item.titulo && x.artista === item.artista))].slice(0,12);
       localStorage.setItem("sonaria_history", JSON.stringify(historyItems));
+      renderHistory();
     }
     function renderHistory(){
       $("historyList").innerHTML = historyItems.length
@@ -758,7 +793,7 @@
         updateTraffic(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0, data.resultado || "");
         renderThemes(data.temas_detectados || []);
         renderIssues(data);
-        renderPedagogy(data.pedagogia || {});
+        renderPedagogy(data.pedagogia || {}, data);
         $("cursosSugeridos").textContent = pedagogyStore.length ? pedagogyStore.map(x=>x.curso).join(", ") : "—";
         renderTranslation(data);
         if(data.efemeride?.texto) $("efemFact").textContent = data.efemeride.texto;
@@ -782,7 +817,7 @@
       $("pedTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver sugerencias.</td></tr>';
       $("pedCourseSelector").innerHTML = '';
       $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
-      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su versión traducida en dos columnas.</div>';
+      $("translationIntro").innerHTML = '<div class="list-item">Aquí verás lo detectado. En <strong>Ver más</strong> aparecerán los cambios realizados, la letra adaptada y su versión traducida.</div>';
       $("adaptedView").innerHTML = '<div class="list-item">No hay letra adaptada disponible.</div>';
       $("translatedView").innerHTML = '<div class="list-item">No hay letra traducida disponible.</div>';
       renderThemes([]); $("resultadoTableBody").innerHTML = '<tr><td colspan="2">Analiza una canción para ver el detalle.</td></tr>'; updateTraffic(); clearStatus();
@@ -812,9 +847,7 @@
       window.open(url, "_blank");
       if(user.plan !== "pro") setStatus("En Pro, el botón YouTube abre directamente la búsqueda con lyrics.", "info");
     };
-    $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value));
-    $("toggleResultado").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Resultado pedagógico está disponible en Pro.", "info"); return; } const w = $("resultadoTableWrap"); const open = w.classList.toggle("open"); $("toggleResultado").textContent = open ? "Ver menos" : "Ver más"; };
-    $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Pedagogía está disponible en Pro.", "info"); return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
+    $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value)); return; } const w = $("resultadoTableWrap"); const open = w.classList.toggle("open"); $("toggleResultado").textContent = open ? "Ver menos" : "Ver más"; }; return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
     $("toggleTranslation").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Traducción está disponible en Pro.", "info"); return; } const w = $("translationWrap"); const open = w.classList.toggle("open"); $("toggleTranslation").textContent = open ? "Ver menos" : "Ver más"; };
     $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); };
     $("btnVerTraducida").onclick = ()=>{ $("translatedView").classList.add("active"); $("adaptedView").classList.remove("active"); };
