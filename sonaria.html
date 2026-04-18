@@ -161,6 +161,8 @@
     .ped-course-btn{padding:10px 14px;border:1px solid var(--line);background:#fff;border-radius:999px;cursor:pointer;font-weight:800}
     .ped-course-btn.active{background:#eef4ff;border-color:#a7c4ff;color:#2d5fdb}
     .lyrics-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .lyrics-toggle-active{background:linear-gradient(135deg,#eef4ff,#e8f0ff)!important;border:1px solid #a7c4ff!important;color:#2558d8!important}
+    .lyrics-toggle-active.alt{background:linear-gradient(135deg,#eef7ff,#ecfbff)!important;border:1px solid #9fd6ff!important;color:#13639a!important}
     .lyrics-view{display:none}
     .lyrics-view.active{display:grid;gap:10px}
     .translated-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -783,16 +785,34 @@
     }
 
     function renderTranslation(data){
-      const changes = data.adaptacion?.changes || [];
-      const detected = (data.contextos_detectados || []).slice(0,6);
+      const detected = [...new Set((data.contextos_detectados || []).slice(0,6))];
+      const themes = [...new Set((data.temas_detectados || []).slice(0,6))];
       const adaptedHtml = data.adaptacion?.adapted_html || '<div class="list-item">No hay letra adaptada disponible.</div>';
-      const changesHtml = changes.length ? changes.slice(0,8).map(ch=>`${ch.original} → <mark>${ch.replacement}</mark>`).join("<br>") : "No hubo cambios visibles.";
+      const totalChanges = (data.adaptacion?.changes || []).length;
+
+      const categories = [];
+      const lowerDetected = detected.join(" ").toLowerCase();
+      const lowerThemes = themes.join(" ").toLowerCase();
+      if(/lenguaje expl[ií]cito|fuck|shit|puta|mierda|bitch/.test(lowerDetected)) categories.push("lenguaje explícito");
+      if(/violencia|kill|gun|blood|matar|arma/.test(lowerDetected + " " + lowerThemes)) categories.push("referencias de violencia");
+      if(/contexto afectivo|romance maduro|sexual|body|bed|kiss|desire/.test(lowerDetected + " " + lowerThemes)) categories.push("referencias sensibles o íntimas");
+      if(/autodesprecio|soledad/.test(lowerThemes)) categories.push("expresiones de autoimagen o vulnerabilidad");
+      if(!categories.length && totalChanges) categories.push("lenguaje no adecuado para aula");
+
+      const categoryHtml = categories.length
+        ? categories.map(c => `• ${c}`).join("<br>")
+        : "No hubo adaptaciones visibles en esta canción.";
+
+      const nonApta = String(data.resultado || "").toLowerCase().includes("no apta");
+      const freeCta = (user.plan !== "pro" && nonApta)
+        ? `<div class="list-item"><strong>⚠️ Uso escolar</strong><br>Esta canción no es directamente apta para el aula. <strong>Pero SonarIA puede adaptarla automáticamente</strong> para que puedas trabajarla con tus estudiantes de forma segura y contextualizada.</div>`
+        : "";
+
       $("translationIntro").innerHTML = `
         <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
-        <div class="list-item"><strong>Versión escolar</strong><br>En <strong>Ver más</strong> verás los cambios aplicados y la letra adaptada completa.</div>`;
-      $("adaptedView").innerHTML = `
-        <div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div>
-        <div class="list-item">${adaptedHtml}</div>`;
+        <div class="list-item"><strong>Adaptación aplicada</strong><br>${categoryHtml}<br><br><span class="muted">${totalChanges ? `Se realizaron ajustes automáticos para contexto escolar.` : "No se requirieron ajustes visibles en esta canción."}</span></div>
+        ${freeCta}
+      `;
 
       const plainAdapted = adaptedHtml
         .replace(/<br\s*\/?>/gi, "\n")
@@ -806,17 +826,38 @@
       let pairs = [];
       if(translated.length){
         pairs = translated.map((row, idx) => ({
-          adapted: row.adapted || plainAdapted[idx] || row.original || "",
+          adapted: row.adapted || plainAdapted[idx] || "",
           translated: row.translated_adapted || row.translated || ""
         }));
       } else {
         pairs = plainAdapted.map(line => ({adapted: line, translated: ""}));
       }
 
-      $("translatedView").innerHTML = pairs.length
-        ? `<div class="list-item"><strong>Lo detectado y lo cambiado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}<br><br>${changesHtml}</div><div class="translated-grid">` +
-          pairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || "Traducción adaptada pendiente desde backend."}</div></div>`).join("") + `</div>`
-        : '<div class="list-item">No hay letra traducida disponible.</div>';
+      const freeNotice = user.plan !== "pro"
+        ? `<div class="list-item"><strong>Vista parcial Free</strong><br>Estás viendo una muestra de la versión escolar. En Pro accedes a la adaptación y traducción completas.</div>`
+        : "";
+
+      const adaptedPreviewHtml = user.plan === "pro"
+        ? adaptedHtml
+        : (data.adaptacion?.preview_html || adaptedHtml);
+
+      $("adaptedView").innerHTML = `
+        ${freeNotice}
+        <div class="list-item"><strong>Versión adaptada</strong><br>Se muestra el resultado escolar ya adaptado, sin detallar la receta exacta de cambios.</div>
+        <div class="list-item">${adaptedPreviewHtml}</div>`;
+
+      const shownPairs = user.plan === "pro" ? pairs : pairs.slice(0, 3);
+      $("translatedView").innerHTML = shownPairs.length
+        ? `
+          ${freeNotice}
+          <div class="list-item"><strong>Versión traducida</strong><br>Esta traducción se construye sobre la <strong>letra adaptada</strong>, no sobre la letra original.</div>
+          <div class="translated-grid">` +
+          shownPairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || "Traducción adaptada no disponible."}</div></div>`).join("") + `</div>`
+        : `<div class="list-item">${user.plan === "pro" ? "No hay letra traducida disponible." : "En Pro verás la traducción de la versión adaptada."}</div>`;
+
+      $("btnVerAdaptada").classList.add("lyrics-toggle-active");
+      $("btnVerAdaptada").classList.remove("alt");
+      $("btnVerTraducida").classList.remove("lyrics-toggle-active","alt");
     }
 
     function saveHistory(item){
@@ -955,8 +996,8 @@
     $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value));
 $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Pedagogía está disponible en Pro.", "info"); return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
     $("toggleTranslation").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Traducción está disponible en Pro.", "info"); return; } const w = $("translationWrap"); const open = w.classList.toggle("open"); $("toggleTranslation").textContent = open ? "Ver menos" : "Ver más"; };
-    $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); };
-    $("btnVerTraducida").onclick = ()=>{ $("translatedView").classList.add("active"); $("adaptedView").classList.remove("active"); };
+    $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); $("btnVerAdaptada").classList.add("lyrics-toggle-active"); $("btnVerAdaptada").classList.remove("alt"); $("btnVerTraducida").classList.remove("lyrics-toggle-active","alt"); };
+    $("btnVerTraducida").onclick = ()=>{ $("translatedView").classList.add("active"); $("adaptedView").classList.remove("active"); $("btnVerTraducida").classList.add("lyrics-toggle-active","alt"); $("btnVerAdaptada").classList.remove("lyrics-toggle-active","alt"); };
     document.querySelectorAll("[data-close]").forEach(btn => btn.onclick = ()=> closeModal(btn.dataset.close));
     document.addEventListener("keydown", e => { if(e.key === "Escape") document.querySelectorAll(".modal.open").forEach(m => m.classList.remove("open")); });
 
