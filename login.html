@@ -1,137 +1,150 @@
-<style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso | MejorarIA</title>
+  <meta name="description" content="Accede a SonarIA dentro de MejorarIA para probar la herramienta.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
   :root{
     --bg:#f6f9fc;
-    --bg2:#eef4fb;
+    --bg2:#edf4fb;
     --panel:#ffffff;
-    --panel-soft:rgba(255,255,255,.75);
-    --text:#0f172a;
-    --muted:#6b7a90;
-    --line:rgba(15,23,42,.08);
-    --blue:#4b82ff;
-    --blue-soft:rgba(75,130,255,.10);
-    --shadow:0 20px 60px rgba(15,23,42,.10);
+    --panel-soft:rgba(255,255,255,.82);
+    --text:#17324d;
+    --muted:#70839a;
+    --line:rgba(24,56,92,.10);
+    --blue:#5a8dee;
+    --blue-2:#8cc8ff;
+    --blue-soft:rgba(90,141,238,.11);
+    --shadow:0 24px 70px rgba(24,55,92,.10);
   }
-
   *{box-sizing:border-box}
-
   body{
     margin:0;
     font-family:'Inter',sans-serif;
     color:var(--text);
     min-height:100vh;
     background:
-      radial-gradient(circle at top left, rgba(75,130,255,.12), transparent 25%),
+      radial-gradient(circle at top left, rgba(140,200,255,.24), transparent 24%),
+      radial-gradient(circle at bottom right, rgba(90,141,238,.12), transparent 22%),
       linear-gradient(180deg,var(--bg),var(--bg2));
   }
-
-  .topbar{
-    width:100%;
-    padding:20px 28px 0 28px;
-  }
-
-  .brand-logo{
-    width:320px;
-    max-width:70vw;
-  }
-
-  .stage{
-    min-height:calc(100vh - 110px);
-    display:grid;
-    place-items:center;
-    padding:24px;
-  }
-
-  .panel{
-    width:100%;
-    max-width:540px;
-    padding:30px;
-    border-radius:26px;
-    background:var(--panel-soft);
-    backdrop-filter:blur(10px);
-    border:1px solid var(--line);
-    box-shadow:var(--shadow);
-  }
-
-  .home{
-    display:inline-block;
-    margin-bottom:16px;
-    color:var(--blue);
-    text-decoration:none;
-    font-weight:700;
-  }
-
-  .brand{
-    font-size:2.3rem;
-    font-weight:900;
-    letter-spacing:-1px;
-    line-height:1;
-    margin-bottom:6px;
-  }
-
-  .brand span{
-    background:linear-gradient(135deg,#4b82ff,#6ee7ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-  }
-
-  .sub{
-    color:var(--muted);
-    line-height:1.7;
-    margin-bottom:18px;
-  }
-
-  .principle{
-    margin:0 0 18px;
-    padding:16px 18px;
-    border-radius:18px;
-    background:var(--blue-soft);
-    border:1px solid rgba(75,130,255,.15);
-  }
-
-  .principle strong{
-    display:block;
-    margin-bottom:6px;
-  }
-
-  .principle p{
-    margin:0;
-    color:#1e293b;
-    line-height:1.68;
-    font-size:.96rem;
-  }
-
-  .status{
-    display:none;
-    margin-top:16px;
-    padding:12px 14px;
-    border-radius:14px;
-    line-height:1.55;
-  }
-
+  .topbar{width:100%;padding:20px 28px 0 28px}
+  .brand-link{display:inline-block;text-decoration:none}
+  .brand-logo{display:block;width:320px;max-width:70vw;height:auto}
+  .stage{min-height:calc(100vh - 110px);display:grid;place-items:center;padding:24px}
+  .panel{width:100%;max-width:540px;padding:30px;border-radius:28px;background:var(--panel-soft);backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .home{display:inline-block;margin-bottom:16px;color:var(--blue);text-decoration:none;font-weight:700}
+  .brand{font-size:2.2rem;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:4px;color:#14304e}
+  .brand span{background:linear-gradient(135deg,var(--blue),var(--blue-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--muted);line-height:1.7;margin-bottom:18px}
+  .principle{margin:0 0 18px;padding:16px 18px;border-radius:18px;background:var(--blue-soft);border:1px solid rgba(90,141,238,.16)}
+  .principle strong{display:block;margin-bottom:6px;color:#17324d}
+  .principle p{margin:0;color:#35506d;line-height:1.68;font-size:.96rem}
+  .status{display:none;margin-top:16px;padding:12px 14px;border-radius:14px;line-height:1.55}
   .status.show{display:block}
-
-  .status.error{
-    background:rgba(255,107,107,.10);
-    border:1px solid rgba(255,107,107,.25);
-    color:#b91c1c;
-  }
-
-  .status.loading{
-    background:rgba(255,138,0,.10);
-    border:1px solid rgba(255,138,0,.25);
-    color:#c2410c;
-  }
-
-  .status.info{
-    background:rgba(75,130,255,.12);
-    border:1px solid rgba(75,130,255,.25);
-    color:#1e3a8a;
-  }
-
-  .note{
-    margin-top:14px;
-    color:var(--muted);
-    font-size:.92rem;
-    line-height:1.7;
-  }
+  .status.error{background:rgba(255,107,107,.10);border:1px solid rgba(255,107,107,.18);color:#b54747}
+  .status.loading{background:rgba(90,141,238,.12);border:1px solid rgba(90,141,238,.18);color:#315681}
+  .status.info{background:rgba(122,216,200,.16);border:1px solid rgba(122,216,200,.22);color:#295f58}
+  .note{margin-top:14px;color:var(--muted);font-size:.92rem;line-height:1.7}
+  @media (max-width: 640px){.topbar{padding:16px 18px 0 18px}.brand-logo{width:220px;max-width:78vw}.stage{min-height:auto;padding:18px}.panel{padding:22px}}
 </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="index.html" class="brand-link" aria-label="Volver al inicio">
+      <img src="logo-mejoraria.png" alt="MejorarIA" class="brand-logo">
+    </a>
+  </div>
+
+  <div class="stage">
+    <div class="panel">
+      <a class="home" href="index.html">← Volver al inicio</a>
+
+      <div class="brand">Mejorar<span>IA</span></div>
+      <div class="sub">Ingresa para acceder a SonarIA dentro de la plataforma.</div>
+
+      <div class="principle">
+        <strong>La IA acompaña. Educar es cuidar.</strong>
+        <p>La responsabilidad de educar y proteger a los estudiantes es siempre humana.</p>
+      </div>
+
+      <div id="g_id_onload"
+          data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
+          data-callback="handleCredentialResponse">
+      </div>
+
+      <div class="g_id_signin"
+          data-type="standard"
+          data-size="large"
+          data-theme="outline"
+          data-text="continue_with"
+          data-shape="pill"
+          data-logo_alignment="left">
+      </div>
+
+      <div id="statusBox" class="status"></div>
+
+      <div class="note">
+        Tu acceso se valida con Google y luego se registra en el backend de MejorarIA para habilitar tu sesión, tu plan y tu continuidad de uso.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://sonaria-api.onrender.com";
+
+    function setStatus(message, type){
+      const box = document.getElementById("statusBox");
+      box.textContent = message;
+      box.className = "status show " + type;
+    }
+
+    function saveSession(data) {
+      localStorage.setItem("mejoraria_token", data.access_token);
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("mejoraria_user", JSON.stringify(data.user || {}));
+
+      if (data.user && data.user.plan) {
+        localStorage.setItem("mejoraria_plan", data.user.plan);
+      }
+    }
+
+    (function showLogoutMessage(){
+      const message = localStorage.getItem("mejoraria_logout_message");
+      if(message){
+        setStatus(message, "info");
+        localStorage.removeItem("mejoraria_logout_message");
+      }
+    })();
+
+    async function handleCredentialResponse(response) {
+      try {
+        setStatus("Validando acceso con MejorarIA...", "loading");
+
+        const res = await fetch(API_URL + "/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ credential: response.credential })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || "No fue posible iniciar sesión.");
+        }
+
+        saveSession(data);
+        localStorage.removeItem("mejoraria_logout_message");
+        window.location.href = "/sonaria.html";
+      } catch (error) {
+        setStatus(error.message || "Error al iniciar sesión", "error");
+      }
+    }
+  </script>
+</body>
+</html>
