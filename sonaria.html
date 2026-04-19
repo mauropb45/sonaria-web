@@ -200,7 +200,26 @@
 
     @media (max-width:1080px){.top-grid,.analysis-grid,.today-layout,.translated-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){.wrap{padding:14px 12px 40px}.topbar{flex-direction:column;align-items:stretch}.top-actions{width:100%}.top-actions .btn,.top-actions .theme-select{width:100%}.inline,.inline-voice{grid-template-columns:1fr}.actions .btn{flex:1 1 100%}}
-  </style>
+  
+    .rescate-box{
+      background:#eef6ff;
+      border-left:4px solid #4b82ff;
+      padding:12px 14px;
+      border-radius:12px;
+      margin-bottom:12px;
+      color:#1f2937;
+    }
+    .rescate-box strong{display:block;margin-bottom:6px}
+    .rescate-box p{margin:0;color:#334155;line-height:1.65}
+    .traduccion-info{
+      font-size:.92rem;
+      opacity:.82;
+      margin-bottom:10px;
+      color:#475569;
+      line-height:1.6;
+    }
+
+</style>
 </head>
 <body class="theme-brisa">
   <div class="wrap">
@@ -233,7 +252,7 @@
           <div>
             <div class="pill">🎵 Entrada rápida para el aula</div>
             <h2 style="margin:10px 0 6px">Analizar canción</h2>
-            <div class="muted">Entra, analiza y toma decisiones docentes con el menor ruido posible.</div>
+            <div class="muted">SonarIA no cancela canciones: las analiza, detecta riesgos y te ayuda a rescatarlas pedagógicamente para el aula.</div>
           </div>
           <div id="analyzingPulse" class="analysis-pulse"><span>Analizando</span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
         </div>
@@ -270,7 +289,14 @@
             <button id="btnSummary" class="btn btn-primary" type="button">Resumen del análisis</button>
           </div>
           <div id="statusBox" class="status"></div>
-        </form>
+        <div class="hero-note" style="margin-top:14px">
+          <strong>🎯 Propuesta SonarIA</strong>
+          Analizamos canciones reales, detectamos riesgos pedagógicos y proponemos adaptaciones para que el profesor no tenga que renunciar al valor artístico de una obra solo porque necesita mediación escolar.
+        </div>
+        <div class="hero-note" style="margin-top:12px">
+          <strong>🚀 Próximo destino</strong>
+          Esta primera entrega se enfoca en traducción y adaptación pedagógica principalmente desde el inglés al español. Luego avanzaremos a una mejora profunda de lo implícito y a la adaptación de canciones en español y otros idiomas.
+        </div>
       </section>
 
       <section class="card section section-hoy">
@@ -279,7 +305,7 @@
             <div>
               <div class="pill">📅 Hoy en SonarIA</div>
               <h2 style="margin:10px 0 6px">Hoy en SonarIA</h2>
-              <div class="muted">Efeméride, hora actual y calendario del mes en un solo vistazo.</div>
+              <div class="muted">Un vistazo rápido para entrar al aula con contexto, tiempo y una referencia musical del día.</div>
             </div>
           </div>
           <div class="today-layout">
@@ -307,8 +333,8 @@
       <section class="card section section-resultado" style="grid-column:1 / -1">
         <div class="section-head">
           <div>
-            <h2>Resultado pedagógico</h2>
-            <div class="muted">Semáforo, riesgo, temas y criterio base.</div>
+            <h2>Uso en aula</h2>
+            <div class="muted">No solo evaluamos riesgo: también buscamos rescatar la mayor cantidad posible de canciones para trabajarlas con sentido pedagógico.</div>
           </div>
           <div class="section-actions">
             <div id="planPill" class="pill">Cuenta Free</div>
@@ -316,14 +342,18 @@
             
           </div>
         </div>
-        <div class="summary-card">
+        <div class="rescate-box">
+            <strong>🎯 ¿Se puede usar en clase?</strong>
+            <p id="usoAulaMensaje">Analiza una canción para saber si puedes usarla directamente, con mediación o mediante una versión adaptada.</p>
+          </div>
+          <div class="summary-card">
           <div id="summaryTitle" style="font-size:1.5rem;font-weight:900;letter-spacing:-.04em;margin-bottom:8px">Esperando análisis</div>
-          <div id="summaryCopy" class="muted">Completa el formulario para obtener una orientación pedagógica inicial.</div>
-          <div id="usoEscolarBox" class="uso-escolar-box">⚠️ <strong>Uso escolar</strong><br>Esta canción no es directamente apta para el aula. Pero SonarIA puede adaptarla automáticamente para que puedas trabajarla con tus estudiantes de forma segura y contextualizada.</div>
+          <div id="summaryCopy" class="muted">Analiza una canción para saber si puedes usarla directamente, con mediación o mediante una versión adaptada.</div>
+          <div id="usoEscolarBox" class="uso-escolar-box">⚠️ <strong>Uso escolar</strong><br>Esta canción no es directamente apta para el aula.<br>✔ Pero SonarIA la transforma en una versión trabajable pedagógicamente.</div>
         </div>
         <div class="metrics">
           <div class="metric"><strong>Edad sugerida</strong><span id="edadSugerida">—</span></div>
-          <div class="metric"><strong>Lectura sugerida</strong><span id="lecturaSugerida">—</span></div>
+          <div class="metric"><strong>Camino sugerido</strong><span id="lecturaSugerida">—</span></div>
           <div class="metric"><strong>Cursos sugeridos</strong><span id="cursosSugeridos">—</span></div>
         </div>
         <div class="traffic">
@@ -367,7 +397,7 @@
             </table>
           </div>
           <div class="ped-card">
-            <strong style="display:block;margin-bottom:10px">Selecciona el curso para ver sugerencias</strong>
+            <strong style="display:block;margin-bottom:10px">¿Cómo trabajar esta canción en clase?</strong>
             <div id="pedCourseSelector" class="ped-selector"></div>
             <div id="pedDetails" class="list" style="margin-top:12px"><div class="list-item">Selecciona el curso para ver las sugerencias.</div></div>
           </div>
@@ -376,15 +406,17 @@
 
       <section class="card section section-traduccion">
         <div class="section-topline">
-          <div class="section-title"><span>🌍</span><h3>Traducción y versión escolar</h3></div>
+          <div class="section-title"><span>🌍</span><h3>🎵 Versión lista para usar en el aula</h3></div>
           <button id="toggleTranslation" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="translationIntro" class="list">
-          <div class="list-item">Aquí verás lo detectado y lo cambiado. En Pro, <strong>Ver más</strong> despliega la letra adaptada completa y su traducción basada en la versión escolar.</div>
+          <div class="traduccion-info">Traducción basada en la versión adaptada para facilitar su uso en el aula.</div>
+          <div class="list-item">Aquí verás qué detectó SonarIA y cómo lo transformó para el aula. En esta primera etapa, la propuesta se enfoca especialmente en canciones en inglés adaptadas y traducidas al español desde su versión escolar.</div>
         </div>
         <div id="translationWrap" class="table-wrap">
           <div class="lyrics-actions">
-            <button id="btnVerAdaptada" class="btn btn-ghost" type="button">Ver letra adaptada</button>
+            <button id="btnVerAdaptada" class="btn btn-ghost" type="button">Ver versión escolar</button>
+            <button class="btn btn-primary" id="btnUsarClase" type="button">Usar esta versión en clase</button>
             <button id="btnVerTraducida" class="btn btn-ghost" type="button">Ver letra traducida</button>
           </div>
           <div id="adaptedView" class="lyrics-view active"></div>
@@ -398,7 +430,7 @@
     <div class="modal-box viewer-box" id="viewerBox">
       <div class="pill" style="margin-bottom:12px">🛡️ Cuidemos a nuestros alumnos</div>
       <h2 style="margin:0 0 8px;font-size:2rem;letter-spacing:-.04em">La IA acompaña. Educar es cuidar.</h2>
-      <p class="muted" style="margin-top:0">SonarIA puede detectar lenguaje explícito, contextos sensibles y adaptar letras para uso escolar, pero la decisión final siempre es del docente.</p>
+      <p class="muted" style="margin-top:0">SonarIA detecta lenguaje explícito, contextos sensibles y propone adaptaciones para rescatar canciones y llevarlas al aula con mayor seguridad. La decisión final siempre es del docente.</p>
       <div class="summary-btn-row"><button id="btnViewerOk" class="btn btn-green" type="button" onclick="closeViewerModalSafe()">Entrar a SonarIA</button></div>
     </div>
   </div>
@@ -1125,5 +1157,50 @@ $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver má
       updateTraffic();
     })();
   </script>
+
+<script>
+(function(){
+  const btn = document.getElementById('btnUsarClase');
+  if(btn){
+    btn.addEventListener('click', function(){
+      const sec = document.getElementById('seccionTraduccion') || document.getElementById('adaptadaBox') || document.getElementById('translationBox');
+      if(sec && sec.scrollIntoView){ sec.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  }
+
+  const badge = document.getElementById('resultBadge');
+  const uso = document.getElementById('usoAulaMensaje');
+  const summary = document.getElementById('summaryTitle');
+  if(badge && uso){
+    const observer = new MutationObserver(function(){
+      const t = (badge.textContent || '').toLowerCase();
+      if(t.includes('verde') || t.includes('apta') || t.includes('🟢')){
+        uso.textContent = 'Sí. Puedes trabajar esta canción directamente en clase y apoyarte en las sugerencias pedagógicas para desarrollarla.';
+      }else if(t.includes('amar') || t.includes('mediación') || t.includes('🟠') || t.includes('🟡')){
+        uso.textContent = 'Sí, pero conviene usarla con guía docente. SonarIA te ayuda a contextualizarla y convertirla en una experiencia pedagógica segura.';
+      }else if(t.includes('roj') || t.includes('no apta') || t.includes('🔴')){
+        uso.textContent = 'No se recomienda usarla de forma directa, pero SonarIA puede rescatarla mediante una versión escolar adaptada para el aula.';
+      }else{
+        uso.textContent = 'Analiza una canción para saber si puedes usarla directamente, con mediación o mediante una versión adaptada.';
+      }
+    });
+    observer.observe(badge, {childList:true, subtree:true, characterData:true});
+    if(summary){
+      const observer2 = new MutationObserver(function(){
+        const s = (summary.textContent || '').toLowerCase();
+        if(s.includes('directamente') || s.includes('apta')){
+          uso.textContent = 'Sí. Puedes trabajar esta canción directamente en clase y apoyarte en las sugerencias pedagógicas para desarrollarla.';
+        }else if(s.includes('mediación') || s.includes('acompañamiento')){
+          uso.textContent = 'Sí, pero conviene usarla con guía docente. SonarIA te ayuda a contextualizarla y convertirla en una experiencia pedagógica segura.';
+        }else if(s.includes('no apta') || s.includes('riesgo alto')){
+          uso.textContent = 'No se recomienda usarla de forma directa, pero SonarIA puede rescatarla mediante una versión escolar adaptada para el aula.';
+        }
+      });
+      observer2.observe(summary, {childList:true, subtree:true, characterData:true});
+    }
+  }
+})();
+</script>
+
 </body>
 </html>
