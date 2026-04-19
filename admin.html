@@ -1,219 +1,315 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin Command | MejorarIA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#07111f;--bg2:#0b1a31;--panel:#111c2b;--panel2:#152235;--line:rgba(255,255,255,.08);
-  --text:#eef3fb;--muted:#9fb0c8;--ferrari:#e10600;--mclaren:#ff8700;--green:#28e08f;--blue:#367cff;--yellow:#f3c74b;
-  --shadow:0 24px 60px rgba(0,0,0,.34);--radius:22px;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,sans-serif;color:var(--text);background:
-radial-gradient(circle at top left, rgba(255,135,0,.09), transparent 18%),
-radial-gradient(circle at top right, rgba(54,124,255,.09), transparent 18%),
-linear-gradient(180deg,var(--bg),var(--bg2));}
-body::before{content:"";position:fixed;inset:0;pointer-events:none;background:
-linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom, rgba(255,255,255,.3), transparent 80%);}
-.wrap{max-width:1480px;margin:0 auto;padding:22px;position:relative;z-index:1}
-.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-bottom:18px}
-.brand h1{margin:0;font-size:2.8rem;line-height:.92;letter-spacing:-.07em;font-weight:900}
-.brand h1 .green{color:var(--green)}
-.brand .sub{margin-top:6px;color:#cad8eb;font-size:.85rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.brand .line{margin-top:4px;color:var(--muted);font-size:.82rem}
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer}
-.btn.ghost{background:#1f2b3e;color:#fff}.btn.primary{background:linear-gradient(135deg,var(--mclaren),#ff9b1f);color:#171b22}.btn.blue{background:linear-gradient(135deg,var(--blue),#5c9bff);color:#fff}.btn.green{background:linear-gradient(135deg,var(--green),#5be5d4);color:#071a18}.btn.danger{background:linear-gradient(135deg,var(--ferrari),#ff635e);color:#fff}
-.btn.small{min-height:38px;padding:0 12px;border-radius:12px;font-size:13px}
-.hero{display:grid;grid-template-columns:1.25fr .9fr;gap:16px;margin-bottom:18px}
-.card,.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-.hero-main{padding:20px}.hero-main .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(54,124,255,.12);border:1px solid rgba(54,124,255,.24);font-weight:900;font-size:.78rem;color:#dce8ff}
-.hero-main h2{margin:14px 0 10px;font-size:3.15rem;line-height:.93;letter-spacing:-.07em;max-width:780px}
-.hero-main p{margin:0;color:#c8d6e8;line-height:1.75;max-width:760px}
-.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-.stat{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
-.stat strong{display:block;font-size:1.8rem;line-height:1}.stat span{display:block;color:#c8d6e8;font-size:.84rem;margin-top:8px}
-.hero-side{padding:16px;display:grid;gap:12px}.micro{padding:16px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}.micro strong{display:block;margin-bottom:6px}.micro span{color:#c8d6e8;line-height:1.6;font-size:.92rem}
-.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
-.panel{padding:18px}.panel h3{margin:0 0 8px;font-size:1.35rem}.panel p{margin:0 0 14px;color:var(--muted);line-height:1.65}
-.controls{display:grid;grid-template-columns:1fr 220px;gap:10px;margin-bottom:12px}
-input,select{width:100%;border:none;outline:none;border-radius:14px;background:#0b1420;color:var(--text);border:1px solid rgba(255,255,255,.08);padding:13px 14px;font:inherit}
-table{width:100%;border-collapse:collapse;font-size:14px} th,td{padding:11px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top} th{color:#d9e6f8;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-.pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}.pill.free{background:rgba(54,124,255,.14);color:#dbe8ff}.pill.pro{background:rgba(0,210,190,.14);color:#d8fff7}.pill.pending{background:rgba(255,135,0,.14);color:#ffe3bf}
-.row-actions{display:flex;gap:8px;flex-wrap:wrap}.status{margin:12px 0 0;font-weight:800}.status.error{color:#ffd3d3}.status.ok{color:#d8fff7}
-.intel{display:grid;gap:14px}.intel-card{padding:16px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}.intel-card strong{display:block;margin-bottom:6px}.intel-card span{color:#c8d6e8;line-height:1.7}
-@media(max-width:1180px){.hero,.grid{grid-template-columns:1fr}} @media(max-width:760px){.controls{grid-template-columns:1fr}.hero-main h2{font-size:2.2rem}.hero-stats{grid-template-columns:1fr}.wrap{padding:14px}table{display:block;overflow:auto}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | SonarIA</title>
+  <meta name="description" content="Panel de administración de SonarIA para gestionar usuarios y regalos Pro.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f7fb; --panel:#ffffffd9; --line:#d7deeb; --text:#243043; --muted:#66758c;
+      --accent:#4b82ff; --green:#23c66a; --orange:#ff9340; --red:#ff6a6a;
+      --shadow:0 18px 42px rgba(31,44,74,.10); --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:'Inter',sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(145,183,255,.26), transparent 22%),
+        radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),
+        linear-gradient(180deg,#f7f9fd,#eef3fa);
+    }
+    .wrap{max-width:1320px;margin:0 auto;padding:24px 20px 60px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    .brand{font-size:2rem;font-weight:900;letter-spacing:-.06em}
+    .brand span{color:var(--accent)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      min-height:46px;padding:0 16px;border:none;border-radius:16px;font:inherit;font-weight:800;cursor:pointer;
+      transition:.18s ease; display:inline-flex; align-items:center; justify-content:center;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
+    .btn-primary{background:linear-gradient(135deg,#ffaf5f,#ff9340);color:#fff}
+    .btn-green{background:linear-gradient(135deg,#2fd46c,#47dd8e);color:#082313}
+    .btn-red{background:linear-gradient(135deg,#ff8a8a,#ff6a6a);color:#fff}
+    .card{
+      background:var(--panel);border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);
+      border-radius:var(--radius);backdrop-filter:blur(10px);
+    }
+    .section{padding:22px}
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-bottom:18px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#355fa8;font-size:.82rem;font-weight:800;margin-bottom:12px}
+    h1{margin:0 0 10px;font-size:clamp(2.4rem,4.8vw,3.8rem);line-height:.95;letter-spacing:-.07em}
+    p{margin:0;color:var(--muted);line-height:1.8}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:18px}
+    .field{display:grid;gap:7px;margin-bottom:12px}
+    label{font-size:.9rem;font-weight:800;color:#344154}
+    input, textarea{
+      width:100%;background:#fff;border:1px solid var(--line);outline:none;border-radius:16px;padding:13px 14px;color:var(--text);font:inherit;
+    }
+    textarea{min-height:90px;resize:vertical}
+    .status{display:none;margin-top:8px;padding:12px 14px;border-radius:14px;font-weight:700;line-height:1.6}
+    .status.show{display:block}
+    .table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    th,td{padding:12px;border-bottom:1px solid #edf1f7;text-align:left;vertical-align:top}
+    th{font-size:.88rem;color:#44536b;background:#f8fbff}
+    .search{margin-bottom:12px}
+    .muted{color:var(--muted)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;font-size:.8rem;font-weight:800;border:1px solid var(--line);background:#fff}
+    .pill.pro{background:#ecfff2;color:#0a6a35;border-color:#b9efcc}
+    .pill.admin{background:#eef4ff;color:#2558d8;border-color:#cfe0ff}
+    @media (max-width:980px){.hero,.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="topbar">
-    <div class="brand">
-      <h1>ADMIN <span class="green">COMMAND</span></h1>
-      <div class="sub">MEJORARIA · SONARIA · CONTROL TÁCTICO</div>
-      <div class="line">BEATLES · STAR WARS · FBI/SWAT · CÁMARAS · RASTREADORES · INFORMÁTICA · ENGLISH · FÓRMULA 1</div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">Sonar<span>IA</span> Admin</div>
+      <div class="actions">
+        <button class="btn btn-ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
+        <button class="btn btn-primary" onclick="window.location.href='/planes.html'">Planes</button>
+      </div>
     </div>
-    <div class="actions">
-      <button class="btn ghost" onclick="window.location.href='/index.html'">Home</button>
-      <button class="btn blue" onclick="window.location.href='/sonaria.html'">Ir a SonarIA</button>
-      <button class="btn primary" onclick="loadAdmin()">Actualizar panel</button>
-    </div>
-  </div>
 
-  <section class="hero">
-    <div class="card hero-main">
-      <div class="eyebrow">CONTROL ROOM · LIVE STATUS</div>
-      <h2>PANEL ADMIN PRO PARA VIGILAR ETAPAS, USUARIOS Y PLANES.</h2>
-      <p>Interfaz tipo sala de control para revisar rápidamente qué usuarios están free, cuáles ya están en Pro y aplicar acciones manuales cuando haga falta.</p>
-      <div class="hero-stats">
-        <div class="stat"><strong id="statTotal">0</strong><span>usuarios detectados</span></div>
-        <div class="stat"><strong id="statFree">0</strong><span>cuentas free</span></div>
-        <div class="stat"><strong id="statPro">0</strong><span>cuentas pro</span></div>
+    <section class="hero">
+      <div class="card section">
+        <div class="eyebrow">🛠️ Administración</div>
+        <h1>Regala tiempo Pro a quien tú determines.</h1>
+        <p>Puedes activar Pro por la cantidad de días que quieras para el usuario que quieras, ideal para promociones, pruebas o alianzas.</p>
       </div>
-    </div>
-    <div class="card hero-side">
-      <div class="micro"><strong>Scanner mode</strong><span>Lectura rápida del estado de usuarios y planes.</span></div>
-      <div class="micro"><strong>Stage tracking</strong><span>Visual claro para saber en qué etapa está cada cuenta.</span></div>
-      <div class="micro"><strong>Action deck</strong><span>Botones directos para dar Pro mensual, anual o quitar Pro.</span></div>
-    </div>
-  </section>
-
-  <div class="grid">
-    <section class="panel">
-      <h3>Radar de usuarios</h3>
-      <p>Puedes filtrar y actuar sobre las cuentas activas.</p>
-      <div class="controls">
-        <input id="userFilter" type="text" placeholder="nombre, correo o etapa">
-        <select id="planFilter">
-          <option value="">Todas</option>
-          <option value="free">Free</option>
-          <option value="pro">Pro</option>
-        </select>
+      <div class="card section">
+        <div class="eyebrow">✅ Qué resuelve</div>
+        <p style="margin-bottom:10px">Este panel te permitirá:</p>
+        <p>• ver usuarios y su plan actual<br>• regalar Pro por X días<br>• revocar Pro manualmente<br>• revisar vencimiento de cada acceso</p>
       </div>
-      <div style="overflow:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Etapa</th>
-              <th>Plan</th>
-              <th>Alta</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="usersBody">
-            <tr><td colspan="5">Cargando usuarios...</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="status" class="status"></div>
     </section>
 
-    <section class="intel">
-      <div class="panel">
-        <h3>Inteligencia operativa</h3>
-        <p>Este admin está pensado para verte a ti, no al usuario final. Se prioriza claridad y rapidez de acción.</p>
-        <div class="intel-card">
-          <strong>Qué sí hace</strong>
-          <span>Leer usuarios, ver estado de plan y dar o quitar Pro manualmente desde backend.</span>
+    <section class="grid">
+      <div class="card section">
+        <div class="field">
+          <label for="userEmail">Correo del usuario</label>
+          <input id="userEmail" type="text" placeholder="docente@correo.com">
         </div>
-        <div class="intel-card">
-          <strong>Qué conviene después</strong>
-          <span>Agregar eliminación, correo a pending y overrides compartidos desde base de datos.</span>
+        <div class="field">
+          <label for="grantDays">Días de regalo</label>
+          <input id="grantDays" type="text" value="30" placeholder="30">
+        </div>
+        <div class="field">
+          <label for="grantNote">Nota interna</label>
+          <textarea id="grantNote" placeholder="Ej: regalo por lanzamiento o prueba docente"></textarea>
+        </div>
+        <div class="actions">
+          <button id="grantBtn" class="btn btn-green" type="button">Activar Pro temporal</button>
+          <button id="revokeBtn" class="btn btn-red" type="button">Revocar Pro</button>
+        </div>
+        <div id="statusBox" class="status"></div>
+      </div>
+
+      <div class="card section">
+        <div class="search">
+          <input id="searchBox" type="text" placeholder="Buscar por nombre o correo">
+        </div>
+        <div style="overflow:auto">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Plan</th>
+                <th>Vencimiento</th>
+                <th>Admin</th>
+                <th>Nota</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody">
+              <tr><td colspan="5">Cargando usuarios...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
   </div>
-</div>
 
-<script>
-const API = "https://sonaria-api.onrender.com";
-function getToken(){
-  return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
-}
-function pillPlan(plan){
-  const p = (plan || "free").toLowerCase();
-  return `<span class="pill ${p === 'pro' ? 'pro' : 'free'}">${p.toUpperCase()}</span>`;
-}
-function pillStatus(status){
-  const s = (status || "").toLowerCase();
-  const cls = s === "active" ? "pro" : (s === "pending" || s === "paused" ? "pending" : "free");
-  return `<span class="pill ${cls}">${status || "—"}</span>`;
-}
-async function fetchJson(path, options={}){
-  const token = getToken();
-  if(!token){ window.location.href = "/login.html"; throw new Error("No hay sesión activa"); }
-  const headers = Object.assign({}, options.headers || {}, { "Authorization": "Bearer " + token });
-  const res = await fetch(API + path, Object.assign({}, options, { headers }));
-  const data = await res.json().catch(() => ({}));
-  if(!res.ok) throw new Error(data.detail || "No se pudo cargar la vista admin");
-  return data;
-}
-async function forcePlan(userId, action, cadence="monthly"){
-  const status = document.getElementById("status");
-  status.className = "status"; status.textContent = "Aplicando cambio...";
-  try{
-    await fetchJson(`/admin/${action}/${userId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cadence })
+  <script>
+    const API = "https://sonaria-api.onrender.com";
+    let users = [];
+
+    function getToken(){
+      return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
+    }
+
+    function setStatus(message, type="info"){
+      const box = document.getElementById("statusBox");
+      box.textContent = message;
+      box.className = "status show";
+      box.style.background = type === "error" ? "#fff1f1" : type === "ok" ? "#eefcf2" : "#eef5ff";
+      box.style.border = "1px solid " + (type === "error" ? "#ffcaca" : type === "ok" ? "#bde9ca" : "#cdddff");
+      box.style.color = type === "error" ? "#a53a3a" : type === "ok" ? "#17663a" : "#26407c";
+    }
+
+    function clearSession(){
+      localStorage.removeItem("mejoraria_token");
+      localStorage.removeItem("token");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("mejoraria_user");
+      localStorage.removeItem("mejoraria_plan");
+    }
+
+    function renderUsers(list){
+      const tbody = document.getElementById("usersBody");
+      if(!list.length){
+        tbody.innerHTML = '<tr><td colspan="5">No hay usuarios para mostrar.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = list.map(user => {
+        const planPill = user.plan === "pro"
+          ? '<span class="pill pro">PRO</span>'
+          : '<span class="pill">FREE</span>';
+        const adminPill = user.is_admin
+          ? '<span class="pill admin">Admin</span>'
+          : '<span class="muted">—</span>';
+        const expires = user.plan_expires_at ? new Date(user.plan_expires_at).toLocaleDateString("es-CL") : "—";
+        const note = user.grant_note || "—";
+        return `
+          <tr>
+            <td><strong>${escapeHtml(user.name || "Sin nombre")}</strong><br><span class="muted">${escapeHtml(user.email || "")}</span></td>
+            <td>${planPill}</td>
+            <td>${expires}</td>
+            <td>${adminPill}</td>
+            <td>${escapeHtml(note)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function escapeHtml(value){
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function loadUsers(){
+      const token = getToken();
+      if(!token){
+        setStatus("Debes iniciar sesión con una cuenta administradora.", "error");
+        document.getElementById("usersBody").innerHTML = '<tr><td colspan="5">Sin sesión activa.</td></tr>';
+        return;
+      }
+
+      try{
+        const res = await fetch(API + "/admin/users", {
+          headers:{ "Authorization":"Bearer " + token }
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(res.status === 401){
+          clearSession();
+          setStatus("Tu sesión expiró. Vuelve a iniciar sesión como administrador.", "error");
+          document.getElementById("usersBody").innerHTML = '<tr><td colspan="5">Sesión expirada.</td></tr>';
+          return;
+        }
+
+        if(res.status === 403){
+          setStatus("Esta cuenta no tiene permisos de administrador.", "error");
+          document.getElementById("usersBody").innerHTML = '<tr><td colspan="5">Acceso solo para administrador.</td></tr>';
+          return;
+        }
+
+        if(!res.ok || !data.items){
+          setStatus(data.detail || "No fue posible cargar usuarios.", "error");
+          return;
+        }
+
+        users = data.items;
+        renderUsers(users);
+      }catch(e){
+        setStatus("No se pudo conectar con el backend.", "error");
+      }
+    }
+
+    async function grantPro(){
+      const email = document.getElementById("userEmail").value.trim();
+      const days = parseInt(document.getElementById("grantDays").value.trim() || "30", 10);
+      const note = document.getElementById("grantNote").value.trim();
+
+      if(!email){
+        setStatus("Debes indicar el correo del usuario.", "error");
+        return;
+      }
+
+      try{
+        const res = await fetch(API + "/admin/grant-pro", {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + getToken()
+          },
+          body: JSON.stringify({ email, days, note })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(!res.ok){
+          setStatus(data.detail || "No fue posible activar Pro temporal.", "error");
+          return;
+        }
+
+        setStatus(data.message || "Pro temporal activado.", "ok");
+        loadUsers();
+      }catch(e){
+        setStatus("No se pudo conectar con el backend.", "error");
+      }
+    }
+
+    async function revokePro(){
+      const email = document.getElementById("userEmail").value.trim();
+      if(!email){
+        setStatus("Debes indicar el correo del usuario.", "error");
+        return;
+      }
+
+      try{
+        const res = await fetch(API + "/admin/revoke-pro", {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + getToken()
+          },
+          body: JSON.stringify({ email })
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if(!res.ok){
+          setStatus(data.detail || "No fue posible revocar Pro.", "error");
+          return;
+        }
+
+        setStatus(data.message || "Pro revocado.", "ok");
+        loadUsers();
+      }catch(e){
+        setStatus("No se pudo conectar con el backend.", "error");
+      }
+    }
+
+    document.getElementById("grantBtn").onclick = grantPro;
+    document.getElementById("revokeBtn").onclick = revokePro;
+    document.getElementById("searchBox").addEventListener("input", (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      const filtered = !q ? users : users.filter(u =>
+        (u.name || "").toLowerCase().includes(q) || (u.email || "").toLowerCase().includes(q)
+      );
+      renderUsers(filtered);
     });
-    status.className = "status ok"; status.textContent = "Cambio aplicado correctamente.";
-    await loadAdmin();
-  }catch(err){
-    status.className = "status error"; status.textContent = err.message;
-  }
-}
-let allUsers = [];
-function renderUsers(){
-  const filter = (document.getElementById("userFilter").value || "").toLowerCase().trim();
-  const planFilter = document.getElementById("planFilter").value || "";
-  const filtered = allUsers.filter(u => {
-    const hay = `${u.email||""} ${u.name||""} ${u.plan||""} ${u.plan_status||""}`.toLowerCase();
-    if(filter && !hay.includes(filter)) return false;
-    if(planFilter && (u.plan || "").toLowerCase() !== planFilter) return false;
-    return true;
-  });
-  document.getElementById("usersBody").innerHTML = filtered.length ? filtered.map(u => `
-    <tr>
-      <td><strong>${u.name || "Sin nombre"}</strong><br><span style="color:#9fb0c8">${u.email || "—"}</span></td>
-      <td>${pillStatus(u.plan_status || (u.plan === "pro" ? "active" : "free"))}</td>
-      <td>${pillPlan(u.plan)}</td>
-      <td>${u.created_at ? new Date(u.created_at).toLocaleDateString("es-CL") : "—"}</td>
-      <td><div class="row-actions">
-        <button class="btn small green" onclick="forcePlan(${u.id}, 'set-pro', 'monthly')">Dar Pro mensual</button>
-        <button class="btn small blue" onclick="forcePlan(${u.id}, 'set-pro', 'annual')">Dar Pro anual</button>
-        <button class="btn small danger" onclick="forcePlan(${u.id}, 'remove-pro')">Quitar Pro</button>
-      </div></td>
-    </tr>`).join("") : `<tr><td colspan="5">No hay coincidencias.</td></tr>`;
-}
-async function loadAdmin(){
-  const status = document.getElementById("status");
-  status.className = "status"; status.textContent = "Escaneando datos...";
-  try{
-    const data = await fetchJson("/admin/stats");
-    const s = data.stats || {};
-    allUsers = data.recent_users || [];
-    document.getElementById("statTotal").textContent = s.total ?? 0;
-    document.getElementById("statFree").textContent = s.free ?? 0;
-    document.getElementById("statPro").textContent = s.pro ?? 0;
-    renderUsers();
-    status.className = "status ok"; status.textContent = "Panel táctico cargado.";
-  }catch(err){
-    status.className = "status error";
-    status.textContent = err.message + " · Si el backend aún no tiene endpoints admin, reemplaza también app.py.";
-    document.getElementById("usersBody").innerHTML = `<tr><td colspan="5">No fue posible cargar usuarios.</td></tr>`;
-  }
-}
-document.getElementById("userFilter").addEventListener("input", renderUsers);
-document.getElementById("planFilter").addEventListener("change", renderUsers);
-loadAdmin();
-</script>
+
+    loadUsers();
+  </script>
 </body>
 </html>
