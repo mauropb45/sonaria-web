@@ -1,536 +1,117 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planes | SonarIA</title>
-  <meta name="description" content="Elige tu modalidad en SonarIA y activa la experiencia Pro con pago seguro." />
+  <meta name="description" content="Elige tu plan en SonarIA y desbloquea la versión Pro." />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#04101f;
-      --bg2:#081a31;
-      --panel:rgba(255,255,255,.05);
-      --panel-strong:rgba(255,255,255,.07);
-      --line:rgba(255,255,255,.10);
-      --text:#f5f7fb;
-      --muted:#9fb0c7;
-      --green:#22c55e;
-      --green2:#14d68f;
-      --orange:#ff8a00;
-      --orange2:#ff5a00;
-      --blue:#4b82ff;
-      --mp-blue:#1400a5;
-      --mp-cyan:#00b1ea;
-      --shadow:0 24px 60px rgba(0,0,0,.35);
+      --bg:#f6f9fc;
+      --bg2:#edf4fb;
+      --panel:rgba(255,255,255,.82);
+      --panel-strong:rgba(255,255,255,.94);
+      --line:rgba(24,56,92,.10);
+      --text:#17324d;
+      --text-strong:#10243a;
+      --muted:#7287a0;
+      --green:#56c4a7;
+      --green2:#85dbc5;
+      --orange:#6fa8ff;
+      --orange2:#4d88ef;
+      --blue:#5a8dee;
+      --blue2:#8cc8ff;
+      --shadow:0 24px 60px rgba(24,55,92,.10);
       --radius:26px;
       --max:1160px;
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-
     body{
       margin:0;
       font-family:'Inter',sans-serif;
       color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(75,130,255,.13), transparent 18%),
-        radial-gradient(circle at top right, rgba(255,138,0,.10), transparent 18%),
+        radial-gradient(circle at top left, rgba(140,200,255,.24), transparent 22%),
+        radial-gradient(circle at top right, rgba(122,216,200,.13), transparent 22%),
         linear-gradient(180deg,var(--bg),var(--bg2));
       min-height:100vh;
       overflow-x:hidden;
     }
-
     body::before{
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(rgba(255,255,255,.013) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.013) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.65) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.55) 1px, transparent 1px);
       background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,.25), transparent 82%);
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.40), transparent 82%);
+      opacity:.22;
     }
-
-    .wrap{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:24px 20px 70px;
-      position:relative;
-      z-index:1;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      margin-bottom:24px;
-    }
-
-    .brand-link{
-      text-decoration:none;
-      color:inherit;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-    }
-
-    .brand{
-      font-size:2rem;
-      font-weight:900;
-      letter-spacing:-.06em;
-      line-height:1;
-    }
-
-    .brand .ia{
-      color:#26d07c;
-      text-shadow:0 0 18px rgba(38,208,124,.30);
-    }
-
-    .brand-sub{
-      color:var(--muted);
-      font-size:.84rem;
-      font-weight:700;
-      margin-top:4px;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:none;
-      border-radius:16px;
-      min-height:48px;
-      padding:0 18px;
-      font:inherit;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;
-    }
-
-    .btn:hover{ transform:translateY(-1px); }
-
-    .btn-ghost{
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid var(--line);
-    }
-
-    .btn-home{
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#111827;
-      box-shadow:0 12px 30px rgba(255,138,0,.22);
-    }
-
-    .hero{
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-      border:1px solid var(--line);
-      border-radius:30px;
-      padding:28px;
-      box-shadow:var(--shadow);
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:18px;
-      margin-bottom:20px;
-      animation:fadeUp .6s ease both;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(75,130,255,.12);
-      border:1px solid rgba(75,130,255,.24);
-      color:#dce8ff;
-      font-size:.82rem;
-      font-weight:800;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(2.6rem, 4.4vw, 4.8rem);
-      line-height:.92;
-      letter-spacing:-.08em;
-      max-width:760px;
-    }
-
-    .hero p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.82;
-      font-size:1.03rem;
-      max-width:760px;
-    }
-
-    .hero-side{
-      display:grid;
-      gap:12px;
-      align-content:start;
-    }
-
-    .mini{
-      padding:16px 18px;
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.07);
-    }
-
-    .mini strong{
-      display:block;
-      margin-bottom:7px;
-      font-size:.98rem;
-    }
-
-    .mini span{
-      color:var(--muted);
-      line-height:1.7;
-      font-size:.95rem;
-    }
-
-    .banner{
-      display:none;
-      margin:0 0 20px;
-      padding:18px 20px;
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-      box-shadow:var(--shadow);
-    }
-
-    .banner.show{display:block}
-    .banner.ok{border-color:rgba(20,214,143,.22); background:linear-gradient(180deg, rgba(20,214,143,.12), rgba(255,255,255,.03))}
-    .banner.pending{border-color:rgba(255,138,0,.24); background:linear-gradient(180deg, rgba(255,138,0,.10), rgba(255,255,255,.03))}
-    .banner.error{border-color:rgba(255,116,116,.24); background:linear-gradient(180deg, rgba(255,116,116,.10), rgba(255,255,255,.03))}
-    .banner strong{display:block; margin-bottom:6px; font-size:1rem}
-    .banner p{margin:0; color:#dce6f5; line-height:1.72}
-    .banner-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
-
-    .plans{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-      margin-top:20px;
-    }
-
-    .plan{
-      position:relative;
-      overflow:hidden;
-      padding:28px;
-      border-radius:28px;
-      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.028));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow);
-      animation:fadeUp .7s ease both;
-    }
-
-    .plan.pro{
-      border:1px solid rgba(0,177,234,.28);
-      box-shadow:0 24px 60px rgba(0,177,234,.10);
-    }
-
-    .plan-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-    }
-
-    .plan h2{
-      margin:0;
-      font-size:1.55rem;
-      letter-spacing:-.04em;
-    }
-
-    .badge{
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:.78rem;
-      font-weight:800;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:#dce8ff;
-      white-space:nowrap;
-    }
-
-    .badge.pro{
-      background:rgba(0,177,234,.12);
-      border-color:rgba(0,177,234,.22);
-      color:#d9f6ff;
-    }
-
-    .price{
-      display:flex;
-      align-items:flex-end;
-      gap:8px;
-      line-height:1;
-      margin-bottom:14px;
-    }
-
-    .price strong{
-      font-size:3.1rem;
-      letter-spacing:-.08em;
-    }
-
-    .price span{
-      color:var(--muted);
-      font-weight:700;
-      margin-bottom:6px;
-    }
-
-    .copy{
-      color:var(--muted);
-      line-height:1.8;
-      margin-bottom:18px;
-    }
-
-    .features{
-      display:grid;
-      gap:10px;
-      margin:0 0 18px;
-      padding:0;
-      list-style:none;
-    }
-
-    .features li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:12px 14px;
-      border-radius:16px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.06);
-      color:#dce8ff;
-      line-height:1.65;
-    }
-
-    .features li::before{
-      content:"✦";
-      color:#9ad6ff;
-      flex:0 0 auto;
-      margin-top:1px;
-    }
-
-    .pro .features li::before{
-      color:#6ed8ff;
-    }
-
-    .value-box{
-      margin-top:18px;
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .value-box strong{
-      display:block;
-      margin-bottom:7px;
-      font-size:1rem;
-    }
-
-    .value-box span{
-      color:#dce7f6;
-      line-height:1.7;
-    }
-
-    .free-cta{
-      width:100%;
-      margin-top:22px;
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid var(--line);
-      min-height:56px;
-      border-radius:16px;
-      font:inherit;
-      font-weight:900;
-      cursor:pointer;
-    }
-
-    .subscription-stack{
-      margin-top:16px;
-      display:grid;
-      gap:14px;
-    }
-
-    .plan-toggle{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .toggle-btn{
-      min-height:46px;
-      padding:0 16px;
-      border:none;
-      border-radius:14px;
-      font:inherit;
-      font-weight:900;
-      cursor:pointer;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.10);
-      transition:.18s ease;
-    }
-
-    .toggle-btn.active{
-      background:linear-gradient(135deg, rgba(0,177,234,.18), rgba(75,130,255,.18));
-      color:#f5fbff;
-      border-color:rgba(0,177,234,.28);
-      box-shadow:0 10px 24px rgba(0,177,234,.14);
-    }
-
-    .mp-button{
-      width:100%;
-      min-height:112px;
-      border:none;
-      border-radius:26px;
-      cursor:pointer;
-      background:linear-gradient(180deg,#ffffff,#f4f9ff);
-      border:2px solid rgba(0,177,234,0.40);
-      box-shadow:0 25px 60px rgba(0,177,234,0.22);
-      color:#0b1730;
-      padding:16px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;
-    }
-
-    .mp-button:hover{
-      transform:translateY(-2px) scale(1.01);
-      box-shadow:0 30px 68px rgba(0,177,234,0.26);
-    }
-
-    .mp-button:disabled{
-      opacity:.78;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .mp-left{
-      display:flex;
-      align-items:center;
-      gap:20px;
-    }
-
-    .mp-logo{
-      background:white;
-      border-radius:18px;
-      padding:12px;
-      box-shadow:0 10px 25px rgba(0,0,0,0.15);
-      min-width:96px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .mp-logo img{
-      width:70px;
-      height:auto;
-      display:block;
-    }
-
-    .mp-copy{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      text-align:left;
-    }
-
-    .mp-copy small{
-      font-size:12px;
-      color:#2d5f81;
-      font-weight:800;
-    }
-
-    .mp-copy strong{
-      font-size:20px;
-      color:var(--mp-blue);
-      font-weight:900;
-      line-height:1.15;
-    }
-
-    .mp-copy span{
-      font-size:14px;
-      color:#375571;
-      margin-top:4px;
-      font-weight:700;
-    }
-
-    .mp-check{
-      width:55px;
-      height:55px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,177,234,0.15);
-      font-size:22px;
-      color:var(--mp-blue);
-      flex:0 0 auto;
-    }
-
-    .trust{
-      margin-top:12px;
-      text-align:center;
-      font-size:13px;
-      color:#cfd9e8;
-      font-weight:700;
-    }
-
-    .foot{
-      margin-top:22px;
-      text-align:center;
-      color:#d7e2f1;
-      font-weight:800;
-    }
-
-    .foot small{
-      display:block;
-      color:var(--muted);
-      font-weight:500;
-      margin-top:6px;
-    }
-
-    @keyframes fadeUp{
-      from{opacity:0; transform:translateY(18px)}
-      to{opacity:1; transform:translateY(0)}
-    }
-
-    @media (max-width: 980px){
-      .hero, .plans{
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media (max-width: 720px){
-      .wrap{ padding:18px 14px 56px; }
-      .topbar{ flex-direction:column; align-items:stretch; }
-      .top-actions{ width:100%; }
-      .top-actions .btn{ width:100%; }
-      .hero, .plan{ padding:20px; }
-      h1{ font-size:2.35rem; }
-      .price strong{ font-size:2.5rem; }
-      .mp-button{ min-height:122px; padding:16px; }
-      .mp-left{ gap:14px; }
-      .mp-logo{ min-width:82px; }
-      .mp-logo img{ width:58px; }
-      .mp-copy strong{ font-size:17px; }
-    }
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px 20px 70px;position:relative;z-index:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+    .brand-link{text-decoration:none;color:inherit;display:inline-flex;align-items:center;gap:10px}
+    .brand{font-size:2rem;font-weight:900;letter-spacing:-.06em;line-height:1;color:var(--text-strong)}
+    .brand .ia{background:linear-gradient(135deg,var(--blue),#73d0f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+    .brand-sub{color:var(--muted);font-size:.84rem;font-weight:700;margin-top:4px}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:none;border-radius:16px;min-height:48px;padding:0 18px;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-ghost{background:rgba(255,255,255,.74);color:var(--text);border:1px solid var(--line);box-shadow:0 10px 24px rgba(24,55,92,.05)}
+    .btn-home{background:linear-gradient(135deg,var(--orange),var(--orange2));color:white;box-shadow:0 12px 30px rgba(90,141,238,.22)}
+    .hero{background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72));border:1px solid var(--line);border-radius:30px;padding:28px;box-shadow:var(--shadow);display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:20px;animation:fadeUp .6s ease both;backdrop-filter:blur(12px)}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(90,141,238,.10);border:1px solid rgba(90,141,238,.18);color:#315681;font-size:.82rem;font-weight:800;margin-bottom:14px}
+    h1{margin:0 0 12px;font-size:clamp(2.6rem, 4.4vw, 4.8rem);line-height:.92;letter-spacing:-.08em;max-width:760px;color:var(--text-strong)}
+    .hero p{margin:0;color:var(--muted);line-height:1.82;font-size:1.03rem;max-width:760px}
+    .user-panel{margin-top:18px;padding:16px 18px;border-radius:18px;background:rgba(248,251,255,.96);border:1px solid var(--line)}
+    .user-line{font-weight:700;line-height:1.6;color:#23415f}
+    .status{margin-top:10px;min-height:24px;font-weight:700;color:#45627f}
+    .hero-side{display:grid;gap:12px;align-content:start}
+    .mini{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.72);border:1px solid var(--line);transform:translateY(0);transition:transform .18s ease, border-color .18s ease}
+    .mini:hover{transform:translateY(-2px);border-color:rgba(90,141,238,.16)}
+    .mini strong{display:block;margin-bottom:7px;font-size:.98rem;color:var(--text-strong)}
+    .mini span{color:var(--muted);line-height:1.7;font-size:.95rem}
+    .plans{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+    .plan{position:relative;overflow:hidden;padding:28px;border-radius:28px;background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.74));border:1px solid var(--line);box-shadow:var(--shadow);animation:fadeUp .7s ease both}
+    .plan::after{content:"";position:absolute;inset:auto -40px -50px auto;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle, rgba(140,200,255,.18), transparent 70%);pointer-events:none}
+    .plan.pro{border:1px solid rgba(90,141,238,.20);box-shadow:0 24px 60px rgba(90,141,238,.10)}
+    .plan-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+    .plan h2{margin:0;font-size:1.55rem;letter-spacing:-.04em;color:var(--text-strong)}
+    .badge{padding:8px 12px;border-radius:999px;font-size:.78rem;font-weight:800;background:rgba(90,141,238,.08);border:1px solid rgba(90,141,238,.14);color:#315681;white-space:nowrap}
+    .badge.pro{background:rgba(122,216,200,.16);border-color:rgba(122,216,200,.22);color:#2c6b64}
+    .price{display:flex;align-items:flex-end;gap:8px;line-height:1;margin-bottom:14px}
+    .price strong{font-size:3.1rem;letter-spacing:-.08em;color:var(--text-strong)}
+    .price span{color:var(--muted);font-weight:700;margin-bottom:6px}
+    .copy{color:var(--muted);line-height:1.8;margin-bottom:18px}
+    .features{display:grid;gap:10px;margin:0 0 18px;padding:0;list-style:none}
+    .features li{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:rgba(248,251,255,.95);border:1px solid var(--line);color:#23415f;line-height:1.65}
+    .features li::before{content:"✦";color:#5a8dee;flex:0 0 auto;margin-top:1px}
+    .pro .features li::before{color:#56c4a7}
+    .pay-row{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+    .mp-card{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 18px;border-radius:20px;background:rgba(248,251,255,.98);border:1px solid var(--line);box-shadow:0 12px 24px rgba(24,55,92,.05)}
+    .mp-brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .mp-brand img{display:block;width:132px;max-width:42vw;height:auto;object-fit:contain;filter:none}
+    .mp-brand-copy{display:grid;gap:4px}
+    .mp-brand-copy strong{font-size:.98rem;color:var(--text-strong)}
+    .mp-brand-copy span{font-size:.86rem;color:var(--muted);line-height:1.5}
+    .mp-price{font-size:1.05rem;font-weight:900;color:var(--text-strong);white-space:nowrap}
+    .trust-row{display:flex;flex-wrap:wrap;gap:10px;color:var(--muted);font-size:.9rem;font-weight:700}
+    .trust-row span{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(90,141,238,.08);border:1px solid rgba(90,141,238,.12)}
+    .btn-pro{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 14px 34px rgba(90,141,238,.20);min-width:180px}
+    .btn-pro[disabled]{opacity:.7;cursor:not-allowed;transform:none}
+    .foot{margin-top:22px;text-align:center;color:var(--text-strong);font-weight:800}
+    .foot small{display:block;color:var(--muted);font-weight:500;margin-top:6px}
+    @keyframes fadeUp{from{opacity:0; transform:translateY(18px)}to{opacity:1; transform:translateY(0)}}
+    @media (max-width: 980px){.hero, .plans{grid-template-columns:1fr}}
+    @media (max-width: 720px){.wrap{padding:18px 14px 56px}.topbar{flex-direction:column;align-items:stretch}.top-actions{width:100%}.top-actions .btn{width:100%}.hero, .plan{padding:20px}h1{font-size:2.35rem}.price strong{font-size:2.5rem}.btn-pro{width:100%}.mp-card{align-items:flex-start}.mp-price{width:100%}}
   </style>
 </head>
 <body>
@@ -554,145 +135,114 @@
     <section class="hero">
       <div>
         <div class="eyebrow">💳 Planes SonarIA</div>
-        <h1>Empieza gratis y activa la modalidad que más tiempo te ahorra.</h1>
+        <h1>Empieza gratis y desbloquea una experiencia docente más potente.</h1>
         <p>
-          SonarIA Free te permite conocer la herramienta y obtener una orientación inicial.
-          SonarIA Pro profundiza la experiencia, te acompaña mejor en decisiones docentes y te acerca más a una clase lista.
+          SonarIA nace desde necesidades reales del aula. La versión base permite conocer la herramienta rápidamente,
+          mientras que la versión Pro prepara el camino para una experiencia más profunda, útil y consistente para el trabajo docente.
         </p>
+
+        <div class="user-panel">
+          <div id="userInfo" class="user-line">Cargando usuario...</div>
+          <div id="status" class="status"></div>
+        </div>
       </div>
 
       <div class="hero-side">
         <div class="mini">
-          <strong>Free con valor real</strong>
-          <span>Analiza canciones, revisa señales sensibles y conoce el flujo antes de dar el salto.</span>
+          <strong>Free para probar</strong>
+          <span>Ideal para entrar rápido, explorar la herramienta y validar si encaja con tu práctica docente.</span>
         </div>
         <div class="mini">
-          <strong>Pro con continuidad</strong>
-          <span>Activa una experiencia más completa con modalidad mensual o anual, según cómo quieras usar SonarIA.</span>
+          <strong>Pro para avanzar</strong>
+          <span>Desbloquea el siguiente paso de SonarIA y deja la cuenta lista para una evolución más potente.</span>
         </div>
         <div class="mini">
-          <strong>Pago seguro</strong>
-          <span>El checkout se procesa con Mercado Pago y luego tu cuenta queda lista para usar la modalidad elegida.</span>
+          <strong>Checkout simulado</strong>
+          <span>La compra es simulada por ahora para probar el flujo completo antes de integrar un medio de pago real.</span>
         </div>
       </div>
     </section>
 
-    <div id="bannerOk" class="banner ok">
-      <strong>Pago recibido. Ahora viene lo mejor.</strong>
-      <p>Tu cuenta ya puede avanzar a Pro. Entra a SonarIA y prueba una canción desafiante para ver el cambio real en tu flujo docente.</p>
-      <div class="banner-actions">
-        <button class="btn btn-home" onclick="window.location.href='/sonaria.html?welcome=pro'">Entrar a SonarIA Pro</button>
-        <button class="btn btn-ghost" onclick="window.location.href='/index.html'">Ir al home</button>
-      </div>
-    </div>
-
-    <div id="bannerPending" class="banner pending">
-      <strong>Tu pago está en proceso.</strong>
-      <p>Si ya pagaste hace un momento, espera unos instantes y vuelve a entrar a SonarIA. La activación puede tardar un poco en confirmarse.</p>
-      <div class="banner-actions">
-        <button class="btn btn-ghost" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button>
-      </div>
-    </div>
-
-    <div id="bannerError" class="banner error">
-      <strong>No pudimos completar el pago.</strong>
-      <p>No se aplicó ningún cobro exitoso. Puedes volver a intentarlo cuando quieras desde esta misma página.</p>
-      <div class="banner-actions">
-        <button class="btn btn-ghost" onclick="document.getElementById('proCard').scrollIntoView({behavior:'smooth'})">Reintentar</button>
-      </div>
-    </div>
-
     <section class="plans">
       <article class="plan">
         <div class="plan-head">
-          <h2>SonarIA Free</h2>
-          <span class="badge">Entrada</span>
+          <h2>Free</h2>
+          <span class="badge">Base</span>
         </div>
 
         <div class="price">
           <strong>$0</strong>
-          <span>para comenzar</span>
+          <span>demo</span>
         </div>
 
         <div class="copy">
-          Ideal para conocer la herramienta, analizar canciones y descubrir cuánto trabajo puede ahorrarte en la preparación inicial.
+          Una entrada simple a SonarIA para probar la experiencia y conocer su lógica inicial.
         </div>
 
         <ul class="features">
-          <li>Análisis base de la canción.</li>
-          <li>Detección inicial de señales sensibles.</li>
-          <li>Orientación pedagógica rápida.</li>
-          <li>Primer contacto con la experiencia SonarIA.</li>
+          <li>Acceso inicial a la herramienta.</li>
+          <li>Experiencia liviana para validar utilidad.</li>
+          <li>Ideal para una primera exploración.</li>
+          <li>Base para pasar a Pro cuando lo necesites.</li>
         </ul>
 
-        <div class="value-box">
-          <strong>Qué ganas con Free</strong>
-          <span>Más claridad para decidir qué hacer con una canción antes de invertir más tiempo en revisarla manualmente.</span>
-        </div>
-
-        <button class="free-cta" onclick="window.location.href='/sonaria.html'">Seguir con Free</button>
+        <button class="btn btn-ghost" disabled>Plan actual</button>
       </article>
 
-      <article id="proCard" class="plan pro">
+      <article class="plan pro">
         <div class="plan-head">
-          <h2>SonarIA Pro</h2>
-          <span class="badge pro">Más continuidad</span>
+          <h2>Pro</h2>
+          <span class="badge pro">Más potente</span>
         </div>
 
         <div class="price">
-          <strong id="priceMain">$4.990</strong>
-          <span id="priceSub">mensual</span>
+          <strong>$4.990</strong>
+          <span>CLP</span>
         </div>
 
         <div class="copy">
-          Elige la modalidad que mejor se adapte a tu ritmo de uso y activa una experiencia más sólida para trabajar con SonarIA.
+          Activa la siguiente capa de SonarIA y deja tu cuenta preparada para una experiencia docente premium.
         </div>
 
         <ul class="features">
-          <li>Flujo continuo para docentes que quieren usar SonarIA con mayor frecuencia.</li>
-          <li>Mejor experiencia para profundizar y avanzar con más regularidad.</li>
-          <li>Acceso pensado para acompañar trabajo real, no solo pruebas iniciales.</li>
-          <li>Activación segura mediante Mercado Pago.</li>
+          <li>Uso completo de la herramienta.</li>
+          <li>Base para futuras funciones avanzadas.</li>
+          <li>Flujo pensado para uso real y frecuente.</li>
+          <li>Preparación para una experiencia más robusta.</li>
         </ul>
 
-        <div class="subscription-stack">
-          <div class="plan-toggle">
-            <button id="btnMonthly" class="toggle-btn active" type="button">Mensual · $4.990</button>
-            <button id="btnAnnual" class="toggle-btn" type="button">Anual · $49.990</button>
-          </div>
-
-          <button id="btnPro" class="mp-button" type="button">
-            <div class="mp-left">
-              <div class="mp-logo">
-                <img src="MP_RGB_HANDSHAKE_color_vertical.png alt="Mercado Pago">
-              </div>
-
-              <div class="mp-copy">
-                <small>Pago seguro</small>
-                <strong id="ctaTitle">Quiero ahorrar tiempo con SonarIA Pro</strong>
-                <span id="ctaPrice">$4.990 mensual</span>
+        <div class="pay-row">
+          <div class="mp-card" aria-label="Pago con Mercado Pago">
+            <div class="mp-brand">
+              <img src="MP_RGB_HANDSHAKE_color_vertical.png" alt="Mercado Pago">
+              <div class="mp-brand-copy">
+                <strong>Pago seguro con Mercado Pago</strong>
+                <span>Activación inmediata para SonarIA Pro y experiencia pensada para docentes.</span>
               </div>
             </div>
+            <div class="mp-price">$4.990 mensual</div>
+          </div>
 
-            <div class="mp-check">✓</div>
-          </button>
+          <button id="btnPro" class="btn btn-pro">Contratar Pro</button>
 
-          <div class="trust" id="trustCopy">
-            Pago seguro con Mercado Pago · Activación inmediata · Hecho para docentes
+          <div class="trust-row">
+            <span>✓ Pago seguro</span>
+            <span>✓ Activación inmediata</span>
+            <span>✓ Hecho para docentes</span>
           </div>
         </div>
       </article>
     </section>
 
     <div class="foot">
-      SonarIA pertenece a la familia de productos MejorarIA.
-      <small>La IA acompaña. Educar es cuidar.</small>
+      MejorarIA
+      <small>Tecnología creada desde necesidades reales del aula y pensada para crecer junto a docentes de distintas áreas.</small>
     </div>
+
   </div>
 
   <script>
     const API = "https://sonaria-api.onrender.com";
-    let selectedCadence = "monthly";
 
     function getToken(){
       return (
@@ -703,81 +253,99 @@
       );
     }
 
-    function updatePlanUI(){
-      const monthly = selectedCadence === "monthly";
-      document.getElementById("btnMonthly").classList.toggle("active", monthly);
-      document.getElementById("btnAnnual").classList.toggle("active", !monthly);
-
-      document.getElementById("priceMain").textContent = monthly ? "$4.990" : "$49.990";
-      document.getElementById("priceSub").textContent = monthly ? "mensual" : "anual";
-      document.getElementById("ctaPrice").textContent = monthly ? "$4.990 mensual" : "$49.990 anual";
-      document.getElementById("ctaTitle").textContent = monthly
-        ? "Quiero ahorrar tiempo con SonarIA Pro"
-        : "Quiero usar SonarIA Pro todo el año";
+    function showStatus(msg, type = "normal"){
+      const el = document.getElementById("status");
+      el.textContent = msg;
+      el.style.color =
+        type === "ok" ? "#2c6b64" :
+        type === "error" ? "#b54747" :
+        "#315681";
     }
 
-    function showPaymentState(){
-      const params = new URLSearchParams(window.location.search);
-      const pago = params.get("pago");
-      if(pago === "ok") document.getElementById("bannerOk").classList.add("show");
-      if(pago === "pending") document.getElementById("bannerPending").classList.add("show");
-      if(pago === "error") document.getElementById("bannerError").classList.add("show");
-    }
+    async function loadUser(){
+      const token = getToken();
 
-    async function checkout(){
-      const btn = document.getElementById("btnPro");
-      const original = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<div class="mp-left"><div class="mp-copy"><small>Mercado Pago</small><strong>Redirigiendo a pago seguro...</strong><span>Preparando checkout</span></div></div>';
+      if(!token){
+        showStatus("Debes iniciar sesión", "error");
+        return;
+      }
 
       try{
-        const token = getToken();
-        if(!token){
-          alert("Primero debes iniciar sesión.");
-          window.location.href = "/login.html";
-          return;
-        }
-
-        const res = await fetch(API + "/subscriptions/create-checkout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({ cadence: selectedCadence })
+        const res = await fetch(API + "/me", {
+          headers:{
+            "Authorization":"Bearer " + token
+          }
         });
 
         const data = await res.json().catch(() => ({}));
 
-        if(data.checkout_url){
-          window.location.href = data.checkout_url;
+        if(!res.ok){
+          showStatus("Sesión inválida", "error");
           return;
         }
 
-        alert(data.detail || "No pudimos iniciar el pago.");
-        btn.disabled = false;
-        btn.innerHTML = original;
-      }catch(error){
-        alert("Error de conexión al iniciar el pago.");
-        btn.disabled = false;
-        btn.innerHTML = original;
+        const user = data.user;
+        document.getElementById("userInfo").textContent =
+          user.email + " | Plan: " + user.plan.toUpperCase();
+
+        if(user.plan === "pro"){
+          const btn = document.getElementById("btnPro");
+          btn.disabled = true;
+          btn.textContent = "Ya eres Pro";
+          showStatus("Tu cuenta ya tiene acceso Pro.", "ok");
+        }
+      }catch(e){
+        showStatus("No se pudo conectar con el backend.", "error");
       }
     }
 
-    document.getElementById("btnMonthly").addEventListener("click", () => {
-      selectedCadence = "monthly";
-      updatePlanUI();
-    });
+    async function iniciarPago(){
+      const btn = document.getElementById("btnPro");
+      btn.disabled = true;
+      btn.textContent = "Creando checkout...";
 
-    document.getElementById("btnAnnual").addEventListener("click", () => {
-      selectedCadence = "annual";
-      updatePlanUI();
-    });
+      try{
+        const res = await fetch(API + "/payments/create-checkout", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + getToken()
+          }
+        });
 
-    document.getElementById("btnPro").addEventListener("click", checkout);
+        const data = await res.json().catch(() => ({}));
 
-    updatePlanUI();
-    showPaymentState();
+        if(!res.ok || !data.checkout_url){
+          showStatus(data.detail || "Error al crear checkout", "error");
+          btn.disabled = false;
+          btn.textContent = "Contratar Pro";
+          return;
+        }
+
+        sessionStorage.setItem("order_id", data.order_id);
+        window.location.href = data.checkout_url;
+
+      }catch(e){
+        showStatus("Error de conexión", "error");
+        btn.disabled = false;
+        btn.textContent = "Contratar Pro";
+      }
+    }
+
+    document.getElementById("btnPro").onclick = iniciarPago;
+
+    const params = new URLSearchParams(window.location.search);
+
+    if(params.get("pago") === "ok"){
+      showStatus("Pago realizado con éxito 🎉", "ok");
+    }
+
+    if(params.get("pago") === "error"){
+      showStatus("Pago cancelado", "error");
+    }
+
+    loadUser();
   </script>
+
 </body>
 </html>
+```
