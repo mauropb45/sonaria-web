@@ -219,6 +219,22 @@
       line-height:1.6;
     }
 
+
+    .mobile-details-toggle{display:none}
+    .desktop-only{display:block}
+    .mobile-only{display:none}
+    @media (max-width: 768px){
+      .desktop-only{display:none !important}
+      .mobile-only{display:block}
+      .mobile-details-toggle{display:inline-flex;width:100%;margin-top:10px}
+      .translation-cards-mobile{display:none}
+      .translation-cards-mobile.show{display:grid;gap:10px;margin-top:10px}
+      .today-layout{grid-template-columns:1fr}
+      .calendar-shell{display:none}
+      .clock-card{order:2}
+      .fact-card{order:1}
+    }
+
 </style>
 </head>
 <body class="theme-brisa">
@@ -419,6 +435,7 @@
             <button class="btn btn-primary" id="btnUsarClase" type="button">Usar esta versión en clase</button>
             <button id="btnVerTraducida" class="btn btn-ghost" type="button">Ver letra traducida</button>
           </div>
+          <button id="btnToggleDetails" class="btn btn-ghost mobile-details-toggle" type="button">Ver detalles de detección</button>
           <div id="adaptedView" class="lyrics-view active"></div>
           <div id="translatedView" class="lyrics-view"></div>
         </div>
@@ -644,9 +661,10 @@
       const fallback = {texto:facts[key] || "Un día como hoy puedes abrir la clase con una escucha comparada y una pregunta breve sobre contexto, emoción o identidad musical.", fecha:new Date().toISOString().slice(0,10)};
       try{
         const res = await fetch(EFEM_URL, {headers: authToken ? {Authorization:"Bearer " + authToken} : {}});
-        const data = await res.json();
+        const data = await res.json().catch(()=>({}));
         const apiText = String((data && data.texto) || "").trim();
-        $("efemFact").textContent = apiText && !/buen día para iniciar la clase/i.test(apiText) ? apiText : fallback.texto;
+        const badGeneric = /buen día para iniciar la clase|hoy puede ser un buen día/i.test(apiText);
+        $("efemFact").textContent = (res.ok && apiText && !badGeneric) ? apiText : fallback.texto;
         renderCalendar((data && data.fecha) || fallback.fecha);
       }catch(_){
         $("efemFact").textContent = fallback.texto;
@@ -848,8 +866,14 @@
         : "No hubo adaptaciones visibles en esta canción.";
 
       $("translationIntro").innerHTML = `
-        <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
-        <div class="list-item"><strong>Adaptación aplicada</strong><br>${categoryHtml}<br><br><span class="muted">${totalChanges ? `Se realizaron ajustes automáticos para contexto escolar.` : "No se requirieron ajustes visibles en esta canción."}</span></div>
+        <div class="desktop-only">
+          <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
+          <div class="list-item"><strong>Adaptación aplicada</strong><br>${categoryHtml}<br><br><span class="muted">${totalChanges ? `Se realizaron ajustes automáticos para contexto escolar.` : "No se requirieron ajustes visibles en esta canción."}</span></div>
+        </div>
+        <div id="translationCardsMobile" class="translation-cards-mobile mobile-only">
+          <div class="list-item"><strong>Detectado</strong><br>${detected.length ? detected.join("<br>") : "Sin detecciones relevantes."}</div>
+          <div class="list-item"><strong>Adaptación aplicada</strong><br>${categoryHtml}<br><br><span class="muted">${totalChanges ? `Se realizaron ajustes automáticos para contexto escolar.` : "No se requirieron ajustes visibles en esta canción."}</span></div>
+        </div>
       `;
 
       const plainAdapted = (adaptedHtml || "")
@@ -1138,6 +1162,15 @@ $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver má
     $("texto").addEventListener("input", () => {
       autoLyricsLoaded = false;
       autoLyricsSignature = "";
+    });
+
+
+    $("btnToggleDetails")?.addEventListener("click", ()=>{
+      const box = $("translationCardsMobile");
+      if(!box) return;
+      const willShow = !box.classList.contains("show");
+      box.classList.toggle("show", willShow);
+      $("btnToggleDetails").textContent = willShow ? "Ocultar detalles de detección" : "Ver detalles de detección";
     });
 
     $("titulo").addEventListener("input", handleSongChange);
