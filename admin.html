@@ -10,203 +10,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f5f7fb;
-      --bg-soft:#eef3fb;
-      --card:#ffffff;
-      --line:#d9e3f1;
-      --line-strong:#c7d5ea;
-      --text:#182334;
-      --muted:#66758c;
-      --blue:#2f6fed;
-      --blue-soft:#eaf2ff;
-      --green:#1fbf75;
-      --green-soft:#e8fbf2;
-      --red:#ef4e4e;
-      --red-soft:#fff0f0;
-      --gold:#d7a63d;
-      --shadow:0 18px 50px rgba(35,54,86,.10);
-      --radius:24px;
-      --radius-sm:18px;
-      --max:1380px;
+      --bg:#f5f7fb;--bg-soft:#eef3fb;--card:#ffffff;--line:#d9e3f1;--line-strong:#c7d5ea;
+      --text:#182334;--muted:#66758c;--blue:#2f6fed;--blue-soft:#eaf2ff;--green:#1fbf75;
+      --green-soft:#e8fbf2;--red:#ef4e4e;--red-soft:#fff0f0;--gold:#d7a63d;--shadow:0 18px 50px rgba(35,54,86,.10);
+      --radius:24px;--radius-sm:18px;--max:1480px;
     }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(47,111,237,.08), transparent 18%),
-        radial-gradient(circle at bottom right, rgba(31,191,117,.08), transparent 18%),
-        linear-gradient(180deg, #fafcff, var(--bg));
-    }
-
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:radial-gradient(circle at top left, rgba(47,111,237,.08), transparent 18%),radial-gradient(circle at bottom right, rgba(31,191,117,.08), transparent 18%),linear-gradient(180deg, #fafcff, var(--bg));}
     .wrap{max-width:var(--max);margin:0 auto;padding:24px 18px 56px}
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-      margin-bottom:18px;flex-wrap:wrap
-    }
-    .brand-block{display:grid;gap:4px}
-    .brand{
-      font-size:clamp(2rem,3vw,3rem);
-      font-weight:900;line-height:.95;letter-spacing:-.06em;
-    }
-    .brand .ia{color:var(--blue)}
-    .sub{color:var(--muted);font-weight:700}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+    .brand-block{display:grid;gap:4px}.brand{font-size:clamp(2rem,3vw,3rem);font-weight:900;line-height:.95;letter-spacing:-.06em}.brand .ia{color:var(--blue)}.sub{color:var(--muted);font-weight:700}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{
-      border:none;border-radius:16px;min-height:48px;padding:0 18px;
-      font:inherit;font-weight:800;cursor:pointer;
-      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      text-decoration:none;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
-    .btn-primary{background:linear-gradient(135deg,var(--blue),#5f90f8);color:#fff;box-shadow:0 14px 30px rgba(47,111,237,.22)}
-    .btn-green{background:linear-gradient(135deg,var(--green),#35d090);color:#062114;box-shadow:0 14px 28px rgba(31,191,117,.18)}
-    .btn-red{background:linear-gradient(135deg,var(--red),#ff7b7b);color:#fff;box-shadow:0 14px 28px rgba(239,78,78,.18)}
-
-    .card{
-      background:linear-gradient(180deg,var(--card),#fbfdff);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.35fr .95fr;
-      gap:16px;
-      margin-bottom:18px;
-    }
-    .hero-main,.hero-side{padding:24px}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      background:var(--blue-soft);border:1px solid #d3e3ff;color:var(--blue);
-      font-size:.82rem;font-weight:800;margin-bottom:14px;
-    }
-    .hero h1{margin:0 0 10px;font-size:clamp(2rem,3.6vw,3.6rem);line-height:.95;letter-spacing:-.06em}
-    .hero p{margin:0;color:var(--muted);line-height:1.8}
-    .quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-    .mini-stat{
-      background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px;
-    }
-    .mini-stat strong{display:block;font-size:1.5rem;letter-spacing:-.04em}
-    .mini-stat span{display:block;color:var(--muted);margin-top:6px;line-height:1.55;font-size:.92rem}
-    .hero-side-grid{display:grid;gap:12px}
-    .info{
-      background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px;
-    }
-    .info strong{display:block;margin-bottom:6px}
-    .info span{color:var(--muted);line-height:1.65}
-
-    .stats-grid{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:12px;
-      margin-bottom:18px;
-    }
-    .stat-card{padding:18px}
-    .stat-card strong{display:block;font-size:1.7rem;letter-spacing:-.05em}
-    .stat-card span{display:block;color:var(--muted);margin-top:5px;font-size:.92rem}
-
-    .main-grid{
-      display:grid;
-      grid-template-columns:360px minmax(0,1fr) 420px;
-      gap:16px;
-      align-items:start;
-    }
-
-    .panel{padding:20px}
-    .panel h2,.section-title{
-      margin:0 0 14px;font-size:1.45rem;letter-spacing:-.04em
-    }
-    .field{display:grid;gap:7px;margin-bottom:12px}
-    .field label{font-weight:700;font-size:.92rem;color:#314156}
-    .field input,.field textarea{
-      width:100%;border:1px solid var(--line-strong);background:#fff;
-      border-radius:16px;padding:14px 14px;font:inherit;color:var(--text);outline:none;
-    }
-    .field textarea{min-height:120px;resize:vertical}
-    .field input:focus,.field textarea:focus{border-color:#88afff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
-    .inline-actions{display:grid;gap:10px}
-    .status{
-      min-height:24px;padding-top:4px;font-weight:700;line-height:1.5;
-    }
-    .status.ok{color:#0e9d5c}
-    .status.error{color:#d33838}
-    .status.info{color:#47617f}
-
-    .table-wrap{padding:20px}
-    .toolbar{
-      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-    .search{
-      flex:1 1 280px;
-      border:1px solid var(--line-strong);background:#fff;border-radius:16px;padding:14px 14px;
-      font:inherit;color:var(--text);outline:none;
-    }
-    .search:focus{border-color:#88afff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
-    .tiny-note{color:var(--muted);font-size:.92rem}
-    .table-card{
-      border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff;
-    }
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:14px 14px;border-bottom:1px solid #edf2f8;text-align:left;vertical-align:top}
-    th{background:#f6f9ff;color:#33445d;font-size:.9rem}
-    td{font-size:.94rem}
-    tr[data-email]{cursor:pointer}
-    tr[data-email]:hover{background:#f8fbff}
-    .pill{
-      display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;
-      font-size:.78rem;font-weight:800;border:1px solid var(--line)
-    }
-    .pill.pro{background:var(--green-soft);border-color:#b8ebd1;color:#0d8f54}
-    .pill.free{background:#f4f7fb;color:#5f6d80}
-    .pill.admin{background:#fff7e7;border-color:#f1deae;color:#a97a11}
-    .small{color:var(--muted);font-size:.85rem;line-height:1.5}
-    .empty{padding:18px;color:var(--muted)}
-
-    .history-wrap{padding:20px}
-    .history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
-    .history-sub{color:var(--muted);line-height:1.65;font-size:.94rem}
-    .history-box{
-      border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden;
-    }
-    .history-user{
-      padding:16px;border-bottom:1px solid #edf2f8;background:#f9fbff;
-    }
-    .history-user strong{display:block;font-size:1rem}
-    .history-user span{display:block;color:var(--muted);margin-top:5px;line-height:1.55}
-    .history-list{max-height:900px;overflow:auto;padding:12px}
-    .history-item{
-      border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;background:#fbfdff;
-    }
-    .history-item:last-child{margin-bottom:0}
-    .history-item strong{display:block}
-    .history-meta{margin-top:6px;color:var(--muted);font-size:.9rem;line-height:1.55}
-    .history-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .history-tag{
-      padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #d7e4ff;color:#375da8;
-      font-size:.78rem;font-weight:800;
-    }
-
-    @media (max-width: 1220px){
-      .main-grid{grid-template-columns:340px 1fr}
-      .history-wrap{grid-column:1 / -1}
-      .stats-grid{grid-template-columns:repeat(3,1fr)}
-    }
-    @media (max-width: 860px){
-      .hero,.main-grid,.stats-grid,.quick-stats{grid-template-columns:1fr}
-      .wrap{padding:18px 14px 42px}
-      .hero-main,.hero-side,.panel,.table-wrap,.history-wrap{padding:18px}
-      .actions{width:100%}
-      .actions .btn{width:100%}
-    }
+    .btn{border:none;border-radius:16px;min-height:48px;padding:0 18px;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, background .18s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+    .btn:hover{transform:translateY(-1px)}.btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}.btn-primary{background:linear-gradient(135deg,var(--blue),#5f90f8);color:#fff;box-shadow:0 14px 30px rgba(47,111,237,.22)}.btn-green{background:linear-gradient(135deg,var(--green),#35d090);color:#062114;box-shadow:0 14px 28px rgba(31,191,117,.18)}.btn-red{background:linear-gradient(135deg,var(--red),#ff7b7b);color:#fff;box-shadow:0 14px 28px rgba(239,78,78,.18)}
+    .card{background:linear-gradient(180deg,var(--card),#fbfdff);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:18px}.hero-main,.hero-side{padding:24px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--blue-soft);border:1px solid #d3e3ff;color:var(--blue);font-size:.82rem;font-weight:800;margin-bottom:14px}.hero h1{margin:0 0 10px;font-size:clamp(2rem,3.6vw,3.6rem);line-height:.95;letter-spacing:-.06em}.hero p{margin:0;color:var(--muted);line-height:1.8}
+    .quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.mini-stat{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px}.mini-stat strong{display:block;font-size:1.5rem;letter-spacing:-.04em}.mini-stat span{display:block;color:var(--muted);margin-top:6px;line-height:1.55;font-size:.92rem}
+    .hero-side-grid{display:grid;gap:12px}.info{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px}.info strong{display:block;margin-bottom:6px}.info span{color:var(--muted);line-height:1.65}
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.stat-card{padding:18px}.stat-card strong{display:block;font-size:1.7rem;letter-spacing:-.05em}.stat-card span{display:block;color:var(--muted);margin-top:5px;font-size:.92rem}
+    .main-grid{display:grid;grid-template-columns:360px minmax(0,1fr) 420px;gap:16px;align-items:start}
+    .panel{padding:20px}.panel h2,.section-title{margin:0 0 14px;font-size:1.45rem;letter-spacing:-.04em}.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-weight:700;font-size:.92rem;color:#314156}.field input,.field textarea{width:100%;border:1px solid var(--line-strong);background:#fff;border-radius:16px;padding:14px 14px;font:inherit;color:var(--text);outline:none}.field textarea{min-height:120px;resize:vertical}.field input:focus,.field textarea:focus,.search:focus{border-color:#88afff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
+    .inline-actions{display:grid;gap:10px}.status{min-height:24px;padding-top:4px;font-weight:700;line-height:1.5}.status.ok{color:#0e9d5c}.status.error{color:#d33838}.status.info{color:#47617f}
+    .table-wrap,.history-wrap,.insights-wrap{padding:20px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}.search{flex:1 1 280px;border:1px solid var(--line-strong);background:#fff;border-radius:16px;padding:14px 14px;font:inherit;color:var(--text);outline:none}.tiny-note{color:var(--muted);font-size:.92rem}
+    .table-card,.history-box,.insight-box{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#fff} table{width:100%;border-collapse:collapse} th,td{padding:14px 14px;border-bottom:1px solid #edf2f8;text-align:left;vertical-align:top} th{background:#f6f9ff;color:#33445d;font-size:.9rem} td{font-size:.94rem} tr[data-email]{cursor:pointer} tr[data-email]:hover{background:#f8fbff}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-size:.78rem;font-weight:800;border:1px solid var(--line)}.pill.pro{background:var(--green-soft);border-color:#b8ebd1;color:#0d8f54}.pill.free{background:#f4f7fb;color:#5f6d80}.pill.admin{background:#fff7e7;border-color:#f1deae;color:#a97a11}.small{color:var(--muted);font-size:.85rem;line-height:1.5}.empty{padding:18px;color:var(--muted)}
+    .history-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.history-sub{color:var(--muted);line-height:1.65;font-size:.94rem}.history-user{padding:16px;border-bottom:1px solid #edf2f8;background:#f9fbff}.history-user strong{display:block;font-size:1rem}.history-user span{display:block;color:var(--muted);margin-top:5px;line-height:1.55}.history-list{max-height:900px;overflow:auto;padding:12px}.history-item{border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;background:#fbfdff}.history-item:last-child{margin-bottom:0}.history-item strong{display:block}.history-meta{margin-top:6px;color:var(--muted);font-size:.9rem;line-height:1.55}.history-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.history-tag{padding:6px 10px;border-radius:999px;background:#eef4ff;border:1px solid #d7e4ff;color:#375da8;font-size:.78rem;font-weight:800}
+    .insights-grid{display:grid;gap:16px;margin-top:18px;grid-column:1 / -1}.insights-top{display:grid;grid-template-columns:1fr 1fr;gap:16px}.insight-box{padding:18px}.insight-box h3{margin:0 0 12px;font-size:1.15rem;letter-spacing:-.03em}.top-song{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #edf2f8}.top-song:last-child{border-bottom:none}.top-song strong{display:block}.top-song span{color:var(--muted);font-size:.9rem}.activity-item{padding:12px 0;border-bottom:1px solid #edf2f8}.activity-item:last-child{border-bottom:none}.activity-item strong{display:block}.activity-item span{display:block;color:var(--muted);font-size:.9rem;line-height:1.5;margin-top:4px}
+    @media (max-width: 1220px){.main-grid{grid-template-columns:340px 1fr}.history-wrap{grid-column:1 / -1}.stats-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width: 980px){.insights-top{grid-template-columns:1fr}}
+    @media (max-width: 860px){.hero,.main-grid,.stats-grid,.quick-stats{grid-template-columns:1fr}.wrap{padding:18px 14px 42px}.hero-main,.hero-side,.panel,.table-wrap,.history-wrap,.insights-wrap{padding:18px}.actions{width:100%}.actions .btn{width:100%}}
   </style>
 </head>
 <body>
@@ -214,7 +46,7 @@
     <div class="topbar">
       <div class="brand-block">
         <div class="brand">Panel Admin Sonar<span class="ia">IA</span></div>
-        <div class="sub">Gestión de usuarios, pagos e historial de análisis</div>
+        <div class="sub">Gestión real de usuarios, pagos, notas internas e historial de análisis</div>
       </div>
       <div class="actions">
         <a class="btn btn-ghost" href="/sonaria.html">Ir a SonarIA</a>
@@ -227,28 +59,17 @@
         <div class="eyebrow">🛡️ Acceso administrativo</div>
         <h1>Controla usuarios, planes e historial desde una sola vista.</h1>
         <p>Este panel está pensado para trabajar rápido: ver estado general, buscar usuarios, activar o revocar Pro y revisar con urgencia el historial real de análisis y pagos de cada cuenta.</p>
-
         <div class="quick-stats">
           <div class="mini-stat"><strong id="heroUsers">—</strong><span>Usuarios totales</span></div>
           <div class="mini-stat"><strong id="heroPro">—</strong><span>Cuentas Pro activas</span></div>
           <div class="mini-stat"><strong id="heroAnalyses">—</strong><span>Análisis registrados</span></div>
         </div>
       </div>
-
       <div class="hero-side">
         <div class="hero-side-grid">
-          <div class="info">
-            <strong>Flujo admin más claro</strong>
-            <span>Desde aquí puedes saltar a SonarIA o volver al panel en cualquier momento.</span>
-          </div>
-          <div class="info">
-            <strong>Historial urgente visible</strong>
-            <span>Al tocar un usuario, se cargan pagos y búsquedas reales en el costado derecho.</span>
-          </div>
-          <div class="info">
-            <strong>Optimizado para móvil</strong>
-            <span>Las columnas se apilan para que puedas revisar cuentas también desde el celular.</span>
-          </div>
+          <div class="info"><strong>Historial real por usuario</strong><span>Al tocar una fila, cargan pagos y búsquedas reales de esa cuenta.</span></div>
+          <div class="info"><strong>Pro temporal y notas</strong><span>Puedes regalar Pro por días, revocarlo y dejar observaciones internas.</span></div>
+          <div class="info"><strong>Vista operativa</strong><span>También puedes monitorear las canciones más analizadas y la actividad reciente.</span></div>
         </div>
       </div>
     </section>
@@ -264,28 +85,14 @@
     <section class="main-grid">
       <aside class="card panel">
         <h2>Acciones rápidas</h2>
-
-        <div class="field">
-          <label for="email">Correo del usuario</label>
-          <input id="email" placeholder="docente@correo.com">
-        </div>
-
-        <div class="field">
-          <label for="days">Días de regalo</label>
-          <input id="days" type="number" min="1" value="30">
-        </div>
-
-        <div class="field">
-          <label for="note">Nota interna</label>
-          <textarea id="note" placeholder="Ej: regalo por lanzamiento o soporte."></textarea>
-        </div>
-
+        <div class="field"><label for="email">Correo del usuario</label><input id="email" placeholder="docente@correo.com"></div>
+        <div class="field"><label for="days">Días de regalo</label><input id="days" type="number" min="1" value="30"></div>
+        <div class="field"><label for="note">Nota interna</label><textarea id="note" placeholder="Ej: regalo por lanzamiento o soporte."></textarea></div>
         <div class="inline-actions">
           <button class="btn btn-green" type="button" onclick="activatePro()">Activar Pro temporal</button>
           <button class="btn btn-red" type="button" onclick="revokePro()">Revocar Pro</button>
           <button class="btn btn-ghost" type="button" onclick="saveNoteOnly()">Guardar nota</button>
         </div>
-
         <div id="statusBox" class="status info">Listo para administrar.</div>
       </aside>
 
@@ -294,41 +101,34 @@
           <input id="search" class="search" placeholder="Buscar por nombre, correo o nota..." oninput="debouncedLoadUsers()">
           <div class="tiny-note">Toca una fila para ver historial.</div>
         </div>
-
         <div class="table-card">
           <table>
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Plan</th>
-                <th>Vence</th>
-                <th>Admin</th>
-                <th>Nota</th>
-              </tr>
-            </thead>
-            <tbody id="usersBody">
-              <tr><td colspan="5" class="empty">Cargando usuarios...</td></tr>
-            </tbody>
+            <thead><tr><th>Usuario</th><th>Plan</th><th>Vence</th><th>Admin</th><th>Nota</th></tr></thead>
+            <tbody id="usersBody"><tr><td colspan="5" class="empty">Cargando usuarios...</td></tr></tbody>
           </table>
         </div>
       </section>
 
       <section class="card history-wrap">
         <div class="history-head">
-          <div>
-            <div class="section-title">Historial del usuario</div>
-            <div class="history-sub">Pagos y análisis reales. Esto te permite ver qué ha buscado cada cuenta y cuándo.</div>
-          </div>
+          <div><div class="section-title">Historial del usuario</div><div class="history-sub">Pagos y análisis reales. Esto te permite ver qué ha buscado cada cuenta y cuándo.</div></div>
         </div>
-
         <div class="history-box">
-          <div id="historyUser" class="history-user">
-            <strong>Ningún usuario seleccionado</strong>
-            <span>Selecciona una fila para cargar su historial.</span>
-          </div>
-          <div id="historyList" class="history-list">
-            <div class="empty">Aún no hay historial para mostrar.</div>
-          </div>
+          <div id="historyUser" class="history-user"><strong>Ningún usuario seleccionado</strong><span>Selecciona una fila para cargar su historial.</span></div>
+          <div id="historyList" class="history-list"><div class="empty">Aún no hay historial para mostrar.</div></div>
+        </div>
+      </section>
+
+      <section class="insights-grid">
+        <div class="insights-top">
+          <section class="card insights-wrap">
+            <div class="section-title">Canciones más analizadas</div>
+            <div class="insight-box" id="topSongsBox"><div class="empty">Cargando...</div></div>
+          </section>
+          <section class="card insights-wrap">
+            <div class="section-title">Actividad reciente</div>
+            <div class="insight-box" id="recentActivityBox"><div class="empty">Cargando...</div></div>
+          </section>
         </div>
       </section>
     </section>
@@ -340,258 +140,125 @@
     let selectedEmail = "";
 
     function getToken(){
-      return (
-        localStorage.getItem("mejoraria_token") ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("access_token") ||
-        ""
-      );
+      return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
     }
-
-    function authHeaders(){
-      return {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + getToken()
-      };
-    }
-
-    function setStatus(message, type = "info"){
-      const box = document.getElementById("statusBox");
-      box.textContent = message;
-      box.className = "status " + type;
-    }
-
-    function moneyCLP(value){
-      const n = Number(value || 0);
-      return n.toLocaleString("es-CL", { style:"currency", currency:"CLP", maximumFractionDigits:0 });
-    }
-
-    function prettyDate(value){
-      if(!value) return "—";
-      try{
-        return new Date(value).toLocaleString("es-CL");
-      }catch{
-        return value;
-      }
-    }
-
-    function escapeHtml(value){
-      return String(value || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
+    function authHeaders(){ return {"Content-Type":"application/json","Authorization":"Bearer " + getToken()}; }
+    function setStatus(message, type = "info"){ const box = document.getElementById("statusBox"); box.textContent = message; box.className = "status " + type; }
+    function moneyCLP(value){ const n = Number(value || 0); return n.toLocaleString("es-CL", { style:"currency", currency:"CLP", maximumFractionDigits:0 }); }
+    function prettyDate(value){ if(!value) return "—"; try{ return new Date(value).toLocaleString("es-CL"); }catch{ return value; } }
+    function escapeHtml(value){ return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
 
     async function fetchJson(url, options = {}){
       const res = await fetch(url, options);
       const data = await res.json().catch(() => ({}));
-      if(res.status === 401){
-        localStorage.setItem("mejoraria_logout_message", data.detail || "Tu sesión expiró. Vuelve a entrar.");
-        window.location.href = "/login.html";
-        throw new Error("Sesión expirada");
-      }
-      if(!res.ok){
-        throw new Error(data.detail || "No fue posible completar la solicitud.");
-      }
+      if(res.status === 401){ localStorage.setItem("mejoraria_logout_message", data.detail || "Tu sesión expiró. Vuelve a entrar."); window.location.href = "/login.html"; throw new Error("Sesión expirada"); }
+      if(!res.ok){ throw new Error(data.detail || "No fue posible completar la solicitud."); }
       return data;
     }
 
-    async function loadDashboard(){
-      const data = await fetchJson(API + "/admin/dashboard", {
-        headers: { "Authorization": "Bearer " + getToken() }
-      });
+    function renderTopSongs(items){
+      const box = document.getElementById("topSongsBox");
+      const list = Array.isArray(items) ? items : [];
+      if(!list.length){ box.innerHTML = "<div class='empty'>Aún no hay suficientes datos.</div>"; return; }
+      box.innerHTML = list.map((item, idx) => `
+        <div class="top-song">
+          <div>
+            <strong>#${idx + 1} · ${escapeHtml(item.title || "Sin título")}</strong>
+            <span>${escapeHtml(item.artist || "Artista no indicado")}</span>
+          </div>
+          <strong>${escapeHtml(item.count ?? 0)}</strong>
+        </div>`).join("");
+    }
 
+    function renderRecentActivity(items){
+      const box = document.getElementById("recentActivityBox");
+      const list = Array.isArray(items) ? items : [];
+      if(!list.length){ box.innerHTML = "<div class='empty'>Aún no hay actividad reciente.</div>"; return; }
+      box.innerHTML = list.map(item => `
+        <div class="activity-item">
+          <strong>${escapeHtml(item.name || item.email || "Usuario")}</strong>
+          <span>${escapeHtml(item.title || "Sin título")} — ${escapeHtml(item.artist || "Artista")}</span>
+          <span>${escapeHtml(item.result || "—")} · ${escapeHtml(prettyDate(item.date))}</span>
+        </div>`).join("");
+    }
+
+    async function loadDashboard(){
+      const data = await fetchJson(API + "/admin/dashboard", { headers: { "Authorization": "Bearer " + getToken() } });
       const s = data.summary || {};
       document.getElementById("heroUsers").textContent = s.total_users ?? "—";
       document.getElementById("heroPro").textContent = s.total_pro ?? "—";
       document.getElementById("heroAnalyses").textContent = s.total_analyses ?? "—";
-
       document.getElementById("totalUsers").textContent = s.total_users ?? "—";
       document.getElementById("totalPro").textContent = s.total_pro ?? "—";
       document.getElementById("totalFree").textContent = s.total_free ?? "—";
       document.getElementById("totalRevenue").textContent = moneyCLP(s.revenue_total ?? 0);
       document.getElementById("expiringSoon").textContent = s.expiring_soon ?? "—";
+      renderTopSongs(data.top_songs || []);
+      renderRecentActivity(data.recent_activity || []);
     }
 
     async function loadUsers(){
       const q = encodeURIComponent(document.getElementById("search").value.trim());
-      const data = await fetchJson(API + "/admin/users?q=" + q, {
-        headers: { "Authorization": "Bearer " + getToken() }
-      });
-
+      const data = await fetchJson(API + "/admin/users?q=" + q, { headers: { "Authorization": "Bearer " + getToken() } });
       const tbody = document.getElementById("usersBody");
       const users = Array.isArray(data.users) ? data.users : [];
-
-      if(!users.length){
-        tbody.innerHTML = "<tr><td colspan='5' class='empty'>No encontré usuarios con ese criterio.</td></tr>";
-        return;
-      }
-
+      if(!users.length){ tbody.innerHTML = "<tr><td colspan='5' class='empty'>No encontré usuarios con ese criterio.</td></tr>"; return; }
       tbody.innerHTML = users.map(user => {
         const isAdmin = !!user.is_admin;
         const planClass = (user.plan || "free") === "pro" ? "pro" : "free";
         return `
           <tr data-email="${escapeHtml(user.email)}" onclick="selectUser('${encodeURIComponent(user.email)}')">
-            <td>
-              <strong>${escapeHtml(user.name || user.email)}</strong>
-              <div class="small">${escapeHtml(user.email)}</div>
-            </td>
+            <td><strong>${escapeHtml(user.name || user.email)}</strong><div class="small">${escapeHtml(user.email)}</div></td>
             <td><span class="pill ${planClass}">${escapeHtml(user.plan || "free")}</span></td>
             <td>${escapeHtml(prettyDate(user.pro_expires_at))}</td>
             <td>${isAdmin ? "<span class='pill admin'>Admin</span>" : "<span class='small'>No</span>"}</td>
             <td><div class="small">${escapeHtml(user.note || "") || "—"}</div></td>
-          </tr>
-        `;
+          </tr>`;
       }).join("");
     }
 
-    function debouncedLoadUsers(){
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(loadUsers, 250);
-    }
-
-    async function selectUser(encodedEmail){
-      const email = decodeURIComponent(encodedEmail);
-      selectedEmail = email;
-
-      document.getElementById("email").value = email;
-      await loadHistory(email);
-    }
+    function debouncedLoadUsers(){ clearTimeout(searchTimer); searchTimer = setTimeout(loadUsers, 250); }
+    async function selectUser(encodedEmail){ const email = decodeURIComponent(encodedEmail); selectedEmail = email; document.getElementById("email").value = email; await loadHistory(email); }
 
     async function loadHistory(email){
-      const data = await fetchJson(API + "/admin/user/history?email=" + encodeURIComponent(email), {
-        headers: { "Authorization": "Bearer " + getToken() }
-      });
-
-      const user = data.user || {};
-      const history = Array.isArray(data.history) ? data.history : [];
-
-      document.getElementById("historyUser").innerHTML = `
-        <strong>${escapeHtml(user.name || user.email || "Usuario")}</strong>
-        <span>${escapeHtml(user.email || "")} · Plan: ${escapeHtml(user.plan || "free")} · Vence: ${escapeHtml(prettyDate(user.pro_expires_at))}</span>
-      `;
-
+      const data = await fetchJson(API + "/admin/user/history?email=" + encodeURIComponent(email), { headers: { "Authorization": "Bearer " + getToken() } });
+      const user = data.user || {}; const history = Array.isArray(data.history) ? data.history : [];
+      document.getElementById("historyUser").innerHTML = `<strong>${escapeHtml(user.name || user.email || "Usuario")}</strong><span>${escapeHtml(user.email || "")} · Plan: ${escapeHtml(user.plan || "free")} · Vence: ${escapeHtml(prettyDate(user.pro_expires_at))}</span>`;
       const list = document.getElementById("historyList");
-      if(!history.length){
-        list.innerHTML = "<div class='empty'>Este usuario aún no tiene historial registrado.</div>";
-        return;
-      }
-
+      if(!history.length){ list.innerHTML = "<div class='empty'>Este usuario aún no tiene historial registrado.</div>"; return; }
       list.innerHTML = history.map(item => {
         if(item.type === "payment"){
-          return `
-            <div class="history-item">
-              <strong>Pago ${escapeHtml(item.status || "—")} · ${moneyCLP(item.amount || 0)}</strong>
-              <div class="history-meta">
-                Proveedor: ${escapeHtml(item.provider || "—")} · Modalidad: ${escapeHtml(item.cadence || "—")}<br>
-                Fecha: ${escapeHtml(prettyDate(item.date))}<br>
-                Referencia: ${escapeHtml(item.external_reference || "—")}
-              </div>
-            </div>
-          `;
+          return `<div class="history-item"><strong>Pago ${escapeHtml(item.status || "—")} · ${moneyCLP(item.amount || 0)}</strong><div class="history-meta">Proveedor: ${escapeHtml(item.provider || "—")} · Modalidad: ${escapeHtml(item.cadence || "—")}<br>Fecha: ${escapeHtml(prettyDate(item.date))}<br>Referencia: ${escapeHtml(item.external_reference || "—")}</div></div>`;
         }
-
         const themes = Array.isArray(item.themes) ? item.themes : [];
-        return `
-          <div class="history-item">
-            <strong>Búsqueda / análisis · ${escapeHtml(item.title || "Sin título")} — ${escapeHtml(item.artist || "Artista no indicado")}</strong>
-            <div class="history-meta">
-              Resultado: ${escapeHtml(item.result || "—")}<br>
-              Edad sugerida: ${escapeHtml(item.age_suggested || "—")} · Riesgo: ${escapeHtml(item.risk ?? "—")}<br>
-              Fuente: ${escapeHtml(item.source || "—")} · Fecha: ${escapeHtml(prettyDate(item.date))}
-            </div>
-            ${themes.length ? `<div class="history-tags">${themes.map(t => `<span class="history-tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
-          </div>
-        `;
+        return `<div class="history-item"><strong>Búsqueda / análisis · ${escapeHtml(item.title || "Sin título")} — ${escapeHtml(item.artist || "Artista no indicado")}</strong><div class="history-meta">Resultado: ${escapeHtml(item.result || "—")}<br>Edad sugerida: ${escapeHtml(item.age_suggested || "—")} · Riesgo: ${escapeHtml(item.risk ?? "—")}<br>Fuente: ${escapeHtml(item.source || "—")} · Fecha: ${escapeHtml(prettyDate(item.date))}</div>${themes.length ? `<div class="history-tags">${themes.map(t => `<span class="history-tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}</div>`;
       }).join("");
+      document.getElementById("note").value = user.note || "";
     }
 
     async function activatePro(){
-      const email = document.getElementById("email").value.trim();
-      const days = Number(document.getElementById("days").value || 30);
-      const note = document.getElementById("note").value.trim();
-
-      if(!email){
-        setStatus("Debes ingresar un correo.", "error");
-        return;
-      }
-
+      const email = document.getElementById("email").value.trim(); const days = Number(document.getElementById("days").value || 30); const note = document.getElementById("note").value.trim();
+      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
       setStatus("Activando Pro temporal...", "info");
-
-      try{
-        await fetchJson(API + "/admin/pro/activate", {
-          method: "POST",
-          headers: authHeaders(),
-          body: JSON.stringify({ email, days, note })
-        });
-        setStatus("Pro temporal activado correctamente.", "ok");
-        await reloadEverything();
-        if(selectedEmail === email) await loadHistory(email);
-      }catch(error){
-        setStatus(error.message || "No fue posible activar Pro.", "error");
-      }
+      try{ await fetchJson(API + "/admin/pro/activate", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email, days, note }) }); setStatus("Pro temporal activado correctamente.", "ok"); await reloadEverything(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible activar Pro.", "error"); }
     }
 
     async function revokePro(){
       const email = document.getElementById("email").value.trim();
-
-      if(!email){
-        setStatus("Debes ingresar un correo.", "error");
-        return;
-      }
-
+      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
       setStatus("Revocando Pro...", "info");
-
-      try{
-        await fetchJson(API + "/admin/pro/revoke", {
-          method: "POST",
-          headers: authHeaders(),
-          body: JSON.stringify({ email })
-        });
-        setStatus("Pro revocado correctamente.", "ok");
-        await reloadEverything();
-        if(selectedEmail === email) await loadHistory(email);
-      }catch(error){
-        setStatus(error.message || "No fue posible revocar Pro.", "error");
-      }
+      try{ await fetchJson(API + "/admin/pro/revoke", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email }) }); setStatus("Pro revocado correctamente.", "ok"); await reloadEverything(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible revocar Pro.", "error"); }
     }
 
     async function saveNoteOnly(){
-      const email = document.getElementById("email").value.trim();
-      const note = document.getElementById("note").value.trim();
-
-      if(!email){
-        setStatus("Debes ingresar un correo.", "error");
-        return;
-      }
-
+      const email = document.getElementById("email").value.trim(); const note = document.getElementById("note").value.trim();
+      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
       setStatus("Guardando nota...", "info");
-
-      try{
-        await fetchJson(API + "/admin/users/update", {
-          method: "POST",
-          headers: authHeaders(),
-          body: JSON.stringify({ email, note })
-        });
-        setStatus("Nota guardada correctamente.", "ok");
-        await loadUsers();
-        if(selectedEmail === email) await loadHistory(email);
-      }catch(error){
-        setStatus(error.message || "No fue posible guardar la nota.", "error");
-      }
+      try{ await fetchJson(API + "/admin/users/update", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email, note }) }); setStatus("Nota guardada correctamente.", "ok"); await loadUsers(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible guardar la nota.", "error"); }
     }
 
     async function reloadEverything(){
-      try{
-        await Promise.all([loadDashboard(), loadUsers()]);
-        if(selectedEmail){
-          await loadHistory(selectedEmail);
-        }
-      }catch(error){
-        setStatus(error.message || "No fue posible actualizar el panel.", "error");
-      }
+      try{ await Promise.all([loadDashboard(), loadUsers()]); if(selectedEmail){ await loadHistory(selectedEmail); } }catch(error){ setStatus(error.message || "No fue posible actualizar el panel.", "error"); }
     }
 
     window.addEventListener("load", reloadEverything);
