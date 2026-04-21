@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MauRock | With a little help from mi FrAiends</title>
+  <meta name="description" content="MauRock transforma una experiencia límite en un recorrido musical de 12 canciones sobre diagnóstico, proceso, fe, dolor, apoyo y renacer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --bg2:#eef3f9;
+      --card:#ffffff;
+      --card-soft:#f9fbff;
+      --text:#172033;
+      --muted:#607089;
+      --line:#d9e3ef;
+      --line-strong:#c8d5e4;
+      --shadow:0 18px 48px rgba(25,39,64,.08);
+      --orange:#f97316;
+      --orange-soft:#fff1e8;
+      --blue:#4b82ff;
+      --blue-soft:#eef4ff;
+      --green:#10b981;
+      --green-soft:#ebfff7;
+      --radius:28px;
+      --radius-sm:18px;
+      --max:1200px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(249,115,22,.10), transparent 24%),
+        radial-gradient(circle at top right, rgba(75,130,255,.08), transparent 20%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      min-height:100vh;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.70), rgba(255,255,255,0)),
+        linear-gradient(90deg, rgba(23,32,51,.018) 1px, transparent 1px),
+        linear-gradient(rgba(23,32,51,.018) 1px, transparent 1px);
+      background-size:auto, 34px 34px, 34px 34px;
+      mask-image:linear-gradient(to bottom, rgba(255,255,255,.55), transparent 82%);
+    }
+
+    a{text-decoration:none;color:inherit}
+    .wrap{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:20px 18px 80px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .brand-link{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+
+    .brand{
+      font-size:2.2rem;
+      font-weight:900;
+      letter-spacing:-.07em;
+      line-height:.95;
+    }
+
+    .brand span{
+      color:var(--orange);
+    }
+
+    .brand-sub{
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      min-height:48px;
+      padding:0 18px;
+      border:none;
+      border-radius:16px;
+      font:inherit;
+      font-weight:800;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-ghost{
+      background:rgba(255,255,255,.72);
+      color:var(--text);
+      border:1px solid var(--line);
+      box-shadow:0 8px 22px rgba(25,39,64,.05);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,#ff934b,var(--orange));
+      color:#fff;
+      box-shadow:0 12px 30px rgba(249,115,22,.25);
+    }
+    .btn-blue{
+      background:linear-gradient(135deg,#6796ff,var(--blue));
+      color:#fff;
+      box-shadow:0 12px 30px rgba(75,130,255,.18);
+    }
+
+    .card{
+      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.82);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.12fr .88fr;
+      gap:18px;
+      margin-bottom:20px;
+    }
+
+    .hero-main,.hero-side,.section-card,.album-card,.song-card,.footer-card{
+      padding:28px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 14px;
+      border-radius:999px;
+      background:var(--orange-soft);
+      border:1px solid #ffd4bb;
+      color:#b45309;
+      font-size:.84rem;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(2.5rem, 5.4vw, 4.8rem);
+      line-height:.92;
+      letter-spacing:-.08em;
+      max-width:760px;
+    }
+
+    .lead{
+      margin:0;
+      color:var(--muted);
+      line-height:1.84;
+      font-size:1.05rem;
+      max-width:760px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    .micro-links{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      color:var(--muted);
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    .micro-links a{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .status-box{
+      padding:16px 18px;
+      border-radius:20px;
+      background:linear-gradient(180deg,#fff8f4,#fffefc);
+      border:1px solid #ffdcca;
+    }
+
+    .status-box strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:1rem;
+    }
+
+    .status-box span{
+      color:var(--muted);
+      line-height:1.75;
+      font-size:.96rem;
+      display:block;
+    }
+
+    .mini-grid{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .mini{
+      padding:16px 18px;
+      border-radius:20px;
+      background:var(--card-soft);
+      border:1px solid var(--line);
+    }
+
+    .mini strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:.98rem;
+    }
+
+    .mini span{
+      color:var(--muted);
+      line-height:1.72;
+      font-size:.94rem;
+    }
+
+    .section-title{
+      margin:0 0 10px;
+      font-size:2rem;
+      line-height:1;
+      letter-spacing:-.05em;
+    }
+
+    .section-copy{
+      margin:0;
+      color:var(--muted);
+      line-height:1.82;
+    }
+
+    .section{
+      margin-bottom:18px;
+    }
+
+    .album-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .album-highlights{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .album-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--blue-soft);
+      border:1px solid #d8e6ff;
+      color:#2f5bb3;
+      font-size:.84rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .timeline{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .timeline-step{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:start;
+      padding:12px 14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    .timeline-num{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--orange-soft);
+      color:#c25c14;
+      font-weight:900;
+      font-size:.92rem;
+      flex:0 0 auto;
+    }
+
+    .timeline-step strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:.96rem;
+    }
+
+    .timeline-step span{
+      color:var(--muted);
+      line-height:1.65;
+      font-size:.92rem;
+    }
+
+    .songs-grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .song-card{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.88);
+    }
+
+    .song-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .track-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--green-soft);
+      border:1px solid #c7f2df;
+      color:#157f59;
+      font-size:.82rem;
+      font-weight:800;
+    }
+
+    .song-title{
+      margin:0;
+      font-size:1.6rem;
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .song-sub{
+      color:var(--muted);
+      margin-top:6px;
+      font-weight:700;
+      font-size:.94rem;
+    }
+
+    .song-layout{
+      display:grid;
+      grid-template-columns:1.2fr .9fr .75fr;
+      gap:14px;
+    }
+
+    .song-box{
+      padding:18px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid var(--line);
+      min-height:100%;
+    }
+
+    .song-box h3{
+      margin:0 0 10px;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .song-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.78;
+      font-size:.96rem;
+    }
+
+    .reflection-list{
+      display:grid;
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .reflection-list li{
+      padding-left:16px;
+      position:relative;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:.95rem;
+    }
+
+    .reflection-list li::before{
+      content:"•";
+      position:absolute;
+      left:0;
+      top:0;
+      color:var(--orange);
+      font-weight:900;
+    }
+
+    .listen-actions{
+      display:grid;
+      gap:10px;
+    }
+
+    .btn-listen,
+    .btn-listen-secondary{
+      min-height:46px;
+      padding:0 14px;
+      border-radius:14px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border:1px solid var(--line);
+    }
+
+    .btn-listen{
+      background:linear-gradient(135deg,#1ed760,#10b981);
+      color:#073a26;
+      border:none;
+      box-shadow:0 10px 24px rgba(16,185,129,.16);
+    }
+
+    .btn-listen-secondary{
+      background:#fff;
+      color:var(--text);
+    }
+
+    .listen-note{
+      color:var(--muted);
+      font-size:.87rem;
+      line-height:1.65;
+      margin-top:4px;
+    }
+
+    .pending{
+      background:#fffaf7;
+      border-color:#ffdcca;
+    }
+
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(180deg, rgba(255,255,255,.90), rgba(255,255,255,.78));
+    }
+
+    .footer-card p{
+      max-width:720px;
+      margin:0 auto 16px;
+    }
+
+    .footer-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .small-note{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.7;
+    }
+
+    @media (max-width: 1080px){
+      .song-layout{grid-template-columns:1fr 1fr}
+      .song-layout .listen-col{grid-column:1 / -1}
+    }
+
+    @media (max-width: 980px){
+      .hero,.album-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 720px){
+      .wrap{padding:16px 14px 56px}
+      .topbar{align-items:stretch}
+      .nav-actions{width:100%}
+      .nav-actions .btn{width:100%}
+      .hero-main,.hero-side,.section-card,.album-card,.song-card,.footer-card{padding:20px}
+      .brand{font-size:1.95rem}
+      h1{font-size:2.35rem}
+      .hero-actions{display:grid;grid-template-columns:1fr;}
+      .hero-actions .btn{width:100%}
+      .song-layout{grid-template-columns:1fr}
+      .song-layout .listen-col{grid-column:auto}
+      .micro-links{display:grid;gap:8px}
+      .timeline-step{grid-template-columns:34px 1fr}
+      .song-title{font-size:1.35rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="index.html" class="brand-link" aria-label="Volver a MejorarIA">
+        <div class="brand">Mau<span>Rock</span></div>
+        <div class="brand-sub">Sub-marca de MejorarIA · música que acompaña procesos reales</div>
+      </a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="index.html">← Volver a MejorarIA</a>
+        <a class="btn btn-blue" href="#disco">Explorar el disco</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="eyebrow">🎸 Sitio en construcción · identidad ya visible</div>
+        <h1>With a little help from mi FrAiends</h1>
+        <p class="lead">
+          MauRock nace desde una experiencia extrema y la transforma en canciones. Este disco recorre un camino emocional que va desde el diagnóstico, el miedo y el dolor, hasta el apoyo, el renacer y la salida del hospital. No busca romantizar el sufrimiento: busca acompañar, dar sentido y abrir conversación.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">🎧 Escuchar en Spotify</a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">📸 Ver Instagram</a>
+        </div>
+
+        <div class="micro-links">
+          <a href="#canciones">• Canción por canción</a>
+          <a href="#disco">• El disco como recorrido</a>
+          <a href="#proposito">• Por qué existe MauRock</a>
+        </div>
+      </div>
+
+      <div class="card hero-side">
+        <div class="status-box">
+          <strong>Una landing con propósito, no una página vacía.</strong>
+          <span>
+            Mientras el sitio sigue creciendo, esta versión ya deja visible la historia del disco, el arco emocional de las canciones y los accesos reales a Spotify e Instagram.
+          </span>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini">
+            <strong>Cómo leer este sitio</strong>
+            <span>
+              Cada canción se presenta en tres capas: cómo nace, qué invita a reflexionar y dónde escuchar o seguir el proyecto.
+            </span>
+          </div>
+          <div class="mini">
+            <strong>Pensado para móvil</strong>
+            <span>
+              En celular el recorrido se vuelve vertical, claro y cercano, para que la historia se entienda rápido sin perder profundidad.
+            </span>
+          </div>
+          <div class="mini">
+            <strong>Sub-marca visible</strong>
+            <span>
+              MauRock convive dentro de MejorarIA como un proyecto humano que acompaña desde la música, no como un rincón oculto.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="disco" class="section album-grid">
+      <div class="card album-card">
+        <div class="album-pill">🧭 El disco como recorrido</div>
+        <h2 class="section-title">Un proceso narrado en 12 estaciones</h2>
+        <p class="section-copy">
+          El corazón del álbum es temático: cada canción se ubica dentro de un trayecto real. El relato parte en el quiebre del verano, atraviesa miedo, procedimientos, gratitud, agotamiento, compañía y renacer, y se abre hacia una vida vivida con más conciencia y amor.
+        </p>
+
+        <div class="album-highlights">
+          <div class="mini">
+            <strong>Del impacto al sentido</strong>
+            <span>El diagnóstico rompe la normalidad y obliga a mirar de frente la fragilidad de la vida.</span>
+          </div>
+          <div class="mini">
+            <strong>Del dolor al apoyo</strong>
+            <span>La familia, los amigos, la fe y quienes aparecen en el camino se vuelven un sostén concreto.</span>
+          </div>
+          <div class="mini">
+            <strong>De sobrevivir a vivir</strong>
+            <span>El cierre del disco no niega el sufrimiento: lo transforma en una nueva forma de habitar la vida.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card album-card">
+        <div class="album-pill">🎼 Mapa emocional</div>
+        <div class="timeline">
+          <div class="timeline-step"><div class="timeline-num">1</div><div><strong>Impacto</strong><span>La noticia irrumpe y el verano se rompe.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">2</div><div><strong>Proceso</strong><span>Comienza el camino médico y la decisión de seguir adelante.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">3</div><div><strong>Miedo y fe</strong><span>La fortaleza externa convive con la incertidumbre interior.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">4</div><div><strong>Gratitud</strong><span>Sobrevivir también revela quiénes sostienen de verdad.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">5</div><div><strong>Desorientación</strong><span>El dolor exige encontrar un norte nuevo.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">6</div><div><strong>Ruina</strong><span>La experiencia se vuelve más dura, física y emocionalmente.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">7</div><div><strong>Límite</strong><span>Aparece el cansancio extremo y la oscuridad mental.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">8</div><div><strong>Ayuda</strong><span>Surgen ángeles en la tierra que reorientan la vida.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">9</div><div><strong>Renacer</strong><span>La nueva oportunidad exige vivir distinto.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">10</div><div><strong>Presencia</strong><span>Volver a sentir la vida como algo real y presente.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">11</div><div><strong>Camino nuevo</strong><span>Seguir luchando con menos miedo y más amor.</span></div></div>
+          <div class="timeline-step"><div class="timeline-num">12</div><div><strong>Memoria</strong><span>Un cierre abierto para dedicar, agradecer y proyectar.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="canciones" class="section">
+      <div class="card section-card" style="margin-bottom:16px;">
+        <h2 class="section-title">Canción por canción</h2>
+        <p class="section-copy">
+          Esta sección traduce la lógica de Instagram a una experiencia web más clara: <strong>cómo nace</strong>, <strong>qué invita a reflexionar</strong> y <strong>dónde escuchar o seguir</strong>. Varias bases vienen del material narrativo del disco; donde el desarrollo aún está creciendo, se indica con honestidad.
+        </p>
+      </div>
+
+      <div class="songs-grid">
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">01 · Verano Roto</h3>
+              <div class="song-sub">El inicio del quiebre</div>
+            </div>
+            <div class="track-badge">Track 1 · Diagnóstico</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Parte en un verano aparentemente normal, compartido con familia y amigos, hasta que una noticia lo cambia todo. Desde ahí nacen la ansiedad, el arrepentimiento por lo poco aprovechado y el miedo a no saber si se podrá seguir viviendo de la misma forma.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué cosas dejamos para después creyendo que siempre habrá tiempo?</li>
+                <li>¿Qué cambia cuando la vida pierde de golpe su sensación de normalidad?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+              <div class="listen-note">Puedes usar Instagram para ver la lógica de publicación por columnas de cada canción.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">02 · Aunque tiemble el suelo</h3>
+              <div class="song-sub">Entrar al proceso</div>
+            </div>
+            <div class="track-badge">Track 2 · Decisión</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Al comprender más a fondo la noticia, aparece el proceso real que habrá que vivir. El susto es fuerte, pero la presencia de la familia, los amigos y la fe empuja a tomar la decisión de seguir adelante a pesar del temblor.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué nos sostiene cuando el camino se vuelve inevitable?</li>
+                <li>¿Cómo cambia el miedo cuando alguien decide caminar al lado nuestro?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">03 · El baile del miedo y la fe</h3>
+              <div class="song-sub">Poner cara de fuerza</div>
+            </div>
+            <div class="track-badge">Track 3 · Umbral</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Nace del día en que hay que hacerse el valiente para que el entorno no se asuste. Por fuera parece que todo está bajo control; por dentro conviven miedo, dudas y una fe intacta que intenta no soltarse.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Cuántas veces fingimos fortaleza para cuidar a quienes nos rodean?</li>
+                <li>¿Puede la fe existir sin borrar el miedo?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">04 · Mi fortuna</h3>
+              <div class="song-sub">La gratitud después del primer impacto</div>
+            </div>
+            <div class="track-badge">Track 4 · Gratitud</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>La canción aparece después de una primera salida positiva: agradecer que todo haya salido bien y reconocer que el camino no ha terminado. La verdadera fortuna se vuelve nítida cuando se descubre que uno no está solo.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué personas se convierten en riqueza real cuando lo difícil aparece?</li>
+                <li>¿Cómo cambia la idea de fortuna después de una crisis?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">05 · Buscando el norte</h3>
+              <div class="song-sub">Dolor y desorientación</div>
+            </div>
+            <div class="track-badge">Track 5 · Norte</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Cuando el obstáculo crece y el dolor también, la pregunta ya no es solo cómo seguir resistiendo, sino hacia dónde seguir. La canción se instala en ese momento de confusión en que el camino necesita un nuevo sentido.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué hacemos cuando aguantar ya no basta y también necesitamos dirección?</li>
+                <li>¿Cómo se encuentra norte en medio del dolor?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">06 · Entre ruinas y fe</h3>
+              <div class="song-sub">La pesadilla parte I</div>
+            </div>
+            <div class="track-badge">Track 6 · Ruinas</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Todo parece caerse a pedazos. Hay dolor, rostros preocupados y días de poca memoria o conciencia. La canción nace desde esa sensación de derrumbe, sostenida apenas por la fe y por la certeza de no estar completamente abandonado.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Cómo se atraviesa un tramo de la vida que apenas puede recordarse?</li>
+                <li>¿Qué queda de nosotros cuando solo podemos confiar?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">07 · Llévame por favor</h3>
+              <div class="song-sub">La pesadilla parte II</div>
+            </div>
+            <div class="track-badge">Track 7 · Límite</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Es uno de los puntos más duros del disco: el cansancio del dolor, la sensación de no querer seguir luchando y la irrupción de pensamientos oscuros. La canción no romantiza ese abismo; lo muestra y también muestra qué vínculos terminan frenándolo.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué pensamientos aparecen cuando el dolor rebasa el cuerpo?</li>
+                <li>¿Qué personas o recuerdos pueden devolvernos a la vida en un momento extremo?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+              <div class="listen-note">Si más adelante quieres, esta canción puede llevar una nota de acompañamiento sensible en una versión ampliada del sitio.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">08 · Ángeles en la tierra</h3>
+              <div class="song-sub">Cable a tierra</div>
+            </div>
+            <div class="track-badge">Track 8 · Apoyo</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Nace cuando aparecen personas que ayudan, orientan y muestran razones concretas para seguir. Algunas siempre estuvieron; otras llegan justo cuando hacen falta. La canción es una forma de agradecer a quienes se vuelven sostén real.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Quiénes han sido ángeles en la tierra para ti?</li>
+                <li>¿Qué palabra o gesto puede cambiar el destino emocional de otro?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">09 · Renacer bajo el sol</h3>
+              <div class="song-sub">Salir de la oscuridad</div>
+            </div>
+            <div class="track-badge">Track 9 · Renacer</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Después de atravesar una etapa durísima, aparece el deseo de terminar esa parte del proceso y comenzar otra desde la gratitud. La nueva oportunidad no se vive como simple alivio, sino como llamado a hacer las cosas de una manera diferente.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué significa renacer sin olvidar todo lo vivido?</li>
+                <li>¿Cómo cambia la vida cuando se la siente como una segunda oportunidad?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">10 · Vivo de verdad</h3>
+              <div class="song-sub">Volver a sentir la vida</div>
+            </div>
+            <div class="track-badge">Track 10 · Presencia</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>Esta canción marca el momento en que ya no se trata solo de haber sobrevivido, sino de empezar a vivir con otra conciencia. Después de sentir el borde de la nada, aparece una certeza nueva: amar a quienes están, dejar de postergar lo importante y entender que vivir de verdad también es atreverse a sentir.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué cambia en nosotros cuando dejamos de sentirnos invencibles?</li>
+                <li>¿Cómo se aprende a valorar cada abrazo, cada risa y cada hogar después de tocar fondo?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+              <div class="listen-note">Canción bisagra del disco: pasa de la supervivencia a una forma nueva de habitar la vida.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">11 · Sin miedo, con amor</h3>
+              <div class="song-sub">Seguir luchando</div>
+            </div>
+            <div class="track-badge">Track 11 · Nuevo camino</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>La salida del hospital no significa que todo terminó, pero sí abre un camino distinto. Habrá días difíciles, aunque el esfuerzo vale la pena para ver a la familia, disfrutar a los amigos y decirles lo que se siente sin seguir escondiéndolo.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Qué cambia cuando dejamos de guardar el cariño para después?</li>
+                <li>¿Cómo se aprende a vivir con menos miedo y más amor?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card song-card">
+          <div class="song-top">
+            <div>
+              <h3 class="song-title">12 · Mónica</h3>
+              <div class="song-sub">Dedicatoria íntima y sostén invisible</div>
+            </div>
+            <div class="track-badge">Track 12 · Dedicatoria</div>
+          </div>
+          <div class="song-layout">
+            <div class="song-box">
+              <h3>Cómo nace</h3>
+              <p>"Mónica" nace como una dedicatoria íntima a la esposa que sostuvo mucho más de lo visible durante el proceso: contuvo a la familia, acompañó en silencio y ayudó a mantener en pie el mundo cercano cuando todo estaba en tensión. Su letra se mantiene reservada, precisamente porque pertenece también a ese espacio sagrado de amor y resguardo.</p>
+            </div>
+            <div class="song-box">
+              <h3>Invita a reflexionar</h3>
+              <ul class="reflection-list">
+                <li>¿Quién sostiene a quienes están sosteniendo a todos los demás?</li>
+                <li>¿Cómo se honra a quienes acompañan sin pedir protagonismo?</li>
+              </ul>
+            </div>
+            <div class="song-box listen-col">
+              <h3>Escuchar / seguir</h3>
+              <div class="listen-actions">
+                <a class="btn-listen" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Spotify</a>
+                <a class="btn-listen-secondary" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Instagram</a>
+              </div>
+              <div class="listen-note">La letra completa no se muestra aquí por decisión del autor: se presenta como una pieza íntima dentro del cierre del disco.</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="proposito" class="section">
+      <div class="card footer-card">
+        <h2 class="section-title">Por qué existe MauRock</h2>
+        <p>
+          Porque a veces una experiencia extrema deja preguntas que no caben en una explicación técnica. MauRock intenta responder desde la música: acompañando a quienes atraviesan procesos difíciles, a sus familias, a sus amistades y también a quienes necesitan poner en palabras lo que todavía duele.
+        </p>
+        <div class="footer-actions">
+          <a class="btn btn-primary" href="https://open.spotify.com/artist/5JaZPrS3Sg3Hnp4Wr5MAy4?si=XfTcxLdNSGSwwsKwSkQtYA" target="_blank" rel="noopener noreferrer">Escuchar MauRock</a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/maurock_oficial?igsh=em1nNzM5YmNoc3l4&utm_source=qr" target="_blank" rel="noopener noreferrer">Seguir en Instagram</a>
+        </div>
+        <div class="small-note">
+          Sugerencia de siguiente etapa: cuando quieras, este sitio puede crecer con portada del disco, letras, videoclips, fotos del proceso y una página individual para cada canción.
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
