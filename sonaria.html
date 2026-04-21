@@ -269,6 +269,13 @@
             <div class="pill">🎵 Entrada rápida para el aula</div>
             <h2 style="margin:10px 0 6px">Analizar canción</h2>
             <div class="muted">SonarIA no cancela canciones: las analiza, detecta riesgos y te ayuda a rescatarlas pedagógicamente para el aula.</div>
+            <div class="hero-note" style="margin-top:14px">
+              <strong>🎵 Enfoque actual de SonarIA</strong>
+              <strong>Hoy SonarIA está optimizada principalmente para canciones en inglés.</strong> Evalúa su contenido, detecta riesgos pedagógicos y, cuando es necesario, propone una <strong>adaptación para contexto escolar</strong>.
+              <br><br>
+              <strong>🛠️ En desarrollo</strong>
+              Ya estamos trabajando para ampliar y afinar el análisis y la adaptación de canciones en español.
+            </div>
           </div>
           <div id="analyzingPulse" class="analysis-pulse"><span>Analizando</span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
         </div>
@@ -307,11 +314,11 @@
           <div id="statusBox" class="status"></div>
         <div class="hero-note" style="margin-top:14px">
           <strong>🎯 Propuesta SonarIA</strong>
-          SonarIA busca que puedas trabajar canciones en inglés sin castigar el arte: evalúa su contenido, detecta riesgos pedagógicos y, cuando es necesario, propone una adaptación para contexto escolar.
+          SonarIA te ayuda a trabajar canciones en clase sin renunciar a su valor artístico. <strong>No busca castigar el arte</strong>, sino hacerlo enseñable, detectando riesgos y proponiendo mediación o adaptación cuando el contexto escolar lo requiere.
         </div>
         <div class="hero-note" style="margin-top:12px">
-          <strong>🌍 Enfoque actual</strong>
-          Hoy SonarIA está orientada principalmente al trabajo con canciones en inglés. Ya estamos trabajando en fortalecer el análisis y la adaptación de canciones en español.
+          <strong>🌍 Cómo trabaja SonarIA hoy</strong>
+          <strong>La adaptación escolar se trabaja hoy principalmente sobre canciones en inglés.</strong> La versión mostrada busca mantener sentido, intención y utilidad pedagógica. Luego iremos ampliando esta fineza al análisis y adaptación de canciones en español.
         </div>
       </section>
 
@@ -404,10 +411,6 @@
           <button id="togglePedagogia" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
-        <div id="mediacionBox" class="ped-card" style="margin-top:12px">
-          <strong style="display:block;margin-bottom:10px">🧠 Guía de mediación docente</strong>
-          <div class="list-item">Cuando una canción requiera mediación, aquí aparecerán pasos concretos para saber qué hacer antes, durante y después de escucharla.</div>
-        </div>
         <div id="pedTableWrap" class="table-wrap">
           <div class="ped-card">
             <strong style="display:block;margin-bottom:10px">Tabla resumen: cursos y OA</strong>
@@ -430,7 +433,7 @@
           <button id="toggleTranslation" class="btn btn-ghost btn-lock" type="button">Ver más</button>
         </div>
         <div id="translationIntro" class="list">
-          <div class="traduccion-info">Traducción basada en la versión adaptada para facilitar su uso en el aula.</div>
+          <div class="traduccion-info"><strong>La adaptación escolar se trabaja hoy principalmente sobre canciones en inglés.</strong> La versión mostrada busca mantener sentido, intención y utilidad pedagógica.</div>
           <div class="list-item">Aquí verás qué detectó SonarIA y cómo lo transformó para el aula. En esta primera etapa, la propuesta se enfoca especialmente en canciones en inglés adaptadas y traducidas al español desde su versión escolar.</div>
         </div>
         <div id="translationWrap" class="table-wrap">
@@ -824,7 +827,6 @@
       $("pedTableBody").innerHTML = pedagogyStore.length
         ? pedagogyStore.map(item => `<tr><td>${item.curso}</td><td>${item.oa[0] || "—"}</td></tr>`).join("")
         : '<tr><td colspan="2">Analiza una canción para ver sugerencias.</td></tr>';
-
       const selector = $("pedCourseSelector"); selector.innerHTML = "";
       if(!pedagogyStore.length){ $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>'; return; }
       pedagogyStore.forEach((item, idx)=>{
@@ -837,7 +839,6 @@
         selector.appendChild(chip);
       });
       $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
-      $("mediacionBox").innerHTML = '<strong style="display:block;margin-bottom:10px">🧠 Guía de mediación docente</strong><div class="list-item">Cuando una canción requiera mediación, aquí aparecerán pasos concretos para saber qué hacer antes, durante y después de escucharla.</div>';
       selectPedCourse(0);
     }
     function selectPedCourse(idx){
@@ -852,27 +853,7 @@
     }
 
 
-    
-    function renderMediation(mediacion, resultado){
-      const box = $("mediacionBox");
-      if(!box) return;
-      if(!mediacion || !resultado){
-        box.innerHTML = `<strong style="display:block;margin-bottom:10px">🧠 Guía de mediación docente</strong>
-          <div class="list-item">Cuando una canción requiera mediación, aquí aparecerán pasos concretos para saber qué hacer antes, durante y después de escucharla.</div>`;
-        return;
-      }
-      const isDirect = String(resultado || "").includes("🟢");
-      box.innerHTML = `
-        <strong style="display:block;margin-bottom:10px">🧠 Guía de mediación docente</strong>
-        <div class="list-item"><strong>${isDirect ? "Uso recomendado" : "Qué hacer como docente"}</strong><br>${mediacion.accion_docente || "—"}</div>
-        <div class="list-item"><strong>Antes de escuchar</strong><br>${mediacion.antes_de_escuchar || "—"}</div>
-        <div class="list-item"><strong>Durante la actividad</strong><br>${mediacion.durante || "—"}</div>
-        <div class="list-item"><strong>Después de escuchar</strong><br>${mediacion.despues || "—"}</div>
-        <div class="list-item"><strong>⚠️ Consideración</strong><br>${mediacion.advertencia || "—"}</div>`;
-      box.style.display = "grid";
-    }
-
-function renderTranslation(data){
+    function renderTranslation(data){
       const detected = [...new Set((data.contextos_detectados || []).slice(0,6))];
       const themes = [...new Set((data.temas_detectados || []).slice(0,6))];
       const adaptedHtml = data.adaptacion?.adapted_html || '';
@@ -1082,7 +1063,6 @@ function renderTranslation(data){
         renderThemes(data.temas_detectados || []);
         renderIssues(data);
         renderPedagogy(data.pedagogia || {}, data.temas_detectados || []);
-        renderMediation(data.mediacion || null, data.resultado || "");
         $("cursosSugeridos").textContent = pedagogyStore.length ? pedagogyStore.map(x=>x.curso).join(", ") : "—";
         renderTranslation(data);
         if(data.efemeride?.texto) $("efemFact").textContent = data.efemeride.texto;
