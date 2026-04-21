@@ -3,476 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MejorarIA | IA para docentes</title>
-<meta name="description" content="MejorarIA crea herramientas docentes desde necesidades reales del aula. Su primer producto es SonarIA, nacido desde una necesidad concreta en educación musical.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<title>MejorarIA | Tecnología y humanidad</title>
+<meta name="description" content="MejorarIA combina herramientas docentes y proyectos humanos para hacer mejor las cosas.">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --bg:#050b14;
-  --bg2:#081224;
-  --text:#f5f7fb;
-  --muted:#9eafc8;
-  --line:rgba(255,255,255,.08);
-  --f1-red:#e10600;
-  --f1-blue:#3b82f6;
-  --f1-purple:#6d28d9;
-  --mclaren:#ff8000;
-  --mclaren2:#ff5a00;
-  --radius:26px;
-  --shadow:0 24px 70px rgba(0,0,0,.34);
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+
+  --sonaria:#3b82f6;
+  --maurock:#f97316;
+
+  --radius:20px;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
 }
+
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+
 body{
   margin:0;
   font-family:'Inter',sans-serif;
+  background:var(--bg);
   color:var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(59,130,246,.10), transparent 20%),
-    radial-gradient(circle at bottom right, rgba(225,6,0,.08), transparent 18%),
-    linear-gradient(180deg,var(--bg),var(--bg2));
-  min-height:100vh;
-  overflow-x:hidden;
 }
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(rgba(255,255,255,.014) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.014) 1px, transparent 1px);
-  background-size:36px 36px;
-  mask-image:linear-gradient(to bottom, rgba(255,255,255,.30), transparent 80%);
-}
+
 .container{
-  max-width:1120px;
+  max-width:1100px;
   margin:auto;
-  padding:22px 20px 80px;
-  position:relative;
-  z-index:1;
+  padding:20px;
 }
+
+h1{
+  font-size:2.2rem;
+  margin-bottom:10px;
+}
+
+p{
+  color:var(--muted);
+  line-height:1.6;
+}
+
 .card{
-  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
+  background:var(--card);
   border:1px solid var(--line);
   border-radius:var(--radius);
+  padding:20px;
   box-shadow:var(--shadow);
 }
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(22px)}
-  to{opacity:1; transform:translateY(0)}
-}
-@keyframes fadeRight{
-  from{opacity:0; transform:translateX(-18px)}
-  to{opacity:1; transform:translateX(0)}
-}
-@keyframes glowPulse{
-  0%,100%{filter:drop-shadow(0 0 0 rgba(110,231,255,0))}
-  50%{filter:drop-shadow(0 0 10px rgba(110,231,255,.18))}
-}
-.reveal{opacity:0; animation:fadeUp .9s ease forwards}
-.reveal-delay-1{animation-delay:.08s}
-.reveal-delay-2{animation-delay:.18s}
-.reveal-delay-3{animation-delay:.28s}
-.nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:38px;
-  gap:14px;
-}
-.logo-link{text-decoration:none;color:inherit}
-.logo-wrap{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-  animation:fadeRight .9s ease both, glowPulse 3.5s ease-in-out infinite;
-}
-.logo{
-  font-size:2.7rem;
-  font-weight:900;
-  letter-spacing:-1.4px;
-  line-height:1;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.logo span{
-  background:linear-gradient(135deg,#23e3a1,#6ee7ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.logo-sub{
-  font-size:.82rem;
-  color:var(--muted);
-  font-weight:700;
-  letter-spacing:.02em;
-}
-.nav-actions{display:flex; gap:10px; flex-wrap:wrap}
+
 .btn{
-  min-height:48px;
-  padding:0 18px;
+  display:block;
+  width:100%;
+  padding:14px;
   border:none;
-  border-radius:16px;
-  font:inherit;
-  font-weight:800;
+  border-radius:14px;
+  font-weight:700;
   cursor:pointer;
-  transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+  margin-top:10px;
 }
-.btn:hover{transform:translateY(-1px)}
-.btn-ghost{
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  border:1px solid var(--line);
-}
-.btn-primary{
-  background:linear-gradient(135deg,var(--mclaren),var(--mclaren2));
-  color:#101418;
-  box-shadow:0 14px 34px rgba(255,128,0,.24);
-}
-.btn-f1{
-  background:linear-gradient(135deg,var(--f1-purple),var(--f1-blue));
+
+.btn-sonaria{
+  background:var(--sonaria);
   color:white;
-  box-shadow:0 14px 34px rgba(59,130,246,.18);
 }
-.hero{
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:20px;
-  margin-bottom:22px;
+
+.btn-maurock{
+  background:var(--maurock);
+  color:white;
 }
-.hero-main{
-  padding:30px;
-  display:grid;
-  gap:18px;
+
+.section{
+  margin-top:20px;
 }
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  width:max-content;
-  gap:8px;
-  padding:8px 14px;
-  border-radius:999px;
-  background:rgba(59,130,246,.12);
-  border:1px solid rgba(59,130,246,.22);
-  color:#dce8ff;
-  font-size:.85rem;
-  font-weight:800;
-}
-.hero h1{
-  margin:0;
-  font-size:clamp(3rem,6vw,5rem);
-  line-height:.92;
-  letter-spacing:-.08em;
-  max-width:760px;
-}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.82;
-  font-size:1.08rem;
-  max-width:760px;
-}
-.hero-cta{display:flex; gap:12px; flex-wrap:wrap}
-.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-.stat{
-  background:rgba(255,255,255,.035);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:16px;
-}
-.stat strong{display:block; font-size:1.6rem; margin-bottom:6px}
-.stat span{color:var(--muted); line-height:1.6; font-size:.94rem}
-.hero-side{
+
+.grid{
   display:grid;
   gap:16px;
 }
-.mini-panel{
-  padding:22px;
+
+.logo{
+  font-weight:900;
+  font-size:2rem;
 }
-.mini-panel h3{
-  margin:0 0 8px;
-  font-size:1.12rem;
+
+.logo span{
+  color:var(--sonaria);
 }
-.mini-panel p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.74;
+
+.sub{
+  margin-bottom:20px;
 }
-.mini-actions{
+
+.links{
   display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:14px;
+  gap:12px;
+  margin-top:10px;
+  font-size:.9rem;
 }
-.section{margin-bottom:22px}
-.section-head{
-  display:flex; justify-content:space-between; align-items:end; gap:12px; margin-bottom:14px;
+
+.links a{
+  text-decoration:none;
+  color:var(--muted);
+  font-weight:600;
 }
-.section-head h2{margin:0; font-size:2rem; letter-spacing:-.04em}
-.section-head p{margin:0; color:var(--muted)}
-.grid{display:grid; grid-template-columns:1fr 1fr; gap:20px}
-.sonaria-card{padding:26px; display:grid; gap:16px}
-.product-top{display:flex; align-items:flex-start; justify-content:space-between; gap:12px}
-.product-icon{
-  width:62px; height:62px; border-radius:20px; display:flex; align-items:center; justify-content:center;
-  font-size:2rem; background:rgba(255,255,255,.06); border:1px solid var(--line);
-}
-.badge{
-  padding:8px 12px; border-radius:999px; font-size:.8rem; font-weight:800;
-  border:1px solid rgba(255,128,0,.24); background:rgba(255,128,0,.12); color:#ffe4c7;
-}
-.sonaria-card h3{margin:0; font-size:2rem; letter-spacing:-.04em}
-.sonaria-card p{margin:0; color:#d8e2f1; line-height:1.82}
-.tags{display:flex; gap:8px; flex-wrap:wrap}
-.tag{
-  padding:8px 12px; border-radius:999px; font-size:.84rem; font-weight:700;
-  background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.18); color:#dce8ff;
-}
-.video-card{padding:22px; display:grid; gap:14px}
-.video-card h3{margin:0; font-size:1.45rem; letter-spacing:-.03em}
-.video-card p{margin:0; color:var(--muted); line-height:1.7}
-.video{
-  width:100%; aspect-ratio:16/9; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:#000;
-}
-.video iframe{width:100%; height:100%; border:0}
-.fusion{display:grid; grid-template-columns:1.02fr .98fr; gap:20px}
-.info-card,.cta-card{padding:26px}
-.info-card h2,.cta-card h2{margin:0 0 10px; font-size:2rem; letter-spacing:-.04em}
-.info-card p,.cta-card p{margin:0; color:#d7e2f1; line-height:1.82}
-.list{display:grid; gap:12px; margin-top:16px}
-.item{
-  background:rgba(255,255,255,.035); border:1px solid var(--line); border-radius:18px; padding:15px 16px;
-}
-.item strong{display:block; margin-bottom:6px}
-.item span{color:var(--muted); line-height:1.68}
-.cta-card{
-  background:
-    linear-gradient(135deg, rgba(225,6,0,.10), rgba(109,40,217,.10), rgba(59,130,246,.10)),
-    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-}
-.cta-final{text-align:center; padding:28px}
-.cta-final h2{margin:0 0 10px; font-size:2rem; letter-spacing:-.04em}
-.cta-final p{margin:0 0 16px; color:var(--muted); line-height:1.78}
-.cta-actions{display:flex; justify-content:center; gap:12px; flex-wrap:wrap}
-.footer{text-align:center; margin-top:28px; color:#d7e2f1; font-weight:800}
-.footer small{display:block; margin-top:8px; color:var(--muted); font-weight:500}
-@media(max-width:980px){
-  .hero,.grid,.fusion,.stats{grid-template-columns:1fr}
-}
-@media(max-width:720px){
-  .container{padding:18px 14px 56px}
-  .nav{flex-direction:column; align-items:stretch}
-  .nav-actions{width:100%}
-  .nav-actions .btn{width:100%}
-  .hero-main,.mini-panel,.sonaria-card,.video-card,.info-card,.cta-card,.cta-final{padding:20px}
-  .logo{font-size:2.2rem}
-  .hero h1{font-size:2.6rem}
+
+.footer{
+  margin-top:30px;
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
 }
 </style>
 </head>
+
 <body>
+
 <div class="container">
-  <div class="nav">
-    <a href="index.html" class="logo-link">
-      <div class="logo-wrap">
-        <div class="logo">Mejorar<span>IA</span></div>
-        <div class="logo-sub">IA creada desde problemas reales del aula</div>
-      </div>
-    </a>
 
-    <div class="nav-actions">
-      <button class="btn btn-ghost reveal reveal-delay-1" onclick="document.getElementById('sonaria').scrollIntoView({behavior:'smooth'})">SonarIA</button>
-      <button class="btn btn-ghost reveal reveal-delay-2" onclick="window.location.href='ecosistema.html'">Sobre nosotros</button>
-      <button class="btn btn-ghost reveal reveal-delay-3" onclick="window.location.href='planes.html'">Planes</button>
-      <button class="btn btn-primary reveal reveal-delay-3" onclick="goLogin()">Iniciar sesión / registrarse</button>
-    </div>
-  </div>
+<div class="logo">Mejorar<span>IA</span></div>
 
-  <section class="hero">
-    <div class="card hero-main reveal">
-      <div class="eyebrow">🧠 Plataforma nacida desde una necesidad real</div>
-      <h1>IA creada desde la sala de clases, no desde el humo.</h1>
-      <p>
-        MejorarIA crea herramientas de inteligencia artificial diseñadas desde problemas reales del aula para apoyar decisiones pedagógicas.
-        Su primer producto es SonarIA, un asistente pedagógico musical que ayuda a evaluar canciones antes de llevarlas al aula, detectando lenguaje sensible, señales implícitas y necesidad de mediación docente.
-      </p>
+<h1>Tecnología para decidir mejor.  
+<br>Humanidad para sentir mejor.</h1>
 
-      <div class="stats">
-        <div class="stat">
-          <strong>1</strong>
-          <span>primer producto real: SonarIA</span>
-        </div>
-        <div class="stat">
-          <strong>100%</strong>
-          <span>origen en una necesidad concreta de aula</span>
-        </div>
-        <div class="stat">
-          <strong>+ visión</strong>
-          <span>crecimiento serio junto a docentes reales</span>
-        </div>
-      </div>
+<p class="sub">
+MejorarIA combina herramientas educativas y proyectos humanos nacidos desde experiencias reales.
+</p>
 
-      <div class="hero-cta">
-        <button class="btn btn-primary" onclick="goLogin()">Probar SonarIA</button>
-        <button class="btn btn-f1" onclick="window.location.href='ecosistema.html'">Conocer MejorarIA</button>
-        <button class="btn btn-ghost" onclick="window.location.href='planes.html'">Ver planes</button>
-      </div>
-    </div>
+<!-- SONARIA -->
+<div class="card section">
+  <h2>🎓 SonarIA</h2>
+  <p>Evalúa canciones para uso escolar considerando lenguaje, contexto y mediación pedagógica.</p>
 
-    <div class="hero-side">
-      <div class="card mini-panel reveal reveal-delay-1">
-        <h3>Más que una herramienta puntual</h3>
-        <p>
-          SonarIA es el primer producto de MejorarIA. Detrás hay una visión de largo plazo: crear soluciones útiles, sobrias y realmente pedagógicas.
-        </p>
-        <div class="mini-actions">
-          <button class="btn btn-ghost" onclick="window.location.href='ecosistema.html'">Ver sobre nosotros</button>
-        </div>
-      </div>
+  <button class="btn btn-sonaria" onclick="location.href='sonaria.html'">
+    Ir a SonarIA
+  </button>
+</div>
 
-      <div class="card mini-panel reveal reveal-delay-2">
-        <h3>¿Buscas una solución para tu asignatura?</h3>
-        <p>
-          Si tienes una necesidad concreta en tu práctica docente, podemos explorarla contigo y convertirla en una propuesta real.
-        </p>
-        <div class="mini-actions">
-          <button class="btn btn-f1" onclick="window.location.href='contacto.html'">Contáctanos</button>
-        </div>
-      </div>
-    </div>
-  </section>
+<!-- MAUROCK -->
+<div class="card section">
+  <h2>🎸 MauRock</h2>
+  <p>
+    Proyecto musical nacido desde la experiencia de vivir un cáncer,
+    creado para acompañar a quienes atraviesan momentos difíciles a través de la música.
+  </p>
 
-  <section id="sonaria" class="section">
-    <div class="section-head">
-      <h2>SonarIA, primer producto de MejorarIA</h2>
-      <p>Producto real, promesa honesta.</p>
-    </div>
+  <button class="btn btn-maurock">
+    Conocer MauRock
+  </button>
 
-    <div class="grid">
-      <div class="card sonaria-card reveal">
-        <div class="product-top">
-          <div class="product-icon">🎧</div>
-          <div class="badge">Disponible</div>
-        </div>
-
-        <h3>SonarIA</h3>
-        <p>
-          SonarIA ayuda a decidir si una canción es apta, si requiere mediación o si conviene reemplazarla, para que elegir repertorio no dependa solo del tiempo, la intuición o la revisión manual de letras.
-        </p>
-        <p>
-          Evalúa contenido, lenguaje, contexto escolar y señales implícitas. Hoy está optimizado principalmente para canciones en inglés y entrega sugerencias de adaptación escolar que siempre deben ser revisadas por el docente.
-        </p>
-
-        <div class="tags">
-          <span class="tag">Análisis pedagógico</span>
-          <span class="tag">Contexto escolar</span>
-          <span class="tag">Optimizado para inglés</span>
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn btn-primary" onclick="goLogin()">Probar SonarIA</button>
-        </div>
-      </div>
-
-      <div class="card video-card reveal reveal-delay-2">
-        <h3>SonarIA en acción</h3>
-        <p>Así se ve la herramienta resolviendo esta necesidad concreta.</p>
-        <div class="video">
-          <iframe src="https://www.youtube.com/embed/aD6MUQl0ajI"
-            title="SonarIA en acción"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen></iframe>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="solucion" class="section">
-    <div class="fusion">
-      <div class="card info-card reveal">
-        <h2>Ventajas competitivas</h2>
-        <p>
-          MejorarIA no busca lanzar herramientas porque sí. Busca transformar problemas reales del trabajo docente en soluciones útiles,
-          claras y con sentido pedagógico.
-        </p>
-
-        <div class="list">
-          <div class="item">
-            <strong>Nace desde experiencia docente real</strong>
-            <span>No desde una idea abstracta, sino desde una dificultad concreta vivida en el ejercicio profesional.</span>
-          </div>
-          <div class="item">
-            <strong>Ayuda a decidir</strong>
-            <span>La IA no reemplaza el criterio del profesor; lo fortalece con más rapidez, claridad y respaldo.</span>
-          </div>
-          <div class="item">
-            <strong>Puede crecer por co-construcción</strong>
-            <span>Las futuras herramientas nacerán a partir de necesidades reales de docentes reales.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card cta-card reveal reveal-delay-2">
-        <h2>Proyección honesta</h2>
-        <p>
-          MejorarIA tiene un origen en la música por mi formación y experiencia, pero su proyección es más amplia:
-          convertirse en una plataforma que genere herramientas co-construidas según necesidades reales de distintas asignaturas.
-        </p>
-
-        <div class="list">
-          <div class="item">
-            <strong>No prometemos humo</strong>
-            <span>Hoy el producto real es SonarIA. El crecimiento futuro dependerá de necesidades concretas y trabajo serio de desarrollo.</span>
-          </div>
-          <div class="item">
-            <strong>Explora la página sobre nosotros</strong>
-            <span>Ahí encontrarás visión, tips breves, efemérides y un espacio más vivo para acompañar a docentes.</span>
-          </div>
-        </div>
-
-        <div style="margin-top:16px;">
-          <button class="btn btn-f1" onclick="window.location.href='ecosistema.html'">Ir a sobre nosotros</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="card" style="padding:24px 26px; margin-bottom:20px;">
-      <div class="eyebrow">🛡️ Principio rector de MejorarIA</div>
-      <h2 style="margin:0 0 10px; font-size:clamp(1.8rem,3vw,2.4rem); letter-spacing:-.04em;">La IA acompaña. Educar es cuidar.</h2>
-      <p style="margin:0; color:var(--muted); line-height:1.82;">
-        La responsabilidad de educar y proteger a los estudiantes es siempre humana. Por eso, cada herramienta de MejorarIA está pensada para apoyar decisiones pedagógicas, no para reemplazar el criterio profesional docente ni el rol de la escuela como espacio de cuidado.
-      </p>
-    </div>
-
-    <div class="card cta-final reveal">
-      <h2>Accede a SonarIA</h2>
-      <p>
-        Inicia sesión o regístrate para entrar a la herramienta dentro de MejorarIA.
-        Podrás probarla un par de veces antes de pensar en la compra.
-      </p>
-
-      <div class="cta-actions">
-        <button class="btn btn-primary" onclick="goLogin()">Entrar o registrarse</button>
-        <button class="btn btn-ghost" onclick="window.location.href='planes.html'">Ver planes</button>
-        <button class="btn btn-ghost" onclick="window.location.href='contacto.html'">Hablar con nosotros</button>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer">
-    MejorarIA · Plataforma nacida desde el aula
-    <small>Educar es cuidar. Y esa responsabilidad siempre es humana.</small>
+  <div class="links">
+    <a href="#" target="_blank">🎧 Spotify</a>
+    <a href="#" target="_blank">📸 Instagram</a>
   </div>
 </div>
 
-<script>
-function goLogin(){
-  window.location.href = "login.html";
-}
-</script>
+<!-- PROPÓSITO -->
+<div class="card section">
+  <h2>🧠 Por qué existe MejorarIA</h2>
+  <p>
+    Creemos que la tecnología puede ayudar a tomar mejores decisiones,
+    pero el impacto real ocurre cuando también conectamos con las personas.
+  </p>
+</div>
+
+<div class="footer">
+MejorarIA · Ecosistema educativo y humano
+</div>
+
+</div>
+
 </body>
 </html>
