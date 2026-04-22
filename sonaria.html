@@ -229,6 +229,12 @@
       .mobile-details-toggle{display:inline-flex;width:100%;margin-top:10px}
       .translation-cards-mobile{display:none}
       .translation-cards-mobile.show{display:grid;gap:10px;margin-top:10px}
+    .adapt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .adapt-col{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+    .adapt-col h4{margin:0 0 10px;font-size:1rem;letter-spacing:-.02em}
+    .adapt-line{padding:8px 10px;border-radius:12px;background:#f9fbff;border:1px solid #edf1f7;margin-bottom:8px;line-height:1.65}
+    .use-course-block{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+    .use-course-block strong{display:block;margin-bottom:8px}
       .today-layout{grid-template-columns:1fr}
       .calendar-shell{display:none}
       .clock-card{order:2}
@@ -435,7 +441,7 @@
         </div>
         <div id="translationWrap" class="table-wrap">
           <div class="lyrics-actions">
-            <button id="btnVerAdaptada" class="btn btn-ghost" type="button">Ver versión escolar</button>
+            <button id="btnVerAdaptada" class="btn btn-ghost" type="button">Adaptación escolar</button>
             <button class="btn btn-primary" id="btnUsarClase" type="button">Usar esta versión en clase</button>
             <button id="btnVerTraducida" class="btn btn-ghost" type="button">Ver letra traducida</button>
           </div>
@@ -453,6 +459,20 @@
       <h2 style="margin:0 0 8px;font-size:2rem;letter-spacing:-.04em">La IA acompaña. Educar es cuidar.</h2>
       <p class="muted" style="margin-top:0">SonarIA detecta lenguaje explícito, contextos sensibles y propone adaptaciones para rescatar canciones y llevarlas al aula con mayor seguridad. La decisión final siempre es del docente.</p>
       <div class="summary-btn-row"><button id="btnViewerOk" class="btn btn-green" type="button" onclick="closeViewerModalSafe()">Entrar a SonarIA</button></div>
+    </div>
+  </div>
+
+  <div id="useVersionModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline"><div class="section-title"><span>🧩</span><h3>Usar esta versión en clase</h3></div><button class="btn btn-ghost" data-close="useVersionModal">Cerrar</button></div>
+      <div class="field" style="max-width:280px;margin-top:8px">
+        <label for="useCourseSelect">Curso</label>
+        <select id="useCourseSelect"></select>
+      </div>
+      <div id="useVersionContent" class="preview-grid"></div>
+      <div class="summary-btn-row" style="margin-top:14px">
+        <button id="btnExportUsePdf" class="btn btn-primary" type="button">Exportar a PDF</button>
+      </div>
     </div>
   </div>
 
@@ -854,8 +874,8 @@
     function renderTranslation(data){
       const detected = [...new Set((data.contextos_detectados || []).slice(0,6))];
       const themes = [...new Set((data.temas_detectados || []).slice(0,6))];
-      const adaptedHtml = data.adaptacion?.adapted_html || '';
-      const totalChanges = (data.adaptacion?.changes || []).length;
+      const adaptation = data.adaptacion || {};
+      const totalChanges = (adaptation.changes || []).length;
 
       const categories = [];
       const lowerDetected = detected.join(" ").toLowerCase();
@@ -881,50 +901,42 @@
         </div>
       `;
 
-      const plainAdapted = (adaptedHtml || "")
-        .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<\/div>/gi, "\n")
-        .replace(/<[^>]+>/g, "")
-        .split(/\n+/)
-        .map(x => x.trim())
-        .filter(Boolean);
-
-      const translated = Array.isArray(data.traduccion) ? data.traduccion : [];
-      let pairs = [];
-      if(translated.length){
-        pairs = translated.map((row, idx) => ({
-          adapted: row.adapted || plainAdapted[idx] || "",
-          translated: row.translated_adapted || row.translated || ""
-        }));
-      } else {
-        pairs = plainAdapted.map(line => ({adapted: line, translated: ""}));
-      }
-
+      const originalLines = adaptation.original_lines || [];
+      const adaptedLines = adaptation.adapted_lines || [];
+      const shownOriginal = user.plan === "pro" ? originalLines : originalLines.slice(0, 6);
+      const shownAdapted = user.plan === "pro" ? adaptedLines : adaptedLines.slice(0, 6);
       const freeNotice = user.plan !== "pro"
         ? `<div class="school-sheet-note">Vista parcial Free: estás viendo una muestra de la versión escolar. En Pro accedes a la adaptación y traducción completas.</div>`
         : "";
 
-      const adaptedPreviewHtml = user.plan === "pro"
-        ? adaptedHtml
-        : (data.adaptacion?.preview_html || adaptedHtml);
-
       const songTitle = $("titulo").value.trim() || "Sin título";
       const songArtist = $("artista").value.trim() || "Artista no indicado";
 
-      $("adaptedView").innerHTML = adaptedPreviewHtml
+      $("adaptedView").innerHTML = shownOriginal.length
         ? `
           ${freeNotice}
           <div class="school-sheet">
             <div class="school-sheet-head">
               <div class="school-sheet-title">${songTitle}</div>
               <div class="school-sheet-artist">${songArtist}</div>
-              <div class="school-sheet-by">Adaptación realizada por SonarIA</div>
+              <div class="school-sheet-by">Adaptación escolar realizada por SonarIA</div>
             </div>
-            <div class="school-sheet-body">${adaptedPreviewHtml}</div>
+            <div class="adapt-grid">
+              <div class="adapt-col">
+                <h4>Letra original</h4>
+                ${shownOriginal.map(line => `<div class="adapt-line">${line || ""}</div>`).join("")}
+              </div>
+              <div class="adapt-col">
+                <h4>Letra adaptada</h4>
+                ${shownAdapted.map(line => `<div class="adapt-line">${line || ""}</div>`).join("")}
+              </div>
+            </div>
           </div>`
         : `<div class="list-item">No hay letra adaptada disponible.</div>`;
 
-      const shownPairs = user.plan === "pro" ? pairs : pairs.slice(0, 3);
+      const translated = Array.isArray(data.traduccion) ? data.traduccion : [];
+      const shownPairs = user.plan === "pro" ? translated : translated.slice(0, 3);
+
       $("translatedView").innerHTML = shownPairs.length
         ? `
           ${freeNotice}
@@ -935,7 +947,7 @@
               <div class="school-sheet-by">Traducción basada en la versión adaptada por SonarIA</div>
             </div>
             <div class="translated-grid">` +
-            shownPairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated || "Traducción adaptada no disponible."}</div></div>`).join("") + `</div>
+            shownPairs.map(row => `<div class="lyric-pair"><div class="lyric-orig">${row.adapted || ""}</div></div><div class="lyric-pair"><div class="lyric-trans">${row.translated_adapted || "Traducción adaptada no disponible."}</div></div>`).join("") + `</div>
           </div>`
         : `<div class="list-item">${user.plan === "pro" ? "No hay letra traducida disponible." : "En Pro verás la traducción de la versión adaptada."}</div>`;
 
@@ -943,7 +955,6 @@
       $("btnVerAdaptada").classList.remove("alt");
       $("btnVerTraducida").classList.remove("lyrics-toggle-active","alt");
     }
-
 
     function saveHistory(item){
       historyItems = [item, ...historyItems.filter(x => !(x.titulo === item.titulo && x.artista === item.artista))].slice(0,12);
@@ -968,6 +979,7 @@
       if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
       try{
         setStatus("Preparando PDF...", "info");
+        const selectedCourse = $("useCourseSelect") ? $("useCourseSelect").value : "";
         const res = await fetch(API_BASE + "/export/pdf", {
           method:"POST",
           headers:{
@@ -979,6 +991,7 @@
             artista: $("artista").value.trim(),
             texto: $("texto").value.trim(),
             cursos: selectedCourses,
+            selected_course: selectedCourse,
             analysis: lastAnalysis
           })
         });
@@ -1002,7 +1015,36 @@
       }
     }
 
-    function buildSummaryModal(){
+    function renderUseVersionContent(){
+      if(!lastAnalysis) return;
+      const selected = $("useCourseSelect").value || (pedagogyStore[0]?.curso || "");
+      const row = pedagogyStore.find(x => x.curso === selected) || pedagogyStore[0];
+      const translated = (lastAnalysis.traduccion || []).map(pair => pair.translated_adapted).filter(Boolean).join("<br>");
+      $("useVersionContent").innerHTML = row ? `
+        <div class="use-course-block"><strong>OA a trabajar</strong>${row.oa.length ? row.oa.join("<br>") : "Sin OA sugerido."}</div>
+        <div class="use-course-block"><strong>Preguntas</strong>${row.preguntas.length ? row.preguntas.join("<br>") : "Sin preguntas sugeridas."}</div>
+        <div class="use-course-block"><strong>Actividades</strong>${row.actividades.length ? row.actividades.join("<br>") : "Sin actividades sugeridas."}</div>
+        <div class="use-course-block"><strong>Reflexiones</strong>${row.reflexiones.length ? row.reflexiones.join("<br>") : "Sin reflexiones sugeridas."}</div>
+        <div class="school-sheet">
+          <div class="school-sheet-head">
+            <div class="school-sheet-title">${$("titulo").value.trim() || "Sin título"}</div>
+            <div class="school-sheet-artist">${$("artista").value.trim() || "Artista no indicado"}</div>
+            <div class="school-sheet-by">Letra traducida para trabajar en ${selected}</div>
+          </div>
+          <div class="school-sheet-body">${translated || "No hay letra traducida disponible."}</div>
+        </div>
+      ` : '<div class="list-item">No hay curso seleccionado.</div>';
+    }
+
+    function openUseVersionModal(){
+      if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
+      if(!pedagogyStore.length){ setStatus("Aún no hay propuesta pedagógica disponible.", "error"); return; }
+      $("useCourseSelect").innerHTML = pedagogyStore.map(row => `<option value="${row.curso}">${row.curso}</option>`).join("");
+      renderUseVersionContent();
+      openModal("useVersionModal");
+    }
+
+    function buildSummaryModal    function buildSummaryModal(){
       if(!lastAnalysis){ setStatus("Primero analiza una canción.", "error"); return; }
       const ped = pedagogyStore;
       $("summaryModalContent").innerHTML = `
@@ -1099,10 +1141,12 @@
     $("clearBtn").onclick = clearAll;
     $("btnSummary").onclick = buildSummaryModal;
       $("btnDownloadPdf").onclick = downloadPdf;
+    $("btnExportUsePdf").onclick = downloadPdf;
     $("btnHistory").onclick = ()=>{ renderHistory(); openModal("historyModal"); };
     $("btnPlanesTop").onclick = ()=> window.location.href = "/planes.html";
     $("btnUpgradeTop").onclick = ()=> window.location.href = "/planes.html";
-    $("btnAdminTop").onclick = ()=> window.location.href = "/admin.html";
+    $("btnAdminTop").onclick = ()=> window.location.href = "/panel.html";
+    $("btnUsarClase").onclick = ()=> openUseVersionModal();
     $("btnCustomize").onclick = ()=> user.plan === "pro" ? openModal("colorsModal") : setStatus("En Free puedes elegir tus colores base desde el selector superior. La personalización avanzada de dos colores es Pro.");
     $("applyColorsBtn").onclick = applyCustomColors;
     $("resetColorsBtn").onclick = resetCustomColors;
@@ -1122,6 +1166,7 @@
       if(user.plan !== "pro") setStatus("En Pro, el botón YouTube abre directamente la búsqueda con lyrics.", "info");
     };
     $("themeSelect").addEventListener("change", e => applyFreeTheme(e.target.value));
+    $("useCourseSelect").addEventListener("change", renderUseVersionContent);
 $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Pedagogía está disponible en Pro.", "info"); return; } const w = $("pedTableWrap"); const open = w.classList.toggle("open"); $("togglePedagogia").textContent = open ? "Ver menos" : "Ver más"; };
     $("toggleTranslation").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver más en Traducción está disponible en Pro.", "info"); return; } const w = $("translationWrap"); const open = w.classList.toggle("open"); $("toggleTranslation").textContent = open ? "Ver menos" : "Ver más"; };
     $("btnVerAdaptada").onclick = ()=>{ $("adaptedView").classList.add("active"); $("translatedView").classList.remove("active"); $("btnVerAdaptada").classList.add("lyrics-toggle-active"); $("btnVerAdaptada").classList.remove("alt"); $("btnVerTraducida").classList.remove("lyrics-toggle-active","alt"); };
@@ -1199,14 +1244,6 @@ $("togglePedagogia").onclick = ()=>{ if(user.plan !== "pro"){ setStatus("Ver má
 
 <script>
 (function(){
-  const btn = document.getElementById('btnUsarClase');
-  if(btn){
-    btn.addEventListener('click', function(){
-      const sec = document.getElementById('seccionTraduccion') || document.getElementById('adaptadaBox') || document.getElementById('translationBox');
-      if(sec && sec.scrollIntoView){ sec.scrollIntoView({behavior:'smooth', block:'start'}); }
-    });
-  }
-
   const badge = document.getElementById('resultBadge');
   const uso = document.getElementById('usoAulaMensaje');
   const summary = document.getElementById('summaryTitle');
