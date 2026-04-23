@@ -655,7 +655,8 @@
         setStatus("Análisis listo.", "success");
       }catch(err){
         console.error(err);
-        setStatus("No pude conectar con el backend o el análisis falló en el servidor. Reintenta en unos segundos.", "error");
+        const detail = (err && err.message) ? err.message : "No pude conectar con el backend o el análisis falló en el servidor.";
+        setStatus(detail, "error");
       }
     }
 
