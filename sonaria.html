@@ -306,34 +306,6 @@
 
     const $ = id => document.getElementById(id);
 
-    function clearSessionAndRedirect(message){
-      try{
-        localStorage.removeItem("mejoraria_token");
-        localStorage.removeItem("token");
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("mejoraria_user");
-        localStorage.setItem("mejoraria_logout_message", message || "Tu sesión expiró. Vuelve a ingresar.");
-        localStorage.setItem("mejoraria_next_after_login", window.location.pathname + window.location.search);
-      }catch(_){}
-      window.location.href = "/login.html";
-    }
-
-    function requireAuthOrRedirect(){
-      authToken = getToken();
-      if(!authToken){
-        clearSessionAndRedirect("Debes iniciar sesión para usar SonarIA.");
-        return false;
-      }
-      return true;
-    }
-
-    function authHeaders(json=true){
-      return {
-        ...(json ? {"Content-Type":"application/json"} : {}),
-        ...(authToken ? {Authorization: "Bearer " + authToken} : {})
-      };
-    }
-
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
     }
@@ -429,12 +401,10 @@
         fecha: new Date().toISOString().slice(0,10)
       };
       try{
-        const res = await fetch(EFEM_URL, { headers: authHeaders(false) });
+        const res = await fetch(EFEM_URL, {
+          headers: authToken ? {Authorization:"Bearer " + authToken} : {}
+        });
         const data = await res.json().catch(() => ({}));
-        if(res.status === 401){
-          clearSessionAndRedirect("Tu sesión expiró. Vuelve a ingresar.");
-          return;
-        }
         $("efemFact").textContent = res.ok && data.texto ? data.texto : fallback.texto;
         renderCalendar((data && data.fecha) || fallback.fecha);
       }catch(_){
@@ -446,22 +416,17 @@
     async function loadUser(){
       authToken = getToken();
       if(!authToken){
-        clearSessionAndRedirect("Debes iniciar sesión para usar SonarIA.");
+        user = {plan:"free", is_admin:false};
+        $("planPill").textContent = "Cuenta Free";
         return;
       }
       try{
-        const res = await fetch(ME_URL, {headers: authHeaders(false)});
-        const data = await res.json().catch(() => ({}));
-        if(res.status === 401){
-          clearSessionAndRedirect("Tu sesión expiró. Vuelve a ingresar.");
-          return;
-        }
-        if(!res.ok || !data.ok) throw new Error(data.detail || "No se pudo validar la sesión.");
+        const res = await fetch(ME_URL, {headers:{Authorization:"Bearer " + authToken}});
+        const data = await res.json();
+        if(!res.ok || !data.ok) throw new Error();
         user = data.user || {plan:"free", is_admin:false};
-      }catch(err){
-        console.error(err);
-        clearSessionAndRedirect("No se pudo validar tu sesión. Vuelve a ingresar.");
-        return;
+      }catch(_){
+        user = {plan:"free", is_admin:false};
       }
       $("planPill").textContent = user.plan === "pro" ? "Plan Pro" : "Cuenta Free";
       $("btnAdminTop").classList.toggle("hidden", !user.is_admin);
@@ -660,10 +625,12 @@
       setStatus("Analizando canción, pedagogía y adaptación...", "info");
 
       try{
-        authToken = getToken();
         const response = await fetch(ANALYZE_URL, {
           method: "POST",
-          headers: authHeaders(true),
+          headers: {
+            "Content-Type": "application/json",
+            ...(authToken ? {Authorization: "Bearer " + authToken} : {})
+          },
           body: JSON.stringify({
             titulo: titulo || "",
             artista: artista || "",
@@ -676,10 +643,6 @@
 
         const data = await response.json().catch(() => ({}));
 
-        if(response.status === 401){
-          clearSessionAndRedirect("Tu sesión expiró. Vuelve a ingresar.");
-          return;
-        }
         if(!response.ok){
           throw new Error(data.detail || "Error en servidor");
         }
@@ -777,10 +740,12 @@
       }
       try{
         setStatus("Preparando PDF...", "info");
-        authToken = getToken();
         const response = await fetch(PDF_URL, {
           method: "POST",
-          headers: authHeaders(true),
+          headers: {
+            "Content-Type": "application/json",
+            ...(authToken ? {Authorization:"Bearer " + authToken} : {})
+          },
           body: JSON.stringify({
             titulo: $("titulo").value.trim(),
             artista: $("artista").value.trim(),
@@ -792,10 +757,6 @@
             }
           })
         });
-        if(response.status === 401){
-          clearSessionAndRedirect("Tu sesión expiró. Vuelve a ingresar.");
-          return;
-        }
         if(!response.ok){
           const raw = await response.text();
           throw new Error(raw || "No se pudo exportar el PDF.");
@@ -869,9 +830,7 @@
       renderCourseChips();
       updateClock();
       setInterval(updateClock, 20000);
-      if(!requireAuthOrRedirect()) return;
       await loadUser();
-      if(!getToken()) return;
       await loadEfemeride();
       renderCalendar();
     })();
