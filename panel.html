@@ -1,233 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SonarIA | Panel docente</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:#0b1220;
-  color:#fff;
-}
-
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:30px;
-}
-
-h1{
-  font-size:28px;
-  margin-bottom:20px;
-}
-
-.card{
-  background:#111827;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-
-input{
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  width:100%;
-  margin-bottom:10px;
-  background:#1f2937;
-  color:#fff;
-}
-
-button{
-  padding:10px 16px;
-  border:none;
-  border-radius:8px;
-  background:#2563eb;
-  color:white;
-  cursor:pointer;
-  font-weight:600;
-}
-
-button:hover{
-  background:#1d4ed8;
-}
-
-.historial-item{
-  background:#1f2937;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-.tag{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:6px;
-  font-size:12px;
-  margin-top:6px;
-}
-
-.apta{
-  background:#065f46;
-}
-
-.no-apta{
-  background:#7f1d1d;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-
-@media(max-width:768px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | Panel admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#f7f9fd;--panel:#ffffffee;--line:#d7deeb;--text:#243043;--muted:#66758c;--accent:#4b82ff;--green:#25c96f;--orange:#ff9d46;--shadow:0 18px 48px rgba(31,44,74,.10);--radius:24px;--bg-main:radial-gradient(circle at top left, rgba(145,183,255,.25), transparent 22%),radial-gradient(circle at bottom right, rgba(75,130,255,.12), transparent 18%),linear-gradient(180deg,#f7f9fd,#eef3fa)}
+    *{box-sizing:border-box} body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg-main)}
+    .wrap{max-width:1380px;margin:0 auto;padding:20px 18px 48px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.brand h1{margin:0;font-size:clamp(2rem,4.2vw,3.2rem);font-weight:900;letter-spacing:-.07em;line-height:.9}.brand .ia{color:var(--accent)}.brand-sub{font-size:.95rem;font-weight:800;color:var(--muted)}
+    .btn{min-height:48px;padding:0 18px;border:none;border-radius:16px;cursor:pointer;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1px solid var(--line);color:var(--text)}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(8px);padding:20px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}.metric{padding:14px;border-radius:16px;background:#fff;border:1px solid var(--line)}.metric strong{display:block;font-size:.86rem;color:#4a5a74;margin-bottom:6px}.metric span{font-weight:900}
+    .section-topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}.list{display:grid;gap:8px}.list-item{padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);line-height:1.65}.small-muted{color:var(--muted);line-height:1.7}.pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.84rem;font-weight:800}
+    @media (max-width:1080px){.grid,.stats{grid-template-columns:1fr}}@media (max-width:720px){.wrap{padding:14px 12px 40px}.topbar{flex-direction:column;align-items:stretch}}
+  </style>
 </head>
-
 <body>
-
-<div class="container">
-
-<h1>🎧 SonarIA Pro — Panel Docente</h1>
-
-<div class="card">
-  <h2>🔍 Analizar canción</h2>
-  
-  <input id="titulo" placeholder="Título de la canción">
-  <input id="artista" placeholder="Artista">
-
-  <button onclick="analizar()">Analizar</button>
-
-  <div id="resultado" style="margin-top:20px;"></div>
-</div>
-
-<div class="grid">
-
-<div class="card">
-  <h2>🕒 Historial</h2>
-  <div id="historial"></div>
-</div>
-
-<div class="card">
-  <h2>📊 Insights docentes</h2>
-  <div id="insights"></div>
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-const API = "https://sonaria-api.onrender.com";
-
-async function analizar(){
-  const titulo = document.getElementById("titulo").value;
-  const artista = document.getElementById("artista").value;
-
-  const res = await fetch(API + "/analizar", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({ titulo, artista })
-  });
-
-  const data = await res.json();
-
-  mostrarResultado(data);
-  cargarHistorial();
-}
-
-function mostrarResultado(data){
-  const div = document.getElementById("resultado");
-
-  let estado = data.apta ? "apta" : "no-apta";
-  let textoEstado = data.apta ? "Apta para clase" : "Requiere supervisión docente";
-
-  div.innerHTML = `
-    <div class="historial-item">
-      <strong>${data.titulo} - ${data.artista}</strong><br>
-      <span class="tag ${estado}">${textoEstado}</span>
-      <p>${data.justificacion || ""}</p>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><h1>Panel <span class="ia">admin</span></h1><div class="brand-sub">Pagos, uso, tiempo y búsquedas</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" onclick="window.location.href='/sonaria.html'">Volver a SonarIA</button></div>
     </div>
-  `;
-}
-
-async function cargarHistorial(){
-  const res = await fetch(API + "/historial");
-  const data = await res.json();
-
-  const cont = document.getElementById("historial");
-  cont.innerHTML = "";
-
-  if(data.items.length === 0){
-    cont.innerHTML = "Aún no hay canciones analizadas";
-    return;
-  }
-
-  data.items.reverse().slice(0,10).forEach(item => {
-
-    let estado = item.apta ? "apta" : "no-apta";
-    let textoEstado = item.apta ? "Apta" : "Supervisión";
-
-    const div = document.createElement("div");
-    div.className = "historial-item";
-
-    div.innerHTML = `
-      <strong>${item.titulo}</strong> - ${item.artista}<br>
-      <span class="tag ${estado}">${textoEstado}</span>
-      <br><br>
-      <button onclick="reanalizar('${item.titulo}','${item.artista}')">
-        Reutilizar
-      </button>
-    `;
-
-    cont.appendChild(div);
-  });
-
-  generarInsights(data.items);
-}
-
-function reanalizar(titulo, artista){
-  document.getElementById("titulo").value = titulo;
-  document.getElementById("artista").value = artista;
-}
-
-function generarInsights(items){
-
-  const div = document.getElementById("insights");
-
-  if(items.length === 0){
-    div.innerHTML = "Sin datos aún";
-    return;
-  }
-
-  let aptas = items.filter(i=>i.apta).length;
-  let noAptas = items.length - aptas;
-
-  div.innerHTML = `
-    <p>🎵 Canciones analizadas: <strong>${items.length}</strong></p>
-    <p>✅ Aptas: ${aptas}</p>
-    <p>⚠️ Requieren supervisión: ${noAptas}</p>
-  `;
-}
-
-cargarHistorial();
-
-</script>
-
+    <div class="stats">
+      <div class="metric"><strong>Usuarios</strong><span id="mUsers">—</span></div>
+      <div class="metric"><strong>Usuarios Pro</strong><span id="mPro">—</span></div>
+      <div class="metric"><strong>Análisis totales</strong><span id="mAnalyses">—</span></div>
+      <div class="metric"><strong>Minutos de uso</strong><span id="mMinutes">—</span></div>
+    </div>
+    <div class="grid">
+      <section class="card"><div class="section-topline"><strong>Pagos</strong><span class="pill">Órdenes recientes</span></div><div id="paymentsList" class="list"><div class="list-item">Cargando...</div></div></section>
+      <section class="card"><div class="section-topline"><strong>Uso de plataforma</strong><span class="pill">Usuarios activos</span></div><div id="usersList" class="list"><div class="list-item">Cargando...</div></div></section>
+      <section class="card"><div class="section-topline"><strong>Búsquedas de usuarios</strong><span class="pill">Últimas búsquedas</span></div><div id="searchesList" class="list"><div class="list-item">Cargando...</div></div></section>
+      <section class="card"><div class="section-topline"><strong>Lectura admin</strong><span class="pill">Qué mirar</span></div><div class="list"><div class="list-item">Revisa aquí pagos simulados, cantidad de análisis, minutos aproximados de uso y búsquedas recientes para entender adopción y comportamiento de la plataforma.</div></div></section>
+    </div>
+  </div>
+  <script>
+    const API = 'https://sonaria-api.onrender.com';
+    function token(){return localStorage.getItem('mejoraria_token')||localStorage.getItem('token')||localStorage.getItem('access_token')||''}
+    async function loadAdmin(){
+      const tk = token();
+      if(!tk){ document.body.innerHTML = '<div class="wrap"><div class="card">Inicia sesión como admin para ver este panel.</div></div>'; return; }
+      try{
+        const res = await fetch(API + '/admin/overview', {headers:{Authorization:'Bearer ' + tk}});
+        const data = await res.json().catch(()=>({}));
+        if(!res.ok || !data.ok){ throw new Error(data.detail || 'No se pudo cargar el panel admin'); }
+        document.getElementById('mUsers').textContent = data.stats.usuarios ?? '—';
+        document.getElementById('mPro').textContent = data.stats.usuarios_pro ?? '—';
+        document.getElementById('mAnalyses').textContent = data.stats.analisis_totales ?? '—';
+        document.getElementById('mMinutes').textContent = data.stats.minutos_uso ?? '—';
+        document.getElementById('paymentsList').innerHTML = (data.payments||[]).length ? (data.payments||[]).map(p => `<div class="list-item"><strong>${p.order_id}</strong><br><span class="small-muted">Estado: ${p.status} · Monto: $${p.amount} · Usuario: ${p.user_id} · ${p.fecha||''}</span></div>`).join('') : '<div class="list-item">Sin pagos registrados.</div>';
+        document.getElementById('usersList').innerHTML = (data.top_users||[]).length ? (data.top_users||[]).map(u => `<div class="list-item"><strong>${u.nombre}</strong><br><span class="small-muted">${u.email||''}</span><br>Plan: ${u.plan} · Análisis: ${u.analisis} · Minutos: ${u.minutos}</div>`).join('') : '<div class="list-item">Sin uso registrado.</div>';
+        document.getElementById('searchesList').innerHTML = (data.searches||[]).length ? (data.searches||[]).map(s => `<div class="list-item"><strong>${s.titulo} — ${s.artista||'—'}</strong><br><span class="small-muted">${s.resultado||'—'} · Usuario ${s.usuario_id} · ${s.fecha||''}</span></div>`).join('') : '<div class="list-item">Sin búsquedas registradas.</div>';
+      }catch(err){
+        document.body.innerHTML = `<div class="wrap"><div class="card">${err.message || 'No se pudo cargar el panel admin.'}</div></div>`;
+      }
+    }
+    loadAdmin();
+  </script>
 </body>
 </html>
