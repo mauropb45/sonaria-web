@@ -107,6 +107,73 @@
     .school-use-shell{display:grid;gap:12px}
     .summary-btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .small-muted{color:var(--muted);line-height:1.7}
+
+    .pro-gradient{
+      background:linear-gradient(135deg,#2a5fe0,#6aa7ff);
+      color:white;
+      box-shadow:0 12px 28px rgba(75,130,255,.22);
+    }
+    .btn-pro{
+      background:linear-gradient(135deg,#243043,#4b82ff);
+      color:#fff;
+      box-shadow:0 12px 30px rgba(36,48,67,.18);
+    }
+    .pro-preview-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .pro-preview-card{
+      position:relative;
+      padding:16px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 12px 28px rgba(31,44,74,.07);
+      overflow:hidden;
+    }
+    .pro-preview-card.locked::after{
+      content:"PRO";
+      position:absolute;
+      top:12px;
+      right:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef4ff;
+      border:1px solid #cfe0ff;
+      color:#2a5fe0;
+      font-size:.75rem;
+      font-weight:900;
+    }
+    .pro-preview-card strong{display:block;margin-bottom:8px}
+    .pro-preview-card p{margin:0;color:var(--muted);line-height:1.65}
+    .pro-preview-blur{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      background:linear-gradient(90deg,#eef4ff,#fff,#eef4ff);
+      color:#5b6b84;
+      filter:blur(.2px);
+      opacity:.8;
+      line-height:1.5;
+      font-weight:700;
+    }
+    .pro-inline{
+      margin-top:12px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#f7faff,#ffffff);
+      border:1px solid #d7deeb;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .pro-inline strong{display:block}
+    .pro-inline span{color:var(--muted);font-size:.92rem;line-height:1.5}
+
     @media (max-width:1080px){.top-grid,.today-layout,.pair-grid,.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){
       .wrap{padding:14px 12px 40px}
@@ -126,6 +193,9 @@
         <div class="brand-sub">Evaluador pedagógico musical</div>
       </div>
       <div class="top-actions">
+        <button id="btnPlanesTop" class="btn btn-ghost" type="button">Ver planes</button>
+        <button id="btnVerMasTop" class="btn btn-soft" type="button">Ver más</button>
+        <button id="btnProTop" class="btn btn-pro" type="button">Pro</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
       </div>
     </div>
@@ -232,6 +302,20 @@
 
       <section class="card section">
         <div class="section-topline">
+          <div class="section-title"><span>✨</span><h3>Capas Pro disponibles</h3></div>
+          <button id="btnVerMasInline" class="btn btn-soft" type="button">Ver más</button>
+        </div>
+        <div class="pro-inline">
+          <div>
+            <strong>Más profundidad sin perder la versión gratuita</strong>
+            <span>Vista previa de análisis avanzado, historial inteligente, PDF premium y filtros de perfil docente.</span>
+          </div>
+          <button id="btnProInline" class="btn btn-pro" type="button">Desbloquear Pro</button>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-topline">
           <div class="section-title"><span>🎓</span><h3>Pedagogía</h3></div>
         </div>
         <div id="pedIntro" class="list"><div class="list-item">Cursos sugeridos: aún no hay análisis.</div></div>
@@ -290,6 +374,44 @@
       <div id="classroomContent" class="school-use-shell"></div>
       <div class="summary-btn-row">
         <button id="btnExportClassroomPdf" class="btn btn-orange" type="button">Exportar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="proPreviewModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>🚀</span><h3>Vista Pro de SonarIA</h3></div>
+        <button class="btn btn-ghost" type="button" data-close="proPreviewModal">Cerrar</button>
+      </div>
+      <div class="small-muted">
+        Esto es una vista previa de lo que se desbloquea con Pro. La versión gratuita mantiene el análisis base; Pro profundiza, organiza y acelera el trabajo docente.
+      </div>
+      <div class="pro-preview-grid">
+        <div class="pro-preview-card locked">
+          <strong>PDF premium por curso</strong>
+          <p>Informe más visual, con OA, riesgos evitados, versión adaptada y ruta de clase.</p>
+          <div class="pro-preview-blur">Incluye portada, criterios docentes y cierre pedagógico.</div>
+        </div>
+        <div class="pro-preview-card locked">
+          <strong>Historial inteligente</strong>
+          <p>Reutiliza canciones, evita duplicados y filtra por curso, resultado o tema.</p>
+          <div class="pro-preview-blur">Creep · 8° básico · identidad · adaptación disponible</div>
+        </div>
+        <div class="pro-preview-card locked">
+          <strong>Perfil de colegio</strong>
+          <p>Ajusta sensibilidad: flexible, estándar o estricto, sin castigar el arte.</p>
+          <div class="pro-preview-blur">Modo colegio exigente: mediación reforzada.</div>
+        </div>
+        <div class="pro-preview-card locked">
+          <strong>Más pedagogía por curso</strong>
+          <p>Actividades, preguntas y reflexiones más profundas para cada nivel.</p>
+          <div class="pro-preview-blur">OA + actividad + evidencia musical + cierre reflexivo.</div>
+        </div>
+      </div>
+      <div class="summary-btn-row">
+        <button class="btn btn-pro" type="button" onclick="window.location.href='planes.html'">Ver planes Pro</button>
+        <button class="btn btn-ghost" type="button" data-close="proPreviewModal">Seguir usando Free</button>
       </div>
     </div>
   </div>
@@ -576,11 +698,12 @@
     function renderPedagogia(data){
       pedagogyStore = buildPedagogyStore(data.pedagogia || {});
       adaptedPedagogyStore = buildPedagogyStore(data.pedagogia_adaptada || {});
-      usingAdaptedPedagogy = false;
-      $("pedActionWrap").classList.toggle("hidden", !(String(data.resultado || "").includes("🔴") && adaptedPedagogyStore.length));
-      const intro = pedagogyStore.length ? pedagogyStore.map(x => x.curso).join(", ") : "aún no hay análisis.";
+      usingAdaptedPedagogy = adaptedPedagogyStore.length > 0;
+      $("pedActionWrap").classList.toggle("hidden", true);
+      const activeStore = currentPedagogySource();
+      const intro = activeStore.length ? activeStore.map(x => x.curso).join(", ") : "aún no hay análisis.";
       $("pedIntro").innerHTML = `<div class="list-item">Cursos sugeridos: ${intro}</div>`;
-      renderPedagogyStore(pedagogyStore, false);
+      renderPedagogyStore(activeStore, usingAdaptedPedagogy);
     }
 
     function renderPedagogyStore(store, adaptedMode){
@@ -641,7 +764,9 @@
     function renderAdaptacion(data){
       const original = getOriginalLines(data);
       const adapted = getAdaptedLines(data);
-      const adaptedDisplay = Array.isArray(data?.adaptacion?.adapted_display_lines) ? data.adaptacion.adapted_display_lines : adapted.map(x => escapeHtml(x));
+      const adaptedDisplay = Array.isArray(data?.adaptacion?.adapted_display_lines)
+        ? data.adaptacion.adapted_display_lines.map(x => String(x || "").trim()).filter(Boolean)
+        : adapted.map(x => escapeHtml(x));
       const maxLen = Math.max(original.length, adapted.length, 1);
       const rows = [];
       for(let i=0;i<maxLen;i++){
@@ -909,6 +1034,17 @@
     });
     $("btnAdminTop").addEventListener("click", () => {
       window.location.href = "/panel.html";
+    });
+    $("btnPlanesTop").addEventListener("click", () => {
+      window.location.href = "planes.html";
+    });
+    $("btnProTop").addEventListener("click", () => {
+      window.location.href = "planes.html";
+    });
+    $("btnVerMasTop").addEventListener("click", () => openModal("proPreviewModal"));
+    $("btnVerMasInline").addEventListener("click", () => openModal("proPreviewModal"));
+    $("btnProInline").addEventListener("click", () => {
+      window.location.href = "planes.html";
     });
     document.querySelectorAll("[data-close]").forEach(btn => {
       btn.addEventListener("click", () => closeModal(btn.dataset.close));
