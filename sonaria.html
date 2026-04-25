@@ -840,6 +840,9 @@
             cursos: selectedCourses,
             analysis: {
               ...lastAnalysis,
+              adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
+                ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
+                : [],
               curso_exportado: courseLabelOverride || ""
             }
           })
