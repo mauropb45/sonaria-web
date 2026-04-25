@@ -272,7 +272,7 @@
       </div>
       <div id="summaryModalContent" class="list"></div>
       <div class="summary-btn-row">
-        <button id="btnDownloadPdf" class="btn btn-orange" type="button">Descargar PDF</button>
+        <button id="btnDownloadPdf" class="btn btn-orange" type="button">Exportar PDF</button>
       </div>
     </div>
   </div>
@@ -802,9 +802,11 @@
         $("classroomContent").innerHTML = '<div class="list-item">No hay información pedagógica disponible.</div>';
         return;
       }
-      const translatedLyrics = Array.isArray(lastAnalysis?.traduccion)
-        ? lastAnalysis.traduccion.map(row => row.translated_adapted || row.translated || "").filter(Boolean).join("\n")
-        : "";
+      const adaptedLyrics = Array.isArray(lastAnalysis?.adaptacion?.adapted_lines) && lastAnalysis.adaptacion.adapted_lines.length
+        ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—").join("\n")
+        : (Array.isArray(lastAnalysis?.traduccion)
+          ? lastAnalysis.traduccion.map(row => row.adapted || "").filter(line => String(line || "").trim() && String(line || "").trim() !== "—").join("\n")
+          : "");
       $("classroomContent").innerHTML = `
         <div class="list-item"><strong>Curso</strong><br>${escapeHtml(item.curso)}</div>
         <div class="list-item"><strong>OA</strong><br>${item.oa.length ? item.oa.map(escapeHtml).join("<br>") : "Sin OA sugeridos."}</div>
@@ -812,8 +814,8 @@
         <div class="list-item"><strong>Actividades</strong><br>${item.actividades.length ? item.actividades.map(escapeHtml).join("<br>") : "Sin actividades sugeridas."}</div>
         <div class="list-item"><strong>Reflexiones</strong><br>${item.reflexiones.length ? item.reflexiones.map(escapeHtml).join("<br>") : "Sin reflexiones sugeridas."}</div>
         <div class="pair-card">
-          <div class="pair-head">Letra trabajada</div>
-          <div class="pair-body">${escapeHtml(translatedLyrics || "No hay letra traducida disponible.")}</div>
+          <div class="pair-head">Letra adaptada para trabajar en aula</div>
+          <div class="pair-body">${escapeHtml(adaptedLyrics || "No hay versión adaptada disponible.")}</div>
         </div>
       `;
     }
@@ -859,7 +861,7 @@
         setStatus("PDF descargado.", "success");
       }catch(err){
         console.error(err);
-        setStatus("No se pudo exportar el PDF.", "error");
+        setStatus(err && err.message ? err.message : "No se pudo exportar el PDF.", "error");
       }
     }
 
@@ -885,7 +887,10 @@
     $("classroomCourseSelect").addEventListener("change", (e) => {
       renderClassroomContent(Number(e.target.value || 0));
     });
-    $("btnDownloadPdf").addEventListener("click", () => downloadPdf());
+    $("btnDownloadPdf").addEventListener("click", () => {
+      const item = currentPedagogySource()[selectedPedIndex || 0];
+      downloadPdf(item ? item.curso : "");
+    });
     $("btnExportClassroomPdf").addEventListener("click", () => {
       const idx = Number($("classroomCourseSelect").value || 0);
       const item = currentPedagogySource()[idx];
