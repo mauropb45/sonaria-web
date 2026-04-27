@@ -89,10 +89,41 @@
     $('btnMonthly').onclick = () => iniciarPago('monthly');
     $('btnAnnual').onclick = () => iniciarPago('annual');
     const params = new URLSearchParams(location.search);
-    if(params.get('pago') === 'ok') setStatus('Pago aprobado. Si tu plan aún no cambia a Pro, recarga o vuelve a iniciar sesión.', 'ok');
-    if(params.get('pago') === 'pendiente') setStatus('Pago pendiente de confirmación.', 'info');
-    if(params.get('pago') === 'error') setStatus('Pago cancelado o rechazado.', 'error');
-    loadUser();
+    async function syncPaymentReturn(){
+      const pago = params.get('pago');
+      const orderId = params.get('order_id') || sessionStorage.getItem('order_id') || '';
+      if(pago === 'ok' && orderId){
+        try{
+          setStatus('Confirmando pago aprobado con MercadoPago...', 'info');
+          const res = await fetch(API + '/payments/mercadopago/sync', {
+            method:'POST',
+            headers:{'Content-Type':'application/json', Authorization:'Bearer '+getToken()},
+            body:JSON.stringify({order_id:orderId})
+          });
+          const data = await res.json().catch(()=>({}));
+          if(res.ok && data.paid){
+            localStorage.setItem('mejoraria_plan','pro');
+            if(data.user) localStorage.setItem('mejoraria_user', JSON.stringify(data.user));
+            setStatus('Pago aprobado. Tu cuenta ya está Pro.', 'ok');
+            disableButtons(true);
+            $('btnMonthly').textContent = 'Ya eres Pro';
+            $('btnAnnual').textContent = 'Ya eres Pro';
+            loadUser();
+            return;
+          }
+          setStatus((data && data.message) || 'Pago recibido, pendiente de confirmación.', 'info');
+        }catch(e){
+          setStatus(e.message || 'No pude confirmar el pago todavía.', 'error');
+        }
+      } else if(pago === 'ok'){
+        setStatus('Pago aprobado. Recarga si tu plan aún no cambia a Pro.', 'ok');
+      }
+      if(pago === 'pendiente') setStatus('Pago pendiente de confirmación.', 'info');
+      if(pago === 'error') setStatus('Pago cancelado o rechazado.', 'error');
+    }
+    $('btnMonthly').onclick = () => iniciarPago('monthly');
+    $('btnAnnual').onclick = () => iniciarPago('annual');
+    loadUser().then(syncPaymentReturn);
   </script>
 </body>
 </html>
