@@ -511,7 +511,8 @@
 
     function isProUser(){
       const plan = String(user?.plan || '').toLowerCase();
-      return plan === 'pro' || plan.startsWith('pro_');
+      // Admin también desbloquea funciones Pro para pruebas y operación interna.
+      return Boolean(user?.is_admin) || plan === 'pro' || plan.startsWith('pro_');
     }
 
     function openBenefits(){
@@ -1133,6 +1134,7 @@
         setStatus("Primero analiza una canción.", "error");
         return;
       }
+      const selectedCourseForPdf = courseLabelOverride || selectedCourses?.[0] || "";
       try{
         setStatus("Preparando PDF...", "info");
         const response = await fetch(PDF_URL, {
@@ -1145,8 +1147,8 @@
             titulo: $("titulo").value.trim(),
             artista: $("artista").value.trim(),
             texto: $("texto").value.trim(),
-            curso: courseLabelOverride || "",
-            curso_exportado: courseLabelOverride || "",
+            curso: selectedCourseForPdf,
+            curso_exportado: selectedCourseForPdf,
             cursos: selectedCourses,
             adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
               ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
@@ -1156,7 +1158,7 @@
               adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
                 ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
                 : [],
-              curso_exportado: courseLabelOverride || ""
+              curso_exportado: selectedCourseForPdf
             }
           })
         });
