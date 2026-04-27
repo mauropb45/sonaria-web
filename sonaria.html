@@ -502,6 +502,7 @@
     let user = {plan:"free", is_admin:false};
     let selectedCourses = JSON.parse(localStorage.getItem("sonaria_courses") || '["6","7","8","1M","2M","3M","4M"]');
     let lastAnalysis = null;
+    let lyricsState = { key:"", source:"empty" }; // empty | auto | manual | history
     let pedagogyStore = [];
     let adaptedPedagogyStore = [];
     let usingAdaptedPedagogy = false;
@@ -509,9 +510,64 @@
 
     const $ = id => document.getElementById(id);
 
+    function normalizeSongKey(title="", artist=""){
+      return `${String(title || "").trim().toLowerCase()}::${String(artist || "").trim().toLowerCase()}`;
+    }
+
+    function currentSongKey(){
+      return normalizeSongKey($("titulo")?.value || "", $("artista")?.value || "");
+    }
+
+    function resetAnalysisOnly(message=""){
+      lastAnalysis = null;
+      pedagogyStore = [];
+      adaptedPedagogyStore = [];
+      usingAdaptedPedagogy = false;
+      selectedPedIndex = 0;
+      if($("summaryTitle")) $("summaryTitle").textContent = "Esperando análisis";
+      if($("summaryCopy")) $("summaryCopy").textContent = "Analiza una canción para saber si puedes usarla directamente, con mediación o mediante una versión adaptada.";
+      if($("resultBadge")) $("resultBadge").textContent = "Sin análisis";
+      if($("edadSugerida")) $("edadSugerida").textContent = "—";
+      if($("lecturaSugerida")) $("lecturaSugerida").textContent = "—";
+      if($("cursosSugeridos")) $("cursosSugeridos").textContent = "—";
+      if($("themesWrap")) $("themesWrap").textContent = "Sin datos";
+      if($("issuesWrap")) $("issuesWrap").textContent = "Analiza una canción para ver el detalle.";
+      if($("pedIntro")) $("pedIntro").innerHTML = '<div class="list-item">Cursos sugeridos: aún no hay análisis.</div>';
+      if($("pedCourseSelector")) $("pedCourseSelector").innerHTML = "";
+      if($("pedDetails")) $("pedDetails").innerHTML = '<div class="list-item">Selecciona el curso para ver las sugerencias.</div>';
+      if($("adaptedView")) $("adaptedView").innerHTML = "";
+      if($("translatedView")) $("translatedView").innerHTML = "";
+      if($("adaptedView")) $("adaptedView").classList.add("active");
+      if($("translatedView")) $("translatedView").classList.remove("active");
+      updateTraffic();
+      updateProUI();
+      if(message) setStatus(message, "info");
+    }
+
+    function handleSongIdentityChange(){
+      const key = currentSongKey();
+      if(lastAnalysis && lyricsState.key && lyricsState.key !== key){
+        resetAnalysisOnly("Nueva canción detectada. Se limpiaron los resultados anteriores.");
+      }
+      if(lyricsState.source === "auto" && lyricsState.key && lyricsState.key !== key){
+        if($("texto")) $("texto").value = "";
+        lyricsState = { key:"", source:"empty" };
+        setStatus("Nueva búsqueda lista. La letra anterior fue limpiada para evitar analizar la canción previa.", "info");
+      }
+    }
+
+    function markManualLyricsChange(){
+      lyricsState = { key: currentSongKey(), source: $("texto")?.value.trim() ? "manual" : "empty" };
+      if(lastAnalysis){
+        resetAnalysisOnly("Letra modificada. Vuelve a analizar para actualizar resultados.");
+      }
+    }
+
+
     function isProUser(){
       const plan = String(user?.plan || '').toLowerCase();
-      return plan === 'pro' || plan.startsWith('pro_');
+      // Admin también desbloquea funciones Pro para pruebas y operación interna.
+      return Boolean(user?.is_admin) || plan === 'pro' || plan.startsWith('pro_');
     }
 
     function openBenefits(){
@@ -849,9 +905,12 @@
             $("titulo").value = item.titulo || "";
             $("artista").value = item.artista || "";
             $("texto").value = item.texto || "";
+            lyricsState = { key: normalizeSongKey(item.titulo || "", item.artista || ""), source: "history" };
             if(item.analysis){
               renderResult(item.analysis);
               setStatus('Canción reutilizada desde tu historial.', 'success');
+            }else{
+              resetAnalysisOnly('Canción cargada desde historial. Puedes volver a analizarla.');
             }
           });
         });
@@ -1012,9 +1071,13 @@
       const titulo = $("titulo").value.trim();
       const artista = $("artista").value.trim();
       const letra = $("texto").value;
+      const key = normalizeSongKey(titulo, artista);
+      const letraPerteneceACancionActual = lyricsState.key === key;
+      const debeBuscarLetraNueva = letra.trim() === "" || (lyricsState.source === "auto" && !letraPerteneceACancionActual);
+      const textoParaAnalizar = debeBuscarLetraNueva ? "" : letra;
 
       clearStatus();
-      setStatus("Analizando canción, pedagogía y adaptación...", "info");
+      setStatus(debeBuscarLetraNueva ? "Buscando letra nueva y analizando canción..." : "Analizando canción, pedagogía y adaptación...", "info");
 
       try{
         const response = await fetch(ANALYZE_URL, {
@@ -1026,8 +1089,8 @@
           body: JSON.stringify({
             titulo: titulo || "",
             artista: artista || "",
-            texto: letra || "",
-            buscar_letra: letra.trim() === "",
+            texto: textoParaAnalizar || "",
+            buscar_letra: debeBuscarLetraNueva,
             contexto_escolar: true,
             cursos: selectedCourses
           })
@@ -1039,8 +1102,11 @@
           throw new Error(data.detail || data.error || "Error en servidor");
         }
 
-        if(data.texto && !letra.trim()){
+        if(data.texto && debeBuscarLetraNueva){
           $("texto").value = data.texto;
+          lyricsState = { key, source: "auto" };
+        }else{
+          lyricsState = { key, source: textoParaAnalizar.trim() ? "manual" : "empty" };
         }
 
         renderResult(data);
@@ -1056,6 +1122,7 @@
       $("artista").value = "";
       $("texto").value = "";
       lastAnalysis = null;
+      lyricsState = { key:"", source:"empty" };
       $("summaryTitle").textContent = "Esperando análisis";
       $("summaryCopy").textContent = "Analiza una canción para saber si puedes usarla directamente, con mediación o mediante una versión adaptada.";
       $("resultBadge").textContent = "Sin análisis";
@@ -1133,6 +1200,7 @@
         setStatus("Primero analiza una canción.", "error");
         return;
       }
+      const selectedCourseForPdf = courseLabelOverride || selectedCourses?.[0] || "";
       try{
         setStatus("Preparando PDF...", "info");
         const response = await fetch(PDF_URL, {
@@ -1145,8 +1213,8 @@
             titulo: $("titulo").value.trim(),
             artista: $("artista").value.trim(),
             texto: $("texto").value.trim(),
-            curso: courseLabelOverride || "",
-            curso_exportado: courseLabelOverride || "",
+            curso: selectedCourseForPdf,
+            curso_exportado: selectedCourseForPdf,
             cursos: selectedCourses,
             adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
               ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
@@ -1156,7 +1224,7 @@
               adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
                 ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
                 : [],
-              curso_exportado: courseLabelOverride || ""
+              curso_exportado: selectedCourseForPdf
             }
           })
         });
@@ -1213,6 +1281,9 @@
       return {title, artist};
     }
 
+    $("titulo").addEventListener("input", handleSongIdentityChange);
+    $("artista").addEventListener("input", handleSongIdentityChange);
+    $("texto").addEventListener("input", markManualLyricsChange);
     $("analyzeBtn").addEventListener("click", analizarCancion);
     $("clearBtn").addEventListener("click", clearAll);
     $("btnSummary").addEventListener("click", buildSummaryModal);
@@ -1282,7 +1353,9 @@
           const parsed = parseVoiceSong(text);
           $("titulo").value = parsed.title;
           if(parsed.artist) $("artista").value = parsed.artist;
-          setStatus(parsed.artist ? "Canción y artista cargados por voz." : "Título cargado por voz. Puedes ajustar artista si corresponde.", "success");
+          if($("texto")) $("texto").value = "";
+          lyricsState = { key:"", source:"empty" };
+          resetAnalysisOnly(parsed.artist ? "Canción y artista cargados por voz. Presiona Analizar para buscar la letra nueva." : "Título cargado por voz. Puedes ajustar artista y analizar.");
         }
       };
       recognition.onerror = () => setStatus("No pude capturar voz. Intenta nuevamente.", "error");
