@@ -89,7 +89,7 @@
     </header>
 
     <section class="card hero">
-      <div class="eyebrow">💳 MercadoPago · acceso docente</div>
+      <div class="eyebrow">💳 Acceso Pro · SonarIA v1.1.0</div>
       <h2>Elige cómo desbloquear SonarIA Pro.</h2>
       <p>La versión Free mantiene el análisis base. Pro desbloquea voz, capas avanzadas de uso en aula, OA y pedagogía completa, adaptación, traducción y exportación PDF para preparar clases con más profundidad.</p>
       <div id="userInfo" class="user">Validando sesión...</div>
@@ -219,11 +219,11 @@
         const data = await res.json().catch(()=>({}));
         if(!res.ok) return;
         if(!data.configured){
-          setStatus('MercadoPago no está configurado: agrega MERCADOPAGO_ACCESS_TOKEN o MP_ACCESS_TOKEN en Render, o links directos por plan.', 'error');
+          setStatus('El pago online aún no está disponible para esta cuenta. Escríbenos y lo activamos.', 'error');
         } else if(data.api_token_configured){
-          setStatus('MercadoPago API configurado correctamente.', 'ok');
+          setStatus('Pago online disponible. Elige el plan que necesitas.', 'ok');
         } else {
-          setStatus('MercadoPago funciona usando links directos configurados en Render.', 'ok');
+          setStatus('Pago online disponible. Elige el plan que necesitas.', 'ok');
         }
       }catch(e){
         console.warn(e);
@@ -238,7 +238,7 @@
       }
 
       disableButtons(true);
-      setStatus('Creando checkout de MercadoPago...', 'info');
+      setStatus('Preparando pago seguro...', 'info');
 
       try{
         const res = await fetch(API + '/payments/create-checkout', {
