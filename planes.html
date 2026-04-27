@@ -219,7 +219,7 @@
         const data = await res.json().catch(()=>({}));
         if(!res.ok) return;
         if(!data.configured){
-          setStatus('MercadoPago no está configurado: agrega MERCADOPAGO_ACCESS_TOKEN en Render o links directos por plan.', 'error');
+          setStatus('MercadoPago no está configurado: agrega MERCADOPAGO_ACCESS_TOKEN o MP_ACCESS_TOKEN en Render, o links directos por plan.', 'error');
         } else if(data.api_token_configured){
           setStatus('MercadoPago API configurado correctamente.', 'ok');
         } else {
@@ -277,8 +277,9 @@
           if(res.ok && data.paid){
             localStorage.setItem('mejoraria_plan','pro');
             if(data.user) localStorage.setItem('mejoraria_user', JSON.stringify(data.user));
-            setStatus('Pago aprobado. Tu cuenta ya está Pro.', 'ok');
+            setStatus('Pago aprobado. Tu cuenta ya está Pro. Redirigiendo a SonarIA...', 'ok');
             loadUser();
+            setTimeout(() => { window.location.href = '/sonaria.html?payment=success&order_id=' + encodeURIComponent(orderId); }, 900);
             return;
           }
 
