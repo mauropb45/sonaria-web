@@ -84,8 +84,29 @@
     .bar-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#25c96f,#f2c14b,#ff6a6a);transition:width .35s ease}
     .chips{display:flex;gap:8px;flex-wrap:wrap}
     .chip{padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.82rem;font-weight:800}
-    .chip.free{background:#25c96f;color:#063117;border-color:#25c96f}
-    .chip.pro{background:linear-gradient(135deg,#2563eb,#4b82ff);color:#fff;border-color:#4b82ff}
+    .chip.free{background:#eafaf1;color:#11763d;border-color:#bdeccd}
+    .chip.pro{background:#eef4ff;color:#2558d8;border-color:#b8d0ff}
+    .plan-badge{
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:900;
+      letter-spacing:.01em;
+      border:1px solid var(--line);
+      box-shadow:0 10px 24px rgba(31,44,74,.07);
+    }
+    .plan-badge.free{background:linear-gradient(135deg,#ecfdf3,#ffffff);color:#11763d;border-color:#bdeccd}
+    .plan-badge.pro{background:linear-gradient(135deg,#eff6ff,#ffffff);color:#2558d8;border-color:#b8d0ff}
+    .welcome-card{margin:0 0 16px;padding:16px 18px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .welcome-main strong{font-size:1.12rem}
+    .welcome-main span{display:block;margin-top:4px;color:var(--muted);font-weight:700}
+    .success-hero{padding:20px;border-radius:22px;background:linear-gradient(135deg,#eef4ff,#fff,#ecfdf3);border:1px solid #cfe0ff;margin-bottom:14px}
+    .success-hero h3{margin:0 0 8px;font-size:2rem;letter-spacing:-.05em}
+    .success-hero p{margin:0;color:#52637c;line-height:1.7}
     .pro-gate{padding:16px;border-radius:18px;background:linear-gradient(135deg,#f7faff,#fff);border:1px dashed #b9cffb;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
     .pro-gate strong{display:block;margin-bottom:4px}
     .pro-gate span{color:var(--muted);line-height:1.5}
@@ -198,11 +219,20 @@
         <div class="brand-sub">Evaluador pedagógico musical</div>
       </div>
       <div class="top-actions">
-        <span id="topPlanPill" class="chip free">Free</span>
+        <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
+        <button id="btnLogoutTop" class="btn btn-ghost" type="button">Cerrar sesión</button>
       </div>
+    </div>
+
+    <div id="welcomeCard" class="welcome-card">
+      <div class="welcome-main">
+        <strong id="welcomeGreeting">Bienvenido/a a SonarIA</strong>
+        <span id="welcomeIdentity">Validando sesión docente...</span>
+      </div>
+      <span id="planPill" class="plan-badge free">🟢 Free</span>
     </div>
 
     <section class="top-grid">
@@ -421,6 +451,36 @@
     </div>
   </div>
 
+
+  <div id="viewerModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>🧭</span><h3>Antes de comenzar</h3></div>
+      </div>
+      <div class="small-muted" style="font-size:1rem">
+        SonarIA puede detectar riesgos, proponer mediación y sugerir adaptaciones para contexto escolar. Aun así, cada curso tiene una historia, una sensibilidad y una realidad propia.
+        <br><br>
+        La decisión final de usar una canción, adaptar una letra o abrir una conversación en clases siempre pertenece al criterio profesional del docente. SonarIA acompaña; educar sigue siendo una responsabilidad humana.
+      </div>
+      <div class="summary-btn-row">
+        <button id="btnAcceptViewer" class="btn btn-green" type="button">Entiendo y continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="proWelcomeModal" class="modal">
+    <div class="modal-box">
+      <div class="success-hero">
+        <h3>🎉 Bienvenido/a a SonarIA Pro</h3>
+        <p>Tu pago fue confirmado. Ya puedes usar adaptación completa, traducción, PDF, pedagogía avanzada y las funciones Pro disponibles para preparar clases con más profundidad.</p>
+      </div>
+      <div class="summary-btn-row">
+        <button class="btn btn-green" type="button" data-close="proWelcomeModal">Entrar a SonarIA Pro</button>
+        <button class="btn btn-ghost" type="button" onclick="window.location.href='planes.html'">Ver mi plan</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
     const ANALYZE_URL = API_BASE + "/analizar";
@@ -429,6 +489,8 @@
     const PDF_URL = API_BASE + "/export/pdf";
     const HISTORY_URL = API_BASE + "/history";
     const USAGE_PING_URL = API_BASE + "/usage/ping";
+    const PAYMENT_SYNC_URL = API_BASE + "/payments/mercadopago/sync";
+    const LOGOUT_URL = API_BASE + "/auth/logout";
     const COURSE_OPTIONS = [
       {code:"1",label:"1° básico"},{code:"2",label:"2° básico"},{code:"3",label:"3° básico"},{code:"4",label:"4° básico"},
       {code:"5",label:"5° básico"},{code:"6",label:"6° básico"},{code:"7",label:"7° básico"},{code:"8",label:"8° básico"},
@@ -447,11 +509,26 @@
     const $ = id => document.getElementById(id);
 
     function isProUser(){
-      return String(user?.plan || '').toLowerCase() === 'pro';
+      const plan = String(user?.plan || '').toLowerCase();
+      return plan === 'pro' || plan.startsWith('pro_');
     }
 
     function openBenefits(){
       openModal('proPreviewModal');
+    }
+
+    function saludoPorHora(){
+      const h = new Date().getHours();
+      if(h < 12) return "Buenos días";
+      if(h < 20) return "Buenas tardes";
+      return "Buenas noches";
+    }
+
+    function updateGreeting(){
+      const name = (user?.name || user?.email || "docente").split("@")[0];
+      const email = user?.email || "";
+      if($("welcomeGreeting")) $("welcomeGreeting").textContent = `${saludoPorHora()}, ${name}`;
+      if($("welcomeIdentity")) $("welcomeIdentity").textContent = email ? `${email} · ${isProUser() ? "Plan Pro activo" : "Plan Free activo"}` : "Sesión docente activa";
     }
 
     function updateProUI(){
@@ -459,12 +536,12 @@
       const plan = $('planPill');
       const topPlan = $('topPlanPill');
       if(topPlan){
-        topPlan.textContent = pro ? 'Pro' : 'Free';
+        topPlan.textContent = pro ? '🔵 Pro' : '🟢 Free';
         topPlan.classList.toggle('pro', pro);
         topPlan.classList.toggle('free', !pro);
       }
       if(plan){
-        plan.textContent = pro ? 'Pro' : 'Free';
+        plan.textContent = pro ? '🔵 Pro' : '🟢 Free';
         plan.classList.toggle('pro', pro);
         plan.classList.toggle('free', !pro);
       }
@@ -481,6 +558,7 @@
       if($('voiceBtn')){
         $('voiceBtn').textContent = pro ? '🎤 Búsqueda por voz' : '🎤 Voz Pro';
       }
+      updateGreeting();
     }
 
     function getToken(){
@@ -590,11 +668,67 @@
       }
     }
 
+    function clearSessionLocal(){
+      ["mejoraria_token","token","access_token","mejoraria_user","mejoraria_plan"].forEach(k => localStorage.removeItem(k));
+    }
+
+    async function logout(){
+      try{
+        const token = getToken();
+        if(token){
+          await fetch(LOGOUT_URL, {method:"POST", headers:{Authorization:"Bearer "+token}});
+        }
+      }catch(_){}
+      clearSessionLocal();
+      sessionStorage.clear();
+      window.location.href = "login.html?logout=1";
+    }
+
+    function maybeShowViewerNotice(){
+      if(!sessionStorage.getItem("sonaria_viewer_accepted")){
+        openModal("viewerModal");
+      }
+    }
+
+    async function handlePaymentReturn(){
+      const params = new URLSearchParams(window.location.search);
+      const ok = params.get("payment") === "success" || params.get("pago") === "ok";
+      const orderId = params.get("order_id") || sessionStorage.getItem("order_id") || "";
+      if(!ok) return;
+      if(!orderId){
+        openModal("proWelcomeModal");
+        history.replaceState({}, document.title, location.pathname);
+        return;
+      }
+      try{
+        setStatus("Confirmando tu pago en MercadoPago...", "info");
+        const res = await fetch(PAYMENT_SYNC_URL, {
+          method:"POST",
+          headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
+          body:JSON.stringify({order_id:orderId})
+        });
+        const data = await res.json().catch(()=>({}));
+        if(res.ok && data.paid){
+          user = data.user || {...user, plan:"pro"};
+          localStorage.setItem("mejoraria_plan", "pro");
+          localStorage.setItem("mejoraria_user", JSON.stringify(user));
+          updateProUI();
+          openModal("proWelcomeModal");
+          setStatus("Pago aprobado. Funciones Pro activadas.", "success");
+        }else{
+          setStatus((data && data.message) || "Pago recibido; aún esperando confirmación de MercadoPago.", "info");
+        }
+      }catch(e){
+        setStatus(e.message || "No pude confirmar el pago todavía.", "error");
+      }finally{
+        history.replaceState({}, document.title, location.pathname);
+      }
+    }
+
     async function loadUser(){
       authToken = getToken();
       if(!authToken){
-        user = {plan:"free", is_admin:false};
-        updateProUI();
+        window.location.href = "login.html?next=sonaria";
         return;
       }
       try{
@@ -603,7 +737,9 @@
         if(!res.ok || !data.ok) throw new Error();
         user = data.user || {plan:"free", is_admin:false};
       }catch(_){
-        user = {plan:"free", is_admin:false};
+        clearSessionLocal();
+        window.location.href = "login.html?next=sonaria&reason=session";
+        return;
       }
       updateProUI();
       $("btnAdminTop").classList.toggle("hidden", !user.is_admin);
@@ -1038,6 +1174,26 @@
       }
     }
 
+    function parseVoiceSong(raw){
+      let text = String(raw || "").trim();
+      text = text.replace(/^buscar( canción)?\s+/i, "").replace(/^analizar( canción)?\s+/i, "");
+      let title = text;
+      let artist = "";
+      const patterns = [
+        /^(.*?)\s+(?:de|por|del artista|artista)\s+(.+)$/i,
+        /^(.*?)\s+(?:by)\s+(.+)$/i
+      ];
+      for(const pat of patterns){
+        const m = text.match(pat);
+        if(m && m[1] && m[2]){
+          title = m[1].trim();
+          artist = m[2].trim();
+          break;
+        }
+      }
+      return {title, artist};
+    }
+
     $("analyzeBtn").addEventListener("click", analizarCancion);
     $("clearBtn").addEventListener("click", clearAll);
     $("btnSummary").addEventListener("click", buildSummaryModal);
@@ -1087,6 +1243,8 @@
       window.location.href = "planes.html";
     });
     $("btnBenefitsTop").addEventListener("click", openBenefits);
+    $("btnLogoutTop")?.addEventListener("click", logout);
+    $("btnAcceptViewer")?.addEventListener("click", () => { sessionStorage.setItem("sonaria_viewer_accepted", "1"); closeModal("viewerModal"); });
     $("btnUsoAulaMas").addEventListener("click", openBenefits);
     document.querySelectorAll("[data-benefits]").forEach(btn => btn.addEventListener("click", openBenefits));
     $("voiceBtn").addEventListener("click", () => {
@@ -1101,7 +1259,12 @@
       recognition.interimResults = false;
       recognition.onresult = (event) => {
         const text = event.results?.[0]?.[0]?.transcript || "";
-        if(text){ $("titulo").value = text; setStatus("Título cargado por voz. Puedes ajustar artista si corresponde.", "success"); }
+        if(text){
+          const parsed = parseVoiceSong(text);
+          $("titulo").value = parsed.title;
+          if(parsed.artist) $("artista").value = parsed.artist;
+          setStatus(parsed.artist ? "Canción y artista cargados por voz." : "Título cargado por voz. Puedes ajustar artista si corresponde.", "success");
+        }
       };
       recognition.onerror = () => setStatus("No pude capturar voz. Intenta nuevamente.", "error");
       recognition.start();
@@ -1137,6 +1300,8 @@
       updateClock();
       setInterval(updateClock, 20000);
       await loadUser();
+      await handlePaymentReturn();
+      maybeShowViewerNotice();
       await loadEfemeride();
       await loadHistory();
       renderCalendar();
