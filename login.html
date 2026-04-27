@@ -76,11 +76,34 @@
     }
 
     (function showLogoutMessage(){
+      const params = new URLSearchParams(location.search);
+      if(params.get("logout")){
+        setStatus("Sesión cerrada correctamente.", "info");
+        return;
+      }
+      if(params.get("reason") === "session"){
+        setStatus("Tu sesión expiró o se abrió en otro dispositivo. Vuelve a iniciar sesión para continuar.", "info");
+        return;
+      }
       const message = localStorage.getItem("mejoraria_logout_message");
       if(message){
         setStatus(message, "info");
         localStorage.removeItem("mejoraria_logout_message");
       }
+    })();
+
+    (async function redirectIfSessionActive(){
+      const token = localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
+      if(!token) return;
+      try{
+        setStatus("Sesión activa encontrada. Entrando a SonarIA...", "loading");
+        const res = await fetch(API_URL + "/me", {headers:{Authorization:"Bearer "+token}});
+        const data = await res.json().catch(()=>({}));
+        if(res.ok && data.ok){
+          if(data.user) localStorage.setItem("mejoraria_user", JSON.stringify(data.user));
+          window.location.href = "/sonaria.html";
+        }
+      }catch(_){}
     })();
 
     async function handleCredentialResponse(response) {
