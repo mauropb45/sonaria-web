@@ -326,6 +326,9 @@
           <div class="metric"><strong>Camino sugerido</strong><span id="lecturaSugerida">—</span></div>
           <div class="metric"><strong>Cursos sugeridos</strong><span id="cursosSugeridos">—</span></div>
         </div>
+        <div id="explicacionPedagogicaCard" class="list hidden" style="margin-top:12px">
+          <div class="list-item"><strong>Justificación pedagógica</strong><br><span id="explicacionPedagogica">—</span></div>
+        </div>
         <div class="traffic">
           <div class="bar-row"><div class="bar-label"><span>Riesgo general</span><span id="riskPercent">0%</span></div><div class="bar"><div id="riskTotalFill" class="bar-fill"></div></div></div>
           <div class="bar-row"><div class="bar-label"><span>Riesgo sensible</span><span id="riskSensitive">0%</span></div><div class="bar"><div id="riskSensitiveFill" class="bar-fill"></div></div></div>
@@ -530,6 +533,8 @@
       if($("edadSugerida")) $("edadSugerida").textContent = "—";
       if($("lecturaSugerida")) $("lecturaSugerida").textContent = "—";
       if($("cursosSugeridos")) $("cursosSugeridos").textContent = "—";
+      if($("explicacionPedagogica")) $("explicacionPedagogica").textContent = "—";
+      if($("explicacionPedagogicaCard")) $("explicacionPedagogicaCard").classList.add("hidden");
       if($("themesWrap")) $("themesWrap").textContent = "Sin datos";
       if($("issuesWrap")) $("issuesWrap").textContent = "Analiza una canción para ver el detalle.";
       if($("pedIntro")) $("pedIntro").innerHTML = '<div class="list-item">Cursos sugeridos: aún no hay análisis.</div>';
@@ -927,6 +932,46 @@
       return list.length ? list.join(", ") : "—";
     }
 
+    // ============================================================
+    // V117.1 / V117.2 — Explicación pedagógica visible y exportable
+    // Usa primero la explicación que manda el backend. Si no viene,
+    // arma una explicación breve desde los datos ya disponibles.
+    // ============================================================
+    function getPedagogicalExplanation(data){
+      const candidates = [
+        data?.explicacion_pedagogica,
+        data?.justificacion_pedagogica,
+        data?.pedagogia?.explicacion_pedagogica,
+        data?.pedagogia?.justificacion,
+        data?.scoring?.explicacion
+      ];
+      for(const value of candidates){
+        const txt = String(value || "").trim();
+        if(txt) return txt;
+      }
+
+      const cursos = unifiedCourseLabels(data);
+      const desde = cursos.length ? cursos[0] : (data?.edad_sugerida || "el nivel sugerido");
+      const temas = arrayUnique([...(data?.temas_detectados || []), ...(data?.contextos_detectados || [])])
+        .map(x => String(x || "").trim())
+        .filter(Boolean)
+        .slice(0, 3);
+      const motivo = temas.length ? temas.join(", ") : (data?.resumen || data?.justificacion || "el contenido y la madurez requerida");
+      return `Se recomienda desde ${desde} debido a ${motivo}.`;
+    }
+
+    function renderExplicacionPedagogica(data){
+      const el = $("explicacionPedagogica");
+      const card = $("explicacionPedagogicaCard");
+      if(!el || !card) return;
+      const txt = getPedagogicalExplanation(data);
+      el.textContent = txt || "—";
+      card.classList.toggle("hidden", !txt);
+      if(data && txt && !data.explicacion_pedagogica){
+        data.explicacion_pedagogica = txt;
+      }
+    }
+
     function buildPedagogyStore(pedagogia, allowedLabels){
       const allowed = Array.isArray(allowedLabels) && allowedLabels.length ? allowedLabels.map(normalizeCourseLabel) : null;
       if(Array.isArray(pedagogia?.por_curso)){
@@ -1147,6 +1192,7 @@
       updateTraffic(data.risk_percent || 0, data.risk_sensitive || 0, data.risk_school || 0);
       renderThemes(data.temas_detectados || []);
       renderIssues(data);
+      renderExplicacionPedagogica(data);
       renderPedagogia(data);
       renderAdaptacion(data);
       renderTraduccion(data);
@@ -1216,6 +1262,8 @@
       $("edadSugerida").textContent = "—";
       $("lecturaSugerida").textContent = "—";
       $("cursosSugeridos").textContent = "—";
+      if($("explicacionPedagogica")) $("explicacionPedagogica").textContent = "—";
+      if($("explicacionPedagogicaCard")) $("explicacionPedagogicaCard").classList.add("hidden");
       $("themesWrap").textContent = "Sin datos";
       $("issuesWrap").textContent = "Analiza una canción para ver el detalle.";
       $("pedIntro").innerHTML = '<div class="list-item">Cursos sugeridos: aún no hay análisis.</div>';
@@ -1239,6 +1287,7 @@
         <div class="list-item"><strong>Resultado</strong><br>${escapeHtml(lastAnalysis.resultado || "—")}</div>
         <div class="list-item"><strong>Edad sugerida</strong><br>${escapeHtml(lastAnalysis.edad_sugerida || "—")}</div>
         <div class="list-item"><strong>Cursos sugeridos</strong><br>${escapeHtml(currentPedagogySource().length ? courseText(currentPedagogySource().map(x=>x.curso)) : "—")}</div>
+        <div class="list-item"><strong>Justificación pedagógica</strong><br>${escapeHtml(getPedagogicalExplanation(lastAnalysis) || "—")}</div>
         <div class="list-item"><strong>Cambios visibles</strong><br>${(lastAnalysis.adaptacion?.changes || []).length}</div>
       `;
       openModal("summaryModal");
@@ -1270,6 +1319,7 @@
           : "");
       $("classroomContent").innerHTML = `
         <div class="list-item"><strong>Curso</strong><br>${escapeHtml(item.curso)}</div>
+        <div class="list-item"><strong>Justificación pedagógica</strong><br>${escapeHtml(getPedagogicalExplanation(lastAnalysis) || "—")}</div>
         <div class="list-item"><strong>OA</strong><br>${item.oa.length ? item.oa.map(escapeHtml).join("<br>") : "Sin OA sugeridos."}</div>
         <div class="list-item"><strong>Preguntas</strong><br>${item.preguntas.length ? item.preguntas.map(escapeHtml).join("<br>") : "Sin preguntas sugeridas."}</div>
         <div class="list-item"><strong>Actividades</strong><br>${item.actividades.length ? item.actividades.map(escapeHtml).join("<br>") : "Sin actividades sugeridas."}</div>
@@ -1327,9 +1377,16 @@
       const officialCoursesForPdf = lastAnalysis ? unifiedCourseLabels(lastAnalysis) : [];
       const selectedCourseForPdf = normalizeCourseLabel(courseLabelOverride || getSelectedPedagogyCourseLabel() || officialCoursesForPdf[0] || "");
       const pedagogiaPdf = buildPdfPedagogyPayload(officialCoursesForPdf);
+      const explanationForPdf = getPedagogicalExplanation(lastAnalysis);
       const analysisForPdf = {
         ...lastAnalysis,
-        pedagogia: pedagogiaPdf,
+        explicacion_pedagogica: explanationForPdf,
+        justificacion_pedagogica: explanationForPdf,
+        pedagogia: {
+          ...pedagogiaPdf,
+          explicacion_pedagogica: explanationForPdf,
+          justificacion: explanationForPdf
+        },
         // Si pedagogía adaptada viene vacía, no la mandamos vacía porque el backend la prioriza sobre pedagogía.
         pedagogia_adaptada: (usingAdaptedPedagogy && adaptedPedagogyStore.length) ? pedagogiaPdf : null
       };
@@ -1348,6 +1405,8 @@
             curso: selectedCourseForPdf,
             curso_exportado: selectedCourseForPdf,
             cursos: officialCoursesForPdf.length ? officialCoursesForPdf : selectedCourses,
+            explicacion_pedagogica: explanationForPdf,
+            justificacion_pedagogica: explanationForPdf,
             adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
               ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
               : [],
