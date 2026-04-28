@@ -363,7 +363,7 @@
         <div class="lyrics-actions">
           <button id="btnVerAdaptada" class="btn btn-soft" type="button">Adaptación escolar</button>
           <button id="btnVerTraducida" class="btn btn-soft" type="button">Letra traducida</button>
-          <button id="btnUsarClase" class="btn btn-orange" type="button">Usar esta versión en clase</button>
+          <button id="btnUsarClase" class="btn btn-orange" type="button">Usar esta versión en clase y descargar PDF</button>
         </div>
         <div id="adaptedView" class="lyrics-view active"></div>
         <div id="translatedView" class="lyrics-view"></div>
@@ -1062,6 +1062,10 @@
       document.querySelectorAll("#pedCourseSelector .ped-course-btn").forEach((btn, i) => {
         btn.classList.toggle("active", i === idx);
       });
+      const classroomSelect = $("classroomCourseSelect");
+      if(classroomSelect && classroomSelect.options.length){
+        classroomSelect.value = String(idx);
+      }
       $("pedDetails").innerHTML = `
         <div class="list-item"><strong>OA</strong><br>${item.oa.length ? item.oa.map(escapeHtml).join("<br>") : "Sin OA sugeridos."}</div>
         <div class="list-item"><strong>Preguntas</strong><br>${item.preguntas.length ? item.preguntas.map(escapeHtml).join("<br>") : "Sin preguntas sugeridas."}</div>
@@ -1277,13 +1281,29 @@
       `;
     }
 
+    function getSelectedPedagogyCourseLabel(){
+      const source = currentPedagogySource();
+      const selected = source && source[selectedPedIndex];
+      if(selected && selected.curso) return normalizeCourseLabel(selected.curso);
+
+      const classroomSelect = $("classroomCourseSelect");
+      if(classroomSelect && classroomSelect.value !== ""){
+        const item = source && source[Number(classroomSelect.value || 0)];
+        if(item && item.curso) return normalizeCourseLabel(item.curso);
+      }
+
+      const official = lastAnalysis ? unifiedCourseLabels(lastAnalysis) : [];
+      return official[0] || "";
+    }
+
     async function downloadPdf(courseLabelOverride=""){
       if(!isProUser()){ openBenefits(); return; }
       if(!lastAnalysis){
         setStatus("Primero analiza una canción.", "error");
         return;
       }
-      const selectedCourseForPdf = courseLabelOverride || selectedCourses?.[0] || "";
+      const officialCoursesForPdf = lastAnalysis ? unifiedCourseLabels(lastAnalysis) : [];
+      const selectedCourseForPdf = normalizeCourseLabel(courseLabelOverride || getSelectedPedagogyCourseLabel() || officialCoursesForPdf[0] || "");
       try{
         setStatus("Preparando PDF...", "info");
         const response = await fetch(PDF_URL, {
@@ -1298,7 +1318,7 @@
             texto: $("texto").value.trim(),
             curso: selectedCourseForPdf,
             curso_exportado: selectedCourseForPdf,
-            cursos: selectedCourses,
+            cursos: officialCoursesForPdf.length ? officialCoursesForPdf : selectedCourses,
             adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
               ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
               : [],
