@@ -628,6 +628,42 @@
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
     }
 
+    function handleExpiredSession(){
+      try{
+        clearSessionLocal();
+      }catch(_){
+        ["mejoraria_token","token","access_token","mejoraria_user","mejoraria_plan"].forEach(k => localStorage.removeItem(k));
+      }
+      try{ sessionStorage.clear(); }catch(_){}
+      try{
+        setStatus("Tu sesión fue cerrada por seguridad. Puedes volver a ingresar.", "error");
+      }catch(_){}
+      alert("Tu sesión fue cerrada por seguridad. Puede que hayas iniciado sesión en otro dispositivo.");
+      window.location.href = "login.html?next=sonaria&reason=session_replaced";
+    }
+
+    async function apiFetch(url, options = {}){
+      const token = getToken();
+      const incomingHeaders = options.headers || {};
+      const headers = {...incomingHeaders};
+
+      if(token && !headers.Authorization && !headers.authorization){
+        headers.Authorization = "Bearer " + token;
+      }
+
+      const response = await fetch(url, {
+        ...options,
+        headers
+      });
+
+      if(response.status === 401){
+        handleExpiredSession();
+        throw new Error("Sesión expirada o reemplazada por otro inicio de sesión.");
+      }
+
+      return response;
+    }
+
     function setStatus(message, type="info"){
       const box = $("statusBox");
       box.textContent = message;
@@ -719,7 +755,7 @@
         fecha: new Date().toISOString().slice(0,10)
       };
       try{
-        const res = await fetch(EFEM_URL, {
+        const res = await apiFetch(EFEM_URL, {
           headers: authToken ? {Authorization:"Bearer " + authToken} : {}
         });
         const data = await res.json().catch(() => ({}));
@@ -765,7 +801,7 @@
       }
       try{
         setStatus("Confirmando tu pago en MercadoPago...", "info");
-        const res = await fetch(PAYMENT_SYNC_URL, {
+        const res = await apiFetch(PAYMENT_SYNC_URL, {
           method:"POST",
           headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
           body:JSON.stringify({order_id:orderId})
@@ -795,7 +831,7 @@
         return;
       }
       try{
-        const res = await fetch(ME_URL, {headers:{Authorization:"Bearer " + authToken}});
+        const res = await apiFetch(ME_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json();
         if(!res.ok || !data.ok) throw new Error();
         user = data.user || {plan:"free", is_admin:false};
@@ -1012,7 +1048,7 @@
         return;
       }
       try{
-        const res = await fetch(HISTORY_URL, {headers:{Authorization:"Bearer " + authToken}});
+        const res = await apiFetch(HISTORY_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json().catch(() => ({}));
         const items = Array.isArray(data.items) ? data.items : [];
         $("historyCount").textContent = `${items.length} registros`;
@@ -1045,7 +1081,7 @@
     async function sendUsagePing(){
       if(!authToken || document.hidden) return;
       try{
-        await fetch(USAGE_PING_URL, {
+        await apiFetch(USAGE_PING_URL, {
           method: 'POST',
           headers: { 'Content-Type':'application/json', Authorization:'Bearer ' + authToken },
           body: JSON.stringify({ page:'sonaria', minutes:1 })
@@ -1213,7 +1249,7 @@
       setStatus(debeBuscarLetraNueva ? "Buscando letra nueva y analizando canción..." : "Analizando canción, pedagogía y adaptación...", "info");
 
       try{
-        const response = await fetch(ANALYZE_URL, {
+        const response = await apiFetch(ANALYZE_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -1392,7 +1428,7 @@
       };
       try{
         setStatus("Preparando PDF...", "info");
-        const response = await fetch(PDF_URL, {
+        const response = await apiFetch(PDF_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
