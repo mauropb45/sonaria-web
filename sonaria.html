@@ -853,7 +853,82 @@
         .replace(/^4° medio$/i, "IV° medio");
     }
 
-    function buildPedagogyStore(pedagogia){
+    // ============================================================
+    // V115.4 — Cursos unificados sobre la interfaz actual
+    // Mantiene el diseño existente; solo asegura que todas las zonas
+    // usen el mismo rango de cursos sugeridos.
+    // ============================================================
+    const COURSE_ORDER = [
+      "1° básico", "2° básico", "3° básico", "4° básico",
+      "5° básico", "6° básico", "7° básico", "8° básico",
+      "I° medio", "II° medio", "III° medio", "IV° medio"
+    ];
+
+    const COURSE_AGE = {
+      "1° básico": 6, "2° básico": 7, "3° básico": 8, "4° básico": 9,
+      "5° básico": 10, "6° básico": 11, "7° básico": 12, "8° básico": 13,
+      "I° medio": 14, "II° medio": 15, "III° medio": 16, "IV° medio": 17
+    };
+
+    function courseAgeFromLabel(label){
+      const normalized = normalizeCourseLabel(label);
+      return COURSE_AGE[normalized] || 99;
+    }
+
+    function extractMinAgeFromAnalysis(data){
+      const direct = Number(data?.edad_minima_sugerida || data?.min_age || data?.edad_minima || 0);
+      if(direct > 0) return direct;
+      const ageText = String(data?.edad_sugerida || data?.edad || "");
+      const matches = ageText.match(/\d+/g);
+      if(matches && matches.length){
+        return Math.min(...matches.map(n => Number(n)).filter(n => n > 0));
+      }
+      return 0;
+    }
+
+    function collectCourseLabelsFromAnalysis(data){
+      const labels = [];
+      const pushMany = (arr) => {
+        if(!Array.isArray(arr)) return;
+        arr.forEach(item => {
+          if(typeof item === "string") labels.push(normalizeCourseLabel(item));
+          else if(item && typeof item === "object") labels.push(normalizeCourseLabel(item.curso || item.course || item.label || ""));
+        });
+      };
+
+      pushMany(data?.cursos_sugeridos);
+      pushMany(data?.courses_suggested);
+      pushMany(data?.pedagogia?.cursos_sugeridos);
+      pushMany(data?.pedagogia?.por_curso);
+      pushMany(data?.pedagogia_adaptada?.cursos_sugeridos);
+      pushMany(data?.pedagogia_adaptada?.por_curso);
+
+      const uniqueLabels = arrayUnique(labels).filter(Boolean);
+      const ordered = COURSE_ORDER.filter(c => uniqueLabels.includes(c));
+      return ordered.length ? ordered : uniqueLabels;
+    }
+
+    function unifiedCourseLabels(data){
+      const minAge = extractMinAgeFromAnalysis(data);
+      let labels = collectCourseLabelsFromAnalysis(data);
+
+      // Si el backend todavía manda todos los cursos, los filtramos por edad mínima.
+      // Esto no cambia la interfaz: solo corrige los datos mostrados.
+      if(minAge > 0){
+        labels = (labels.length ? labels : COURSE_ORDER).filter(label => courseAgeFromLabel(label) >= minAge);
+      }
+
+      labels = COURSE_ORDER.filter(c => labels.includes(c));
+      return labels.length ? labels : collectCourseLabelsFromAnalysis(data);
+    }
+
+    function courseText(labels){
+      const list = arrayUnique(labels || []);
+      return list.length ? list.join(", ") : "—";
+    }
+
+    function buildPedagogyStore(pedagogia, allowedLabels){
+      const allowed = Array.isArray(allowedLabels) && allowedLabels.length ? allowedLabels.map(normalizeCourseLabel) : null;
       if(Array.isArray(pedagogia?.por_curso)){
         return pedagogia.por_curso.map(item => ({
           curso: normalizeCourseLabel(item.curso || item.course || ""),
@@ -861,9 +936,12 @@
           preguntas: arrayUnique(item.preguntas || []),
           actividades: arrayUnique(item.actividades || []),
           reflexiones: arrayUnique(item.reflexiones || [])
-        })).filter(x => x.curso);
+        })).filter(x => x.curso && (!allowed || allowed.includes(x.curso)))
+          .sort((a,b) => courseAgeFromLabel(a.curso) - courseAgeFromLabel(b.curso));
       }
-      const courses = arrayUnique((pedagogia?.cursos_sugeridos || []).map(normalizeCourseLabel));
+      const courses = arrayUnique((pedagogia?.cursos_sugeridos || []).map(normalizeCourseLabel))
+        .filter(curso => !allowed || allowed.includes(curso))
+        .sort((a,b) => courseAgeFromLabel(a) - courseAgeFromLabel(b));
       return courses.map(curso => ({
         curso,
         oa: arrayUnique(pedagogia?.oa_sugeridos || []),
@@ -935,12 +1013,17 @@
     }
 
     function renderPedagogia(data){
-      pedagogyStore = buildPedagogyStore(data.pedagogia || {});
-      adaptedPedagogyStore = buildPedagogyStore(data.pedagogia_adaptada || {});
+      const officialCourses = unifiedCourseLabels(data);
+      pedagogyStore = buildPedagogyStore(data.pedagogia || {}, officialCourses);
+      adaptedPedagogyStore = buildPedagogyStore(data.pedagogia_adaptada || {}, officialCourses);
       usingAdaptedPedagogy = adaptedPedagogyStore.length > 0;
       $("pedActionWrap").classList.toggle("hidden", true);
-      const activeStore = currentPedagogySource();
-      const intro = activeStore.length ? activeStore.map(x => x.curso).join(", ") : "aún no hay análisis.";
+      let activeStore = currentPedagogySource();
+      if(!activeStore.length && officialCourses.length){
+        pedagogyStore = officialCourses.map(curso => ({curso, oa:[], preguntas:[], actividades:[], reflexiones:[]}));
+        activeStore = currentPedagogySource();
+      }
+      const intro = activeStore.length ? courseText(activeStore.map(x => x.curso)) : "aún no hay análisis.";
       $("pedIntro").innerHTML = `<div class="list-item">Cursos sugeridos: ${intro}</div>`;
       renderPedagogyStore(activeStore, usingAdaptedPedagogy);
       updateProUI();
@@ -954,7 +1037,7 @@
         $("cursosSugeridos").textContent = "—";
         return;
       }
-      $("cursosSugeridos").textContent = store.map(x => x.curso).join(", ");
+      $("cursosSugeridos").textContent = courseText(store.map(x => x.curso));
       store.forEach((item, idx) => {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -1151,7 +1234,7 @@
         <div class="list-item"><strong>${escapeHtml($("titulo").value || "Sin título")} — ${escapeHtml($("artista").value || "Artista no indicado")}</strong></div>
         <div class="list-item"><strong>Resultado</strong><br>${escapeHtml(lastAnalysis.resultado || "—")}</div>
         <div class="list-item"><strong>Edad sugerida</strong><br>${escapeHtml(lastAnalysis.edad_sugerida || "—")}</div>
-        <div class="list-item"><strong>Cursos sugeridos</strong><br>${escapeHtml(currentPedagogySource().length ? currentPedagogySource().map(x=>x.curso).join(", ") : "—")}</div>
+        <div class="list-item"><strong>Cursos sugeridos</strong><br>${escapeHtml(currentPedagogySource().length ? courseText(currentPedagogySource().map(x=>x.curso)) : "—")}</div>
         <div class="list-item"><strong>Cambios visibles</strong><br>${(lastAnalysis.adaptacion?.changes || []).length}</div>
       `;
       openModal("summaryModal");
