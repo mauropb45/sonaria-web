@@ -363,7 +363,7 @@
         <div class="lyrics-actions">
           <button id="btnVerAdaptada" class="btn btn-soft" type="button">Adaptación escolar</button>
           <button id="btnVerTraducida" class="btn btn-soft" type="button">Letra traducida</button>
-          <button id="btnUsarClase" class="btn btn-orange" type="button">Usar esta versión en clase y descargar PDF</button>
+          <button id="btnUsarClase" class="btn btn-orange" type="button">Exportar resultados en PDF</button>
         </div>
         <div id="adaptedView" class="lyrics-view active"></div>
         <div id="translatedView" class="lyrics-view"></div>
@@ -391,7 +391,7 @@
       </div>
       <div id="summaryModalContent" class="list"></div>
       <div class="summary-btn-row">
-        <button id="btnDownloadPdf" class="btn btn-orange" type="button">Exportar PDF</button>
+        <button id="btnDownloadPdf" class="btn btn-orange" type="button">Exportar resultados en PDF</button>
       </div>
     </div>
   </div>
@@ -408,7 +408,7 @@
       </div>
       <div id="classroomContent" class="school-use-shell"></div>
       <div class="summary-btn-row">
-        <button id="btnExportClassroomPdf" class="btn btn-orange" type="button">Exportar PDF</button>
+        <button id="btnExportClassroomPdf" class="btn btn-orange" type="button">Exportar resultados en PDF</button>
       </div>
     </div>
   </div>
@@ -1281,6 +1281,28 @@
       `;
     }
 
+    function buildPdfPedagogyPayload(officialCoursesForPdf){
+      const source = currentPedagogySource();
+      const porCurso = (source || []).map(item => ({
+        curso: normalizeCourseLabel(item.curso || ""),
+        oa: arrayUnique(item.oa || item.oa_sugeridos || []),
+        oa_sugeridos: arrayUnique(item.oa || item.oa_sugeridos || []),
+        preguntas: arrayUnique(item.preguntas || []),
+        actividades: arrayUnique(item.actividades || []),
+        reflexiones: arrayUnique(item.reflexiones || [])
+      })).filter(item => item.curso);
+
+      const cursos = porCurso.length
+        ? porCurso.map(item => item.curso)
+        : (officialCoursesForPdf || []).map(normalizeCourseLabel).filter(Boolean);
+
+      return {
+        cursos_sugeridos: arrayUnique(cursos),
+        enfoque: lastAnalysis?.pedagogia?.enfoque || lastAnalysis?.pedagogia_adaptada?.enfoque || "",
+        por_curso: porCurso
+      };
+    }
+
     function getSelectedPedagogyCourseLabel(){
       const source = currentPedagogySource();
       const selected = source && source[selectedPedIndex];
@@ -1304,6 +1326,13 @@
       }
       const officialCoursesForPdf = lastAnalysis ? unifiedCourseLabels(lastAnalysis) : [];
       const selectedCourseForPdf = normalizeCourseLabel(courseLabelOverride || getSelectedPedagogyCourseLabel() || officialCoursesForPdf[0] || "");
+      const pedagogiaPdf = buildPdfPedagogyPayload(officialCoursesForPdf);
+      const analysisForPdf = {
+        ...lastAnalysis,
+        pedagogia: pedagogiaPdf,
+        // Si pedagogía adaptada viene vacía, no la mandamos vacía porque el backend la prioriza sobre pedagogía.
+        pedagogia_adaptada: (usingAdaptedPedagogy && adaptedPedagogyStore.length) ? pedagogiaPdf : null
+      };
       try{
         setStatus("Preparando PDF...", "info");
         const response = await fetch(PDF_URL, {
@@ -1323,10 +1352,11 @@
               ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
               : [],
             analysis: {
-              ...lastAnalysis,
+              ...analysisForPdf,
               adapted_lines: Array.isArray(lastAnalysis?.adaptacion?.adapted_lines)
                 ? lastAnalysis.adaptacion.adapted_lines.filter(line => String(line || "").trim() && String(line || "").trim() !== "—")
                 : [],
+              curso: selectedCourseForPdf,
               curso_exportado: selectedCourseForPdf
             }
           })
