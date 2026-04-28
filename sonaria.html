@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
+  <!-- SonarIA V118.5: sesión única + búsqueda estable A→B -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -551,13 +552,16 @@
 
     function handleSongIdentityChange(){
       const key = currentSongKey();
-      if(lastAnalysis && lyricsState.key && lyricsState.key !== key){
-        resetAnalysisOnly("Nueva canción detectada. Se limpiaron los resultados anteriores.");
-      }
-      if(lyricsState.source === "auto" && lyricsState.key && lyricsState.key !== key){
-        if($("texto")) $("texto").value = "";
+      if(lyricsState.key && lyricsState.key !== key){
+        // V118.5: al cambiar título/artista se limpia SIEMPRE la letra asociada
+        // a la canción anterior. Esto evita que canción B reutilice letra/análisis de canción A.
+        if($("texto") && $("texto").value.trim()){
+          $("texto").value = "";
+        }
         lyricsState = { key:"", source:"empty" };
-        setStatus("Nueva búsqueda lista. La letra anterior fue limpiada para evitar analizar la canción previa.", "info");
+      }
+      if(lastAnalysis){
+        resetAnalysisOnly("Nueva canción detectada. Se limpiaron letra y resultados anteriores.");
       }
     }
 
@@ -1239,10 +1243,21 @@
     async function analizarCancion(){
       const titulo = $("titulo").value.trim();
       const artista = $("artista").value.trim();
-      const letra = $("texto").value;
+      let letra = $("texto").value;
       const key = normalizeSongKey(titulo, artista);
+
+      // V118.5: si el texto pertenece a otra canción, no se reutiliza.
+      // Esto corrige el ciclo canción A -> canción B sin recargar página.
+      if(lyricsState.key && lyricsState.key !== key){
+        letra = "";
+        if($("texto")) $("texto").value = "";
+        lyricsState = { key:"", source:"empty" };
+      }
+
+      resetAnalysisOnly();
+
       const letraPerteneceACancionActual = lyricsState.key === key;
-      const debeBuscarLetraNueva = letra.trim() === "" || (lyricsState.source === "auto" && !letraPerteneceACancionActual);
+      const debeBuscarLetraNueva = letra.trim() === "" || !letraPerteneceACancionActual;
       const textoParaAnalizar = debeBuscarLetraNueva ? "" : letra;
 
       clearStatus();
@@ -1264,6 +1279,10 @@
             cursos: selectedCourses
           })
         });
+
+        if(!response){
+          return;
+        }
 
         const data = await response.json().catch(() => ({}));
 
