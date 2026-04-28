@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin | SonarIA</title>
-  <meta name="description" content="Panel administrativo de SonarIA." />
+  <title>Admin | SonarIA v1.2.0</title>
+  <meta name="description" content="Panel administrativo de SonarIA v1.2.0." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@
     <div class="topbar">
       <div class="brand-block">
         <div class="brand">Panel Admin Sonar<span class="ia">IA</span></div>
-        <div class="sub">Gestión real de usuarios, pagos, notas internas e historial de análisis</div>
+        <div class="sub">v1.2.0 · Panel conectado a usuarios, licencias, uso e historial</div>
       </div>
       <div class="actions">
         <a class="btn btn-ghost" href="/sonaria.html">Ir a SonarIA</a>
@@ -136,8 +136,10 @@
 
   <script>
     const API = "https://sonaria-api.onrender.com";
-    let searchTimer = null;
+    const VERSION = "SonarIA v1.2.0 · Panel Admin conectado";
     let selectedEmail = "";
+    let lastAdminData = null;
+    let searchTimer = null;
 
     function getToken(){
       return localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
@@ -147,26 +149,70 @@
     function moneyCLP(value){ const n = Number(value || 0); return n.toLocaleString("es-CL", { style:"currency", currency:"CLP", maximumFractionDigits:0 }); }
     function prettyDate(value){ if(!value) return "—"; try{ return new Date(value).toLocaleString("es-CL"); }catch{ return value; } }
     function escapeHtml(value){ return String(value || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;"); }
+    function norm(value){ return String(value || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
 
     async function fetchJson(url, options = {}){
       const res = await fetch(url, options);
       const data = await res.json().catch(() => ({}));
-      if(res.status === 401){ localStorage.setItem("mejoraria_logout_message", data.detail || "Tu sesión expiró. Vuelve a entrar."); window.location.href = "/login.html"; throw new Error("Sesión expirada"); }
+      if(res.status === 401){
+        localStorage.removeItem("mejoraria_token");
+        localStorage.removeItem("token");
+        localStorage.removeItem("access_token");
+        localStorage.setItem("mejoraria_logout_message", data.detail || "Tu sesión expiró o fue reemplazada. Vuelve a entrar.");
+        window.location.href = "/login.html";
+        throw new Error("Sesión expirada");
+      }
+      if(res.status === 403){ throw new Error(data.detail || "Acceso solo para administración."); }
       if(!res.ok){ throw new Error(data.detail || "No fue posible completar la solicitud."); }
       return data;
     }
 
-    function renderTopSongs(items){
+    function planClass(plan){
+      const p = String(plan || "free").toLowerCase();
+      return (p.includes("pro") || p.includes("enterprise") || p.includes("school")) ? "pro" : "free";
+    }
+
+    function usersFromData(data){
+      if(Array.isArray(data?.usuarios)) return data.usuarios;
+      if(Array.isArray(data?.users)) return data.users;
+      if(Array.isArray(data?.top_users)) return data.top_users;
+      return [];
+    }
+
+    function searchesFromData(data){
+      if(Array.isArray(data?.busquedas_recientes)) return data.busquedas_recientes;
+      if(Array.isArray(data?.searches)) return data.searches;
+      if(Array.isArray(data?.actividad_reciente)) return data.actividad_reciente;
+      return [];
+    }
+
+    function statsFromData(data){
+      return data?.stats || data?.resumen || data?.uso || {};
+    }
+
+    function licensesFromData(data){
+      return data?.licencias || data?.licenses || {};
+    }
+
+    function renderTopSongsFromSearches(searches){
       const box = document.getElementById("topSongsBox");
-      const list = Array.isArray(items) ? items : [];
+      const counts = new Map();
+      (searches || []).forEach(item => {
+        const title = item.titulo || item.title || "Sin título";
+        const artist = item.artista || item.artist || "Artista no indicado";
+        const key = norm(title + "::" + artist);
+        if(!counts.has(key)) counts.set(key, { title, artist, count: 0 });
+        counts.get(key).count += 1;
+      });
+      const list = Array.from(counts.values()).sort((a,b) => b.count - a.count).slice(0, 8);
       if(!list.length){ box.innerHTML = "<div class='empty'>Aún no hay suficientes datos.</div>"; return; }
       box.innerHTML = list.map((item, idx) => `
         <div class="top-song">
           <div>
-            <strong>#${idx + 1} · ${escapeHtml(item.title || "Sin título")}</strong>
-            <span>${escapeHtml(item.artist || "Artista no indicado")}</span>
+            <strong>#${idx + 1} · ${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.artist)}</span>
           </div>
-          <strong>${escapeHtml(item.count ?? 0)}</strong>
+          <strong>${escapeHtml(item.count)}</strong>
         </div>`).join("");
     }
 
@@ -174,91 +220,110 @@
       const box = document.getElementById("recentActivityBox");
       const list = Array.isArray(items) ? items : [];
       if(!list.length){ box.innerHTML = "<div class='empty'>Aún no hay actividad reciente.</div>"; return; }
-      box.innerHTML = list.map(item => `
+      box.innerHTML = list.slice(0, 20).map(item => `
         <div class="activity-item">
-          <strong>${escapeHtml(item.name || item.email || "Usuario")}</strong>
-          <span>${escapeHtml(item.title || "Sin título")} — ${escapeHtml(item.artist || "Artista")}</span>
-          <span>${escapeHtml(item.result || "—")} · ${escapeHtml(prettyDate(item.date))}</span>
+          <strong>${escapeHtml(item.nombre || item.name || item.email || (item.usuario_id ? "Usuario " + item.usuario_id : "Usuario"))}</strong>
+          <span>${escapeHtml(item.titulo || item.title || "Sin título")} — ${escapeHtml(item.artista || item.artist || "Artista")}</span>
+          <span>${escapeHtml(item.resultado || item.result || "—")} · ${escapeHtml(prettyDate(item.fecha || item.date || item.created_at))}</span>
         </div>`).join("");
     }
 
-    async function loadDashboard(){
-      const data = await fetchJson(API + "/admin/dashboard", { headers: { "Authorization": "Bearer " + getToken() } });
-      const s = data.summary || {};
-      document.getElementById("heroUsers").textContent = s.total_users ?? "—";
-      document.getElementById("heroPro").textContent = s.total_pro ?? "—";
-      document.getElementById("heroAnalyses").textContent = s.total_analyses ?? "—";
-      document.getElementById("totalUsers").textContent = s.total_users ?? "—";
-      document.getElementById("totalPro").textContent = s.total_pro ?? "—";
-      document.getElementById("totalFree").textContent = s.total_free ?? "—";
-      document.getElementById("totalRevenue").textContent = moneyCLP(s.revenue_total ?? 0);
-      document.getElementById("expiringSoon").textContent = s.expiring_soon ?? "—";
-      renderTopSongs(data.top_songs || []);
-      renderRecentActivity(data.recent_activity || []);
+    function renderStats(data){
+      const stats = statsFromData(data);
+      const lic = licensesFromData(data);
+      const users = usersFromData(data);
+      const searches = searchesFromData(data);
+      const totalUsers = stats.usuarios ?? stats.total_users ?? users.length ?? "—";
+      const totalPro = stats.usuarios_pro ?? stats.total_pro ?? users.filter(u => planClass(u.plan) === "pro").length ?? "—";
+      const totalAnalyses = stats.analisis_totales ?? stats.total_analisis ?? stats.total_analyses ?? searches.length ?? "—";
+      const totalCapacity = lic.total ?? stats.capacidad_total_cuentas ?? 0;
+      const used = lic.usadas ?? lic.used ?? users.length ?? 0;
+      const available = lic.disponibles ?? lic.available ?? Math.max(0, Number(totalCapacity || 0) - Number(used || 0));
+
+      document.getElementById("heroUsers").textContent = totalUsers;
+      document.getElementById("heroPro").textContent = totalPro;
+      document.getElementById("heroAnalyses").textContent = totalAnalyses;
+      document.getElementById("totalUsers").textContent = totalUsers;
+      document.getElementById("totalPro").textContent = totalPro;
+      document.getElementById("totalFree").textContent = Math.max(0, Number(totalUsers || 0) - Number(totalPro || 0));
+      document.getElementById("totalRevenue").textContent = moneyCLP(stats.ingresos_pagados ?? stats.revenue_total ?? 0);
+      document.getElementById("expiringSoon").textContent = totalCapacity ? `${available} disp.` : (stats.expiring_soon ?? "—");
     }
 
-    async function loadUsers(){
-      const q = encodeURIComponent(document.getElementById("search").value.trim());
-      const data = await fetchJson(API + "/admin/users?q=" + q, { headers: { "Authorization": "Bearer " + getToken() } });
+    function renderUsers(data){
       const tbody = document.getElementById("usersBody");
-      const users = Array.isArray(data.users) ? data.users : [];
+      const q = norm(document.getElementById("search").value.trim());
+      let users = usersFromData(data).map(u => ({
+        id: u.id || u.usuario_id || "",
+        name: u.nombre || u.name || u.email || "Usuario",
+        email: u.email || "",
+        plan: u.plan || "free",
+        plan_label: u.plan_label || u.plan || "free",
+        is_admin: !!(u.is_admin || u.admin),
+        note: u.note || u.nota || "",
+        busquedas: u.busquedas ?? u.analisis ?? u.searches ?? 0,
+        minutos: u.minutos ?? u.minutes ?? 0,
+        pro_expires_at: u.pro_expires_at || u.vence || ""
+      }));
+      if(q){
+        users = users.filter(u => norm(`${u.name} ${u.email} ${u.plan_label} ${u.note}`).includes(q));
+      }
       if(!users.length){ tbody.innerHTML = "<tr><td colspan='5' class='empty'>No encontré usuarios con ese criterio.</td></tr>"; return; }
-      tbody.innerHTML = users.map(user => {
-        const isAdmin = !!user.is_admin;
-        const planClass = (user.plan || "free") === "pro" ? "pro" : "free";
-        return `
-          <tr data-email="${escapeHtml(user.email)}" onclick="selectUser('${encodeURIComponent(user.email)}')">
-            <td><strong>${escapeHtml(user.name || user.email)}</strong><div class="small">${escapeHtml(user.email)}</div></td>
-            <td><span class="pill ${planClass}">${escapeHtml(user.plan || "free")}</span></td>
-            <td>${escapeHtml(prettyDate(user.pro_expires_at))}</td>
-            <td>${isAdmin ? "<span class='pill admin'>Admin</span>" : "<span class='small'>No</span>"}</td>
-            <td><div class="small">${escapeHtml(user.note || "") || "—"}</div></td>
-          </tr>`;
-      }).join("");
+      tbody.innerHTML = users.map(user => `
+        <tr data-email="${escapeHtml(user.email)}" onclick="selectUser('${encodeURIComponent(user.email || user.id || user.name)}')">
+          <td><strong>${escapeHtml(user.name || user.email)}</strong><div class="small">${escapeHtml(user.email || "ID " + user.id)} · ${escapeHtml(user.busquedas)} análisis · ${escapeHtml(user.minutos)} min</div></td>
+          <td><span class="pill ${planClass(user.plan)}">${escapeHtml(user.plan_label || user.plan || "free")}</span></td>
+          <td>${escapeHtml(prettyDate(user.pro_expires_at))}</td>
+          <td>${user.is_admin ? "<span class='pill admin'>Admin</span>" : "<span class='small'>No</span>"}</td>
+          <td><div class="small">${escapeHtml(user.note || "") || "—"}</div></td>
+        </tr>`).join("");
     }
 
-    function debouncedLoadUsers(){ clearTimeout(searchTimer); searchTimer = setTimeout(loadUsers, 250); }
-    async function selectUser(encodedEmail){ const email = decodeURIComponent(encodedEmail); selectedEmail = email; document.getElementById("email").value = email; await loadHistory(email); }
-
-    async function loadHistory(email){
-      const data = await fetchJson(API + "/admin/user/history?email=" + encodeURIComponent(email), { headers: { "Authorization": "Bearer " + getToken() } });
-      const user = data.user || {}; const history = Array.isArray(data.history) ? data.history : [];
-      document.getElementById("historyUser").innerHTML = `<strong>${escapeHtml(user.name || user.email || "Usuario")}</strong><span>${escapeHtml(user.email || "")} · Plan: ${escapeHtml(user.plan || "free")} · Vence: ${escapeHtml(prettyDate(user.pro_expires_at))}</span>`;
+    function renderHistoryForUser(identifier){
+      const data = lastAdminData || {};
+      const users = usersFromData(data);
+      const searches = searchesFromData(data);
+      const decoded = decodeURIComponent(identifier || "");
+      const user = users.find(u => (u.email && u.email === decoded) || String(u.id || u.usuario_id || u.nombre || u.name) === decoded) || {};
+      selectedEmail = user.email || decoded;
+      document.getElementById("email").value = selectedEmail;
+      document.getElementById("note").value = user.note || user.nota || "";
+      document.getElementById("historyUser").innerHTML = `<strong>${escapeHtml(user.nombre || user.name || user.email || decoded || "Usuario")}</strong><span>${escapeHtml(user.email || "")} · Plan: ${escapeHtml(user.plan_label || user.plan || "free")} · Análisis: ${escapeHtml(user.busquedas ?? user.analisis ?? 0)}</span>`;
+      const userId = user.id || user.usuario_id;
+      const history = searches.filter(item => {
+        if(userId && String(item.usuario_id || item.user_id || "") === String(userId)) return true;
+        if(user.email && String(item.email || "") === String(user.email)) return true;
+        return false;
+      });
       const list = document.getElementById("historyList");
-      if(!history.length){ list.innerHTML = "<div class='empty'>Este usuario aún no tiene historial registrado.</div>"; return; }
-      list.innerHTML = history.map(item => {
-        if(item.type === "payment"){
-          return `<div class="history-item"><strong>Pago ${escapeHtml(item.status || "—")} · ${moneyCLP(item.amount || 0)}</strong><div class="history-meta">Proveedor: ${escapeHtml(item.provider || "—")} · Modalidad: ${escapeHtml(item.cadence || "—")}<br>Fecha: ${escapeHtml(prettyDate(item.date))}<br>Referencia: ${escapeHtml(item.external_reference || "—")}</div></div>`;
-        }
-        const themes = Array.isArray(item.themes) ? item.themes : [];
-        return `<div class="history-item"><strong>Búsqueda / análisis · ${escapeHtml(item.title || "Sin título")} — ${escapeHtml(item.artist || "Artista no indicado")}</strong><div class="history-meta">Resultado: ${escapeHtml(item.result || "—")}<br>Edad sugerida: ${escapeHtml(item.age_suggested || "—")} · Riesgo: ${escapeHtml(item.risk ?? "—")}<br>Fuente: ${escapeHtml(item.source || "—")} · Fecha: ${escapeHtml(prettyDate(item.date))}</div>${themes.length ? `<div class="history-tags">${themes.map(t => `<span class="history-tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}</div>`;
-      }).join("");
-      document.getElementById("note").value = user.note || "";
+      if(!history.length){ list.innerHTML = "<div class='empty'>Este usuario aún no tiene historial visible en el resumen.</div>"; return; }
+      list.innerHTML = history.map(item => `
+        <div class="history-item">
+          <strong>Búsqueda / análisis · ${escapeHtml(item.titulo || item.title || "Sin título")} — ${escapeHtml(item.artista || item.artist || "Artista no indicado")}</strong>
+          <div class="history-meta">Resultado: ${escapeHtml(item.resultado || item.result || "—")}<br>Fecha: ${escapeHtml(prettyDate(item.fecha || item.date || item.created_at))}</div>
+        </div>`).join("");
     }
 
-    async function activatePro(){
-      const email = document.getElementById("email").value.trim(); const days = Number(document.getElementById("days").value || 30); const note = document.getElementById("note").value.trim();
-      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
-      setStatus("Activando Pro temporal...", "info");
-      try{ await fetchJson(API + "/admin/pro/activate", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email, days, note }) }); setStatus("Pro temporal activado correctamente.", "ok"); await reloadEverything(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible activar Pro.", "error"); }
+    async function loadAdminResumen(){
+      const data = await fetchJson(API + "/admin/resumen", { headers: { "Authorization": "Bearer " + getToken() } });
+      lastAdminData = data;
+      renderStats(data);
+      renderUsers(data);
+      renderTopSongsFromSearches(searchesFromData(data));
+      renderRecentActivity(searchesFromData(data));
+      setStatus(VERSION + " cargado correctamente.", "ok");
     }
 
-    async function revokePro(){
-      const email = document.getElementById("email").value.trim();
-      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
-      setStatus("Revocando Pro...", "info");
-      try{ await fetchJson(API + "/admin/pro/revoke", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email }) }); setStatus("Pro revocado correctamente.", "ok"); await reloadEverything(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible revocar Pro.", "error"); }
-    }
+    function debouncedLoadUsers(){ clearTimeout(searchTimer); searchTimer = setTimeout(() => renderUsers(lastAdminData || {}), 250); }
+    async function selectUser(encodedEmail){ renderHistoryForUser(encodedEmail); }
 
-    async function saveNoteOnly(){
-      const email = document.getElementById("email").value.trim(); const note = document.getElementById("note").value.trim();
-      if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
-      setStatus("Guardando nota...", "info");
-      try{ await fetchJson(API + "/admin/users/update", { method:"POST", headers: authHeaders(), body: JSON.stringify({ email, note }) }); setStatus("Nota guardada correctamente.", "ok"); await loadUsers(); if(selectedEmail === email) await loadHistory(email); }catch(error){ setStatus(error.message || "No fue posible guardar la nota.", "error"); }
-    }
+    async function activatePro(){ setStatus("La asignación manual de Pro se conectará en V119.3. Por ahora el panel muestra datos reales.", "info"); }
+    async function revokePro(){ setStatus("La revocación manual se conectará en V119.3. Por ahora el panel muestra datos reales.", "info"); }
+    async function saveNoteOnly(){ setStatus("Las notas internas se conectarán en V119.3. Por ahora el panel muestra datos reales.", "info"); }
 
     async function reloadEverything(){
-      try{ await Promise.all([loadDashboard(), loadUsers()]); if(selectedEmail){ await loadHistory(selectedEmail); } }catch(error){ setStatus(error.message || "No fue posible actualizar el panel.", "error"); }
+      try{ await loadAdminResumen(); if(selectedEmail){ renderHistoryForUser(encodeURIComponent(selectedEmail)); } }
+      catch(error){ setStatus(error.message || "No fue posible actualizar el panel.", "error"); }
     }
 
     window.addEventListener("load", reloadEverything);
