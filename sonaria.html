@@ -424,6 +424,21 @@
     </div>
   </div>
 
+  <div id="songSuggestionModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>🔎</span><h3>¿Te refieres a...?</h3></div>
+        <button class="btn btn-ghost" type="button" data-close="songSuggestionModal">Cerrar</button>
+      </div>
+      <div class="small-muted">
+        No pudimos confirmar la canción con ese título/artista. Puede haber una pequeña diferencia de escritura. Elige una opción para cargarla y analizarla nuevamente.
+      </div>
+      <div id="songSuggestionList" class="list" style="margin-top:14px">
+        <div class="list-item">Buscando sugerencias...</div>
+      </div>
+    </div>
+  </div>
+
   <div id="classroomModal" class="modal">
     <div class="modal-box">
       <div class="section-topline">
@@ -511,7 +526,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.2.5 · versión docente PRO";
+    const SONARIA_VERSION = "SonarIA v1.2.6 · V121.1 · versión docente PRO";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -540,7 +555,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.2.5 · versión docente PRO";
+      if(el) el.textContent = "v1.2.6 · V121.1 · versión docente PRO";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -727,8 +742,9 @@
       "Generando pedagogía",
       "Preparando PDF"
     ];
-    let analysisProgressTimer = null;
 
+    // V121.1: progreso por hitos reales del flujo.
+    // No avanza por temporizador: solo cuando el proceso pasa a la siguiente fase.
     function setProgressStep(index, customText=""){
       const wrap = $("analysisProgress");
       const text = $("progressText");
@@ -750,32 +766,20 @@
     }
 
     function iniciarProgresoAnalisis(){
-      if(analysisProgressTimer) clearInterval(analysisProgressTimer);
+      const wrap = $("analysisProgress");
       const bar = $("progressBar");
       const percent = $("progressPercent");
+      if(wrap) wrap.classList.remove("hidden");
       if(bar) bar.style.width = "0%";
       if(percent) percent.textContent = "0%";
       ANALYSIS_PROGRESS_STEPS.forEach((_, i) => {
         const el = $("progressStep" + i);
         if(el){ el.classList.remove("done", "active"); }
       });
-      let i = 0;
       setProgressStep(0);
-      analysisProgressTimer = setInterval(() => {
-        i = Math.min(i + 1, ANALYSIS_PROGRESS_STEPS.length - 1);
-        setProgressStep(i);
-        if(i >= ANALYSIS_PROGRESS_STEPS.length - 1){
-          clearInterval(analysisProgressTimer);
-          analysisProgressTimer = null;
-        }
-      }, 850);
     }
 
     function finalizarProgresoAnalisis(ok=true){
-      if(analysisProgressTimer){
-        clearInterval(analysisProgressTimer);
-        analysisProgressTimer = null;
-      }
       const wrap = $("analysisProgress");
       if(!wrap) return;
       if(ok){
@@ -1317,6 +1321,89 @@
       $("translatedView").innerHTML = `<div class="pair-grid">${content}</div>`;
     }
 
+    function similarityScore(a = "", b = ""){
+      const left = String(a || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+      const right = String(b || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+      if(!left || !right) return 0;
+      if(left === right) return 1;
+      if(right.includes(left) || left.includes(right)) return 0.86;
+      const aWords = new Set(left.split(" ").filter(Boolean));
+      const bWords = new Set(right.split(" ").filter(Boolean));
+      let common = 0;
+      aWords.forEach(w => { if(bWords.has(w)) common++; });
+      return common / Math.max(aWords.size, bWords.size, 1);
+    }
+
+    async function fetchSongSuggestions(title, artist){
+      const query = [title, artist].filter(Boolean).join(" ").trim();
+      if(!query) return [];
+      try{
+        const url = "https://itunes.apple.com/search?entity=song&limit=8&term=" + encodeURIComponent(query);
+        const res = await fetch(url);
+        const data = await res.json().catch(() => ({}));
+        const rows = Array.isArray(data.results) ? data.results : [];
+        const seen = new Set();
+        return rows.map(item => {
+          const t = item.trackName || "";
+          const a = item.artistName || "";
+          const score = (similarityScore(title, t) * 0.72) + (artist ? similarityScore(artist, a) * 0.28 : 0.18);
+          return {title:t, artist:a, album:item.collectionName || "", year:String(item.releaseDate || "").slice(0,4), score};
+        }).filter(item => {
+          const key = normalizeSongKey(item.title, item.artist);
+          if(!item.title || !item.artist || seen.has(key)) return false;
+          seen.add(key);
+          return item.score >= 0.32;
+        }).sort((x,y) => y.score - x.score).slice(0,5);
+      }catch(err){
+        console.warn("No se pudieron cargar sugerencias", err);
+        return [];
+      }
+    }
+
+    function openSongSuggestionModal(suggestions){
+      const box = $("songSuggestionList");
+      if(!box) return;
+      if(!suggestions || !suggestions.length){
+        box.innerHTML = '<div class="list-item">No encontré sugerencias cercanas. Revisa título/artista o pega la letra manualmente.</div>';
+        openModal("songSuggestionModal");
+        return;
+      }
+      box.innerHTML = suggestions.map((item, idx) => {
+        return '<div class="list-item" style="display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap">'
+          + '<div><strong>' + (idx + 1) + '. ' + escapeHtml(item.title) + '</strong><br>'
+          + '<span class="small-muted">' + escapeHtml(item.artist)
+          + (item.album ? ' · ' + escapeHtml(item.album) : '')
+          + (item.year ? ' · ' + escapeHtml(item.year) : '') + '</span></div>'
+          + '<button class="btn btn-primary" type="button" data-suggestion-index="' + idx + '">Usar y analizar</button></div>';
+      }).join("");
+      box.querySelectorAll("[data-suggestion-index]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = suggestions[Number(btn.dataset.suggestionIndex || 0)];
+          if(!item) return;
+          $("titulo").value = item.title;
+          $("artista").value = item.artist;
+          if($("texto")) $("texto").value = "";
+          lyricsState = {key:"", source:"empty"};
+          resetAnalysisOnly("Sugerencia seleccionada. Buscando letra nueva...");
+          closeModal("songSuggestionModal");
+          analizarCancion();
+        });
+      });
+      openModal("songSuggestionModal");
+    }
+
+    async function maybeSuggestSongAfterFailure(){
+      const title = $("titulo")?.value.trim() || "";
+      const artist = $("artista")?.value.trim() || "";
+      if(!title) return false;
+      const suggestions = await fetchSongSuggestions(title, artist);
+      if(suggestions.length){
+        openSongSuggestionModal(suggestions);
+        return true;
+      }
+      return false;
+    }
+
     function renderResult(data){
       lastAnalysis = data;
       $("resultBadge").textContent = data.resultado || "Análisis listo";
@@ -1380,11 +1467,16 @@
           return;
         }
 
+        setProgressStep(1);
         const data = await response.json().catch(() => ({}));
 
         if(!response.ok){
-          throw new Error(data.detail || data.error || "Error en servidor");
+          const error = new Error(data.detail || data.error || "Error en servidor");
+          error.sonariaData = data;
+          throw error;
         }
+
+        setProgressStep(2);
 
         if(data.texto && debeBuscarLetraNueva){
           $("texto").value = data.texto;
@@ -1393,13 +1485,23 @@
           lyricsState = { key, source: textoParaAnalizar.trim() ? "manual" : "empty" };
         }
 
+        setProgressStep(3);
         renderResult(data);
         finalizarProgresoAnalisis(true);
         setStatus("Análisis listo.", "success");
       }catch(err){
         console.error(err);
         finalizarProgresoAnalisis(false);
-        setStatus(err && err.message ? err.message : "No pude conectar con el backend o el análisis falló en el servidor.", "error");
+        const msg = err && err.message ? err.message : "No pude conectar con el backend o el análisis falló en el servidor.";
+        setStatus(msg, "error");
+
+        // Si la búsqueda automática falló, ofrecemos alternativas por posible error de escritura.
+        if(debeBuscarLetraNueva){
+          const opened = await maybeSuggestSongAfterFailure();
+          if(opened){
+            setStatus("No se encontró la canción exacta. Revisa las sugerencias: ¿te refieres a alguna de ellas?", "info");
+          }
+        }
       }
     }
 
