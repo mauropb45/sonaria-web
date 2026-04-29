@@ -1,306 +1,144 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planes | SonarIA</title>
-  <meta name="description" content="Planes SonarIA Pro para docentes y equipos." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f7f9fd;
-      --panel:#fffffff2;
-      --line:#d7deeb;
-      --text:#243043;
-      --muted:#66758c;
-      --blue:#4b82ff;
-      --blue2:#2563eb;
-      --green:#22c55e;
-      --green2:#14d68f;
-      --orange:#ff9d46;
-      --orange2:#ff7b20;
-      --shadow:0 18px 48px rgba(31,44,74,.10);
-      --radius:28px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left,rgba(145,183,255,.28),transparent 23%),
-        radial-gradient(circle at bottom right,rgba(75,130,255,.12),transparent 20%),
-        linear-gradient(180deg,#f7f9fd,#eef3fa);
-      min-height:100vh;
-    }
-    .wrap{max-width:1220px;margin:0 auto;padding:24px 18px 64px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-    .brand h1{margin:0;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:900;letter-spacing:-.07em;line-height:.9}
-    .brand .ia{color:var(--blue)}
-    .brand-sub{font-size:.95rem;font-weight:800;color:var(--muted)}
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{min-height:50px;padding:0 18px;border:none;border-radius:16px;cursor:pointer;font:inherit;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s ease}
-    .btn:hover{transform:translateY(-1px)}
-    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
-    .btn-blue{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;box-shadow:0 14px 34px rgba(75,130,255,.22)}
-    .btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#082313;box-shadow:0 14px 34px rgba(35,198,106,.18)}
-    .btn-orange{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#1f1406;box-shadow:0 14px 34px rgba(255,157,70,.22)}
-    .card{background:var(--panel);border:1px solid rgba(255,255,255,.92);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(8px)}
-    .hero{padding:28px;margin-bottom:18px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#2a5fe0;font-size:.84rem;font-weight:900}
-    .hero h2{margin:12px 0 8px;font-size:clamp(2.4rem,5vw,4.4rem);letter-spacing:-.08em;line-height:.92}
-    .hero p{margin:0;color:var(--muted);font-size:1.08rem;line-height:1.8;max-width:900px}
-    .user{margin-top:16px;padding:14px 16px;border-radius:18px;background:#fff;border:1px solid var(--line);font-weight:900}
-    .status{margin-top:10px;min-height:24px;font-weight:900;line-height:1.5}
-    .plans{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
-    .enterprise{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .plan{padding:26px;position:relative;overflow:hidden}
-    .plan.recommended{border:1px solid #afd1ff}
-    .plan.enterprise-plan{border:1px solid #bfe8d0}
-    .plan-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
-    .plan h3{margin:0;font-size:1.8rem;letter-spacing:-.05em}
-    .badge{padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #cfe0ff;color:#2a5fe0;font-size:.8rem;font-weight:900;white-space:nowrap}
-    .badge.green{background:#eafaf1;border-color:#bdeccd;color:#108043}
-    .price{display:flex;align-items:flex-end;gap:8px;margin:12px 0}
-    .price strong{font-size:3.2rem;letter-spacing:-.08em;line-height:1}
-    .price span{color:var(--muted);font-weight:900;margin-bottom:8px}
-    .copy{color:var(--muted);line-height:1.75}
-    .features{display:grid;gap:10px;margin:18px 0;padding:0;list-style:none}
-    .features li{padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);line-height:1.65}
-    .features li::before{content:'✦ ';color:var(--blue);font-weight:900}
-    .section-title{display:flex;justify-content:space-between;align-items:end;gap:14px;margin:28px 0 14px}
-    .section-title h2{margin:0;font-size:2rem;letter-spacing:-.05em}
-    .section-title p{margin:0;color:var(--muted);line-height:1.6}
-    .foot{text-align:center;margin-top:22px;color:var(--muted);line-height:1.7}
-    @media(max-width:920px){.plans,.enterprise{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:stretch}.actions .btn{width:100%}.hero,.plan{padding:20px}.price strong{font-size:2.6rem}.section-title{display:block}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes SonarIA</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.note {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 260px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.price {
+  font-size: 24px;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+button {
+  background: #2f6fed;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1c4fd6;
+}
+</style>
 </head>
+
 <body>
-  <main class="wrap">
-    <header class="topbar">
-      <div class="brand"><h1>Sonar<span class="ia">IA</span></h1><div class="brand-sub">Planes y beneficios Pro</div></div>
-      <div class="actions">
-        <button class="btn btn-ghost" onclick="location.href='/sonaria.html'">Volver a SonarIA</button>
-        <button class="btn btn-ghost" onclick="location.href='/index.html'">Inicio</button>
-      </div>
-    </header>
 
-    <section class="card hero">
-      <div class="eyebrow">💳 Acceso Pro · SonarIA v1.1.0</div>
-      <h2>Elige cómo desbloquear SonarIA Pro.</h2>
-      <p>La versión Free mantiene el análisis base. Pro desbloquea voz, capas avanzadas de uso en aula, OA y pedagogía completa, adaptación, traducción y exportación PDF para preparar clases con más profundidad.</p>
-      <div id="userInfo" class="user">Validando sesión...</div>
-      <div id="status" class="status"></div>
-    </section>
+<h1>Planes SonarIA</h1>
 
-    <section class="plans">
-      <article class="card plan">
-        <div class="plan-head"><h3>Pro mensual</h3><span class="badge">Flexible</span></div>
-        <div class="price"><strong>$4.990</strong><span>/ mes</span></div>
-        <p class="copy">Ideal para probar Pro, preparar clases puntuales y acceder a las capas avanzadas cuando las necesites.</p>
-        <ul class="features">
-          <li>Adaptación y traducción completas.</li>
-          <li>OA, actividades, preguntas y reflexiones por curso.</li>
-          <li>PDF exportable para uso docente.</li>
-          <li>Historial y reutilización de canciones.</li>
-        </ul>
-        <button id="btnMonthly" class="btn btn-blue" type="button">Pagar mensual con MercadoPago</button>
-      </article>
+<div class="note">
+Puedes usar SonarIA con Gmail o con correos institucionales asociados a Google Workspace.
+</div>
 
-      <article class="card plan recommended">
-        <div class="plan-head"><h3>Pro anual</h3><span class="badge">Mejor valor</span></div>
-        <div class="price"><strong>$49.000</strong><span>/ año</span></div>
-        <p class="copy">Pensado para docentes que usarán SonarIA durante el año escolar con continuidad y planificación.</p>
-        <ul class="features">
-          <li>Todo lo del plan mensual.</li>
-          <li>Ahorro frente al pago mes a mes.</li>
-          <li>Continuidad para preparar repertorio anual.</li>
-          <li>Experiencia Pro activa durante 12 meses.</li>
-        </ul>
-        <button id="btnAnnual" class="btn btn-green" type="button">Pagar anual con MercadoPago</button>
-      </article>
-    </section>
+<div class="container">
 
-    <div class="section-title">
-      <div>
-        <h2>Planes empresas / colegios</h2>
-        <p>Acceso anual para equipos docentes. Los montos pueden ajustarse desde Render sin tocar el código.</p>
-      </div>
-    </div>
+  <div class="card">
+    <h3>Plan 10 licencias</h3>
+    <div class="price">$39.000 / mes</div>
+    <button onclick="comprarPlan(10)">Comprar</button>
+  </div>
 
-    <section class="enterprise">
-      <article class="card plan enterprise-plan">
-        <div class="plan-head"><h3>Empresa 5 cuentas</h3><span class="badge green">Equipo inicial</span></div>
-        <div class="price"><strong>$199.000</strong><span>/ año</span></div>
-        <p class="copy">Para departamentos pequeños o pilotos institucionales.</p>
-        <ul class="features">
-          <li>5 accesos Pro anuales.</li>
-          <li>Uso docente con adaptación, traducción y PDF.</li>
-          <li>Ideal para probar SonarIA como equipo.</li>
-        </ul>
-        <button id="btnEnterprise5" class="btn btn-orange" type="button">Pagar 5 cuentas con MercadoPago</button>
-      </article>
+  <div class="card">
+    <h3>Plan 30 licencias</h3>
+    <div class="price">$89.000 / mes</div>
+    <button onclick="comprarPlan(30)">Comprar</button>
+  </div>
 
-      <article class="card plan enterprise-plan">
-        <div class="plan-head"><h3>Empresa 10 cuentas</h3><span class="badge green">Equipo completo</span></div>
-        <div class="price"><strong>$349.000</strong><span>/ año</span></div>
-        <p class="copy">Para colegios o equipos de música, inglés y convivencia escolar.</p>
-        <ul class="features">
-          <li>10 accesos Pro anuales.</li>
-          <li>Continuidad institucional para varios docentes.</li>
-          <li>Mejor costo por cuenta para equipos.</li>
-        </ul>
-        <button id="btnEnterprise10" class="btn btn-orange" type="button">Pagar 10 cuentas con MercadoPago</button>
-      </article>
-    </section>
+  <div class="card">
+    <h3>Plan 50 licencias</h3>
+    <div class="price">$129.000 / mes</div>
+    <button onclick="comprarPlan(50)">Comprar</button>
+  </div>
 
-    <p class="foot">El pago se procesa en MercadoPago. Al aprobarse, la cuenta queda como Pro mediante el backend de SonarIA. Para planes empresa, la cuenta compradora queda Pro y el alta de las cuentas adicionales puede gestionarse administrativamente.</p>
-  </main>
+</div>
 
-  <script>
-    const API = "https://sonaria-api.onrender.com";
-    const $ = id => document.getElementById(id);
+<script>
+const API = "https://sonaria-api.onrender.com";
 
-    function getToken(){
-      return localStorage.getItem('mejoraria_token') ||
-             localStorage.getItem('token') ||
-             localStorage.getItem('access_token') || '';
+function getToken(){
+  return localStorage.getItem("mejoraria_token") 
+      || localStorage.getItem("token") 
+      || localStorage.getItem("access_token") 
+      || "";
+}
+
+async function comprarPlan(licencias) {
+
+  const token = getToken();
+
+  if (!token) {
+    alert("Debes iniciar sesión antes de comprar");
+    return;
+  }
+
+  try {
+
+    const res = await fetch(API + "/subscriptions/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({
+        plan: licencias
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert("Error al iniciar el pago");
+      console.error(data);
+      return;
     }
 
-    function setStatus(msg, type='info'){
-      const el = $('status');
-      el.textContent = msg;
-      el.style.color = type === 'error' ? '#9b2c2c' : type === 'ok' ? '#126738' : '#2b4d87';
-    }
+    // 🔥 REDIRECCIÓN A MERCADOPAGO
+    window.location.href = data.init_point;
 
-    function allButtons(){
-      return ['btnMonthly','btnAnnual','btnEnterprise5','btnEnterprise10'].map(id => $(id)).filter(Boolean);
-    }
+  } catch (err) {
+    console.error(err);
+    alert("Error de conexión con el servidor");
+  }
+}
+</script>
 
-    function disableButtons(disabled){
-      allButtons().forEach(btn => btn.disabled = disabled);
-    }
-
-    async function loadUser(){
-      const token = getToken();
-      if(!token){
-        $('userInfo').textContent = 'Debes iniciar sesión para contratar Pro.';
-        setStatus('Inicia sesión primero.', 'error');
-        disableButtons(true);
-        return;
-      }
-
-      try{
-        const res = await fetch(API + '/me', {headers:{Authorization:'Bearer '+token}});
-        const data = await res.json().catch(()=>({}));
-        if(!res.ok) throw new Error(data.detail || 'Sesión inválida');
-
-        const user = data.user || {};
-        const plan = String(user.plan || 'free').toLowerCase();
-        $('userInfo').textContent = `${user.email || 'Usuario'} · Plan actual: ${plan.toUpperCase()}`;
-
-        if(plan === 'pro'){
-          setStatus('Tu cuenta ya tiene acceso Pro. Puedes contratar un plan empresa si necesitas cuentas adicionales.', 'ok');
-        } else {
-          await checkPaymentConfig();
-        }
-      }catch(e){
-        $('userInfo').textContent = 'No se pudo validar la sesión.';
-        setStatus(e.message || 'Error de sesión', 'error');
-      }
-    }
-
-    async function checkPaymentConfig(){
-      try{
-        const res = await fetch(API + '/payments/config', {headers:{Authorization:'Bearer '+getToken()}});
-        const data = await res.json().catch(()=>({}));
-        if(!res.ok) return;
-        if(!data.configured){
-          setStatus('El pago online aún no está disponible para esta cuenta. Escríbenos y lo activamos.', 'error');
-        } else if(data.api_token_configured){
-          setStatus('Pago online disponible. Elige el plan que necesitas.', 'ok');
-        } else {
-          setStatus('Pago online disponible. Elige el plan que necesitas.', 'ok');
-        }
-      }catch(e){
-        console.warn(e);
-      }
-    }
-
-    async function iniciarPago(plan){
-      const token = getToken();
-      if(!token){
-        setStatus('Debes iniciar sesión para pagar.', 'error');
-        return;
-      }
-
-      disableButtons(true);
-      setStatus('Preparando pago seguro...', 'info');
-
-      try{
-        const res = await fetch(API + '/payments/create-checkout', {
-          method:'POST',
-          headers:{'Content-Type':'application/json', Authorization:'Bearer '+token},
-          body:JSON.stringify({plan})
-        });
-
-        const data = await res.json().catch(()=>({}));
-        if(!res.ok || !data.checkout_url) throw new Error(data.detail || 'No se pudo crear el checkout');
-
-        sessionStorage.setItem('order_id', data.order_id || '');
-        sessionStorage.setItem('payment_plan', data.plan || plan);
-        location.href = data.checkout_url;
-      }catch(e){
-        setStatus(e.message || 'Error al conectar con MercadoPago', 'error');
-        disableButtons(false);
-      }
-    }
-
-    async function syncPaymentReturn(){
-      const params = new URLSearchParams(location.search);
-      const pago = params.get('pago');
-      const orderId = params.get('order_id') || sessionStorage.getItem('order_id') || '';
-
-      if(pago === 'ok' && orderId){
-        try{
-          setStatus('Confirmando pago aprobado con MercadoPago...', 'info');
-          const res = await fetch(API + '/payments/mercadopago/sync', {
-            method:'POST',
-            headers:{'Content-Type':'application/json', Authorization:'Bearer '+getToken()},
-            body:JSON.stringify({order_id:orderId})
-          });
-          const data = await res.json().catch(()=>({}));
-
-          if(res.ok && data.paid){
-            localStorage.setItem('mejoraria_plan','pro');
-            if(data.user) localStorage.setItem('mejoraria_user', JSON.stringify(data.user));
-            setStatus('Pago aprobado. Tu cuenta ya está Pro. Redirigiendo a SonarIA...', 'ok');
-            loadUser();
-            setTimeout(() => { window.location.href = '/sonaria.html?payment=success&order_id=' + encodeURIComponent(orderId); }, 900);
-            return;
-          }
-
-          setStatus((data && data.message) || 'Pago recibido, pendiente de confirmación.', 'info');
-        }catch(e){
-          setStatus(e.message || 'No pude confirmar el pago todavía.', 'error');
-        }
-      } else if(pago === 'ok'){
-        setStatus('Pago aprobado. Recarga si tu plan aún no cambia a Pro.', 'ok');
-      }
-
-      if(pago === 'pendiente') setStatus('Pago pendiente de confirmación.', 'info');
-      if(pago === 'error') setStatus('Pago cancelado o rechazado.', 'error');
-    }
-
-    $('btnMonthly').onclick = () => iniciarPago('monthly');
-    $('btnAnnual').onclick = () => iniciarPago('annual');
-    $('btnEnterprise5').onclick = () => iniciarPago('enterprise5');
-    $('btnEnterprise10').onclick = () => iniciarPago('enterprise10');
-
-    loadUser().then(syncPaymentReturn);
-  </script>
 </body>
 </html>
