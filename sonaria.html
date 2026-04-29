@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
-  <!-- SonarIA V121: barra de análisis + versión visible + base UX móvil -->
+  <!-- SonarIA V130: efemérides inteligentes + móvil + experiencia PRO -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -211,14 +211,79 @@
     .pro-inline strong{display:block}
     .pro-inline span{color:var(--muted);font-size:.92rem;line-height:1.5}
 
+
+    /* V130 — experiencia PRO y optimización móvil segura */
+    .card, .welcome-card, .summary-card, .fact-card, .clock-card, .calendar-shell{
+      animation:sonariaFadeUp .45s ease both;
+    }
+    @keyframes sonariaFadeUp{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    .btn:active{transform:translateY(0) scale(.99)}
+    .analysis-progress{
+      position:relative;
+      overflow:hidden;
+    }
+    .analysis-progress::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg,transparent,rgba(75,130,255,.08),transparent);
+      transform:translateX(-100%);
+      animation:sonariaSweep 1.7s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes sonariaSweep{
+      to{transform:translateX(100%)}
+    }
+    .progress-fill{box-shadow:0 0 16px rgba(47,111,237,.28)}
+    #efemFact{
+      display:block;
+      margin-top:8px;
+      font-size:.96rem;
+    }
+    .fact-card strong{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
     @media (max-width:1080px){.top-grid,.today-layout,.pair-grid,.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){
-      .wrap{padding:14px 12px 40px}
-      .topbar{flex-direction:column;align-items:stretch}
-      .top-actions{width:100%}
-      .top-actions .btn{width:100%}
-      .inline{grid-template-columns:1fr}
-      .actions .btn{flex:1 1 100%}
+      body{background:#f6f9ff}
+      .wrap{width:100%;padding:12px 10px 36px}
+      .topbar{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:10px}
+      .brand h1{font-size:2.35rem;line-height:.92}
+      .brand-sub{font-size:.82rem;line-height:1.35}
+      .top-actions{width:100%;display:grid;grid-template-columns:1fr;gap:8px}
+      .top-actions .btn,.top-actions .plan-badge{width:100%;min-height:48px}
+      .section{padding:15px}
+      .card,.welcome-card,.summary-card,.fact-card,.clock-card,.calendar-shell{border-radius:20px}
+      .top-grid,.today-layout,.pair-grid,.metrics{grid-template-columns:1fr!important;gap:12px}
+      .today-layout{grid-template-areas:"fact" "clock" "calendar"}
+      .inline{grid-template-columns:1fr;gap:8px}
+      .actions{display:grid;grid-template-columns:1fr;gap:8px}
+      .actions .btn,.btn{width:100%;min-height:52px;font-size:16px;padding:13px 14px;border-radius:15px}
+      input[type=text], textarea, select{font-size:16px;padding:14px;border-radius:15px}
+      textarea{min-height:190px}
+      .analysis-progress{padding:13px;border-radius:18px;position:sticky;top:8px;z-index:20;background:#fff;box-shadow:0 16px 34px rgba(31,44,74,.12)}
+      .progress-track{height:10px}
+      .progress-steps{grid-template-columns:1fr 1fr;gap:8px}
+      .progress-step{font-size:.76rem;white-space:normal;line-height:1.15}
+      .clock-card strong{font-size:2.45rem}
+      .calendar{gap:4px}
+      .cal-head,.cal-day{font-size:.72rem;padding:7px 0}
+      .course-chip{width:100%;text-align:center;padding:13px 16px}
+      .modal{padding:10px;align-items:flex-start;overflow:auto}
+      .modal-box{width:100%;max-height:none;padding:16px;border-radius:22px;margin:10px 0}
+      .summary-btn-row,.lyrics-actions,.pro-inline{display:grid;grid-template-columns:1fr;gap:8px}
+      .pro-preview-grid{grid-template-columns:1fr}
+      .small-muted{font-size:.92rem}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
   </style>
 </head>
@@ -227,7 +292,7 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.2.5 · versión docente PRO</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.0 · V130 · efemérides + móvil PRO</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
@@ -526,7 +591,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.2.6 · V123/V122 · PDF PRO + efemérides";
+    const SONARIA_VERSION = "SonarIA v1.3.0 · V130 · efemérides inteligentes + móvil PRO";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -555,7 +620,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.2.6 · V123/V122 · PDF PRO + efemérides";
+      if(el) el.textContent = "v1.3.0 · V130 · efemérides + móvil PRO";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -858,7 +923,10 @@
         fecha: new Date().toISOString().slice(0,10)
       };
       try{
-        const res = await apiFetch(EFEM_URL, {
+        const title = encodeURIComponent($("titulo")?.value || "");
+        const artist = encodeURIComponent($("artista")?.value || "");
+        const efemUrl = `${EFEM_URL}?cancion=${title}&artista=${artist}`;
+        const res = await apiFetch(efemUrl, {
           headers: authToken ? {Authorization:"Bearer " + authToken} : {}
         });
         const data = await res.json().catch(() => ({}));
