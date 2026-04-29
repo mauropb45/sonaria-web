@@ -100,6 +100,14 @@ function getToken(){
       || "";
 }
 
+function mapPlan(licencias){
+  // 🔥 IMPORTANTE: adaptar a lo que tu backend reconoce
+  if (licencias === 10) return "enterprise10";
+  if (licencias === 30) return "monthly";   // fallback temporal
+  if (licencias === 50) return "monthly";   // fallback temporal
+  return "monthly";
+}
+
 async function comprarPlan(licencias) {
 
   const token = getToken();
@@ -111,27 +119,27 @@ async function comprarPlan(licencias) {
 
   try {
 
-    const res = await fetch(API + "/subscriptions/create", {
+    const res = await fetch(API + "/payments/create-checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       },
       body: JSON.stringify({
-        plan: licencias
+        plan: mapPlan(licencias)
       })
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      alert("Error al iniciar el pago");
-      console.error(data);
+      console.error("ERROR BACKEND:", data);
+      alert(data.detail || "Error al iniciar el pago");
       return;
     }
 
     // 🔥 REDIRECCIÓN A MERCADOPAGO
-    window.location.href = data.init_point;
+    window.location.href = data.checkout_url || data.init_point;
 
   } catch (err) {
     console.error(err);
