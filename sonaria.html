@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
-  <!-- SonarIA V131: final estable + herramientas agrupadas + móvil + checkout limpio -->
+  <!-- SonarIA V131.3: real estable + desktop herramientas visibles + móvil herramientas agrupadas + guía docente + voz autoanaliza -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -249,6 +249,13 @@
       gap:8px;
     }
 
+
+    .desktop-tools-panel{display:block;margin:0 0 16px}
+    #btnToolsTop{display:none}
+    #principiosSonaria{display:none}
+    .guide-docente-list{display:grid;gap:12px;margin-top:12px}
+    .guide-docente-item{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line);line-height:1.7}
+    .guide-docente-item strong{display:block;margin-bottom:6px;color:#172033}
     @media (max-width:1080px){.top-grid,.today-layout,.pair-grid,.metrics{grid-template-columns:1fr}}
     @media (max-width:720px){
       body{background:#f6f9ff}
@@ -257,6 +264,8 @@
       .brand h1{font-size:2.35rem;line-height:.92}
       .brand-sub{font-size:.82rem;line-height:1.35}
       .top-actions{width:100%;display:grid;grid-template-columns:1fr;gap:8px}
+      #btnToolsTop{display:inline-flex}
+      .desktop-tools-panel{display:none!important}
       .top-actions .btn,.top-actions .plan-badge{width:100%;min-height:48px}
       .section{padding:15px}
       .card,.welcome-card,.summary-card,.fact-card,.clock-card,.calendar-shell{border-radius:20px}
@@ -297,11 +306,12 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131 · final estable</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.3 · estable real</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
+        <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
@@ -316,6 +326,30 @@
       </div>
       <span id="planPill" class="plan-badge free">🟢 Free</span>
     </div>
+
+    <section id="desktopToolsPanel" class="card section desktop-tools-panel" aria-label="Herramientas docentes de apoyo">
+      <div class="section-topline">
+        <div class="section-title"><span>🧰</span><h3>Herramientas docentes</h3></div>
+        <div class="chips"><span class="chip">Desktop</span></div>
+      </div>
+      <div class="today-layout" style="margin-top:14px">
+        <div class="fact-card">
+          <strong>🎼 Un día como hoy</strong>
+          <div id="efemFactDesktop" class="small-muted">Cargando efeméride musical...</div>
+        </div>
+        <div class="clock-card">
+          <strong id="clockTimeDesktop">--:--</strong>
+          <span id="clockDateDesktop">--</span>
+        </div>
+        <div class="calendar-shell">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
+            <strong>Calendario del mes</strong>
+            <span class="small-muted" id="calendarMonthLabelDesktop"></span>
+          </div>
+          <div id="calendarGridDesktop" class="calendar"></div>
+        </div>
+      </div>
+    </section>
 
     <section class="top-grid">
       <section class="card section">
@@ -465,6 +499,19 @@
     </section>
   </div>
 
+  <div id="guideModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>📘</span><h3>Guía docente</h3></div>
+        <button class="btn btn-ghost" type="button" data-close="guideModal">Cerrar</button>
+      </div>
+      <div class="guide-docente-list">
+        <div class="guide-docente-item"><strong>🎨 El arte puede abrir conversaciones</strong>La música permite abordar emociones, contextos culturales, valores, tensiones sociales y preguntas que muchas veces no aparecen en una clase tradicional. SonarIA busca acompañar esa conversación, no reemplazar el criterio docente.</div>
+        <div class="guide-docente-item"><strong>🧭 Declaración de principios</strong>SonarIA no está pensado para castigar el arte ni cancelar canciones. Su propósito es detectar riesgos, sugerir mediación pedagógica y, cuando sea necesario, proponer adaptaciones escolares para conservar el valor humano, expresivo y cultural de la obra.</div>
+        <div class="guide-docente-item"><strong>✅ Alcance actual</strong>SonarIA es una herramienta de apoyo. La decisión final sobre el uso de una canción en aula recae siempre en el profesor o profesora, considerando edad, curso, contexto institucional y objetivos de aprendizaje.</div>
+      </div>
+    </div>
+  </div>
 
   <div id="toolsModal" class="modal">
     <div class="modal-box">
@@ -897,18 +944,28 @@
       });
     }
 
-    function updateClock(){
-      const now = new Date();
-      $("clockTime").textContent = now.toLocaleTimeString("es-CL", {hour:"2-digit", minute:"2-digit"});
-      $("clockDate").textContent = now.toLocaleDateString("es-CL", {weekday:"short", day:"2-digit", month:"short"});
+    function setTextIfExists(id, value){
+      const el = $(id);
+      if(el) el.textContent = value;
     }
 
-    function renderCalendar(dateStr){
+    function updateClock(){
+      const now = new Date();
+      const timeText = now.toLocaleTimeString("es-CL", {hour:"2-digit", minute:"2-digit"});
+      const dateText = now.toLocaleDateString("es-CL", {weekday:"short", day:"2-digit", month:"short"});
+      setTextIfExists("clockTime", timeText);
+      setTextIfExists("clockDate", dateText);
+      setTextIfExists("clockTimeDesktop", timeText);
+      setTextIfExists("clockDateDesktop", dateText);
+    }
+
+    function fillCalendarGrid(gridId, labelId, dateStr){
+      const grid = $(gridId);
+      if(!grid) return;
       const now = new Date((dateStr || new Date().toISOString().slice(0,10)) + "T12:00:00");
       const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
-      $("calendarMonthLabel").textContent = now.toLocaleDateString("es-CL", {month:"long", year:"numeric"});
+      setTextIfExists(labelId, now.toLocaleDateString("es-CL", {month:"long", year:"numeric"}));
       const names = ["Lu","Ma","Mi","Ju","Vi","Sa","Do"];
-      const grid = $("calendarGrid");
       grid.innerHTML = "";
       names.forEach(n => {
         const x = document.createElement("div");
@@ -934,6 +991,11 @@
       }
     }
 
+    function renderCalendar(dateStr){
+      fillCalendarGrid("calendarGrid", "calendarMonthLabel", dateStr);
+      fillCalendarGrid("calendarGridDesktop", "calendarMonthLabelDesktop", dateStr);
+    }
+
     async function loadEfemeride(){
       const fallback = {
         texto: "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical sin depender de una obra específica.",
@@ -947,10 +1009,13 @@
           headers: authToken ? {Authorization:"Bearer " + authToken} : {}
         });
         const data = await res.json().catch(() => ({}));
-        $("efemFact").textContent = res.ok && data.texto ? data.texto : fallback.texto;
+        const efemText = res.ok && data.texto ? data.texto : fallback.texto;
+        setTextIfExists("efemFact", efemText);
+        setTextIfExists("efemFactDesktop", efemText);
         renderCalendar((data && data.fecha) || fallback.fecha);
       }catch(_){
-        $("efemFact").textContent = fallback.texto;
+        setTextIfExists("efemFact", fallback.texto);
+        setTextIfExists("efemFactDesktop", fallback.texto);
         renderCalendar(fallback.fecha);
       }
     }
@@ -1871,6 +1936,7 @@
       loadEfemeride();
     });
     $("btnBenefitsTop").addEventListener("click", openBenefits);
+    $("btnGuideTop")?.addEventListener("click", () => openModal("guideModal"));
     $("btnLogoutTop")?.addEventListener("click", logout);
     $("btnAcceptViewer")?.addEventListener("click", () => { sessionStorage.setItem("sonaria_viewer_accepted", "1"); closeModal("viewerModal"); });
     $("btnUsoAulaMas").addEventListener("click", openBenefits);
@@ -1893,7 +1959,8 @@
           if(parsed.artist) $("artista").value = parsed.artist;
           if($("texto")) $("texto").value = "";
           lyricsState = { key:"", source:"empty" };
-          resetAnalysisOnly(parsed.artist ? "Canción y artista cargados por voz. Presiona Analizar para buscar la letra nueva." : "Título cargado por voz. Puedes ajustar artista y analizar.");
+          resetAnalysisOnly(parsed.artist ? "Canción y artista cargados por voz. Analizando automáticamente…" : "Título cargado por voz. Analizando automáticamente…");
+          setTimeout(() => analizarCancion(), 250);
         }
       };
       recognition.onerror = () => setStatus("No pude capturar voz. Intenta nuevamente.", "error");
