@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
-  <!-- SonarIA V130: efemérides inteligentes + móvil + experiencia PRO -->
+  <!-- SonarIA V131: final estable + herramientas agrupadas + móvil + checkout limpio -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -282,6 +282,11 @@
       .small-muted{font-size:.92rem}
     }
 
+
+    .card, .welcome-card, .summary-card, .fact-card, .clock-card, .calendar-shell{overflow:hidden;touch-action:manipulation}
+    @media (hover:hover){.card:hover,.welcome-card:hover{transform:translateY(-1px)}}
+    @media (hover:none){.card:hover,.welcome-card:hover{transform:none!important}}
+
     @media (prefers-reduced-motion: reduce){
       *, *::before, *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
@@ -292,11 +297,12 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.0 · V130 · efemérides + móvil PRO</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131 · final estable</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
+        <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
         <button id="btnLogoutTop" class="btn btn-ghost" type="button">Cerrar sesión</button>
@@ -316,17 +322,6 @@
         <div class="pill">🎵 Entrada rápida para el aula</div>
         <h2 style="margin:10px 0 6px">Analizar canción</h2>
         <div class="small-muted">SonarIA no cancela canciones: las analiza, detecta riesgos y te ayuda a rescatarlas pedagógicamente para el aula.</div>
-        <div class="hero-note">
-          <strong>🎨 El arte puede abrir conversaciones que normalmente no ocurren</strong>
-          No se trata de castigar el arte, sino de encontrar caminos para trabajarlo pedagógicamente sin perder su valor humano, expresivo y cultural.
-          <br><br>
-          <strong>🎓 Declaración de principios</strong>
-          SonarIA acompaña decisiones docentes: detecta riesgos, sugiere mediación, propone adaptación cuando hace falta y ayuda a transformar una canción difícil en una oportunidad de conversación, reflexión y aprendizaje.
-          <br><br>
-          <strong>🌍 Alcance actual</strong>
-          <strong>Hoy SonarIA está optimizada inicialmente para canciones en inglés.</strong> La adaptación escolar y la traducción se construyen priorizando sentido, intención y utilidad pedagógica.
-        </div>
-
         <div class="inline" style="margin-top:12px">
           <div class="field" style="margin:0">
             <label for="titulo">Título</label>
@@ -373,28 +368,6 @@
         <div id="statusBox" class="status"></div>
       </section>
 
-      <section class="card section">
-        <div class="pill">📅 Hoy en SonarIA</div>
-        <h2 style="margin:10px 0 6px">Hoy en SonarIA</h2>
-        <div class="small-muted">Un vistazo rápido para entrar al aula con contexto, tiempo y una referencia musical del día.</div>
-        <div class="today-layout" style="margin-top:14px">
-          <div class="fact-card">
-            <strong>🎼 Un día como hoy</strong>
-            <div id="efemFact" class="small-muted">Cargando efeméride musical...</div>
-          </div>
-          <div class="clock-card">
-            <strong id="clockTime">--:--</strong>
-            <span id="clockDate">--</span>
-          </div>
-          <div class="calendar-shell">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
-              <strong>Calendario del mes</strong>
-              <span class="small-muted" id="calendarMonthLabel"></span>
-            </div>
-            <div id="calendarGrid" class="calendar"></div>
-          </div>
-        </div>
-      </section>
     </section>
 
     <section class="analysis-grid">
@@ -466,6 +439,22 @@
         </div>
       </section>
 
+      <section class="card section" id="principiosSonaria">
+        <div class="section-topline">
+          <div class="section-title"><span>🎨</span><h3>Principios y alcance de SonarIA</h3></div>
+        </div>
+        <div class="hero-note">
+          <strong>El arte puede abrir conversaciones que normalmente no ocurren.</strong>
+          No se trata de castigar el arte, sino de encontrar caminos para trabajarlo pedagógicamente sin perder su valor humano, expresivo y cultural.
+          <br><br>
+          <strong>Declaración de principios.</strong>
+          SonarIA acompaña decisiones docentes: detecta riesgos, sugiere mediación, propone adaptación cuando hace falta y ayuda a transformar una canción difícil en una oportunidad de conversación, reflexión y aprendizaje.
+          <br><br>
+          <strong>Alcance actual.</strong>
+          <strong>Hoy SonarIA está optimizada inicialmente para canciones en inglés.</strong> La adaptación escolar y la traducción se construyen priorizando sentido, intención y utilidad pedagógica.
+        </div>
+      </section>
+
       <section class="card section">
         <div class="section-topline">
           <div class="section-title"><span>🕘</span><h3>Mi historial</h3></div>
@@ -474,6 +463,34 @@
         <div id="historyList" class="list"><div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div></div>
       </section>
     </section>
+  </div>
+
+
+  <div id="toolsModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>🧰</span><h3>Otras herramientas</h3></div>
+        <button class="btn btn-ghost" type="button" data-close="toolsModal">Cerrar</button>
+      </div>
+      <div class="small-muted">Efeméride, hora y calendario agrupados para mantener limpio el panel principal.</div>
+      <div class="today-layout" style="margin-top:14px">
+        <div class="fact-card">
+          <strong>🎼 Un día como hoy</strong>
+          <div id="efemFact" class="small-muted">Cargando efeméride musical...</div>
+        </div>
+        <div class="clock-card">
+          <strong id="clockTime">--:--</strong>
+          <span id="clockDate">--</span>
+        </div>
+        <div class="calendar-shell">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
+            <strong>Calendario del mes</strong>
+            <span class="small-muted" id="calendarMonthLabel"></span>
+          </div>
+          <div id="calendarGrid" class="calendar"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="summaryModal" class="modal">
@@ -591,7 +608,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.3.0 · V130 · efemérides inteligentes + móvil PRO";
+    const SONARIA_VERSION = "SonarIA v1.3.1 · V131 · final estable";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -620,7 +637,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.3.0 · V130 · efemérides + móvil PRO";
+      if(el) el.textContent = "v1.3.1 · V131 · final estable";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -855,8 +872,8 @@
       }
     }
 
-    function openModal(id){ $(id).classList.add("open"); }
-    function closeModal(id){ $(id).classList.remove("open"); }
+    function openModal(id){ const el = $(id); if(el) el.classList.add("open"); }
+    function closeModal(id){ const el = $(id); if(el) el.classList.remove("open"); }
 
     function renderCourseChips(){
       const wrap = $("courseChips");
@@ -1846,6 +1863,12 @@
     });
     $("btnPlanesTop").addEventListener("click", () => {
       window.location.href = "planes.html";
+    });
+    $("btnToolsTop")?.addEventListener("click", () => {
+      openModal("toolsModal");
+      renderCalendar();
+      updateClock();
+      loadEfemeride();
     });
     $("btnBenefitsTop").addEventListener("click", openBenefits);
     $("btnLogoutTop")?.addEventListener("click", logout);
