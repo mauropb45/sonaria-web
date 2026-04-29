@@ -526,7 +526,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.2.6 · V121.1 · versión docente PRO";
+    const SONARIA_VERSION = "SonarIA v1.2.6 · V123/V122 · PDF PRO + efemérides";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -555,7 +555,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.2.6 · V121.1 · versión docente PRO";
+      if(el) el.textContent = "v1.2.6 · V123/V122 · PDF PRO + efemérides";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -854,7 +854,7 @@
 
     async function loadEfemeride(){
       const fallback = {
-        texto: "Un día como hoy puedes abrir la clase con una escucha comparada y una pregunta breve sobre contexto, emoción o identidad musical.",
+        texto: "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical sin depender de una obra específica.",
         fecha: new Date().toISOString().slice(0,10)
       };
       try{
