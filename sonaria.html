@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SonarIA | Panel docente</title>
-  <!-- SonarIA V131.3: real estable + desktop herramientas visibles + móvil herramientas agrupadas + guía docente + voz autoanaliza -->
+  <!-- SonarIA V131.4: dashboard 2 columnas + herramientas compactas desktop + móvil agrupado + guía docente + voz autoanaliza -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.84rem;font-weight:800}
     .card{background:var(--panel);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(8px)}
     .section{padding:20px}
-    .top-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+    .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.45fr);gap:16px;align-items:start}
     .analysis-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
     .today-layout{display:grid;grid-template-columns:1.14fr .86fr;grid-template-areas:"fact clock" "calendar calendar";gap:14px;align-items:stretch}
     .fact-card{grid-area:fact;padding:22px;border-radius:22px;background:#fff;border:1px solid var(--line);line-height:1.8}
@@ -250,13 +250,25 @@
     }
 
 
-    .desktop-tools-panel{display:block;margin:0 0 16px}
+    .desktop-tools-panel{display:block;margin:0}
+    .desktop-tools-panel.section{padding:16px}
+    .desktop-tools-panel .section-title h3{font-size:1rem;margin:0}
+    .desktop-tools-panel .today-layout{grid-template-columns:1fr;grid-template-areas:"clock" "calendar" "fact";gap:10px}
+    .desktop-tools-panel .clock-card{padding:16px 12px;border-radius:18px}
+    .desktop-tools-panel .clock-card strong{font-size:2.15rem;letter-spacing:-.08em}
+    .desktop-tools-panel .clock-card span{font-size:.82rem;margin-top:5px}
+    .desktop-tools-panel .calendar-shell{padding:12px;border-radius:16px}
+    .desktop-tools-panel .calendar{gap:3px}
+    .desktop-tools-panel .cal-head,.desktop-tools-panel .cal-day{font-size:.66rem;padding:5px 0;border-radius:8px}
+    .desktop-tools-panel .fact-card{padding:13px;border-radius:16px;line-height:1.45;font-size:.88rem}
+    .desktop-tools-panel .fact-card strong{font-size:.92rem}
+    .desktop-tools-panel #efemFactDesktop{font-size:.84rem;line-height:1.45;margin-top:6px}
     #btnToolsTop{display:none}
     #principiosSonaria{display:none}
     .guide-docente-list{display:grid;gap:12px;margin-top:12px}
     .guide-docente-item{padding:16px;border-radius:18px;background:#fff;border:1px solid var(--line);line-height:1.7}
     .guide-docente-item strong{display:block;margin-bottom:6px;color:#172033}
-    @media (max-width:1080px){.top-grid,.today-layout,.pair-grid,.metrics{grid-template-columns:1fr}}
+    @media (max-width:1080px){.today-layout,.pair-grid,.metrics{grid-template-columns:1fr}.top-grid{grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr)}}
     @media (max-width:720px){
       body{background:#f6f9ff}
       .wrap{width:100%;padding:12px 10px 36px}
@@ -306,7 +318,7 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.3 · estable real</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
@@ -326,30 +338,6 @@
       </div>
       <span id="planPill" class="plan-badge free">🟢 Free</span>
     </div>
-
-    <section id="desktopToolsPanel" class="card section desktop-tools-panel" aria-label="Herramientas docentes de apoyo">
-      <div class="section-topline">
-        <div class="section-title"><span>🧰</span><h3>Herramientas docentes</h3></div>
-        <div class="chips"><span class="chip">Desktop</span></div>
-      </div>
-      <div class="today-layout" style="margin-top:14px">
-        <div class="fact-card">
-          <strong>🎼 Un día como hoy</strong>
-          <div id="efemFactDesktop" class="small-muted">Cargando efeméride musical...</div>
-        </div>
-        <div class="clock-card">
-          <strong id="clockTimeDesktop">--:--</strong>
-          <span id="clockDateDesktop">--</span>
-        </div>
-        <div class="calendar-shell">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
-            <strong>Calendario del mes</strong>
-            <span class="small-muted" id="calendarMonthLabelDesktop"></span>
-          </div>
-          <div id="calendarGridDesktop" class="calendar"></div>
-        </div>
-      </div>
-    </section>
 
     <section class="top-grid">
       <section class="card section">
@@ -400,6 +388,29 @@
         </div>
 
         <div id="statusBox" class="status"></div>
+      </section>
+
+      <section id="desktopToolsPanel" class="card section desktop-tools-panel" aria-label="Herramientas docentes de apoyo">
+        <div class="section-topline compact-tools-title">
+          <div class="section-title"><span>🧰</span><h3>Herramientas de apoyo</h3></div>
+        </div>
+        <div class="today-layout" style="margin-top:10px">
+          <div class="clock-card">
+            <strong id="clockTimeDesktop">--:--</strong>
+            <span id="clockDateDesktop">--</span>
+          </div>
+          <div class="calendar-shell">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px">
+              <strong>Calendario</strong>
+              <span class="small-muted" id="calendarMonthLabelDesktop"></span>
+            </div>
+            <div id="calendarGridDesktop" class="calendar"></div>
+          </div>
+          <div class="fact-card">
+            <strong>🎼 Un día como hoy</strong>
+            <div id="efemFactDesktop" class="small-muted">Cargando efeméride musical...</div>
+          </div>
+        </div>
       </section>
 
     </section>
