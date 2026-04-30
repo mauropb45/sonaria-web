@@ -674,6 +674,7 @@
     const HISTORY_URL = API_BASE + "/history";
     const USAGE_PING_URL = API_BASE + "/usage/ping";
     const PAYMENT_SYNC_URL = API_BASE + "/payments/mercadopago/sync";
+    const SUBSCRIPTION_SYNC_URL = API_BASE + "/subscriptions/sync";
     const LOGOUT_URL = API_BASE + "/auth/logout";
     const COURSE_OPTIONS = [
       {code:"1",label:"1° básico"},{code:"2",label:"2° básico"},{code:"3",label:"3° básico"},{code:"4",label:"4° básico"},
@@ -1055,31 +1056,41 @@
 
     async function handlePaymentReturn(){
       const params = new URLSearchParams(window.location.search);
-      const ok = params.get("payment") === "success" || params.get("pago") === "ok";
-      const orderId = params.get("order_id") || sessionStorage.getItem("order_id") || "";
-      if(!ok) return;
-      if(!orderId){
-        openModal("proWelcomeModal");
-        history.replaceState({}, document.title, location.pathname);
-        return;
-      }
+      const paymentOk = params.get("payment") === "success" || params.get("pago") === "ok";
+      const subscriptionOk = params.get("subscription") === "success";
+      const orderId = params.get("order_id") || params.get("external_reference") || sessionStorage.getItem("order_id") || "";
+      const preapprovalId = params.get("preapproval_id") || params.get("preapproval_id") || "";
+      if(!paymentOk && !subscriptionOk) return;
       try{
         setStatus("Confirmando tu pago en MercadoPago...", "info");
-        const res = await apiFetch(PAYMENT_SYNC_URL, {
-          method:"POST",
-          headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
-          body:JSON.stringify({order_id:orderId})
-        });
+        let res;
+        if(subscriptionOk){
+          res = await apiFetch(SUBSCRIPTION_SYNC_URL, {
+            method:"POST",
+            headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
+            body:JSON.stringify({preapproval_id:preapprovalId, external_reference:orderId})
+          });
+        }else{
+          if(!orderId){
+            openModal("proWelcomeModal");
+            history.replaceState({}, document.title, location.pathname);
+            return;
+          }
+          res = await apiFetch(PAYMENT_SYNC_URL, {
+            method:"POST",
+            headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
+            body:JSON.stringify({order_id:orderId})
+          });
+        }
         const data = await res.json().catch(()=>({}));
-        if(res.ok && data.paid){
-          user = data.user || {...user, plan:"pro"};
-          localStorage.setItem("mejoraria_plan", "pro");
+        if(res.ok && (data.paid || data.ok)){
+          await loadUser();
           localStorage.setItem("mejoraria_user", JSON.stringify(user));
           updateProUI();
           openModal("proWelcomeModal");
-          setStatus("Pago aprobado. Funciones Pro activadas.", "success");
+          setStatus("Pago recibido. SonarIA actualizó tu acceso.", "success");
         }else{
-          setStatus((data && data.message) || "Pago recibido; aún esperando confirmación de MercadoPago.", "info");
+          setStatus((data && (data.message || data.detail)) || "Pago recibido; aún esperando confirmación de MercadoPago.", "info");
         }
       }catch(e){
         setStatus(e.message || "No pude confirmar el pago todavía.", "error");
