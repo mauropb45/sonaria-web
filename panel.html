@@ -3,157 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel | SonarIA</title>
+<title>Admin | SonarIA PRO</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#f5f7fb;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#6b7280;
-  --blue:#3b82f6;
-  --green:#22c55e;
-  --orange:#ff6a00;
-  --radius:18px;
-  --shadow:0 10px 30px rgba(0,0,0,.08);
-}
-
-*{box-sizing:border-box}
-
 body{
   margin:0;
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  font-family:Inter;
+  background:#f5f7fb;
+  color:#1e293b;
 }
 
 .container{
-  max-width:1100px;
+  max-width:1200px;
   margin:auto;
   padding:20px;
 }
 
-/* HEADER */
-.top{
+.topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:20px;
 }
 
-.logo{
-  font-size:1.8rem;
-  font-weight:900;
+h1{
+  margin:0;
+  font-size:2rem;
 }
 
-.logo span{
-  color:var(--blue);
-}
-
-.user{
-  font-size:.9rem;
-  color:var(--muted);
-}
-
-/* HERO */
-.hero{
-  background:linear-gradient(135deg,#3b82f6,#60a5fa);
-  color:white;
-  padding:25px;
-  border-radius:var(--radius);
-  margin-bottom:20px;
-}
-
-.hero h1{
-  margin:0 0 10px;
-}
-
-.hero button{
-  margin-top:10px;
-  background:white;
-  color:#1e40af;
+.btn{
+  padding:10px 16px;
   border:none;
-  padding:12px 18px;
   border-radius:10px;
-  font-weight:700;
   cursor:pointer;
+  font-weight:700;
 }
 
-/* CARDS */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
+.btn-ghost{
+  background:#fff;
+  border:1px solid #d9e3f1;
+}
+
+.btn-red{
+  background:#ef4444;
+  color:white;
 }
 
 .card{
-  background:var(--card);
+  background:white;
+  border-radius:16px;
   padding:20px;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+  box-shadow:0 10px 30px rgba(0,0,0,.05);
 }
 
-.card h2{
-  margin-top:0;
+table{
+  width:100%;
+  border-collapse:collapse;
 }
 
-/* PLAN */
-.plan{
-  border:2px solid var(--blue);
+th, td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  text-align:left;
 }
 
-.plan.pro{
-  border-color:var(--green);
+th{
+  background:#f1f5f9;
 }
 
 .badge{
-  display:inline-block;
-  padding:6px 10px;
+  padding:5px 10px;
   border-radius:999px;
-  font-size:.8rem;
-  font-weight:700;
-  margin-bottom:10px;
+  font-size:.75rem;
+  font-weight:800;
 }
 
-.badge.free{
-  background:#eef2ff;
-  color:#3730a3;
-}
-
-.badge.pro{
-  background:#dcfce7;
-  color:#166534;
-}
-
-/* BUTTONS */
-button{
-  background:var(--blue);
-  color:white;
-  border:none;
-  padding:12px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:700;
-  width:100%;
-}
-
-button.secondary{
-  background:#e5e7eb;
-  color:#111;
-}
-
-button.pro{
-  background:var(--green);
-}
-
-/* MOBILE */
-@media(max-width:700px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-}
+.pro{background:#d1fae5;color:#065f46;}
+.free{background:#e2e8f0;color:#334155;}
 </style>
 </head>
 
@@ -161,54 +89,142 @@ button.pro{
 
 <div class="container">
 
-  <!-- HEADER -->
-  <div class="top">
-    <div class="logo">Sonar<span>IA</span></div>
-    <div class="user">Hola, docente 👋</div>
+  <div class="topbar">
+    <h1>Panel Admin SonarIA</h1>
+
+    <div>
+      <button class="btn btn-ghost" onclick="irSonaria()">Ir a SonarIA</button>
+      <button class="btn btn-red" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
   </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <h1>Evalúa canciones en segundos</h1>
-    <p>Evita errores en clase y toma decisiones pedagógicas seguras.</p>
-    <button onclick="location.href='sonaria.html'">Ir a SonarIA</button>
-  </div>
+  <div class="card">
+    <h2>Usuarios</h2>
 
-  <!-- GRID -->
-  <div class="grid">
-
-    <!-- USO -->
-    <div class="card">
-      <h2>🎵 Usar SonarIA</h2>
-      <p>Analiza letras, detecta riesgos y obtén adaptación escolar automática.</p>
-      <button onclick="location.href='sonaria.html'">Analizar canción</button>
-    </div>
-
-    <!-- PLAN -->
-    <div class="card plan">
-      <div class="badge free">Plan actual: FREE</div>
-      <h2>Sube a PRO</h2>
-      <p>Obtén análisis ilimitado, PDF y herramientas completas.</p>
-      <button class="pro" onclick="location.href='planes.html'">Ver planes</button>
-    </div>
-
-    <!-- HISTORIAL -->
-    <div class="card">
-      <h2>📊 Historial</h2>
-      <p>Revisa las canciones que ya analizaste.</p>
-      <button class="secondary">Próximamente</button>
-    </div>
-
-    <!-- COLEGIOS -->
-    <div class="card">
-      <h2>🏫 Para colegios</h2>
-      <p>Licencias para equipos docentes y uso institucional.</p>
-      <button onclick="location.href='contacto.html'">Solicitar info</button>
-    </div>
-
+    <table id="tablaUsuarios">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Nombre</th>
+          <th>Plan</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
 </div>
+
+<script>
+
+const API = "https://sonaria-api.onrender.com";
+
+/* =========================
+   PROTECCIÓN DE ACCESO
+========================= */
+const token = localStorage.getItem("mejoraria_token");
+
+if(!token){
+  window.location.href = "/login.html";
+}
+
+/* =========================
+   CARGAR USUARIOS
+========================= */
+async function cargarUsuarios(){
+
+  const res = await fetch(API + "/admin/users", {
+    headers:{
+      "Authorization":"Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+
+  const tbody = document.querySelector("#tablaUsuarios tbody");
+  tbody.innerHTML = "";
+
+  (data.users || []).forEach(user => {
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${user.email}</td>
+      <td>${user.name || "-"}</td>
+      <td>
+        <span class="badge ${user.plan === "pro" ? "pro":"free"}">
+          ${user.plan}
+        </span>
+      </td>
+      <td>
+        <button class="btn btn-red" onclick="eliminarUsuario(${user.id})">
+          Eliminar
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+
+/* =========================
+   ELIMINAR USUARIO
+========================= */
+async function eliminarUsuario(id){
+
+  if(!confirm("¿Seguro que quieres eliminar este usuario?")) return;
+
+  const res = await fetch(API + "/admin/delete-user/" + id, {
+    method:"DELETE",
+    headers:{
+      "Authorization":"Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+
+  if(data.ok){
+    alert("Usuario eliminado");
+    cargarUsuarios();
+  }else{
+    alert(data.detail || "Error");
+  }
+}
+
+/* =========================
+   LOGOUT REAL
+========================= */
+async function cerrarSesion(){
+
+  try{
+    await fetch(API + "/auth/logout", {
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer " + token
+      }
+    });
+  }catch(e){}
+
+  localStorage.clear();
+  sessionStorage.clear();
+
+  window.location.href = "/login.html";
+}
+
+/* =========================
+   NAV
+========================= */
+function irSonaria(){
+  window.location.href = "/sonaria.html";
+}
+
+/* =========================
+   INIT
+========================= */
+cargarUsuarios();
+
+</script>
 
 </body>
 </html>
