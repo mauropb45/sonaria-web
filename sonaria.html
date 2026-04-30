@@ -263,6 +263,29 @@
     .desktop-tools-panel .fact-card{padding:13px;border-radius:16px;line-height:1.45;font-size:.88rem}
     .desktop-tools-panel .fact-card strong{font-size:.92rem}
     .desktop-tools-panel #efemFactDesktop{font-size:.84rem;line-height:1.45;margin-top:6px}
+    .sound-card{
+      padding:13px;
+      border-radius:16px;
+      background:linear-gradient(180deg,#ffffff,#f7faff);
+      border:1px solid var(--line);
+      display:grid;
+      gap:10px;
+      line-height:1.45;
+      font-size:.88rem;
+    }
+    .sound-card strong{display:flex;align-items:center;gap:8px}
+    .sound-meter-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .sound-db{font-size:1.85rem;font-weight:950;letter-spacing:-.07em;color:#243043}
+    .sound-pill{padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:900;border:1px solid var(--line);background:#f4f7fb;color:#66758c}
+    .sound-pill.green{background:#eafaf1;color:#11763d;border-color:#bdeccd}
+    .sound-pill.yellow{background:#fff7e6;color:#9a5a00;border-color:#f3d28c}
+    .sound-pill.red{background:#fff0f0;color:#a83232;border-color:#f2b8b8}
+    .sound-track{height:10px;background:#e8edf6;border-radius:999px;overflow:hidden}
+    .sound-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#25c96f,#f2c14b,#ff6a6a);transition:width .18s ease}
+    .sound-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sound-actions .btn{min-height:40px;padding:0 10px;border-radius:13px;font-size:.82rem}
+    .sound-note{font-size:.78rem;color:var(--muted);line-height:1.45}
+
     #btnToolsTop{display:none}
     #principiosSonaria{display:none}
     .guide-docente-list{display:grid;gap:12px;margin-top:12px}
@@ -318,13 +341,12 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.5 · historial + efeméride robusta</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
         <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
-        <button id="btnHistoryTop" class="btn btn-ghost" type="button">Mi historial</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
@@ -410,6 +432,22 @@
           <div class="fact-card">
             <strong>🎼 Un día como hoy</strong>
             <div id="efemFactDesktop" class="small-muted">Cargando efeméride musical...</div>
+          </div>
+          <div class="sound-card" aria-label="Sonómetro de aula">
+            <strong>🔊 Sonómetro de aula</strong>
+            <div class="sound-meter-top">
+              <div>
+                <div id="soundDbDesktop" class="sound-db">-- dB</div>
+                <div id="soundMsgDesktop" class="small-muted">Permite usar el micrófono para medir ruido aproximado.</div>
+              </div>
+              <span id="soundPillDesktop" class="sound-pill">apagado</span>
+            </div>
+            <div class="sound-track"><div id="soundFillDesktop" class="sound-fill"></div></div>
+            <div class="sound-actions">
+              <button id="soundStartDesktop" class="btn btn-soft" type="button">Iniciar</button>
+              <button id="soundStopDesktop" class="btn btn-ghost" type="button">Detener</button>
+            </div>
+            <div class="sound-note">Orientativo: no graba audio ni reemplaza un sonómetro certificado.</div>
           </div>
         </div>
       </section>
@@ -501,13 +539,11 @@
         </div>
       </section>
 
-      <section class="card section" id="historySection">
+      <section class="card section">
         <div class="section-topline">
           <div class="section-title"><span>🕘</span><h3>Mi historial</h3></div>
           <div class="chips"><span id="historyCount" class="chip">0 registros</span></div>
         </div>
-        <div class="small-muted" style="margin-bottom:10px">Historial real de tus análisis guardados. Puedes reutilizar canciones, recuperar letras y volver a analizarlas.</div>
-        <div class="summary-btn-row" style="margin-bottom:12px"><button id="btnRefreshHistory" class="btn btn-soft" type="button">Actualizar historial</button></div>
         <div id="historyList" class="list"><div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div></div>
       </section>
     </section>
@@ -538,6 +574,22 @@
         <div class="fact-card">
           <strong>🎼 Un día como hoy</strong>
           <div id="efemFact" class="small-muted">Cargando efeméride musical...</div>
+        </div>
+        <div class="sound-card" aria-label="Sonómetro de aula">
+          <strong>🔊 Sonómetro de aula</strong>
+          <div class="sound-meter-top">
+            <div>
+              <div id="soundDb" class="sound-db">-- dB</div>
+              <div id="soundMsg" class="small-muted">Permite usar el micrófono para medir ruido aproximado.</div>
+            </div>
+            <span id="soundPill" class="sound-pill">apagado</span>
+          </div>
+          <div class="sound-track"><div id="soundFill" class="sound-fill"></div></div>
+          <div class="sound-actions">
+            <button id="soundStart" class="btn btn-soft" type="button">Iniciar</button>
+            <button id="soundStop" class="btn btn-ghost" type="button">Detener</button>
+          </div>
+          <div class="sound-note">Orientativo: no graba audio ni reemplaza un sonómetro certificado.</div>
         </div>
         <div class="clock-card">
           <strong id="clockTime">--:--</strong>
@@ -677,7 +729,6 @@
     const HISTORY_URL = API_BASE + "/history";
     const USAGE_PING_URL = API_BASE + "/usage/ping";
     const PAYMENT_SYNC_URL = API_BASE + "/payments/mercadopago/sync";
-    const SUBSCRIPTION_SYNC_URL = API_BASE + "/subscriptions/sync";
     const LOGOUT_URL = API_BASE + "/auth/logout";
     const COURSE_OPTIONS = [
       {code:"1",label:"1° básico"},{code:"2",label:"2° básico"},{code:"3",label:"3° básico"},{code:"4",label:"4° básico"},
@@ -1011,39 +1062,20 @@
       fillCalendarGrid("calendarGridDesktop", "calendarMonthLabelDesktop", dateStr);
     }
 
-    function localEfemerideFallback(){
-      const today = new Date();
-      const month = today.getMonth() + 1;
-      const textos = {
-        1:"Enero permite vincular música e inicio de ciclos: metas expresivas, repertorios nuevos, identidad de curso y memoria cultural.",
-        2:"Febrero permite contextualizar circulación musical, medios de comunicación, festivales y audiencias en la cultura popular.",
-        3:"Marzo permite conectar música, historia, patrimonio e inicio del año escolar desde una mirada cultural amplia.",
-        4:"Abril permite abordar música, cuerpo, movimiento, escena y expresión artística como lenguajes conectados.",
-        5:"Mayo permite destacar intérpretes, voz, canción popular y construcción emocional en distintos repertorios.",
-        6:"Junio permite trabajar la música como práctica comunitaria, celebración cultural y forma de participación social.",
-        7:"Julio permite contextualizar formas extensas, contraste expresivo y desarrollo instrumental en la historia de la música.",
-        8:"Agosto permite abordar performance, videoclip, cultura pop y relación entre música, imagen e industria.",
-        9:"Septiembre permite conectar música, identidad, escena, comunidad y formas de expresión colectiva.",
-        10:"Octubre permite relacionar canción popular, contexto social, autoría y memoria cultural del siglo XX.",
-        11:"Noviembre permite destacar patrimonio musical, oficio del músico, interpretación y tradición cultural.",
-        12:"Diciembre permite revisar ciclos, repertorios significativos, memoria musical y transformaciones históricas."
+    async function loadEfemeride(){
+      const fallback = {
+        texto: "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical sin depender de una obra específica.",
+        fecha: new Date().toISOString().slice(0,10)
       };
-      return {texto:textos[month] || "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical.", fecha:today.toISOString().slice(0,10)};
-    }
-
-    async function loadEfemeride(contextData = null){
-      const fallback = localEfemerideFallback();
-      setTextIfExists("efemFact", fallback.texto);
-      setTextIfExists("efemFactDesktop", fallback.texto);
-      renderCalendar(fallback.fecha);
       try{
-        const title = $("titulo")?.value || contextData?.titulo || "";
-        const artist = $("artista")?.value || contextData?.artista || "";
-        const temas = Array.isArray(contextData?.temas_detectados) ? contextData.temas_detectados.join(",") : "";
-        const params = new URLSearchParams({cancion:title, artista:artist, tema:temas, fecha:new Date().toISOString().slice(0,10), _t:String(Date.now())});
-        const res = await fetch(`${EFEM_URL}?${params.toString()}`, {cache:"no-store"});
+        const title = encodeURIComponent($("titulo")?.value || "");
+        const artist = encodeURIComponent($("artista")?.value || "");
+        const efemUrl = `${EFEM_URL}?cancion=${title}&artista=${artist}`;
+        const res = await apiFetch(efemUrl, {
+          headers: authToken ? {Authorization:"Bearer " + authToken} : {}
+        });
         const data = await res.json().catch(() => ({}));
-        const efemText = res.ok && data && data.texto ? data.texto : fallback.texto;
+        const efemText = res.ok && data.texto ? data.texto : fallback.texto;
         setTextIfExists("efemFact", efemText);
         setTextIfExists("efemFactDesktop", efemText);
         renderCalendar((data && data.fecha) || fallback.fecha);
@@ -1052,6 +1084,81 @@
         setTextIfExists("efemFactDesktop", fallback.texto);
         renderCalendar(fallback.fecha);
       }
+    }
+
+
+    let soundCtx = null;
+    let soundAnalyser = null;
+    let soundStream = null;
+    let soundRaf = null;
+    let soundBaseline = null;
+
+    function updateSoundUI(db, label, cls, percent){
+      const values = [
+        ["soundDb", "soundMsg", "soundPill", "soundFill"],
+        ["soundDbDesktop", "soundMsgDesktop", "soundPillDesktop", "soundFillDesktop"]
+      ];
+      values.forEach(([dbId,msgId,pillId,fillId]) => {
+        const dbEl = $(dbId), msgEl = $(msgId), pillEl = $(pillId), fillEl = $(fillId);
+        if(dbEl) dbEl.textContent = Number.isFinite(db) ? `${Math.round(db)} dB` : "-- dB";
+        if(msgEl) msgEl.textContent = label || "Permite usar el micrófono para medir ruido aproximado.";
+        if(pillEl){ pillEl.textContent = cls === "green" ? "ambiente sano" : cls === "yellow" ? "ruido alto" : cls === "red" ? "pausa sugerida" : "apagado"; pillEl.className = "sound-pill " + (cls || ""); }
+        if(fillEl) fillEl.style.width = `${Math.max(0, Math.min(100, percent || 0))}%`;
+      });
+    }
+
+    async function startSoundMeter(){
+      try{
+        if(soundStream) stopSoundMeter(false);
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if(!AudioCtx || !navigator.mediaDevices?.getUserMedia){
+          updateSoundUI(NaN, "Este navegador no permite sonómetro con micrófono.", "", 0);
+          return;
+        }
+        soundStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false }, video:false });
+        soundCtx = new AudioCtx();
+        const source = soundCtx.createMediaStreamSource(soundStream);
+        soundAnalyser = soundCtx.createAnalyser();
+        soundAnalyser.fftSize = 2048;
+        source.connect(soundAnalyser);
+        const data = new Uint8Array(soundAnalyser.fftSize);
+        soundBaseline = null;
+        const tick = () => {
+          soundAnalyser.getByteTimeDomainData(data);
+          let sum = 0;
+          for(let i=0;i<data.length;i++){
+            const v = (data[i] - 128) / 128;
+            sum += v * v;
+          }
+          const rms = Math.sqrt(sum / data.length);
+          const dbfs = 20 * Math.log10(rms || 0.00001);
+          if(soundBaseline === null) soundBaseline = dbfs;
+          // Estimación pedagógica: no calibrada. Mapea el ruido relativo del micrófono a rango aula.
+          let approxDb = 45 + ((dbfs - soundBaseline) * 2.1);
+          approxDb = Math.max(35, Math.min(95, approxDb));
+          let cls = "green", msg = "Ambiente ideal para escuchar, explicar o trabajar en grupo.", pct = ((approxDb - 35) / 60) * 100;
+          if(approxDb >= 68 && approxDb < 78){ cls = "yellow"; msg = "El ruido está subiendo: conviene bajar volumen o pausar instrucciones."; }
+          if(approxDb >= 78){ cls = "red"; msg = "Ruido alto: sugiere pausa, respiración breve o acuerdo de silencio."; }
+          updateSoundUI(approxDb, msg, cls, pct);
+          soundRaf = requestAnimationFrame(tick);
+        };
+        tick();
+      }catch(err){
+        console.error(err);
+        updateSoundUI(NaN, "No se pudo acceder al micrófono. Revisa permisos del navegador.", "", 0);
+      }
+    }
+
+    function stopSoundMeter(reset=true){
+      if(soundRaf) cancelAnimationFrame(soundRaf);
+      soundRaf = null;
+      if(soundStream){ soundStream.getTracks().forEach(t => t.stop()); }
+      soundStream = null;
+      if(soundCtx){ try{ soundCtx.close(); }catch(_){} }
+      soundCtx = null;
+      soundAnalyser = null;
+      soundBaseline = null;
+      if(reset) updateSoundUI(NaN, "Sonómetro detenido. No se graba ni guarda audio.", "", 0);
     }
 
     function clearSessionLocal(){
@@ -1078,41 +1185,31 @@
 
     async function handlePaymentReturn(){
       const params = new URLSearchParams(window.location.search);
-      const paymentOk = params.get("payment") === "success" || params.get("pago") === "ok";
-      const subscriptionOk = params.get("subscription") === "success";
-      const orderId = params.get("order_id") || params.get("external_reference") || sessionStorage.getItem("order_id") || "";
-      const preapprovalId = params.get("preapproval_id") || params.get("preapproval_id") || "";
-      if(!paymentOk && !subscriptionOk) return;
+      const ok = params.get("payment") === "success" || params.get("pago") === "ok";
+      const orderId = params.get("order_id") || sessionStorage.getItem("order_id") || "";
+      if(!ok) return;
+      if(!orderId){
+        openModal("proWelcomeModal");
+        history.replaceState({}, document.title, location.pathname);
+        return;
+      }
       try{
         setStatus("Confirmando tu pago en MercadoPago...", "info");
-        let res;
-        if(subscriptionOk){
-          res = await apiFetch(SUBSCRIPTION_SYNC_URL, {
-            method:"POST",
-            headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
-            body:JSON.stringify({preapproval_id:preapprovalId, external_reference:orderId})
-          });
-        }else{
-          if(!orderId){
-            openModal("proWelcomeModal");
-            history.replaceState({}, document.title, location.pathname);
-            return;
-          }
-          res = await apiFetch(PAYMENT_SYNC_URL, {
-            method:"POST",
-            headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
-            body:JSON.stringify({order_id:orderId})
-          });
-        }
+        const res = await apiFetch(PAYMENT_SYNC_URL, {
+          method:"POST",
+          headers:{"Content-Type":"application/json", Authorization:"Bearer "+getToken()},
+          body:JSON.stringify({order_id:orderId})
+        });
         const data = await res.json().catch(()=>({}));
-        if(res.ok && (data.paid || data.ok)){
-          await loadUser();
+        if(res.ok && data.paid){
+          user = data.user || {...user, plan:"pro"};
+          localStorage.setItem("mejoraria_plan", "pro");
           localStorage.setItem("mejoraria_user", JSON.stringify(user));
           updateProUI();
           openModal("proWelcomeModal");
-          setStatus("Pago recibido. SonarIA actualizó tu acceso.", "success");
+          setStatus("Pago aprobado. Funciones Pro activadas.", "success");
         }else{
-          setStatus((data && (data.message || data.detail)) || "Pago recibido; aún esperando confirmación de MercadoPago.", "info");
+          setStatus((data && data.message) || "Pago recibido; aún esperando confirmación de MercadoPago.", "info");
         }
       }catch(e){
         setStatus(e.message || "No pude confirmar el pago todavía.", "error");
@@ -1330,23 +1427,12 @@
     }
 
 
-    function formatHistoryDate(value){
-      if(!value) return "fecha no disponible";
-      try{
-        const d = new Date(value);
-        if(Number.isNaN(d.getTime())) return String(value);
-        return d.toLocaleString("es-CL", {dateStyle:"short", timeStyle:"short"});
-      }catch(_){ return String(value); }
-    }
-
     function buildHistoryItemHtml(item, idx){
-      const title = escapeHtml(item.titulo || item.title || "Sin título");
-      const artist = escapeHtml(item.artista || item.artist || "Artista no indicado");
-      const result = escapeHtml(item.resultado || item.result || "—");
-      const age = escapeHtml(item.edad || item.age_suggested || "—");
-      const risk = Number(item.risk || item.risk_percent || 0);
-      const when = escapeHtml(formatHistoryDate(item.fecha || item.updated_at || item.created_at || ""));
-      return `<div class="list-item"><strong>${title} — ${artist}</strong><br><span class="small-muted">${result} · Edad: ${age} · Riesgo: ${risk}% · ${when}</span><div class="summary-btn-row"><button class="btn btn-soft" type="button" data-history-idx="${idx}">Reutilizar</button><button class="btn btn-ghost" type="button" data-history-analyze="${idx}">Volver a analizar</button></div></div>`;
+      const title = escapeHtml(item.titulo || "Sin título");
+      const artist = escapeHtml(item.artista || "Artista no indicado");
+      const result = escapeHtml(item.resultado || "—");
+      const when = escapeHtml(item.updated_at || item.created_at || "");
+      return `<div class="list-item"><strong>${title} — ${artist}</strong><br><span class="small-muted">${result} · ${when}</span><div class="summary-btn-row"><button class="btn btn-soft" type="button" data-history-idx="${idx}">Reutilizar</button></div></div>`;
     }
 
     async function loadHistory(){
@@ -1358,7 +1444,7 @@
       try{
         const res = await apiFetch(HISTORY_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json().catch(() => ({}));
-        const items = Array.isArray(data.items) ? data.items : (Array.isArray(data.history) ? data.history : (Array.isArray(data) ? data : []));
+        const items = Array.isArray(data.items) ? data.items : [];
         $("historyCount").textContent = `${items.length} registros`;
         if(!items.length){
           $("historyList").innerHTML = '<div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div>';
@@ -1369,33 +1455,16 @@
           btn.addEventListener('click', () => {
             const item = items[Number(btn.dataset.historyIdx || 0)];
             if(!item) return;
-            const title = item.titulo || item.title || "";
-            const artist = item.artista || item.artist || "";
-            $("titulo").value = title;
-            $("artista").value = artist;
-            $("texto").value = item.texto || item.lyrics || "";
-            lyricsState = { key: normalizeSongKey(title, artist), source: "history" };
-            if(item.analysis && Object.keys(item.analysis).length){
+            $("titulo").value = item.titulo || "";
+            $("artista").value = item.artista || "";
+            $("texto").value = item.texto || "";
+            lyricsState = { key: normalizeSongKey(item.titulo || "", item.artista || ""), source: "history" };
+            if(item.analysis){
               renderResult(item.analysis);
               setStatus('Canción reutilizada desde tu historial.', 'success');
             }else{
               resetAnalysisOnly('Canción cargada desde historial. Puedes volver a analizarla.');
             }
-            window.scrollTo({top:0, behavior:'smooth'});
-          });
-        });
-        document.querySelectorAll('[data-history-analyze]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const item = items[Number(btn.dataset.historyAnalyze || 0)];
-            if(!item) return;
-            const title = item.titulo || item.title || "";
-            const artist = item.artista || item.artist || "";
-            $("titulo").value = title;
-            $("artista").value = artist;
-            $("texto").value = item.texto || item.lyrics || "";
-            lyricsState = { key: normalizeSongKey(title, artist), source: "history" };
-            window.scrollTo({top:0, behavior:'smooth'});
-            analizarCancion();
           });
         });
       }catch(_){
@@ -1640,7 +1709,6 @@
       renderPedagogia(data);
       renderAdaptacion(data);
       renderTraduccion(data);
-      loadEfemeride(data);
       loadHistory();
       updateProUI();
     }
@@ -2042,6 +2110,8 @@
     document.querySelectorAll("[data-close]").forEach(btn => {
       btn.addEventListener("click", () => closeModal(btn.dataset.close));
     });
+    ["soundStart","soundStartDesktop"].forEach(id => $(id)?.addEventListener("click", startSoundMeter));
+    ["soundStop","soundStopDesktop"].forEach(id => $(id)?.addEventListener("click", () => stopSoundMeter(true)));
 
     $("btnActivarAdaptadaPed").addEventListener("click", () => {
       usingAdaptedPedagogy = true;
@@ -2067,17 +2137,6 @@
 
     (async function init(){
       renderCourseChips();
-      const historyTop = $("btnHistoryTop");
-      if(historyTop){
-        historyTop.addEventListener("click", () => {
-          loadHistory();
-          const target = $("historySection");
-          if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
-        });
-      }
-      const refreshHistory = $("btnRefreshHistory");
-      if(refreshHistory){ refreshHistory.addEventListener("click", loadHistory); }
-
       updateClock();
       setInterval(updateClock, 20000);
       await loadUser();
