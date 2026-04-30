@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin | SonarIA v1.2.5</title>
+  <title>Admin | SonarIA v1.3.2</title>
   <meta name="description" content="Panel administrativo de SonarIA." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
     .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:18px}.hero-main,.hero-side{padding:24px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--blue-soft);border:1px solid #d3e3ff;color:var(--blue);font-size:.82rem;font-weight:800;margin-bottom:14px}.hero h1{margin:0 0 10px;font-size:clamp(2rem,3.6vw,3.6rem);line-height:.95;letter-spacing:-.06em}.hero p{margin:0;color:var(--muted);line-height:1.8}
     .quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.mini-stat{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px}.mini-stat strong{display:block;font-size:1.5rem;letter-spacing:-.04em}.mini-stat span{display:block;color:var(--muted);margin-top:6px;line-height:1.55;font-size:.92rem}
     .hero-side-grid{display:grid;gap:12px}.info{background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;padding:16px}.info strong{display:block;margin-bottom:6px}.info span{color:var(--muted);line-height:1.65}
-    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.stat-card{padding:18px}.stat-card strong{display:block;font-size:1.7rem;letter-spacing:-.05em}.stat-card span{display:block;color:var(--muted);margin-top:5px;font-size:.92rem}
+    .stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}.stat-card{padding:18px}.stat-card strong{display:block;font-size:1.7rem;letter-spacing:-.05em}.stat-card span{display:block;color:var(--muted);margin-top:5px;font-size:.92rem}
     .main-grid{display:grid;grid-template-columns:360px minmax(0,1fr) 420px;gap:16px;align-items:start}
     .panel{padding:20px}.panel h2,.section-title{margin:0 0 14px;font-size:1.45rem;letter-spacing:-.04em}.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-weight:700;font-size:.92rem;color:#314156}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line-strong);background:#fff;border-radius:16px;padding:14px 14px;font:inherit;color:var(--text);outline:none}.field textarea{min-height:96px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus,.search:focus{border-color:#88afff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
     .inline-actions{display:grid;gap:10px}.status{min-height:24px;padding-top:4px;font-weight:700;line-height:1.5}.status.ok{color:#0e9d5c}.status.error{color:#d33838}.status.info{color:#47617f}
@@ -46,7 +46,7 @@
     <div class="topbar">
       <div class="brand-block">
         <div class="brand">Panel Admin Sonar<span class="ia">IA</span></div>
-        <div class="sub">v1.2.5 · Gestión real de usuarios, licencias, uso e historial</div>
+        <div class="sub">v1.3.2 · Ventas, suscripciones, licencias, uso e historial</div>
       </div>
       <div class="actions">
         <a class="btn btn-ghost" href="/sonaria.html">Ir a SonarIA</a>
@@ -57,8 +57,8 @@
     <section class="card hero">
       <div class="hero-main">
         <div class="eyebrow">🛡️ Acceso administrativo</div>
-        <h1>Controla usuarios, licencias e historial desde una sola vista.</h1>
-        <p>Panel conectado a datos reales de SonarIA: usuarios, planes, capacidad de cuentas, búsquedas recientes y uso por profesor.</p>
+        <h1>Controla ventas, suscripciones, licencias e historial desde una sola vista.</h1>
+        <p>Panel conectado a datos reales de SonarIA: usuarios, pagos, suscripciones, capacidad de cuentas, búsquedas recientes y uso por profesor.</p>
         <div class="quick-stats">
           <div class="mini-stat"><strong id="heroUsers">—</strong><span>Usuarios totales</span></div>
           <div class="mini-stat"><strong id="heroPro">—</strong><span>Cuentas Pro activas</span></div>
@@ -80,6 +80,7 @@
       <div class="card stat-card"><strong id="capacityTotal">—</strong><span>Capacidad cuentas</span></div>
       <div class="card stat-card"><strong id="licensesUsed">—</strong><span>Licencias usadas</span></div>
       <div class="card stat-card"><strong id="minutesUse">—</strong><span>Minutos de uso</span></div>
+      <div class="card stat-card"><strong id="activeSubs">—</strong><span>Suscripciones activas</span></div>
     </section>
 
     <section class="main-grid">
@@ -94,6 +95,7 @@
           <button class="btn btn-ghost" type="button" onclick="selectedEmail ? loadHistory(selectedEmail) : setStatus('Selecciona un usuario primero.', 'error')">Ver usuario seleccionado</button>
         </div>
         <div id="statusBox" class="status info">Listo para administrar licencias.</div>
+        <div class="tiny-note" style="margin-top:10px">Al asignar una licencia, SonarIA enviará correo automático si SMTP está configurado. Si no, el panel te avisará para confirmación manual.</div>
       </aside>
 
       <section class="card table-wrap">
@@ -130,6 +132,16 @@
             <div class="insight-box" id="paymentsBox"><div class="empty">Cargando...</div></div>
           </section>
         </div>
+        <div class="insights-top">
+          <section class="card insights-wrap">
+            <div class="section-title">Suscripciones MercadoPago</div>
+            <div class="insight-box" id="subscriptionsBox"><div class="empty">Cargando...</div></div>
+          </section>
+          <section class="card insights-wrap">
+            <div class="section-title">Licencias asignadas y correos</div>
+            <div class="insight-box" id="licensesBox"><div class="empty">Cargando...</div></div>
+          </section>
+        </div>
       </section>
     </section>
   </div>
@@ -161,24 +173,37 @@
       const searches = data.busquedas_recientes || data.searches || data.recent_searches || [];
       const payments = data.payments || data.pagos || [];
       const lic = data.licencias || data.licenses || {};
+      const ventas = data.ventas || {};
       const uso = data.uso || data.usage || {};
+      const subs = lic.suscripciones || data.suscripciones || data.subscriptions || [];
+      const assignments = lic.asignaciones || data.asignaciones || data.license_assignments || [];
 
       const usuarios = usuariosRaw.map(u => ({
+        id: u.id || u.user_id || "",
         email: u.email || u.correo || "",
         name: u.name || u.nombre || u.email || u.correo || "Usuario",
         plan: u.plan || u.plan_name || "free",
+        plan_label: u.plan_label || u.plan || "free",
         busquedas: u.busquedas || u.analisis || u.searches || 0,
         minutos: u.minutos || u.minutes || 0,
+        ultimo_uso: u.ultimo_uso || u.last_activity || "",
         is_admin: !!(u.is_admin || u.admin || String(u.email || "").startsWith("admin@")),
       }));
 
+      const totalCap = lic.total ?? lic.capacidad_total ?? stats.capacidad_total_cuentas ?? stats.licencias_total ?? 0;
+      const usadas = lic.usadas ?? lic.asignadas ?? lic.asignadas_estimadas ?? lic.used ?? stats.usuarios_pro ?? stats.licencias_usadas ?? 0;
       return {
         usuarios,
         licencias: {
-          total: lic.total ?? lic.capacidad_total ?? stats.capacidad_total_cuentas ?? stats.licencias_total ?? 0,
-          usadas: lic.usadas ?? lic.used ?? stats.usuarios_pro ?? stats.licencias_usadas ?? 0,
-          disponibles: lic.disponibles ?? lic.available ?? Math.max(0, Number(lic.total ?? stats.capacidad_total_cuentas ?? 0) - Number(lic.usadas ?? stats.usuarios_pro ?? 0)),
+          total: totalCap,
+          usadas,
+          disponibles: lic.disponibles ?? lic.disponibles_estimadas ?? lic.available ?? Math.max(0, Number(totalCap || 0) - Number(usadas || 0)),
+          suscripciones_activas: lic.suscripciones_activas ?? ventas.suscripciones_activas ?? 0,
+          asignaciones: assignments,
+          suscripciones: subs,
+          nota: lic.nota || "",
         },
+        ventas,
         uso: {
           total_analisis: uso.total_analisis ?? stats.analisis_totales ?? stats.total_analyses ?? 0,
           minutos_uso: uso.minutos_uso ?? stats.minutos_uso ?? 0,
@@ -197,6 +222,8 @@
       renderUsers();
       renderRecentSearches();
       renderPayments();
+      renderSubscriptions();
+      renderLicenses();
       setStatus("Panel actualizado correctamente.", "ok");
     }
 
@@ -212,7 +239,8 @@
       document.getElementById("capacityTotal").textContent = adminData.licencias.total || 0;
       document.getElementById("licensesUsed").textContent = adminData.licencias.usadas || pro || 0;
       document.getElementById("minutesUse").textContent = adminData.uso.minutos_uso || 0;
-      document.getElementById("licenseHeroText").textContent = `Total: ${adminData.licencias.total || 0} · Usadas: ${adminData.licencias.usadas || pro || 0} · Disponibles: ${adminData.licencias.disponibles || 0}`;
+      document.getElementById("activeSubs").textContent = adminData.licencias.suscripciones_activas || 0;
+      document.getElementById("licenseHeroText").textContent = `Total: ${adminData.licencias.total || 0} · Usadas: ${adminData.licencias.usadas || pro || 0} · Disponibles: ${adminData.licencias.disponibles || 0} · Suscripciones activas: ${adminData.licencias.suscripciones_activas || 0}`;
     }
 
     function renderUsers(){
@@ -263,6 +291,45 @@
       box.innerHTML = list.slice(0, 12).map(p => `<div class="activity-item"><strong>${escapeHtml(p.order_id || p.external_reference || "Orden")}</strong><span>Estado: ${escapeHtml(p.status || "—")} · Monto: ${escapeHtml(p.amount || p.monto || 0)}</span><span>${escapeHtml(prettyDate(p.fecha || p.date || p.created_at))}</span></div>`).join("");
     }
 
+    function renderSubscriptions(){
+      const box = document.getElementById("subscriptionsBox");
+      if(!box) return;
+      const list = adminData.licencias.suscripciones || [];
+      if(!list.length){
+        box.innerHTML = "<div class='empty'>No hay suscripciones recurrentes registradas todavía.</div>";
+        return;
+      }
+      box.innerHTML = list.slice(0, 20).map(s => {
+        const status = String(s.status || "pending").toLowerCase();
+        const pillClass = ["active","authorized","approved"].includes(status) ? "pro" : "free";
+        return `<div class="activity-item">
+          <strong>${escapeHtml(s.plan_name || s.plan || "Suscripción")}</strong>
+          <span><span class="pill ${pillClass}">${escapeHtml(status)}</span> · ${escapeHtml(s.payer_email || s.email || "sin correo")}</span>
+          <span>Licencias: ${escapeHtml(s.licenses_used ?? 0)} / ${escapeHtml(s.licenses_total ?? 0)} · Disponibles: ${escapeHtml(s.licenses_available ?? "—")}</span>
+          <span>MP: ${escapeHtml(s.mp_preapproval_id || s.preapproval_id || s.external_reference || "—")}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderLicenses(){
+      const box = document.getElementById("licensesBox");
+      if(!box) return;
+      const list = adminData.licencias.asignaciones || [];
+      if(!list.length){
+        box.innerHTML = "<div class='empty'>Aún no hay licencias asignadas por correo.</div>";
+        return;
+      }
+      box.innerHTML = list.slice(0, 30).map(l => {
+        const status = String(l.status || "active").toLowerCase();
+        const pillClass = status === "active" ? "pro" : "free";
+        return `<div class="activity-item">
+          <strong>${escapeHtml(l.email || l.assigned_email || "correo no indicado")}</strong>
+          <span><span class="pill ${pillClass}">${escapeHtml(status)}</span> · Usuario: ${escapeHtml(l.assigned_user_name || (l.assigned_user_id ? "vinculado" : "pendiente de login"))}</span>
+          <span>Nota: ${escapeHtml(l.note || "—")} · Fecha: ${escapeHtml(prettyDate(l.updated_at || l.fecha || l.created_at))}</span>
+        </div>`;
+      }).join("");
+    }
+
     async function assignLicense(){
       const email = document.getElementById("email").value.trim();
       const plan = document.getElementById("planSelect").value;
@@ -270,8 +337,9 @@
       if(!email){ setStatus("Debes ingresar un correo.", "error"); return; }
       setStatus("Asignando licencia...", "info");
       try{
-        await fetchJson(API + "/admin/licenses/assign", { method:"POST", body: JSON.stringify({ email, plan, note }) });
-        setStatus("Licencia asignada correctamente.", "ok");
+        const data = await fetchJson(API + "/admin/licenses/assign", { method:"POST", body: JSON.stringify({ email, plan, note }) });
+        const mail = data.email_sent ? " Correo enviado." : (" " + (data.email_status || "Correo no enviado; confirmar manualmente."));
+        setStatus("Licencia asignada correctamente." + mail, "ok");
         await reloadEverything();
       }catch(error){ setStatus(error.message || "No fue posible asignar licencia.", "error"); }
     }
@@ -282,8 +350,9 @@
       if(!confirm("¿Revocar licencia de " + email + "?")) return;
       setStatus("Revocando licencia...", "info");
       try{
-        await fetchJson(API + "/admin/licenses/revoke", { method:"POST", body: JSON.stringify({ email }) });
-        setStatus("Licencia revocada correctamente.", "ok");
+        const data = await fetchJson(API + "/admin/licenses/revoke", { method:"POST", body: JSON.stringify({ email }) });
+        const mail = data.email_sent ? " Correo enviado." : (" " + (data.email_status || "Correo no enviado; confirmar manualmente."));
+        setStatus("Licencia revocada correctamente." + mail, "ok");
         await reloadEverything();
       }catch(error){ setStatus(error.message || "No fue posible revocar licencia.", "error"); }
     }
