@@ -318,12 +318,13 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.5 · historial + efeméride robusta</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
         <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
+        <button id="btnHistoryTop" class="btn btn-ghost" type="button">Mi historial</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
@@ -500,11 +501,13 @@
         </div>
       </section>
 
-      <section class="card section">
+      <section class="card section" id="historySection">
         <div class="section-topline">
           <div class="section-title"><span>🕘</span><h3>Mi historial</h3></div>
           <div class="chips"><span id="historyCount" class="chip">0 registros</span></div>
         </div>
+        <div class="small-muted" style="margin-bottom:10px">Historial real de tus análisis guardados. Puedes reutilizar canciones, recuperar letras y volver a analizarlas.</div>
+        <div class="summary-btn-row" style="margin-bottom:12px"><button id="btnRefreshHistory" class="btn btn-soft" type="button">Actualizar historial</button></div>
         <div id="historyList" class="list"><div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div></div>
       </section>
     </section>
@@ -1008,20 +1011,39 @@
       fillCalendarGrid("calendarGridDesktop", "calendarMonthLabelDesktop", dateStr);
     }
 
-    async function loadEfemeride(){
-      const fallback = {
-        texto: "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical sin depender de una obra específica.",
-        fecha: new Date().toISOString().slice(0,10)
+    function localEfemerideFallback(){
+      const today = new Date();
+      const month = today.getMonth() + 1;
+      const textos = {
+        1:"Enero permite vincular música e inicio de ciclos: metas expresivas, repertorios nuevos, identidad de curso y memoria cultural.",
+        2:"Febrero permite contextualizar circulación musical, medios de comunicación, festivales y audiencias en la cultura popular.",
+        3:"Marzo permite conectar música, historia, patrimonio e inicio del año escolar desde una mirada cultural amplia.",
+        4:"Abril permite abordar música, cuerpo, movimiento, escena y expresión artística como lenguajes conectados.",
+        5:"Mayo permite destacar intérpretes, voz, canción popular y construcción emocional en distintos repertorios.",
+        6:"Junio permite trabajar la música como práctica comunitaria, celebración cultural y forma de participación social.",
+        7:"Julio permite contextualizar formas extensas, contraste expresivo y desarrollo instrumental en la historia de la música.",
+        8:"Agosto permite abordar performance, videoclip, cultura pop y relación entre música, imagen e industria.",
+        9:"Septiembre permite conectar música, identidad, escena, comunidad y formas de expresión colectiva.",
+        10:"Octubre permite relacionar canción popular, contexto social, autoría y memoria cultural del siglo XX.",
+        11:"Noviembre permite destacar patrimonio musical, oficio del músico, interpretación y tradición cultural.",
+        12:"Diciembre permite revisar ciclos, repertorios significativos, memoria musical y transformaciones históricas."
       };
+      return {texto:textos[month] || "Efeméride musical del día: contexto breve para vincular música, cultura, memoria e identidad musical.", fecha:today.toISOString().slice(0,10)};
+    }
+
+    async function loadEfemeride(contextData = null){
+      const fallback = localEfemerideFallback();
+      setTextIfExists("efemFact", fallback.texto);
+      setTextIfExists("efemFactDesktop", fallback.texto);
+      renderCalendar(fallback.fecha);
       try{
-        const title = encodeURIComponent($("titulo")?.value || "");
-        const artist = encodeURIComponent($("artista")?.value || "");
-        const efemUrl = `${EFEM_URL}?cancion=${title}&artista=${artist}`;
-        const res = await apiFetch(efemUrl, {
-          headers: authToken ? {Authorization:"Bearer " + authToken} : {}
-        });
+        const title = $("titulo")?.value || contextData?.titulo || "";
+        const artist = $("artista")?.value || contextData?.artista || "";
+        const temas = Array.isArray(contextData?.temas_detectados) ? contextData.temas_detectados.join(",") : "";
+        const params = new URLSearchParams({cancion:title, artista:artist, tema:temas, fecha:new Date().toISOString().slice(0,10), _t:String(Date.now())});
+        const res = await fetch(`${EFEM_URL}?${params.toString()}`, {cache:"no-store"});
         const data = await res.json().catch(() => ({}));
-        const efemText = res.ok && data.texto ? data.texto : fallback.texto;
+        const efemText = res.ok && data && data.texto ? data.texto : fallback.texto;
         setTextIfExists("efemFact", efemText);
         setTextIfExists("efemFactDesktop", efemText);
         renderCalendar((data && data.fecha) || fallback.fecha);
@@ -1308,12 +1330,23 @@
     }
 
 
+    function formatHistoryDate(value){
+      if(!value) return "fecha no disponible";
+      try{
+        const d = new Date(value);
+        if(Number.isNaN(d.getTime())) return String(value);
+        return d.toLocaleString("es-CL", {dateStyle:"short", timeStyle:"short"});
+      }catch(_){ return String(value); }
+    }
+
     function buildHistoryItemHtml(item, idx){
-      const title = escapeHtml(item.titulo || "Sin título");
-      const artist = escapeHtml(item.artista || "Artista no indicado");
-      const result = escapeHtml(item.resultado || "—");
-      const when = escapeHtml(item.updated_at || item.created_at || "");
-      return `<div class="list-item"><strong>${title} — ${artist}</strong><br><span class="small-muted">${result} · ${when}</span><div class="summary-btn-row"><button class="btn btn-soft" type="button" data-history-idx="${idx}">Reutilizar</button></div></div>`;
+      const title = escapeHtml(item.titulo || item.title || "Sin título");
+      const artist = escapeHtml(item.artista || item.artist || "Artista no indicado");
+      const result = escapeHtml(item.resultado || item.result || "—");
+      const age = escapeHtml(item.edad || item.age_suggested || "—");
+      const risk = Number(item.risk || item.risk_percent || 0);
+      const when = escapeHtml(formatHistoryDate(item.fecha || item.updated_at || item.created_at || ""));
+      return `<div class="list-item"><strong>${title} — ${artist}</strong><br><span class="small-muted">${result} · Edad: ${age} · Riesgo: ${risk}% · ${when}</span><div class="summary-btn-row"><button class="btn btn-soft" type="button" data-history-idx="${idx}">Reutilizar</button><button class="btn btn-ghost" type="button" data-history-analyze="${idx}">Volver a analizar</button></div></div>`;
     }
 
     async function loadHistory(){
@@ -1325,7 +1358,7 @@
       try{
         const res = await apiFetch(HISTORY_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json().catch(() => ({}));
-        const items = Array.isArray(data.items) ? data.items : [];
+        const items = Array.isArray(data.items) ? data.items : (Array.isArray(data.history) ? data.history : (Array.isArray(data) ? data : []));
         $("historyCount").textContent = `${items.length} registros`;
         if(!items.length){
           $("historyList").innerHTML = '<div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div>';
@@ -1336,16 +1369,33 @@
           btn.addEventListener('click', () => {
             const item = items[Number(btn.dataset.historyIdx || 0)];
             if(!item) return;
-            $("titulo").value = item.titulo || "";
-            $("artista").value = item.artista || "";
-            $("texto").value = item.texto || "";
-            lyricsState = { key: normalizeSongKey(item.titulo || "", item.artista || ""), source: "history" };
-            if(item.analysis){
+            const title = item.titulo || item.title || "";
+            const artist = item.artista || item.artist || "";
+            $("titulo").value = title;
+            $("artista").value = artist;
+            $("texto").value = item.texto || item.lyrics || "";
+            lyricsState = { key: normalizeSongKey(title, artist), source: "history" };
+            if(item.analysis && Object.keys(item.analysis).length){
               renderResult(item.analysis);
               setStatus('Canción reutilizada desde tu historial.', 'success');
             }else{
               resetAnalysisOnly('Canción cargada desde historial. Puedes volver a analizarla.');
             }
+            window.scrollTo({top:0, behavior:'smooth'});
+          });
+        });
+        document.querySelectorAll('[data-history-analyze]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const item = items[Number(btn.dataset.historyAnalyze || 0)];
+            if(!item) return;
+            const title = item.titulo || item.title || "";
+            const artist = item.artista || item.artist || "";
+            $("titulo").value = title;
+            $("artista").value = artist;
+            $("texto").value = item.texto || item.lyrics || "";
+            lyricsState = { key: normalizeSongKey(title, artist), source: "history" };
+            window.scrollTo({top:0, behavior:'smooth'});
+            analizarCancion();
           });
         });
       }catch(_){
@@ -1590,6 +1640,7 @@
       renderPedagogia(data);
       renderAdaptacion(data);
       renderTraduccion(data);
+      loadEfemeride(data);
       loadHistory();
       updateProUI();
     }
@@ -2016,6 +2067,17 @@
 
     (async function init(){
       renderCourseChips();
+      const historyTop = $("btnHistoryTop");
+      if(historyTop){
+        historyTop.addEventListener("click", () => {
+          loadHistory();
+          const target = $("historySection");
+          if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+        });
+      }
+      const refreshHistory = $("btnRefreshHistory");
+      if(refreshHistory){ refreshHistory.addEventListener("click", loadHistory); }
+
       updateClock();
       setInterval(updateClock, 20000);
       await loadUser();
