@@ -324,7 +324,7 @@
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
-        <button id="btnGuideTop" class="btn btn-ghost" type="button">Declaración de principios</button>
+        <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
@@ -667,7 +667,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.3.1 · V131 · final estable";
+    const SONARIA_VERSION = "SonarIA v1.3.5 · FREE + TRIAL + PRO";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -696,7 +696,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.3.1 · V131 · final estable";
+      if(el) el.textContent = "v1.3.5 · FREE + TRIAL + PRO";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -758,10 +758,33 @@
     }
 
 
+    function accessState(){
+      return user?.access || {
+        pro_active: Boolean(user?.pro_active),
+        trial: user?.trial || {},
+        free_daily_limit: user?.free_daily_limit || 2,
+        free_remaining_today: null
+      };
+    }
+
     function isProUser(){
+      const access = accessState();
       const plan = String(user?.plan || '').toLowerCase();
-      // Admin también desbloquea funciones Pro para pruebas y operación interna.
-      return Boolean(user?.is_admin) || plan === 'pro' || plan.startsWith('pro_');
+      // Admin, suscripción, licencia o trial activo desbloquean funciones Pro.
+      return Boolean(user?.is_admin) || Boolean(access?.pro_active) || plan === 'pro' || plan.startsWith('pro_');
+    }
+
+    function accessLabel(){
+      const access = accessState();
+      const trial = access?.trial || {};
+      if(Boolean(user?.is_admin)) return "Admin · Pro";
+      if(trial.active) return `Trial Pro · quedan ${trial.days_left || 0} día(s)`;
+      if(isProUser()) return "Plan Pro activo";
+      const limit = access.free_daily_limit ?? user?.free_daily_limit ?? 2;
+      const remaining = access.free_remaining_today;
+      return remaining === null || remaining === undefined
+        ? `Plan Free · ${limit} análisis/día`
+        : `Plan Free · ${remaining}/${limit} análisis disponibles hoy`;
     }
 
     function openBenefits(){
@@ -779,7 +802,7 @@
       const name = (user?.name || user?.email || "docente").split("@")[0];
       const email = user?.email || "";
       if($("welcomeGreeting")) $("welcomeGreeting").textContent = `${saludoPorHora()}, ${name}`;
-      if($("welcomeIdentity")) $("welcomeIdentity").textContent = email ? `${email} · ${isProUser() ? "Plan Pro activo" : "Plan Free activo"}` : "Sesión docente activa";
+      if($("welcomeIdentity")) $("welcomeIdentity").textContent = email ? `${email} · ${accessLabel()}` : "Sesión docente activa";
     }
 
     function updateProUI(){
@@ -787,12 +810,12 @@
       const plan = $('planPill');
       const topPlan = $('topPlanPill');
       if(topPlan){
-        topPlan.textContent = pro ? 'Plan Pro' : 'Plan Free';
+        topPlan.textContent = accessLabel();
         topPlan.classList.toggle('pro', pro);
         topPlan.classList.toggle('free', !pro);
       }
       if(plan){
-        plan.textContent = pro ? 'Plan Pro' : 'Plan Free';
+        plan.textContent = accessLabel();
         plan.classList.toggle('pro', pro);
         plan.classList.toggle('free', !pro);
       }
@@ -1101,6 +1124,9 @@
         const data = await res.json();
         if(!res.ok || !data.ok) throw new Error();
         user = data.user || {plan:"free", is_admin:false};
+        if(data.access){ user.access = data.access; }
+        localStorage.setItem("mejoraria_user", JSON.stringify(user));
+        localStorage.setItem("mejoraria_plan", user.plan || "free");
       }catch(_){
         clearSessionLocal();
         window.location.href = "login.html?next=sonaria&reason=session";
@@ -1634,7 +1660,16 @@
         const data = await response.json().catch(() => ({}));
 
         if(!response.ok){
-          const error = new Error(data.detail || data.error || "Error en servidor");
+          let detail = data.detail || data.error || "Error en servidor";
+          if(typeof detail === "object"){
+            const access = detail.access || {};
+            if(access){
+              user.access = access;
+              updateProUI();
+            }
+            detail = detail.message || "Límite FREE alcanzado. Activa una suscripción para seguir usando funciones Pro.";
+          }
+          const error = new Error(detail);
           error.sonariaData = data;
           throw error;
         }
@@ -1649,6 +1684,10 @@
         }
 
         setProgressStep(3);
+        if(data.access){
+          user.access = data.access;
+          updateProUI();
+        }
         renderResult(data);
         finalizarProgresoAnalisis(true);
         setStatus("Análisis listo.", "success");
