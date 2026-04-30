@@ -263,28 +263,6 @@
     .desktop-tools-panel .fact-card{padding:13px;border-radius:16px;line-height:1.45;font-size:.88rem}
     .desktop-tools-panel .fact-card strong{font-size:.92rem}
     .desktop-tools-panel #efemFactDesktop{font-size:.84rem;line-height:1.45;margin-top:6px}
-    .sound-card{
-      padding:13px;
-      border-radius:16px;
-      background:linear-gradient(180deg,#ffffff,#f7faff);
-      border:1px solid var(--line);
-      display:grid;
-      gap:10px;
-      line-height:1.45;
-      font-size:.88rem;
-    }
-    .sound-card strong{display:flex;align-items:center;gap:8px}
-    .sound-meter-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-    .sound-db{font-size:1.85rem;font-weight:950;letter-spacing:-.07em;color:#243043}
-    .sound-pill{padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:900;border:1px solid var(--line);background:#f4f7fb;color:#66758c}
-    .sound-pill.green{background:#eafaf1;color:#11763d;border-color:#bdeccd}
-    .sound-pill.yellow{background:#fff7e6;color:#9a5a00;border-color:#f3d28c}
-    .sound-pill.red{background:#fff0f0;color:#a83232;border-color:#f2b8b8}
-    .sound-track{height:10px;background:#e8edf6;border-radius:999px;overflow:hidden}
-    .sound-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#25c96f,#f2c14b,#ff6a6a);transition:width .18s ease}
-    .sound-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .sound-actions .btn{min-height:40px;padding:0 10px;border-radius:13px;font-size:.82rem}
-    .sound-note{font-size:.78rem;color:var(--muted);line-height:1.45}
 
     #btnToolsTop{display:none}
     #principiosSonaria{display:none}
@@ -341,12 +319,12 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable · sin sonómetro</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
         <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
-        <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
+        <button id="btnGuideTop" class="btn btn-ghost" type="button">Declaración de principios</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
         <button id="btnAdminTop" class="btn btn-ghost hidden" type="button">Panel admin</button>
@@ -432,22 +410,6 @@
           <div class="fact-card">
             <strong>🎼 Un día como hoy</strong>
             <div id="efemFactDesktop" class="small-muted">Cargando efeméride musical...</div>
-          </div>
-          <div class="sound-card" aria-label="Sonómetro de aula">
-            <strong>🔊 Sonómetro de aula</strong>
-            <div class="sound-meter-top">
-              <div>
-                <div id="soundDbDesktop" class="sound-db">-- dB</div>
-                <div id="soundMsgDesktop" class="small-muted">Permite usar el micrófono para medir ruido aproximado.</div>
-              </div>
-              <span id="soundPillDesktop" class="sound-pill">apagado</span>
-            </div>
-            <div class="sound-track"><div id="soundFillDesktop" class="sound-fill"></div></div>
-            <div class="sound-actions">
-              <button id="soundStartDesktop" class="btn btn-soft" type="button">Iniciar</button>
-              <button id="soundStopDesktop" class="btn btn-ghost" type="button">Detener</button>
-            </div>
-            <div class="sound-note">Orientativo: no graba audio ni reemplaza un sonómetro certificado.</div>
           </div>
         </div>
       </section>
@@ -574,22 +536,6 @@
         <div class="fact-card">
           <strong>🎼 Un día como hoy</strong>
           <div id="efemFact" class="small-muted">Cargando efeméride musical...</div>
-        </div>
-        <div class="sound-card" aria-label="Sonómetro de aula">
-          <strong>🔊 Sonómetro de aula</strong>
-          <div class="sound-meter-top">
-            <div>
-              <div id="soundDb" class="sound-db">-- dB</div>
-              <div id="soundMsg" class="small-muted">Permite usar el micrófono para medir ruido aproximado.</div>
-            </div>
-            <span id="soundPill" class="sound-pill">apagado</span>
-          </div>
-          <div class="sound-track"><div id="soundFill" class="sound-fill"></div></div>
-          <div class="sound-actions">
-            <button id="soundStart" class="btn btn-soft" type="button">Iniciar</button>
-            <button id="soundStop" class="btn btn-ghost" type="button">Detener</button>
-          </div>
-          <div class="sound-note">Orientativo: no graba audio ni reemplaza un sonómetro certificado.</div>
         </div>
         <div class="clock-card">
           <strong id="clockTime">--:--</strong>
@@ -1086,80 +1032,6 @@
       }
     }
 
-
-    let soundCtx = null;
-    let soundAnalyser = null;
-    let soundStream = null;
-    let soundRaf = null;
-    let soundBaseline = null;
-
-    function updateSoundUI(db, label, cls, percent){
-      const values = [
-        ["soundDb", "soundMsg", "soundPill", "soundFill"],
-        ["soundDbDesktop", "soundMsgDesktop", "soundPillDesktop", "soundFillDesktop"]
-      ];
-      values.forEach(([dbId,msgId,pillId,fillId]) => {
-        const dbEl = $(dbId), msgEl = $(msgId), pillEl = $(pillId), fillEl = $(fillId);
-        if(dbEl) dbEl.textContent = Number.isFinite(db) ? `${Math.round(db)} dB` : "-- dB";
-        if(msgEl) msgEl.textContent = label || "Permite usar el micrófono para medir ruido aproximado.";
-        if(pillEl){ pillEl.textContent = cls === "green" ? "ambiente sano" : cls === "yellow" ? "ruido alto" : cls === "red" ? "pausa sugerida" : "apagado"; pillEl.className = "sound-pill " + (cls || ""); }
-        if(fillEl) fillEl.style.width = `${Math.max(0, Math.min(100, percent || 0))}%`;
-      });
-    }
-
-    async function startSoundMeter(){
-      try{
-        if(soundStream) stopSoundMeter(false);
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if(!AudioCtx || !navigator.mediaDevices?.getUserMedia){
-          updateSoundUI(NaN, "Este navegador no permite sonómetro con micrófono.", "", 0);
-          return;
-        }
-        soundStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false }, video:false });
-        soundCtx = new AudioCtx();
-        const source = soundCtx.createMediaStreamSource(soundStream);
-        soundAnalyser = soundCtx.createAnalyser();
-        soundAnalyser.fftSize = 2048;
-        source.connect(soundAnalyser);
-        const data = new Uint8Array(soundAnalyser.fftSize);
-        soundBaseline = null;
-        const tick = () => {
-          soundAnalyser.getByteTimeDomainData(data);
-          let sum = 0;
-          for(let i=0;i<data.length;i++){
-            const v = (data[i] - 128) / 128;
-            sum += v * v;
-          }
-          const rms = Math.sqrt(sum / data.length);
-          const dbfs = 20 * Math.log10(rms || 0.00001);
-          if(soundBaseline === null) soundBaseline = dbfs;
-          // Estimación pedagógica: no calibrada. Mapea el ruido relativo del micrófono a rango aula.
-          let approxDb = 45 + ((dbfs - soundBaseline) * 2.1);
-          approxDb = Math.max(35, Math.min(95, approxDb));
-          let cls = "green", msg = "Ambiente ideal para escuchar, explicar o trabajar en grupo.", pct = ((approxDb - 35) / 60) * 100;
-          if(approxDb >= 68 && approxDb < 78){ cls = "yellow"; msg = "El ruido está subiendo: conviene bajar volumen o pausar instrucciones."; }
-          if(approxDb >= 78){ cls = "red"; msg = "Ruido alto: sugiere pausa, respiración breve o acuerdo de silencio."; }
-          updateSoundUI(approxDb, msg, cls, pct);
-          soundRaf = requestAnimationFrame(tick);
-        };
-        tick();
-      }catch(err){
-        console.error(err);
-        updateSoundUI(NaN, "No se pudo acceder al micrófono. Revisa permisos del navegador.", "", 0);
-      }
-    }
-
-    function stopSoundMeter(reset=true){
-      if(soundRaf) cancelAnimationFrame(soundRaf);
-      soundRaf = null;
-      if(soundStream){ soundStream.getTracks().forEach(t => t.stop()); }
-      soundStream = null;
-      if(soundCtx){ try{ soundCtx.close(); }catch(_){} }
-      soundCtx = null;
-      soundAnalyser = null;
-      soundBaseline = null;
-      if(reset) updateSoundUI(NaN, "Sonómetro detenido. No se graba ni guarda audio.", "", 0);
-    }
 
     function clearSessionLocal(){
       ["mejoraria_token","token","access_token","mejoraria_user","mejoraria_plan"].forEach(k => localStorage.removeItem(k));
@@ -2110,8 +1982,6 @@
     document.querySelectorAll("[data-close]").forEach(btn => {
       btn.addEventListener("click", () => closeModal(btn.dataset.close));
     });
-    ["soundStart","soundStartDesktop"].forEach(id => $(id)?.addEventListener("click", startSoundMeter));
-    ["soundStop","soundStopDesktop"].forEach(id => $(id)?.addEventListener("click", () => stopSoundMeter(true)));
 
     $("btnActivarAdaptadaPed").addEventListener("click", () => {
       usingAdaptedPedagogy = true;
