@@ -263,7 +263,6 @@
     .desktop-tools-panel .fact-card{padding:13px;border-radius:16px;line-height:1.45;font-size:.88rem}
     .desktop-tools-panel .fact-card strong{font-size:.92rem}
     .desktop-tools-panel #efemFactDesktop{font-size:.84rem;line-height:1.45;margin-top:6px}
-
     #btnToolsTop{display:none}
     #principiosSonaria{display:none}
     .guide-docente-list{display:grid;gap:12px;margin-top:12px}
@@ -319,7 +318,7 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.3.1 · V131.4 · dashboard estable · sin sonómetro</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.4.0 · V140 · docente/admin separado</span></div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
@@ -667,7 +666,7 @@
 
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
-    const SONARIA_VERSION = "SonarIA v1.3.5 · FREE + TRIAL + PRO";
+    const SONARIA_VERSION = "SonarIA v1.3.1 · V131 · final estable";
     const ANALYZE_URL = API_BASE + "/analizar";
     const ME_URL = API_BASE + "/me";
     const EFEM_URL = API_BASE + "/efemeride";
@@ -696,7 +695,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.3.5 · FREE + TRIAL + PRO";
+      if(el) el.textContent = "v1.3.1 · V131 · final estable";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -758,33 +757,10 @@
     }
 
 
-    function accessState(){
-      return user?.access || {
-        pro_active: Boolean(user?.pro_active),
-        trial: user?.trial || {},
-        free_daily_limit: user?.free_daily_limit || 2,
-        free_remaining_today: null
-      };
-    }
-
     function isProUser(){
-      const access = accessState();
       const plan = String(user?.plan || '').toLowerCase();
-      // Admin, suscripción, licencia o trial activo desbloquean funciones Pro.
-      return Boolean(user?.is_admin) || Boolean(access?.pro_active) || plan === 'pro' || plan.startsWith('pro_');
-    }
-
-    function accessLabel(){
-      const access = accessState();
-      const trial = access?.trial || {};
-      if(Boolean(user?.is_admin)) return "Admin · Pro";
-      if(trial.active) return `Trial Pro · quedan ${trial.days_left || 0} día(s)`;
-      if(isProUser()) return "Plan Pro activo";
-      const limit = access.free_daily_limit ?? user?.free_daily_limit ?? 2;
-      const remaining = access.free_remaining_today;
-      return remaining === null || remaining === undefined
-        ? `Plan Free · ${limit} análisis/día`
-        : `Plan Free · ${remaining}/${limit} análisis disponibles hoy`;
+      // Admin también desbloquea funciones Pro para pruebas y operación interna.
+      return Boolean(user?.is_admin) || plan === 'pro' || plan.startsWith('pro_');
     }
 
     function openBenefits(){
@@ -802,7 +778,7 @@
       const name = (user?.name || user?.email || "docente").split("@")[0];
       const email = user?.email || "";
       if($("welcomeGreeting")) $("welcomeGreeting").textContent = `${saludoPorHora()}, ${name}`;
-      if($("welcomeIdentity")) $("welcomeIdentity").textContent = email ? `${email} · ${accessLabel()}` : "Sesión docente activa";
+      if($("welcomeIdentity")) $("welcomeIdentity").textContent = email ? `${email} · ${isProUser() ? "Plan Pro activo" : "Plan Free activo"}` : "Sesión docente activa";
     }
 
     function updateProUI(){
@@ -810,12 +786,12 @@
       const plan = $('planPill');
       const topPlan = $('topPlanPill');
       if(topPlan){
-        topPlan.textContent = accessLabel();
+        topPlan.textContent = pro ? 'Plan Pro' : 'Plan Free';
         topPlan.classList.toggle('pro', pro);
         topPlan.classList.toggle('free', !pro);
       }
       if(plan){
-        plan.textContent = accessLabel();
+        plan.textContent = pro ? 'Plan Pro' : 'Plan Free';
         plan.classList.toggle('pro', pro);
         plan.classList.toggle('free', !pro);
       }
@@ -1055,7 +1031,6 @@
       }
     }
 
-
     function clearSessionLocal(){
       ["mejoraria_token","token","access_token","mejoraria_user","mejoraria_plan"].forEach(k => localStorage.removeItem(k));
     }
@@ -1124,9 +1099,6 @@
         const data = await res.json();
         if(!res.ok || !data.ok) throw new Error();
         user = data.user || {plan:"free", is_admin:false};
-        if(data.access){ user.access = data.access; }
-        localStorage.setItem("mejoraria_user", JSON.stringify(user));
-        localStorage.setItem("mejoraria_plan", user.plan || "free");
       }catch(_){
         clearSessionLocal();
         window.location.href = "login.html?next=sonaria&reason=session";
@@ -1660,16 +1632,7 @@
         const data = await response.json().catch(() => ({}));
 
         if(!response.ok){
-          let detail = data.detail || data.error || "Error en servidor";
-          if(typeof detail === "object"){
-            const access = detail.access || {};
-            if(access){
-              user.access = access;
-              updateProUI();
-            }
-            detail = detail.message || "Límite FREE alcanzado. Activa una suscripción para seguir usando funciones Pro.";
-          }
-          const error = new Error(detail);
+          const error = new Error(data.detail || data.error || "Error en servidor");
           error.sonariaData = data;
           throw error;
         }
@@ -1684,10 +1647,6 @@
         }
 
         setProgressStep(3);
-        if(data.access){
-          user.access = data.access;
-          updateProUI();
-        }
         renderResult(data);
         finalizarProgresoAnalisis(true);
         setStatus("Análisis listo.", "success");
