@@ -503,9 +503,15 @@
       <section class="card section">
         <div class="section-topline">
           <div class="section-title"><span>🕘</span><h3>Mi historial</h3></div>
-          <div class="chips"><span id="historyCount" class="chip">0 registros</span></div>
+          <div class="chips"><span id="historyCount" class="chip">0 canciones guardadas</span></div>
         </div>
-        <div id="historyList" class="list"><div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div></div>
+        <div class="pro-gate" style="margin-top:10px">
+          <div>
+            <strong>Historial inteligente, no lista infinita</strong>
+            <span id="historyInlineMessage">Tus canciones guardadas se abren en una ventana aparte. No se duplican: si analizas la misma canción, se actualiza.</span>
+          </div>
+          <button id="btnOpenHistory" class="btn btn-soft" type="button">Abrir historial</button>
+        </div>
       </section>
     </section>
   </div>
@@ -548,6 +554,23 @@
           <div id="calendarGrid" class="calendar"></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="historyModal" class="modal">
+    <div class="modal-box">
+      <div class="section-topline">
+        <div class="section-title"><span>🕘</span><h3>Historial de canciones</h3></div>
+        <button class="btn btn-ghost" type="button" data-close="historyModal">Cerrar</button>
+      </div>
+      <div class="small-muted" style="margin-bottom:12px">
+        Aquí puedes reutilizar canciones ya analizadas o borrarlas. SonarIA evita duplicados: si vuelves a analizar la misma canción, se actualiza el registro existente.
+      </div>
+      <div class="summary-btn-row" style="margin-bottom:12px">
+        <button id="btnRefreshHistory" class="btn btn-soft" type="button">Actualizar historial</button>
+        <button id="btnClearHistory" class="btn btn-danger" type="button">Borrar todo mi historial</button>
+      </div>
+      <div id="historyList" class="list"><div class="list-item">Cargando historial...</div></div>
     </div>
   </div>
 
@@ -1298,47 +1321,116 @@
 
 
     function buildHistoryItemHtml(item, idx){
+      const id = Number(item.id || 0);
       const title = escapeHtml(item.titulo || "Sin título");
       const artist = escapeHtml(item.artista || "Artista no indicado");
       const result = escapeHtml(item.resultado || "—");
-      const when = escapeHtml(item.updated_at || item.created_at || "");
-      return `<div class="list-item"><strong>${title} — ${artist}</strong><br><span class="small-muted">${result} · ${when}</span><div class="summary-btn-row"><button class="btn btn-soft" type="button" data-history-idx="${idx}">Reutilizar</button></div></div>`;
+      const when = escapeHtml((item.updated_at || item.created_at || "").replace("T", " ").slice(0, 16));
+      const riesgo = Number(item.risk || item.risk_percent || 0);
+      return '<div class="list-item" data-history-item="' + id + '">' +
+        '<strong>' + title + ' — ' + artist + '</strong><br>' +
+        '<span class="small-muted">' + result + ' · riesgo ' + riesgo + '% · ' + when + '</span>' +
+        '<div class="summary-btn-row">' +
+          '<button class="btn btn-soft" type="button" data-history-idx="' + idx + '">Reutilizar</button>' +
+          '<button class="btn btn-danger" type="button" data-history-delete="' + id + '">Borrar</button>' +
+        '</div>' +
+      '</div>';
     }
 
-    async function loadHistory(){
+    function reuseHistoryItem(item){
+      if(!item) return;
+      $("titulo").value = item.titulo || "";
+      $("artista").value = item.artista || "";
+      $("texto").value = item.texto || "";
+      lyricsState = { key: normalizeSongKey(item.titulo || "", item.artista || ""), source: "history" };
+      closeModal("historyModal");
+      if(item.analysis && Object.keys(item.analysis || {}).length){
+        renderResult(item.analysis);
+        setStatus('Canción reutilizada desde tu historial.', 'success');
+      }else{
+        resetAnalysisOnly('Canción cargada desde historial. Puedes volver a analizarla.');
+      }
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    async function deleteHistoryItem(id){
+      if(!id || !authToken) return;
+      if(!confirm("¿Borrar esta canción de tu historial?")) return;
+      try{
+        const res = await apiFetch(HISTORY_URL + "/" + id, {
+          method: 'DELETE',
+          headers:{Authorization:'Bearer ' + authToken}
+        });
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok || !data.ok) throw new Error(data.detail || 'No se pudo borrar');
+        setStatus('Canción borrada del historial.', 'success');
+        await loadHistory(true);
+      }catch(err){
+        setStatus(err.message || 'No se pudo borrar la canción.', 'error');
+      }
+    }
+
+    async function clearHistory(){
+      if(!authToken) return;
+      if(!confirm("¿Borrar TODO tu historial de canciones? Esta acción no afecta tu cuenta.")) return;
+      try{
+        const res = await apiFetch(HISTORY_URL, {
+          method: 'DELETE',
+          headers:{Authorization:'Bearer ' + authToken}
+        });
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok || !data.ok) throw new Error(data.detail || 'No se pudo limpiar el historial');
+        setStatus('Historial borrado.', 'success');
+        await loadHistory(true);
+      }catch(err){
+        setStatus(err.message || 'No se pudo limpiar el historial.', 'error');
+      }
+    }
+
+    async function loadHistory(renderModal = false){
+      const countEl = $("historyCount");
+      const inlineEl = $("historyInlineMessage");
+      const listEl = $("historyList");
       if(!authToken){
-        $("historyCount").textContent = "0 registros";
-        $("historyList").innerHTML = '<div class="list-item">Inicia sesión para guardar y reutilizar tu historial.</div>';
+        if(countEl) countEl.textContent = "0 canciones guardadas";
+        if(inlineEl) inlineEl.textContent = "Inicia sesión para guardar, reutilizar y administrar tu historial.";
+        if(listEl) listEl.innerHTML = '<div class="list-item">Inicia sesión para guardar y reutilizar tu historial.</div>';
         return;
       }
       try{
         const res = await apiFetch(HISTORY_URL, {headers:{Authorization:"Bearer " + authToken}});
         const data = await res.json().catch(() => ({}));
-        const items = Array.isArray(data.items) ? data.items : [];
-        $("historyCount").textContent = `${items.length} registros`;
+        const rawItems = Array.isArray(data.items) ? data.items : [];
+        const seen = new Set();
+        const items = rawItems.filter(item => {
+          const key = normalizeSongKey(item.titulo || "", item.artista || "");
+          if(seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        const label = items.length === 1 ? "1 canción guardada" : (items.length + " canciones guardadas");
+        if(countEl) countEl.textContent = label;
+        if(inlineEl){
+          inlineEl.textContent = items.length
+            ? "Historial disponible. Ábrelo para reutilizar o borrar canciones sin llenar esta pantalla."
+            : "Tu historial aparecerá aquí después del primer análisis.";
+        }
+        if(!listEl) return;
         if(!items.length){
-          $("historyList").innerHTML = '<div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div>';
+          listEl.innerHTML = '<div class="list-item">Tu historial aparecerá aquí después del primer análisis.</div>';
           return;
         }
-        $("historyList").innerHTML = items.map((item, idx) => buildHistoryItemHtml(item, idx)).join("");
-        document.querySelectorAll('[data-history-idx]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const item = items[Number(btn.dataset.historyIdx || 0)];
-            if(!item) return;
-            $("titulo").value = item.titulo || "";
-            $("artista").value = item.artista || "";
-            $("texto").value = item.texto || "";
-            lyricsState = { key: normalizeSongKey(item.titulo || "", item.artista || ""), source: "history" };
-            if(item.analysis){
-              renderResult(item.analysis);
-              setStatus('Canción reutilizada desde tu historial.', 'success');
-            }else{
-              resetAnalysisOnly('Canción cargada desde historial. Puedes volver a analizarla.');
-            }
-          });
+        listEl.innerHTML = items.map((item, idx) => buildHistoryItemHtml(item, idx)).join("");
+        listEl.querySelectorAll('[data-history-idx]').forEach(btn => {
+          btn.addEventListener('click', () => reuseHistoryItem(items[Number(btn.dataset.historyIdx || 0)]));
         });
+        listEl.querySelectorAll('[data-history-delete]').forEach(btn => {
+          btn.addEventListener('click', () => deleteHistoryItem(Number(btn.dataset.historyDelete || 0)));
+        });
+        if(renderModal) openModal("historyModal");
       }catch(_){
-        $("historyList").innerHTML = '<div class="list-item">No se pudo cargar tu historial.</div>';
+        if(inlineEl) inlineEl.textContent = "No se pudo cargar tu historial.";
+        if(listEl) listEl.innerHTML = '<div class="list-item">No se pudo cargar tu historial.</div>';
       }
     }
 
@@ -1980,6 +2072,13 @@
     document.querySelectorAll("[data-close]").forEach(btn => {
       btn.addEventListener("click", () => closeModal(btn.dataset.close));
     });
+
+    $("btnOpenHistory")?.addEventListener("click", async () => {
+      openModal("historyModal");
+      await loadHistory(true);
+    });
+    $("btnRefreshHistory")?.addEventListener("click", async () => loadHistory(true));
+    $("btnClearHistory")?.addEventListener("click", clearHistory);
 
     $("btnActivarAdaptadaPed").addEventListener("click", () => {
       usingAdaptedPedagogy = true;
