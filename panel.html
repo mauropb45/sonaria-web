@@ -3,260 +3,152 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SonarIA Admin | SaaS Pro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Panel SaaS | SonarIA</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f8fc; --panel:#ffffff; --panel2:#f9fbff; --line:#dce5f2; --line2:#c9d6ea;
-  --text:#172033; --muted:#66758c; --blue:#2f6fed; --blue2:#6a9aff; --green:#18bf73;
-  --green2:#e7fbf1; --red:#ef4e4e; --red2:#fff0f0; --orange:#ff8a00; --orange2:#fff4e5;
-  --purple:#7c3aed; --purple2:#f2ecff; --shadow:0 18px 50px rgba(35,54,86,.10);
-  --radius:24px; --max:1540px;
+  --bg:#f6f8fc;--card:#ffffff;--line:#dbe4f0;--text:#172033;--muted:#64748b;
+  --blue:#2f6fed;--green:#16a34a;--red:#dc2626;--orange:#f97316;--purple:#7c3aed;
+  --soft-blue:#eef5ff;--soft-green:#ecfdf3;--soft-red:#fff1f2;--soft-orange:#fff7ed;--soft-purple:#f5f3ff;
+  --shadow:0 18px 50px rgba(34,51,84,.08);--radius:24px;--max:1480px;
 }
-*{box-sizing:border-box} html{scroll-behavior:smooth}
-body{margin:0;font-family:'Inter',sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(47,111,237,.10),transparent 22%),radial-gradient(circle at bottom right,rgba(24,191,115,.09),transparent 22%),linear-gradient(180deg,#fbfdff,var(--bg));min-height:100vh}
-button,input,textarea,select{font:inherit}.wrap{width:min(96vw,var(--max));margin:0 auto;padding:24px 0 60px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.brand h1{margin:0;font-size:clamp(2rem,3vw,3.4rem);line-height:.9;letter-spacing:-.07em;font-weight:900}.brand .ia{color:var(--blue)}.brand p{margin:7px 0 0;color:var(--muted);font-weight:700}.top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.btn{border:none;border-radius:16px;min-height:44px;padding:0 16px;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:.18s ease}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 12px 28px rgba(47,111,237,.22)}.btn-green{background:linear-gradient(135deg,var(--green),#38d991);color:#042114}.btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line)}.btn-red{background:linear-gradient(135deg,var(--red),#ff7b7b);color:#fff}.btn-orange{background:linear-gradient(135deg,var(--orange),#ffb156);color:#261100}.btn-purple{background:linear-gradient(135deg,var(--purple),#a78bfa);color:white}.btn-small{min-height:34px;padding:0 11px;border-radius:12px;font-size:.82rem}.card{background:linear-gradient(180deg,var(--panel),#fbfdff);border:1px solid rgba(255,255,255,.88);border-radius:var(--radius);box-shadow:var(--shadow)}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:16px}.hero-main,.hero-side{padding:24px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef4ff;border:1px solid #d4e3ff;color:#2558d8;font-size:.82rem;font-weight:900;margin-bottom:14px}.hero h2{margin:0 0 10px;font-size:clamp(2rem,3.4vw,3.6rem);line-height:.94;letter-spacing:-.065em}.hero p{margin:0;color:var(--muted);line-height:1.75}.signal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.signal{padding:15px;border-radius:18px;background:#fff;border:1px solid var(--line)}.signal strong{display:block;font-size:1.45rem;letter-spacing:-.04em}.signal span{display:block;color:var(--muted);margin-top:5px;font-size:.88rem;line-height:1.45}.status-box{display:grid;gap:10px}.info{padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);line-height:1.58}.info strong{display:block;margin-bottom:4px}.info span{color:var(--muted);font-size:.93rem}.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}.stat{padding:16px}.stat strong{display:block;font-size:1.65rem;letter-spacing:-.06em}.stat span{display:block;margin-top:5px;color:var(--muted);font-size:.88rem;font-weight:650}.main-grid{display:grid;grid-template-columns:360px minmax(0,1fr) 360px;gap:16px;align-items:start}.panel{padding:18px}.panel h3,.section-title{margin:0 0 13px;font-size:1.28rem;letter-spacing:-.04em}.field{display:grid;gap:7px;margin-bottom:11px}.field label{font-weight:800;font-size:.88rem;color:#344154}.field input,.field textarea,.field select{width:100%;background:#fff;border:1px solid var(--line2);border-radius:15px;padding:13px 13px;outline:none;color:var(--text)}.field textarea{min-height:82px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus,.search:focus{border-color:#8db3ff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}.action-grid{display:grid;gap:9px}.microcopy{color:var(--muted);font-size:.86rem;line-height:1.55}.status{min-height:22px;font-weight:800;line-height:1.45;font-size:.9rem}.status.ok{color:#0b9556}.status.error{color:#d33838}.status.info{color:#445f80}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:999px;min-height:36px;padding:0 13px;font-weight:850;cursor:pointer}.tab.active{background:#eef4ff;border-color:#aac6ff;color:#1f5bd8}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}.search{flex:1 1 260px;border:1px solid var(--line2);background:#fff;border-radius:15px;padding:12px 13px;outline:none}.list{display:grid;gap:10px}.user-card,.school-card,.trial-card,.activity-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.row strong{font-size:.98rem}.sub{display:block;color:var(--muted);font-size:.84rem;line-height:1.45;margin-top:3px}.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.badge{display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;font-size:.74rem;font-weight:900;border:1px solid var(--line)}.badge.free{background:#f4f7fb;color:#526174}.badge.pro{background:var(--green2);border-color:#b8ebd1;color:#0d8f54}.badge.trial{background:var(--purple2);border-color:#d6c7ff;color:#6d28d9}.badge.admin{background:#fff7e7;border-color:#f1deae;color:#a97a11}.badge.warn{background:var(--orange2);border-color:#ffd29c;color:#b45309}.badge.danger{background:var(--red2);border-color:#ffcaca;color:#b91c1c}.item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}.danger-zone{border:1px dashed #ffcaca;background:#fff7f7;border-radius:18px;padding:14px;margin-top:12px}.empty{padding:18px;color:var(--muted);text-align:center;border:1px dashed var(--line2);border-radius:18px;background:#fff}.footer-note{margin-top:16px;color:var(--muted);font-size:.86rem;line-height:1.6;text-align:center}@media(max-width:1180px){.hero,.main-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.wrap{width:94vw;padding-top:14px}.topbar{display:grid}.top-actions{justify-content:stretch}.top-actions .btn{width:100%}.signal-grid,.stats{grid-template-columns:1fr 1fr}.hero-main,.hero-side,.panel{padding:16px}.hero h2{font-size:2.25rem}.btn{width:100%}.row{display:grid}.item-actions{display:grid}}
+*{box-sizing:border-box} body{margin:0;font-family:'Inter',sans-serif;background:radial-gradient(circle at top left,rgba(47,111,237,.10),transparent 22%),radial-gradient(circle at bottom right,rgba(22,163,74,.08),transparent 22%),var(--bg);color:var(--text)}
+.wrap{max-width:var(--max);margin:0 auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap}.brand h1{margin:0;font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.075em;line-height:.92}.brand span{color:var(--blue)}.sub{color:var(--muted);font-weight:700;margin-top:6px;line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,var(--blue),#6598ff);color:white;box-shadow:0 12px 28px rgba(47,111,237,.18)}.btn-green{background:linear-gradient(135deg,#22c55e,#5de38f);color:#062315}.btn-red{background:linear-gradient(135deg,#ef4444,#fb7185);color:white}.btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line)}.btn-orange{background:linear-gradient(135deg,var(--orange),#ffb15e);color:#1f1305}.btn-purple{background:linear-gradient(135deg,var(--purple),#a78bfa);color:white}.btn-small{min-height:34px;border-radius:12px;padding:0 10px;font-size:.82rem}.card{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-bottom:16px}.panel{padding:22px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--soft-blue);color:#1e56c5;font-size:.82rem;font-weight:900;border:1px solid #d8e7ff}.hero h2{margin:12px 0 8px;font-size:clamp(1.8rem,3vw,3rem);line-height:.98;letter-spacing:-.065em}.muted{color:var(--muted);line-height:1.7}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.kpi{padding:18px}.kpi strong{display:block;font-size:1.8rem;letter-spacing:-.055em}.kpi span{display:block;color:var(--muted);font-weight:750;margin-top:4px;font-size:.92rem}.layout{display:grid;grid-template-columns:360px minmax(0,1fr) 420px;gap:16px;align-items:start}.stack{display:grid;gap:16px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-title h3{margin:0;font-size:1.35rem;letter-spacing:-.045em}.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-size:.9rem;font-weight:800;color:#334155}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd8ea;background:#fff;border-radius:15px;padding:13px 14px;font:inherit;outline:none;color:var(--text)}.field textarea{min-height:80px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus,.search:focus{border-color:#8bb4ff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}.status{min-height:22px;font-weight:800;line-height:1.55}.ok{color:#0f8f50}.error{color:#c82333}.info{color:#456179}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff}table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #edf2f8;text-align:left;vertical-align:top;font-size:.92rem}th{background:#f7faff;color:#334155;font-size:.84rem}tr:last-child td{border-bottom:none}.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:.76rem;font-weight:900;border:1px solid var(--line);white-space:nowrap}.pill.pro{background:var(--soft-green);color:#0f7a43;border-color:#bbebcf}.pill.free{background:#f1f5f9;color:#475569}.pill.trial{background:var(--soft-purple);color:#5b21b6;border-color:#ddd6fe}.pill.warn{background:var(--soft-orange);color:#a34800;border-color:#fed7aa}.pill.bad{background:var(--soft-red);color:#9f1239;border-color:#fecdd3}.list{display:grid;gap:10px}.item{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px}.item strong{display:block;margin-bottom:5px}.item .meta{font-size:.86rem;color:var(--muted);line-height:1.55}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.search{flex:1;min-width:220px;border:1px solid #cbd8ea;border-radius:15px;padding:12px 14px;font:inherit}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-weight:900;cursor:pointer}.tab.active{background:var(--soft-blue);color:#1e56c5;border-color:#cfe1ff}.hidden{display:none!important}.empty{padding:18px;color:var(--muted)}.note{padding:14px 16px;border-radius:18px;background:#fff;border:1px dashed #b7c6dc;color:#475569;line-height:1.65;font-weight:650}
+@media(max-width:1180px){.layout,.hero{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.wrap{padding:14px 10px 40px}.actions,.grid2{grid-template-columns:1fr;display:grid;width:100%}.btn{width:100%}.kpis{grid-template-columns:1fr}.panel{padding:16px}th,td{font-size:.84rem;padding:11px 9px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar">
+  <div class="top">
     <div class="brand">
-      <h1>Sonar<span class="ia">IA</span> Admin</h1>
-      <p>Panel SaaS pro · ventas, pruebas, colegios, usuarios y base de datos segura.</p>
+      <h1>Sonar<span>IA</span> Admin</h1>
+      <div class="sub">Panel SaaS simple: regalos, registros, colegios, licencias y usuarios. V143 integración total.</div>
     </div>
-    <div class="top-actions">
-      <a class="btn btn-ghost" href="/sonaria.html">Ir a SonarIA</a>
-      <a class="btn btn-ghost" href="/planes.html">Ver planes</a>
-      <button class="btn btn-primary" onclick="loadAll()">Actualizar</button>
+    <div class="actions">
+      <button class="btn btn-ghost" onclick="location.href='/sonaria.html'">Ir a SonarIA</button>
+      <button class="btn btn-primary" onclick="refreshAll()">Actualizar</button>
       <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
     </div>
   </div>
 
-  <section class="hero">
-    <div class="card hero-main">
-      <div class="eyebrow">Panel entendible para cualquier persona</div>
-      <h2>Controla crecimiento sin lenguaje técnico.</h2>
-      <p>Desde aquí puedes invitar docentes a probar SonarIA PRO por pocos días, ver quién usa la plataforma, administrar colegios y limpiar usuarios de prueba de forma segura.</p>
-      <div class="signal-grid">
-        <div class="signal"><strong id="heroUsers">—</strong><span>Usuarios registrados</span></div>
-        <div class="signal"><strong id="heroPro">—</strong><span>Usuarios con acceso PRO</span></div>
-        <div class="signal"><strong id="heroTrials">—</strong><span>Pruebas invitadas activas</span></div>
+  <div class="hero">
+    <div class="card panel">
+      <span class="eyebrow">Vista para negocio</span>
+      <h2>Qué está pasando hoy</h2>
+      <p class="muted">Este panel evita lenguaje técnico: muestra usuarios, pruebas regaladas, colegios simulados y eventos importantes.</p>
+      <div id="smtpNote" class="note" style="margin-top:14px">Revisando correo...</div>
+    </div>
+    <div class="card panel">
+      <div class="section-title"><h3>Acciones rápidas</h3></div>
+      <div class="grid2">
+        <button class="btn btn-green" onclick="focusGift()">Enviar regalo PRO</button>
+        <button class="btn btn-purple" onclick="focusSchool()">Simular colegio</button>
+      </div>
+      <p class="muted" style="margin-bottom:0">Si el correo automático falla, el acceso igual queda guardado y puedes copiar el link manualmente.</p>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="card kpi"><strong id="kUsers">0</strong><span>Usuarios registrados</span></div>
+    <div class="card kpi"><strong id="kPro">0</strong><span>Usuarios con PRO</span></div>
+    <div class="card kpi"><strong id="kTrials">0</strong><span>Regalos activos</span></div>
+    <div class="card kpi"><strong id="kSchools">0</strong><span>Colegios/packs</span></div>
+    <div class="card kpi"><strong id="kSeats">0</strong><span>Cupos disponibles</span></div>
+  </div>
+
+  <div class="layout">
+    <div class="stack">
+      <div class="card panel" id="giftBox">
+        <div class="section-title"><h3>🎁 Enviar regalo PRO</h3></div>
+        <div class="field"><label>Correo del docente</label><input id="giftEmail" placeholder="docente@colegio.cl"></div>
+        <div class="field"><label>Días de acceso</label><select id="giftDays"><option value="3">3 días</option><option value="5">5 días</option><option value="7">7 días</option><option value="14">14 días</option></select></div>
+        <div class="field"><label>Nota interna</label><textarea id="giftNote" placeholder="Ej: regalo por demo, contacto por Instagram, etc."></textarea></div>
+        <button class="btn btn-green" onclick="sendGift()">Enviar regalo</button>
+        <div id="giftStatus" class="status"></div>
+      </div>
+
+      <div class="card panel" id="schoolBox">
+        <div class="section-title"><h3>🏫 Simular colegio</h3></div>
+        <div class="field"><label>Nombre colegio</label><input id="schoolName" placeholder="Colegio Demo"></div>
+        <div class="field"><label>Correo encargado</label><input id="schoolOwner" placeholder="coordinador@colegio.cl"></div>
+        <div class="field"><label>Pack</label><select id="schoolPlan"><option value="school_5">5 docentes</option><option value="school_10" selected>10 docentes</option><option value="school_20">20 docentes</option><option value="school_30">30 docentes</option></select></div>
+        <button class="btn btn-purple" onclick="simulateSchool()">Crear pack simulado</button>
+        <div id="schoolStatus" class="status"></div>
+      </div>
+
+      <div class="card panel">
+        <div class="section-title"><h3>📌 Eventos recientes</h3></div>
+        <div id="eventsList" class="list"><div class="empty">Cargando eventos...</div></div>
       </div>
     </div>
-    <div class="card hero-side">
-      <div class="status-box">
-        <div class="info"><strong>Flujo recomendado</strong><span>Invitar → docente prueba → usa SonarIA → decide suscripción individual o colegio.</span></div>
-        <div class="info"><strong>Base de datos segura</strong><span>Eliminar exige confirmación visual por correo y no permite borrar administradores.</span></div>
-        <div class="info"><strong id="syncStatus">Cargando datos…</strong><span id="syncSub">Conectando con backend.</span></div>
+
+    <div class="stack">
+      <div class="card panel">
+        <div class="section-title"><h3>👥 Usuarios</h3><button class="btn btn-ghost btn-small" onclick="loadUsers()">Recargar</button></div>
+        <div class="toolbar"><input id="userSearch" class="search" placeholder="Buscar por nombre o correo" oninput="renderUsers()"></div>
+        <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Plan</th><th>Uso</th><th>Acciones</th></tr></thead><tbody id="usersBody"><tr><td colspan="4">Cargando...</td></tr></tbody></table></div>
+      </div>
+
+      <div class="card panel">
+        <div class="section-title"><h3>🎁 Regalos y pruebas</h3><button class="btn btn-ghost btn-small" onclick="loadGifts()">Recargar</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Correo</th><th>Estado</th><th>Vence</th><th>Acción</th></tr></thead><tbody id="giftsBody"><tr><td colspan="4">Cargando...</td></tr></tbody></table></div>
       </div>
     </div>
-  </section>
 
-  <section class="stats">
-    <div class="card stat"><strong id="stUsers">—</strong><span>Usuarios</span></div>
-    <div class="card stat"><strong id="stPro">—</strong><span>PRO activos</span></div>
-    <div class="card stat"><strong id="stTrials">—</strong><span>Trials activos</span></div>
-    <div class="card stat"><strong id="stSchools">—</strong><span>Colegios/packs</span></div>
-    <div class="card stat"><strong id="stSongs">—</strong><span>Canciones analizadas</span></div>
-    <div class="card stat"><strong id="stMinutes">—</strong><span>Minutos de uso</span></div>
-  </section>
+    <div class="stack">
+      <div class="card panel">
+        <div class="section-title"><h3>🏫 Colegios y licencias</h3><button class="btn btn-ghost btn-small" onclick="loadSchools()">Recargar</button></div>
+        <div id="schoolsList" class="list"><div class="empty">Cargando colegios...</div></div>
+      </div>
 
-  <section class="main-grid">
-    <aside class="card panel">
-      <h3>🎁 Invitar a probar PRO</h3>
-      <div class="field"><label>Correo del docente</label><input id="inviteEmail" type="email" placeholder="docente@colegio.cl"></div>
-      <div class="field"><label>Días de prueba</label><select id="inviteDays"><option value="3">3 días</option><option value="5">5 días</option><option value="7">7 días</option><option value="14">14 días</option></select></div>
-      <div class="field"><label>Nota interna</label><textarea id="inviteNote" placeholder="Ej: invitado desde feria / contacto colegio / prueba especial"></textarea></div>
-      <div class="action-grid">
-        <button class="btn btn-green" onclick="inviteTrial()">Enviar invitación PRO</button>
-        <button class="btn btn-ghost" onclick="fillSelectedEmail()">Usar usuario seleccionado</button>
+      <div class="card panel">
+        <div class="section-title"><h3>➕ Asignar docente a colegio</h3></div>
+        <div class="field"><label>Correo encargado/colegio</label><input id="assignOwner" placeholder="coordinador@colegio.cl"></div>
+        <div class="field"><label>Correo docente</label><input id="assignTeacher" placeholder="profesor@colegio.cl"></div>
+        <button class="btn btn-primary" onclick="assignTeacher()">Asignar docente</button>
+        <div id="assignStatus" class="status"></div>
       </div>
-      <p class="microcopy">La prueba activa acceso PRO temporal. Si el docente ya existe, se actualiza al instante; si no existe, queda reservado por correo.</p>
-      <div id="inviteStatus" class="status"></div>
-
-      <div class="danger-zone">
-        <h3>🧹 Limpiar usuarios de prueba</h3>
-        <p class="microcopy">Selecciona un usuario en la lista y escribe exactamente su correo para borrarlo. Esta acción elimina uso, análisis y órdenes simuladas asociadas.</p>
-        <div class="field"><label>Correo de confirmación</label><input id="deleteConfirm" type="email" placeholder="correo exacto del usuario"></div>
-        <button class="btn btn-red" onclick="safeDeleteSelected()">Borrar usuario seleccionado</button>
-        <div id="deleteStatus" class="status"></div>
-      </div>
-    </aside>
-
-    <main class="card panel">
-      <div class="toolbar">
-        <div>
-          <h3 style="margin-bottom:4px">Centro de gestión</h3>
-          <div class="microcopy">Usuarios, colegios, pruebas y actividad reciente.</div>
-        </div>
-        <input id="search" class="search" placeholder="Buscar por nombre, correo o plan…" oninput="renderCurrentTab()">
-      </div>
-      <div class="tabs">
-        <button class="tab active" data-tab="opportunities" onclick="setTab('opportunities')">Oportunidades</button>
-        <button class="tab" data-tab="users" onclick="setTab('users')">Usuarios</button>
-        <button class="tab" data-tab="schools" onclick="setTab('schools')">Colegios</button>
-        <button class="tab" data-tab="trials" onclick="setTab('trials')">Pruebas</button>
-        <button class="tab" data-tab="activity" onclick="setTab('activity')">Actividad</button>
-      </div>
-      <div id="mainList" class="list"></div>
-    </main>
-
-    <aside class="card panel">
-      <h3>🧭 Usuario seleccionado</h3>
-      <div id="selectedBox" class="empty">Selecciona un usuario para ver acciones rápidas.</div>
-      <div style="height:14px"></div>
-      <h3>✅ Checklist comercial</h3>
-      <div class="list">
-        <div class="activity-card"><strong>1. Invitar</strong><span class="sub">Entrega pocos días de PRO para que prueben con canciones reales.</span></div>
-        <div class="activity-card"><strong>2. Medir uso</strong><span class="sub">Quien analiza más canciones es mejor candidato a suscripción.</span></div>
-        <div class="activity-card"><strong>3. Convertir</strong><span class="sub">Trial activo o vencido → enviar link de planes o pack colegio.</span></div>
-        <div class="activity-card"><strong>4. Limpiar</strong><span class="sub">Borra cuentas de prueba cuando estés seguro para mantener base ordenada.</span></div>
-      </div>
-      <div style="height:14px"></div>
-      <h3>🔐 Estado técnico</h3>
-      <div id="techBox" class="info"><strong>Backend</strong><span>Esperando conexión…</span></div>
-    </aside>
-  </section>
-  <div class="footer-note">SonarIA V141 · Panel SaaS pro seguro · Si no ves cambios, abre /panel.html?v=141 y haz hard reload.</div>
+    </div>
+  </div>
 </div>
-
 <script>
-const API = "https://sonaria-api.onrender.com";
-let token = localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
-let currentTab = "opportunities";
-let selectedUser = null;
-let state = {summary:null, users:[], schools:[], trials:[], searches:[]};
-
-if(!token){ window.location.href = "/login.html"; }
-
-function $(id){return document.getElementById(id)}
-function escapeHtml(v){return String(v ?? "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function setStatus(id,msg,type="info"){ const el=$(id); if(!el) return; el.textContent=msg; el.className="status "+type; }
-function authHeaders(json=false){ const h={"Authorization":"Bearer "+token}; if(json) h["Content-Type"]="application/json"; return h; }
+const API = 'https://sonaria-api.onrender.com';
+let token = localStorage.getItem('mejoraria_token') || localStorage.getItem('token') || localStorage.getItem('access_token') || '';
+let USERS=[], GIFTS=[], SCHOOLS=[];
+if(!token){ location.href='/login.html'; }
+function authHeaders(json=true){ const h={Authorization:'Bearer '+token}; if(json) h['Content-Type']='application/json'; return h; }
 async function api(path, opts={}){
-  const res = await fetch(API+path, opts);
+  const res = await fetch(API+path, {headers:authHeaders(opts.body!==undefined), ...opts});
   const data = await res.json().catch(()=>({}));
-  if(res.status===401){ localStorage.clear(); sessionStorage.clear(); window.location.href="/login.html"; return {}; }
-  if(!res.ok || data.ok===false){ throw new Error(data.detail || data.message || "Error de conexión"); }
+  if(res.status===401){ localStorage.clear(); sessionStorage.clear(); location.href='/login.html'; return {}; }
+  if(!res.ok) throw new Error(data.detail || data.message || 'Error API');
   return data;
 }
-
-async function loadAll(){
-  $("syncStatus").textContent="Actualizando…"; $("syncSub").textContent="Leyendo usuarios, colegios, trials y actividad.";
-  try{
-    const [summary, users, schools, trials] = await Promise.allSettled([
-      api("/admin/summary", {headers:authHeaders()}),
-      api("/admin/users", {headers:authHeaders()}),
-      api("/admin/schools", {headers:authHeaders()}),
-      api("/admin/trials/list", {headers:authHeaders()}),
-    ]);
-    if(summary.status==="fulfilled") state.summary=summary.value;
-    if(users.status==="fulfilled") state.users=users.value.users || [];
-    if(schools.status==="fulfilled") state.schools=schools.value.schools || [];
-    if(trials.status==="fulfilled") state.trials=trials.value.trials || [];
-    state.searches = (state.summary && state.summary.busquedas_recientes) || [];
-    renderStats(); renderCurrentTab();
-    $("syncStatus").textContent="Datos actualizados"; $("syncSub").textContent=new Date().toLocaleString("es-CL");
-    $("techBox").innerHTML=`<strong>Backend conectado</strong><span>${escapeHtml((state.summary||{}).version || "API activa")}</span>`;
-  }catch(e){
-    $("syncStatus").textContent="Error al cargar"; $("syncSub").textContent=e.message;
-    $("techBox").innerHTML=`<strong>Error</strong><span>${escapeHtml(e.message)}</span>`;
-  }
+function esc(s){ return String(s ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function pill(text,type){ return `<span class="pill ${type||''}">${esc(text)}</span>`; }
+function setStatus(id,msg,type='info'){ const el=document.getElementById(id); el.textContent=msg; el.className='status '+type; }
+async function logout(){ try{ await api('/auth/logout',{method:'POST'}); }catch(e){} localStorage.clear(); sessionStorage.clear(); location.href='/login.html'; }
+async function loadEmailStatus(){
+  try{ const d=await api('/admin/email/status'); document.getElementById('smtpNote').innerHTML = d.smtp_configured ? `✅ <b>Correo automático activo.</b> Remitente: ${esc(d.smtp_from)} · Avisos admin: ${esc(d.admin_notify_email||'no definido')}` : `⚠️ <b>Correo automático no configurado.</b> Las invitaciones y regalos funcionan igual, pero deberás avisar manualmente al usuario. Configura SMTP_HOST, SMTP_USER, SMTP_PASSWORD, SMTP_FROM y ADMIN_NOTIFY_EMAIL en Render.`; }
+  catch(e){ document.getElementById('smtpNote').textContent='No pude revisar SMTP: '+e.message; }
 }
-
-function isPro(u){ const p=(u.plan||"").toLowerCase(); return u.pro_active || p==="pro" || p.startsWith("pro_") || p.includes("school") || p.includes("enterprise"); }
-function isTrial(u){ return (u.plan||"").toLowerCase()==="pro_trial"; }
-function renderStats(){
-  const stats=(state.summary||{}).stats||{};
-  const users=state.users||[];
-  const pro=users.filter(isPro).length || stats.usuarios_pro || 0;
-  const trials=(state.trials||[]).filter(t=>t.active).length;
-  const schools=state.schools.length;
-  const songs=stats.analisis_totales || state.searches.length || 0;
-  const minutes=stats.minutos_uso || users.reduce((a,u)=>a+(+u.minutos||0),0);
-  [["heroUsers",users.length||stats.usuarios||0],["heroPro",pro],["heroTrials",trials],["stUsers",users.length||stats.usuarios||0],["stPro",pro],["stTrials",trials],["stSchools",schools],["stSongs",songs],["stMinutes",minutes]].forEach(([id,val])=>$(id).textContent=val);
-}
-function setTab(tab){ currentTab=tab; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab)); renderCurrentTab(); }
-function qFilter(items, getText){ const q=($("search").value||"").toLowerCase().trim(); if(!q) return items; return items.filter(x=>getText(x).toLowerCase().includes(q)); }
-function renderCurrentTab(){
-  if(currentTab==="users") return renderUsers(state.users);
-  if(currentTab==="schools") return renderSchools(state.schools);
-  if(currentTab==="trials") return renderTrials(state.trials);
-  if(currentTab==="activity") return renderActivity(state.searches);
-  return renderOpportunities();
-}
-function userBadges(u){
-  let arr=[]; const p=(u.plan||"free").toLowerCase();
-  if(u.is_admin) arr.push(`<span class="badge admin">Admin</span>`);
-  if(isTrial(u)) arr.push(`<span class="badge trial">Trial PRO</span>`);
-  else if(isPro(u)) arr.push(`<span class="badge pro">PRO</span>`);
-  else arr.push(`<span class="badge free">Free</span>`);
-  arr.push(`<span class="badge">${escapeHtml(u.analisis||0)} canciones</span>`);
-  arr.push(`<span class="badge">${escapeHtml(u.minutos||0)} min</span>`);
-  return arr.join('');
-}
-function renderUsers(users){
-  const list=$("mainList"); const filtered=qFilter(users||[],u=>`${u.name} ${u.email} ${u.plan}`);
-  if(!filtered.length){list.innerHTML='<div class="empty">No hay usuarios para mostrar.</div>';return;}
-  list.innerHTML=filtered.map(u=>`<div class="user-card" onclick='selectUser(${JSON.stringify(u).replace(/'/g,"&#39;")})'>
-    <div class="row"><div><strong>${escapeHtml(u.name||"Sin nombre")}</strong><span class="sub">${escapeHtml(u.email)}</span></div><button class="btn btn-ghost btn-small" onclick='event.stopPropagation();selectUser(${JSON.stringify(u).replace(/'/g,"&#39;")})'>Gestionar</button></div>
-    <div class="badges">${userBadges(u)}</div>
-  </div>`).join('');
-}
-function renderOpportunities(){
-  const users=state.users||[];
-  const candidates=users.filter(u=>!isPro(u) && ((+u.analisis||0)>0 || (+u.minutos||0)>0)).sort((a,b)=>((+b.analisis||0)+(+b.minutos||0))-((+a.analisis||0)+(+a.minutos||0)));
-  const trials=(state.trials||[]).filter(t=>t.active);
-  const items=[];
-  trials.forEach(t=>items.push({type:'trial',title:t.email,sub:`Trial activo hasta ${t.expires_at||'—'}`,email:t.email,hot:2}));
-  candidates.forEach(u=>items.push({type:'free',title:u.name||u.email,sub:`FREE con uso: ${u.analisis||0} canciones · ${u.minutos||0} min`,email:u.email,hot:1,user:u}));
-  const filtered=qFilter(items,x=>`${x.title} ${x.sub} ${x.email}`);
-  $("mainList").innerHTML = filtered.length ? filtered.map(x=>`<div class="user-card">
-    <div class="row"><div><strong>${x.hot>1?'🔥':'✨'} ${escapeHtml(x.title)}</strong><span class="sub">${escapeHtml(x.sub)}</span></div><span class="badge ${x.hot>1?'trial':'warn'}">${x.type==='trial'?'Convertir':'Invitar'}</span></div>
-    <div class="item-actions"><button class="btn btn-green btn-small" onclick="quickInvite('${escapeHtml(x.email)}')">Invitar PRO</button><button class="btn btn-ghost btn-small" onclick="copyText('${escapeHtml(x.email)}')">Copiar correo</button></div>
-  </div>`).join('') : '<div class="empty">Aún no hay oportunidades claras. Invita docentes desde el panel izquierdo.</div>';
-}
-function renderSchools(schools){
-  const filtered=qFilter(schools||[],s=>`${s.owner_email} ${s.plan_name} ${s.status}`);
-  $("mainList").innerHTML = filtered.length ? filtered.map(s=>`<div class="school-card"><div class="row"><div><strong>🏫 ${escapeHtml(s.owner_email||'Colegio sin dueño visible')}</strong><span class="sub">${escapeHtml(s.plan_name||s.plan_key||'Pack colegio')}</span></div><span class="badge pro">${escapeHtml(s.status||'active')}</span></div><div class="badges"><span class="badge">${s.licenses_used||0}/${s.licenses_total||0} cupos usados</span><span class="badge">${s.licenses_available||0} disponibles</span></div></div>`).join('') : '<div class="empty">No hay colegios/packs activos todavía.</div>';
-}
-function renderTrials(trials){
-  const filtered=qFilter(trials||[],t=>`${t.email} ${t.status} ${t.note}`);
-  $("mainList").innerHTML = filtered.length ? filtered.map(t=>`<div class="trial-card"><div class="row"><div><strong>🎁 ${escapeHtml(t.email)}</strong><span class="sub">Vence: ${escapeHtml(t.expires_at||'—')}</span></div><span class="badge ${t.active?'trial':'danger'}">${escapeHtml(t.status)}</span></div><div class="item-actions"><button class="btn btn-red btn-small" onclick="revokeTrial('${escapeHtml(t.email)}')">Revocar</button><button class="btn btn-ghost btn-small" onclick="copyText('${escapeHtml(t.email)}')">Copiar</button></div></div>`).join('') : '<div class="empty">No hay pruebas invitadas.</div>';
-}
-function renderActivity(searches){
-  const filtered=qFilter(searches||[],s=>`${s.titulo} ${s.artista} ${s.email} ${s.usuario}`);
-  $("mainList").innerHTML = filtered.length ? filtered.slice(0,80).map(s=>`<div class="activity-card"><strong>🎵 ${escapeHtml(s.titulo||'Canción')}</strong><span class="sub">${escapeHtml(s.artista||'')} · ${escapeHtml(s.usuario||s.email||'Usuario')} · ${escapeHtml(s.fecha||'')}</span><div class="badges"><span class="badge">${escapeHtml(s.resultado||'Análisis')}</span></div></div>`).join('') : '<div class="empty">Aún no hay actividad reciente.</div>';
-}
-function selectUser(u){
-  selectedUser=u; $("selectedBox").className="user-card"; $("selectedBox").innerHTML=`<strong>${escapeHtml(u.name||'Sin nombre')}</strong><span class="sub">${escapeHtml(u.email)}</span><div class="badges">${userBadges(u)}</div><div class="item-actions"><button class="btn btn-green btn-small" onclick="quickInvite('${escapeHtml(u.email)}')">Invitar PRO</button><button class="btn btn-ghost btn-small" onclick="fillSelectedEmail()">Usar correo</button></div>`;
-}
-function fillSelectedEmail(){ if(!selectedUser){setStatus('inviteStatus','Selecciona un usuario primero.','error');return;} $('inviteEmail').value=selectedUser.email; $('deleteConfirm').value=selectedUser.email; setStatus('inviteStatus','Correo seleccionado.','ok'); }
-async function inviteTrial(){
-  const email=$('inviteEmail').value.trim(); const days=+$('inviteDays').value; const note=$('inviteNote').value.trim();
-  if(!email || !email.includes('@')){setStatus('inviteStatus','Ingresa un correo válido.','error');return;}
-  setStatus('inviteStatus','Creando invitación…','info');
-  try{ const data=await api('/admin/trials/invite',{method:'POST',headers:authHeaders(true),body:JSON.stringify({email,days,note})}); setStatus('inviteStatus',data.message || 'Invitación creada.','ok'); await loadAll(); }
-  catch(e){setStatus('inviteStatus',e.message,'error');}
-}
-function quickInvite(email){ $('inviteEmail').value=email; $('inviteDays').value='3'; window.scrollTo({top:0,behavior:'smooth'}); setStatus('inviteStatus','Correo cargado. Presiona “Enviar invitación PRO”.','ok'); }
-async function revokeTrial(email){ if(!confirm('¿Revocar prueba para '+email+'?')) return; try{await api('/admin/trials/revoke',{method:'POST',headers:authHeaders(true),body:JSON.stringify({email})}); await loadAll();}catch(e){alert(e.message);} }
-async function safeDeleteSelected(){
-  if(!selectedUser){setStatus('deleteStatus','Selecciona un usuario primero.','error');return;}
-  if(selectedUser.is_admin){setStatus('deleteStatus','No se puede borrar un administrador.','error');return;}
-  const confirmEmail=$('deleteConfirm').value.trim().toLowerCase();
-  if(confirmEmail !== (selectedUser.email||'').toLowerCase()){setStatus('deleteStatus','El correo escrito no coincide.','error');return;}
-  if(!confirm('Vas a borrar definitivamente a '+selectedUser.email+'. ¿Continuar?')) return;
-  setStatus('deleteStatus','Borrando de forma segura…','info');
-  try{ await api('/admin/users/safe-delete',{method:'POST',headers:authHeaders(true),body:JSON.stringify({user_id:selectedUser.id,confirm_email:confirmEmail})}); selectedUser=null; $('selectedBox').className='empty'; $('selectedBox').textContent='Usuario eliminado. Selecciona otro usuario.'; $('deleteConfirm').value=''; setStatus('deleteStatus','Usuario eliminado.','ok'); await loadAll(); }
-  catch(e){setStatus('deleteStatus',e.message,'error');}
-}
-function copyText(txt){navigator.clipboard?.writeText(txt);}
-async function logout(){ try{await fetch(API+'/auth/logout',{method:'POST',headers:authHeaders()});}catch(e){} localStorage.clear(); sessionStorage.clear(); window.location.href='/login.html?logout=1'; }
-loadAll();
+async function loadUsers(){ const d=await api('/admin/users'); USERS=d.users||[]; renderUsers(); updateKpis(); }
+function renderUsers(){ const q=(document.getElementById('userSearch').value||'').toLowerCase(); const rows=USERS.filter(u=>(u.email+' '+u.name).toLowerCase().includes(q)); const body=document.getElementById('usersBody'); if(!rows.length){body.innerHTML='<tr><td colspan="4" class="empty">Sin usuarios</td></tr>';return;} body.innerHTML=rows.map(u=>`<tr><td><b>${esc(u.name||'Sin nombre')}</b><br><span class="muted">${esc(u.email)}</span></td><td>${pill(u.plan_label||u.plan,(u.pro_active?'pro':(String(u.plan).includes('trial')?'trial':'free')))}</td><td>${Number(u.analisis||0)} canciones<br><span class="muted">${Number(u.minutos||0)} min</span></td><td>${u.is_admin?pill('Admin','warn'):`<button class="btn btn-red btn-small" onclick="deleteUser(${u.id},'${esc(u.email)}')">Borrar</button>`}</td></tr>`).join(''); }
+async function deleteUser(id,email){ const confirmEmail=prompt('Para borrar este usuario escribe su correo completo:', email); if(!confirmEmail) return; try{ await api('/admin/users/safe-delete',{method:'POST',body:JSON.stringify({user_id:id,confirm_email:confirmEmail})}); await loadUsers(); await loadEvents(); alert('Usuario eliminado de forma segura'); }catch(e){ alert(e.message); } }
+async function loadGifts(){ const d=await api('/admin/gifts/list'); GIFTS=d.trials||d.gifts||[]; renderGifts(); updateKpis(); }
+function renderGifts(){ const body=document.getElementById('giftsBody'); if(!GIFTS.length){body.innerHTML='<tr><td colspan="4" class="empty">Aún no hay regalos</td></tr>';return;} body.innerHTML=GIFTS.map(g=>{ const type=g.active?'pro':(g.status==='revoked'?'bad':'warn'); return `<tr><td>${esc(g.email)}</td><td>${pill(g.status||'active',type)}</td><td>${esc(g.expires_at||'-')}</td><td>${g.status==='active'?`<button class="btn btn-red btn-small" onclick="revokeGift('${esc(g.email)}')">Revocar</button>`:'-'}</td></tr>`; }).join(''); }
+async function sendGift(){ const email=document.getElementById('giftEmail').value.trim(); const days=Number(document.getElementById('giftDays').value||3); const note=document.getElementById('giftNote').value.trim(); if(!email){setStatus('giftStatus','Ingresa un correo','error');return;} try{ const d=await api('/admin/gifts/send',{method:'POST',body:JSON.stringify({email,days,note})}); setStatus('giftStatus', d.email_sent ? `Regalo creado y correo enviado a ${email}` : `Regalo creado. Correo no enviado (${d.email_status||'SMTP pendiente'}). Avísale manualmente: ${location.origin}/login.html`, d.email_sent?'ok':'info'); document.getElementById('giftEmail').value=''; document.getElementById('giftNote').value=''; await loadGifts(); await loadUsers(); await loadEvents(); }catch(e){setStatus('giftStatus',e.message,'error');} }
+async function revokeGift(email){ if(!confirm('¿Revocar regalo PRO para '+email+'?')) return; try{ await api('/admin/gifts/revoke',{method:'POST',body:JSON.stringify({email})}); await loadGifts(); await loadUsers(); await loadEvents(); }catch(e){alert(e.message);} }
+async function loadSchools(){ const d=await api('/admin/schools'); SCHOOLS=d.schools||[]; renderSchools(); updateKpis(); }
+function renderSchools(){ const box=document.getElementById('schoolsList'); if(!SCHOOLS.length){box.innerHTML='<div class="empty">Aún no hay colegios simulados o suscritos.</div>';return;} box.innerHTML=SCHOOLS.map(s=>`<div class="item"><strong>${esc(s.school_name||s.owner_email)}</strong><div class="meta">Encargado: ${esc(s.owner_email)}<br>${esc(s.plan_name)} · ${pill(s.status,s.status==='active'?'pro':'warn')}<br>Cupos: ${Number(s.licenses_used||0)} usados / ${Number(s.licenses_total||0)} totales · ${Number(s.licenses_available||0)} disponibles</div>${(s.teachers||[]).slice(0,5).map(t=>`<div class="meta">• ${esc(t.email)} (${esc(t.status)})</div>`).join('')}</div>`).join(''); }
+async function simulateSchool(){ const school_name=document.getElementById('schoolName').value.trim(); const owner_email=document.getElementById('schoolOwner').value.trim(); const plan=document.getElementById('schoolPlan').value; if(!owner_email){setStatus('schoolStatus','Ingresa correo del encargado','error');return;} try{ await api('/admin/schools/simulate',{method:'POST',body:JSON.stringify({school_name,owner_email,plan,note:'Simulación comercial desde panel V143'})}); setStatus('schoolStatus','Pack colegio creado/simulado','ok'); await loadSchools(); await loadEvents(); }catch(e){setStatus('schoolStatus',e.message,'error');} }
+async function assignTeacher(){ const owner_email=document.getElementById('assignOwner').value.trim(); const teacher_email=document.getElementById('assignTeacher').value.trim(); if(!owner_email||!teacher_email){setStatus('assignStatus','Completa ambos correos','error');return;} try{ await api('/admin/schools/teachers/add',{method:'POST',body:JSON.stringify({owner_email,teacher_email,note:'Asignación desde panel V143'})}); setStatus('assignStatus','Docente asignado. Si existe, queda PRO; si no, queda reservado por correo.','ok'); document.getElementById('assignTeacher').value=''; await loadSchools(); await loadUsers(); await loadEvents(); }catch(e){setStatus('assignStatus',e.message,'error');} }
+async function loadEvents(){ try{ const d=await api('/admin/events?limit=30'); const list=document.getElementById('eventsList'); const ev=d.events||[]; if(!ev.length){list.innerHTML='<div class="empty">Sin eventos todavía</div>';return;} list.innerHTML=ev.map(e=>`<div class="item"><strong>${esc(e.title||e.type)}</strong><div class="meta">${esc(e.detail||'')}<br>${esc(e.email||'')} · ${esc(e.created_at||'')}</div></div>`).join(''); }catch(e){ document.getElementById('eventsList').innerHTML='<div class="empty">No pude cargar eventos: '+esc(e.message)+'</div>'; } }
+function updateKpis(){ document.getElementById('kUsers').textContent=USERS.length; document.getElementById('kPro').textContent=USERS.filter(u=>u.pro_active).length; document.getElementById('kTrials').textContent=GIFTS.filter(g=>g.active).length; document.getElementById('kSchools').textContent=SCHOOLS.length; document.getElementById('kSeats').textContent=SCHOOLS.reduce((a,s)=>a+Number(s.licenses_available||0),0); }
+function focusGift(){ document.getElementById('giftBox').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('giftEmail').focus(); }
+function focusSchool(){ document.getElementById('schoolBox').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('schoolOwner').focus(); }
+async function refreshAll(){ await Promise.allSettled([loadEmailStatus(),loadUsers(),loadGifts(),loadSchools(),loadEvents()]); updateKpis(); }
+refreshAll();
 </script>
 </body>
 </html>
