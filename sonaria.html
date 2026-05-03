@@ -212,7 +212,7 @@
     .pro-inline span{color:var(--muted);font-size:.92rem;line-height:1.5}
 
 
-    /* V143 — conversión PRO dentro de SonarIA */
+    
     .conversion-card{
       margin:0 0 16px;
       padding:16px 18px;
@@ -352,6 +352,16 @@
     @media (hover:hover){.card:hover,.welcome-card:hover{transform:translateY(-1px)}}
     @media (hover:none){.card:hover,.welcome-card:hover{transform:none!important}}
 
+
+    .app-version-footer{
+      text-align:center;
+      color:#94a3b8;
+      font-size:.78rem;
+      font-weight:700;
+      margin:18px 0 0;
+      letter-spacing:.01em;
+    }
+
     @media (prefers-reduced-motion: reduce){
       *, *::before, *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
@@ -362,11 +372,11 @@
     <div class="topbar">
       <div class="brand">
         <h1>Sonar<span class="ia">IA</span></h1>
-        <div class="brand-sub">Evaluador pedagógico musical · <span id="versionLabel">v1.4.3 · conversión PRO integrada</span></div>
+        <div class="brand-sub">Evaluador pedagógico musical para aula</div>
       </div>
       <div class="top-actions">
         <span id="topPlanPill" class="plan-badge free">🟢 Free</span>
-        <button id="btnBenefitsTop" class="btn btn-soft" type="button">Beneficios Pro</button>
+        <button id="btnBenefitsTop" class="btn btn-soft" type="button">Activar PRO</button>
         <button id="btnGuideTop" class="btn btn-ghost" type="button">Guía docente</button>
         <button id="btnToolsTop" class="btn btn-ghost" type="button">Otras herramientas</button>
         <button id="btnPlanesTop" class="btn btn-ghost hidden" type="button">Ver planes</button>
@@ -754,6 +764,11 @@
     </div>
   </div>
 
+
+    <footer class="app-version-footer" aria-label="Versión de SonarIA">
+      <span id="versionLabel">SonarIA v1.4.6</span>
+    </footer>
+
   <script>
     const API_BASE = "https://sonaria-api.onrender.com";
     const SONARIA_VERSION = "SonarIA v1.3.1 · V131 · final estable";
@@ -785,7 +800,7 @@
 
     function renderVersionLabel(){
       const el = $("versionLabel");
-      if(el) el.textContent = "v1.4.3 · conversión PRO integrada";
+      if(el) el.textContent = "SonarIA v1.4.6";
     }
 
     function normalizeSongKey(title="", artist=""){
@@ -860,12 +875,27 @@
 
     function isTrialUser(){
       const plan = String(user?.plan || '').toLowerCase();
-      return plan === 'pro_trial' || plan === 'trial' || plan.includes('trial');
+      const kind = String(user?.license_kind || '').toLowerCase();
+      return kind === 'gift' || plan === 'pro_gift' || plan === 'pro_trial' || plan === 'trial' || plan.includes('trial');
+    }
+
+    function isInstitutionalUser(){
+      const plan = String(user?.plan || '').toLowerCase();
+      const kind = String(user?.license_kind || '').toLowerCase();
+      return kind === 'school_license' || plan === 'pro_institutional' || plan === 'pro_license';
     }
 
     function isPaidProUser(){
       const plan = String(user?.plan || '').toLowerCase();
-      return plan === 'pro' || plan === 'pro_monthly' || plan === 'pro_annual' || plan.startsWith('pro_enterprise') || plan.startsWith('school_') || plan.startsWith('starter_') || plan.startsWith('enterprise_');
+      return isInstitutionalUser() || plan === 'pro' || plan === 'pro_monthly' || plan === 'pro_annual' || plan.startsWith('pro_enterprise') || plan.startsWith('school_') || plan.startsWith('starter_') || plan.startsWith('enterprise_');
+    }
+
+    function accessLabel(){
+      if(user?.is_admin) return 'Admin · PRO';
+      if(isInstitutionalUser()) return 'Acceso institucional · PRO';
+      if(isTrialUser()) return 'Prueba PRO activa';
+      if(isPaidProUser()) return 'Suscripción PRO activa';
+      return 'Plan Free activo';
     }
 
     function openPlans(){
@@ -883,11 +913,19 @@
 
       card.classList.toggle('pro', paid);
       if(paid){
-        $('conversionKicker').textContent = 'Cuenta PRO';
-        $('conversionTitle').textContent = 'Tu acceso PRO está activo';
-        $('conversionCopy').textContent = 'Tienes funciones completas para preparar clases: análisis, adaptación, traducción, pedagogía y PDF.';
-        $('btnUpgradeMain').textContent = 'Ver planes';
-        card.classList.toggle('hidden', hiddenByUser);
+        if(isInstitutionalUser()){
+          $('conversionKicker').textContent = 'Acceso institucional';
+          $('conversionTitle').textContent = 'Tu colegio te activó SonarIA PRO';
+          $('conversionCopy').textContent = 'Tienes acceso completo por licencia institucional: análisis, adaptación escolar, traducción, pedagogía y PDF.';
+          $('btnUpgradeMain').textContent = 'Ver planes';
+          card.classList.remove('hidden');
+        }else{
+          $('conversionKicker').textContent = 'Cuenta PRO';
+          $('conversionTitle').textContent = 'Tu acceso PRO está activo';
+          $('conversionCopy').textContent = 'Tienes funciones completas para preparar clases: análisis, adaptación, traducción, pedagogía y PDF.';
+          $('btnUpgradeMain').textContent = 'Ver planes';
+          card.classList.toggle('hidden', hiddenByUser);
+        }
         after?.classList.add('hidden');
       }else if(trial){
         $('conversionKicker').textContent = 'Prueba PRO activa';
@@ -901,9 +939,9 @@
           $('afterAnalysisCopy').textContent = 'Mantén análisis ilimitado, adaptación escolar, traducción y PDF al terminar tu invitación.';
         }
       }else{
-        $('conversionKicker').textContent = 'Plan FREE';
+        $('conversionKicker').textContent = 'Plan Free';
         $('conversionTitle').textContent = 'Prueba SonarIA PRO y prepara clases sin límites';
-        $('conversionCopy').textContent = 'FREE permite uso limitado. PRO desbloquea adaptación escolar, traducción, PDF y pedagogía completa.';
+        $('conversionCopy').textContent = 'Free permite uso limitado. PRO desbloquea adaptación escolar, traducción, PDF y pedagogía completa.';
         $('btnUpgradeMain').textContent = 'Activar PRO';
         card.classList.remove('hidden');
         if(after && lastAnalysis){
@@ -927,7 +965,7 @@
       const email = user?.email || "";
       if($("welcomeGreeting")) $("welcomeGreeting").textContent = `${saludoPorHora()}, ${name}`;
       if($("welcomeIdentity")){
-        const state = isPaidProUser() ? "Suscripción/PRO activo" : (isTrialUser() ? "Prueba PRO activa" : "Plan FREE activo");
+        const state = isPaidProUser() ? "Acceso PRO activo" : (isTrialUser() ? "Prueba PRO activa" : "Plan Free activo");
         $("welcomeIdentity").textContent = email ? `${email} · ${state}` : "Sesión docente activa";
       }
     }
@@ -936,17 +974,18 @@
       const pro = isProUser();
       const plan = $('planPill');
       const topPlan = $('topPlanPill');
+      const visiblePlan = isInstitutionalUser() ? 'Institucional PRO' : (isTrialUser() ? 'Prueba PRO' : (pro ? 'Plan PRO' : 'Plan Free')); 
       if(topPlan){
-        topPlan.textContent = isTrialUser() ? 'Prueba PRO' : (pro ? 'Plan PRO' : 'Plan FREE');
+        topPlan.textContent = visiblePlan;
         topPlan.classList.toggle('pro', pro);
         topPlan.classList.toggle('free', !pro);
       }
       if(plan){
-        plan.textContent = isTrialUser() ? 'Prueba PRO' : (pro ? 'Plan PRO' : 'Plan FREE');
+        plan.textContent = visiblePlan;
         plan.classList.toggle('pro', pro);
         plan.classList.toggle('free', !pro);
       }
-      if($('resultPlanChip')){ $('resultPlanChip').textContent = isTrialUser() ? 'Prueba PRO' : (pro ? 'Cuenta PRO' : 'Cuenta FREE'); }
+      if($('resultPlanChip')){ $('resultPlanChip').textContent = isInstitutionalUser() ? 'Cuenta institucional PRO' : (isTrialUser() ? 'Prueba PRO' : (pro ? 'Cuenta PRO' : 'Cuenta Free')); }
       $('btnBenefitsTop')?.classList.toggle('hidden', pro);
       $('btnPlanesTop')?.classList.remove('hidden');
       $('btnUsoAulaMas')?.classList.toggle('hidden', pro);
