@@ -1,187 +1,420 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SonarIA Admin</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
+<title>Panel Admin | SonarIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --soft:#eef4ff;
+  --line:#d9e3f1;
+  --line2:#c7d5ea;
+  --text:#172033;
+  --muted:#66758c;
+  --blue:#2f6fed;
+  --blue2:#5f90f8;
+  --green:#1fbf75;
+  --green2:#35d090;
+  --red:#ef4e4e;
+  --orange:#ff9f43;
+  --shadow:0 18px 50px rgba(35,54,86,.10);
+  --radius:24px;
+}
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Inter;
-  background:#f5f7fb;
+  font-family:'Inter',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(47,111,237,.09), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(31,191,117,.08), transparent 22%),
+    linear-gradient(180deg,#fbfdff,var(--bg));
+  min-height:100vh;
 }
-
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:25px;
-}
-
-h1{
-  margin-bottom:20px;
-}
-
-/* KPIs */
-.kpis{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:25px;
-}
-
-.kpi{
-  background:white;
-  padding:15px;
-  border-radius:12px;
-  box-shadow:0 4px 15px rgba(0,0,0,.05);
-}
-
-.kpi h2{
-  margin:0;
-}
-
-/* COLEGIOS */
-.colegios{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  gap:15px;
-  margin-bottom:25px;
-}
-
-.card{
-  background:white;
-  padding:15px;
-  border-radius:14px;
-  box-shadow:0 6px 20px rgba(0,0,0,.05);
-}
-
-.btn{
-  padding:8px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:8px;
-}
-
-.primary{background:#3b82f6;color:white;}
-.green{background:#22c55e;color:white;}
-.red{background:#ef4444;color:white;}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-
-@media(max-width:900px){
-  .kpis{grid-template-columns:1fr 1fr;}
-  .grid{grid-template-columns:1fr;}
-}
+.wrap{max-width:1480px;margin:0 auto;padding:24px 18px 56px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:grid;gap:5px}
+.brand-title{font-size:clamp(2rem,3.4vw,3.4rem);font-weight:900;line-height:.94;letter-spacing:-.07em}
+.brand-title span{color:var(--blue)}
+.brand-sub{color:var(--muted);font-weight:700;line-height:1.45}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;transition:.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 12px 26px rgba(47,111,237,.20)}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#062114;box-shadow:0 12px 24px rgba(31,191,117,.18)}
+.btn-red{background:linear-gradient(135deg,var(--red),#ff7b7b);color:white}
+.btn-ghost{background:white;border:1px solid var(--line);color:var(--text)}
+.btn-small{min-height:36px;border-radius:12px;padding:0 12px;font-size:.86rem}
+.card{background:linear-gradient(180deg,var(--card),#fbfdff);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-bottom:16px}
+.hero-main,.hero-side{padding:24px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:#eaf2ff;border:1px solid #d3e3ff;color:var(--blue);font-size:.82rem;font-weight:900;margin-bottom:12px}
+.hero h1{margin:0 0 8px;font-size:clamp(2rem,3.7vw,3.65rem);line-height:.95;letter-spacing:-.07em}
+.muted{color:var(--muted);line-height:1.7}
+.status{margin-top:12px;min-height:24px;font-weight:800;line-height:1.55}.status.ok{color:#0e9d5c}.status.error{color:#d33838}.status.info{color:#47617f}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{padding:18px}.kpi strong{display:block;font-size:1.75rem;letter-spacing:-.05em}.kpi span{display:block;color:var(--muted);margin-top:5px;font-size:.9rem;line-height:1.45}
+.layout{display:grid;grid-template-columns:390px minmax(0,1fr);gap:16px;align-items:start}
+.side-stack{display:grid;gap:16px}.panel{padding:20px}.panel h2,.section-title{margin:0 0 14px;font-size:1.35rem;letter-spacing:-.04em}
+.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-weight:800;font-size:.9rem;color:#314156}
+input,select,textarea{width:100%;border:1px solid var(--line2);background:white;border-radius:16px;padding:13px 14px;font:inherit;color:var(--text);outline:none}textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:#88afff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
+.main-stack{display:grid;gap:16px}.school-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.school-card{padding:18px;border-radius:22px;background:white;border:1px solid var(--line);box-shadow:0 12px 30px rgba(35,54,86,.07)}
+.school-card h3{margin:0 0 6px;font-size:1.1rem}.school-meta{color:var(--muted);line-height:1.6;font-size:.92rem}.progress{height:10px;background:#e8edf6;border-radius:999px;overflow:hidden;margin:12px 0}.bar{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));width:0%}
+.school-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:20px;background:white}table{width:100%;border-collapse:collapse}th,td{padding:13px 14px;border-bottom:1px solid #edf2f8;text-align:left;vertical-align:top;font-size:.93rem}th{background:#f6f9ff;color:#33445d;font-size:.86rem}tr:last-child td{border-bottom:none}.small{font-size:.84rem;color:var(--muted);line-height:1.5}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-size:.76rem;font-weight:900;border:1px solid var(--line)}.pill.pro{background:#e8fbf2;border-color:#b8ebd1;color:#0d8f54}.pill.free{background:#f4f7fb;color:#5f6d80}.pill.admin{background:#fff7e7;border-color:#f1deae;color:#a97a11}.pill.warn{background:#fff7ed;border-color:#fed7aa;color:#b45309}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:white;font-weight:900;cursor:pointer}.tab.active{background:var(--blue);color:white;border-color:var(--blue)}
+.hidden{display:none!important}.empty{padding:16px;color:var(--muted);line-height:1.6}.activity-list{display:grid;gap:10px;max-height:520px;overflow:auto}.activity{padding:12px 0;border-bottom:1px solid #edf2f8}.activity:last-child{border-bottom:none}.activity strong{display:block}.activity span{display:block;color:var(--muted);font-size:.9rem;margin-top:4px;line-height:1.45}
+.detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}.detail-title{margin:0;font-size:1.35rem}.detail-box{padding:16px;border-radius:18px;background:#f8fbff;border:1px solid var(--line);margin-bottom:12px}
+@media(max-width:1120px){.hero,.layout{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.wrap{padding:18px 12px 42px}.actions,.school-actions{width:100%}.btn{width:100%}.kpis{grid-template-columns:1fr 1fr}.hero-main,.hero-side,.panel{padding:18px}.school-grid{grid-template-columns:1fr}.brand-title{font-size:2.35rem}}
 </style>
-
 </head>
-
 <body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-title">Panel Admin Sonar<span>IA</span></div>
+      <div class="brand-sub">Gestión comercial, usuarios, regalos PRO y colegios.</div>
+    </div>
+    <div class="actions">
+      <a class="btn btn-ghost" href="/sonaria.html">Ir a SonarIA</a>
+      <button class="btn btn-ghost" onclick="refreshAll()">Actualizar</button>
+      <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
+    </div>
+  </div>
 
-<div class="container">
+  <section class="hero">
+    <div class="card hero-main">
+      <div class="eyebrow">Panel SaaS · híbrido recomendado</div>
+      <h1>Controla usuarios, colegios y accesos en un solo lugar.</h1>
+      <div class="muted">Arriba ves el estado del negocio. Abajo gestionas regalos, simulaciones y licencias institucionales.</div>
+      <div id="status" class="status info">Cargando panel...</div>
+    </div>
+    <div class="card hero-side">
+      <div class="eyebrow">Acciones rápidas</div>
+      <div class="muted">1) Crea o simula un colegio. 2) Asigna docentes. 3) Verifica cupos y acceso institucional.</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn btn-primary" onclick="showTab('schools')">Ver colegios</button>
+        <button class="btn btn-green" onclick="document.getElementById('giftEmail').focus()">Enviar regalo</button>
+      </div>
+    </div>
+  </section>
 
-<h1>SonarIA Admin</h1>
+  <section class="kpis">
+    <div class="card kpi"><strong id="kpiUsers">—</strong><span>Usuarios registrados</span></div>
+    <div class="card kpi"><strong id="kpiPro">—</strong><span>Usuarios PRO / institucionales</span></div>
+    <div class="card kpi"><strong id="kpiLicTotal">—</strong><span>Cupos institucionales</span></div>
+    <div class="card kpi"><strong id="kpiLicAvail">—</strong><span>Cupos disponibles</span></div>
+    <div class="card kpi"><strong id="kpiAnalyses">—</strong><span>Análisis realizados</span></div>
+  </section>
 
-<!-- KPIs (solo visual por ahora) -->
+  <div class="layout">
+    <aside class="side-stack">
+      <div class="card panel">
+        <h2>Enviar regalo PRO</h2>
+        <div class="field"><label>Correo del docente</label><input id="giftEmail" type="email" placeholder="docente@colegio.cl"></div>
+        <div class="field"><label>Días de acceso</label><select id="giftDays"><option value="3">3 días</option><option value="5">5 días</option><option value="7">7 días</option><option value="14">14 días</option></select></div>
+        <div class="field"><label>Nota opcional</label><textarea id="giftNote" placeholder="Acceso de prueba enviado por SonarIA"></textarea></div>
+        <button class="btn btn-green" onclick="sendGift()">Enviar regalo</button>
+      </div>
 
-<div class="kpis">
-  <div class="kpi"><div>Usuarios</div><h2 id="u">-</h2></div>
-  <div class="kpi"><div>PRO</div><h2 id="p">-</h2></div>
-  <div class="kpi"><div>Regalos</div><h2 id="g">-</h2></div>
-  <div class="kpi"><div>Colegios</div><h2 id="c">-</h2></div>
-</div>
+      <div class="card panel">
+        <h2>Simular colegio</h2>
+        <div class="field"><label>Correo comprador / colegio</label><input id="schoolOwnerEmail" type="email" placeholder="coordinacion@colegio.cl"></div>
+        <div class="field"><label>Pack</label><select id="schoolPlan"><option value="pro_enterprise_5">5 licencias</option><option value="pro_enterprise_10">10 licencias</option><option value="starter_10">10 licencias · starter</option></select></div>
+        <button class="btn btn-primary" onclick="simulateSchool()">Crear / actualizar colegio</button>
+      </div>
 
-<h2>Colegios</h2>
-<div id="colegios" class="colegios"></div>
+      <div class="card panel">
+        <h2>Asignar docente</h2>
+        <div class="field"><label>Colegio / comprador</label><input id="licenseOwnerEmail" type="email" placeholder="correo del colegio"></div>
+        <div class="field"><label>Correo docente</label><input id="licenseEmail" type="email" placeholder="docente@colegio.cl"></div>
+        <div class="field"><label>Nota</label><input id="licenseNote" placeholder="Licencia institucional"></div>
+        <button class="btn btn-green" onclick="assignLicense()">Asignar licencia</button>
+      </div>
+    </aside>
 
-<div class="grid">
+    <main class="main-stack">
+      <div class="card panel">
+        <div class="tabs">
+          <button id="tab-schools" class="tab active" onclick="showTab('schools')">Colegios</button>
+          <button id="tab-users" class="tab" onclick="showTab('users')">Usuarios</button>
+          <button id="tab-activity" class="tab" onclick="showTab('activity')">Actividad</button>
+        </div>
 
-<div class="card">
-<h3>Enviar regalo PRO</h3>
-<input id="email" placeholder="correo" style="width:100%;margin-bottom:8px;">
-<select id="days" style="width:100%;margin-bottom:8px;">
-<option value="3">3 días</option>
-<option value="7">7 días</option>
-</select>
-<button class="btn green" onclick="gift()">Enviar</button>
-</div>
+        <section id="view-schools">
+          <div class="detail-head">
+            <div>
+              <h2 class="section-title">Colegios y packs</h2>
+              <div class="small">Tarjetas creadas desde suscripciones/planes institucionales activos o simulados.</div>
+            </div>
+          </div>
+          <div id="schoolsGrid" class="school-grid"></div>
+        </section>
 
-<div class="card">
-<h3>Eventos</h3>
-<div id="events">Cargando...</div>
-</div>
+        <section id="view-users" class="hidden">
+          <div class="detail-head">
+            <div>
+              <h2 class="section-title">Usuarios</h2>
+              <div class="small">Selecciona usuarios para enviar regalos o revisar estado.</div>
+            </div>
+            <input id="userSearch" placeholder="Buscar por correo, nombre o plan" oninput="renderUsers()" style="max-width:360px">
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Plan</th><th>Análisis</th><th>Minutos</th><th>Acción</th></tr></thead><tbody id="usersBody"></tbody></table></div>
+        </section>
 
-</div>
+        <section id="view-activity" class="hidden">
+          <h2 class="section-title">Actividad reciente</h2>
+          <div id="activityList" class="activity-list"></div>
+        </section>
+      </div>
 
+      <div id="schoolDetailCard" class="card panel hidden">
+        <div class="detail-head">
+          <div><h2 id="schoolDetailTitle" class="detail-title">Colegio</h2><div id="schoolDetailMeta" class="small"></div></div>
+          <button class="btn btn-ghost btn-small" onclick="closeSchoolDetail()">Cerrar vista</button>
+        </div>
+        <div id="schoolDetailSummary" class="detail-box"></div>
+        <div class="table-wrap"><table><thead><tr><th>Docente</th><th>Estado</th><th>Nota</th><th>Acción</th></tr></thead><tbody id="schoolTeachersBody"></tbody></table></div>
+      </div>
+    </main>
+  </div>
 </div>
 
 <script>
+const API = "https://sonaria-api.onrender.com";
+const token = localStorage.getItem("mejoraria_token") || localStorage.getItem("token") || localStorage.getItem("access_token") || "";
+let adminData = { usuarios:[], licencias:{}, subscriptions:[], assignments:[], busquedas_recientes:[], payments:[], stats:{} };
+let schools = [];
 
-const API="https://sonaria-api.onrender.com";
-const token=localStorage.getItem("mejoraria_token");
+if(!token){ window.location.href = "/login.html"; }
 
-/* COLEGIOS (usa endpoint real existente) */
-async function loadSchools(){
-  const res=await fetch(API+"/admin/schools",{headers:{Authorization:"Bearer "+token}});
-  const data=await res.json();
+function setStatus(msg,type="info"){
+  const el=document.getElementById("status");
+  if(el){ el.textContent=msg; el.className="status "+type; }
+}
+function authHeaders(){ return {"Authorization":"Bearer "+token,"Content-Type":"application/json"}; }
+function escapeHtml(v){ return String(v ?? "").replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[m])); }
+function num(v){ return Number(v || 0) || 0; }
+function lower(v){ return String(v || "").trim().toLowerCase(); }
+function pct(used,total){ total=num(total); used=num(used); return total ? Math.min(100, Math.round((used/total)*100)) : 0; }
 
-  colegios.innerHTML="";
-
-  data.forEach(s=>{
-    const div=document.createElement("div");
-    div.className="card";
-
-    div.innerHTML=`
-      <h3>${s.name}</h3>
-      <p>${s.used}/${s.total} cupos</p>
-      <button class="btn primary" onclick="enter('${s.id}')">Entrar</button>
-    `;
-
-    colegios.appendChild(div);
-  });
-
-  document.getElementById("c").innerText=data.length;
+async function fetchJson(url, options={}){
+  const res = await fetch(url,{...options,headers:{...authHeaders(),...(options.headers||{})}});
+  const data = await res.json().catch(()=>({}));
+  if(res.status===401){ localStorage.clear(); sessionStorage.clear(); window.location.href="/login.html"; throw new Error("Sesión expirada"); }
+  if(!res.ok){ throw new Error(data.detail || data.message || ("Error "+res.status)); }
+  return data;
 }
 
-/* REGALO */
-async function gift(){
-  await fetch(API+"/admin/gift",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization:"Bearer "+token
+async function tryPost(paths, body){
+  let lastErr = null;
+  for(const path of paths){
+    try{ return await fetchJson(API+path,{method:"POST",body:JSON.stringify(body)}); }
+    catch(e){ lastErr=e; }
+  }
+  throw lastErr || new Error("No encontré endpoint compatible");
+}
+
+function normalizeResumen(data){
+  const stats = data.stats || data.estadisticas || {};
+  const usuariosRaw = data.usuarios || data.users || data.top_users || [];
+  const lic = data.licencias || data.licenses || {};
+  const uso = data.uso || data.usage || {};
+  const subscriptions = data.subscriptions || data.suscripciones || lic.subscriptions || lic.suscripciones || data.colegios || data.schools || [];
+  const assignments = data.assignments || data.asignaciones || lic.assignments || lic.asignaciones || lic.detalle || [];
+  const searches = data.busquedas_recientes || data.searches || data.recent_searches || [];
+  const payments = data.payments || data.pagos || [];
+
+  const usuarios = usuariosRaw.map(u=>({
+    id:u.id || u.user_id || "",
+    email:u.email || u.correo || "",
+    name:u.name || u.nombre || u.email || u.correo || "Usuario",
+    plan:u.plan || u.plan_name || "free",
+    busquedas:u.busquedas || u.analisis || u.searches || 0,
+    minutos:u.minutos || u.minutes || 0,
+    is_admin:!!(u.is_admin || u.admin || String(u.email||"").startsWith("admin@"))
+  }));
+
+  return {
+    usuarios,
+    licencias:{
+      total: lic.total ?? lic.capacidad_total ?? stats.capacidad_total_cuentas ?? stats.licencias_total ?? 0,
+      usadas: lic.usadas ?? lic.used ?? stats.licencias_usadas ?? stats.usuarios_pro ?? 0,
+      disponibles: lic.disponibles ?? lic.available ?? Math.max(0, Number(lic.total ?? stats.capacidad_total_cuentas ?? 0) - Number(lic.usadas ?? stats.usuarios_pro ?? 0)),
     },
-    body:JSON.stringify({
-      email:email.value,
-      days:days.value
-    })
+    uso:{ total_analisis: uso.total_analisis ?? stats.analisis_totales ?? stats.total_analyses ?? 0, minutos_uso: uso.minutos_uso ?? stats.minutos_uso ?? 0 },
+    stats,
+    subscriptions,
+    assignments,
+    busquedas_recientes:searches,
+    payments,
+  };
+}
+
+function normalizeSchools(){
+  const subs = adminData.subscriptions || [];
+  const assignments = adminData.assignments || [];
+  const activeAssignments = assignments.filter(a=> lower(a.status || "active") === "active");
+  const byOwner = {};
+
+  subs.forEach((s,idx)=>{
+    const email = lower(s.payer_email || s.owner_email || s.email || s.correo || s.name || "");
+    const key = email || String(s.id || idx);
+    const total = num(s.licenses_total ?? s.total ?? s.cupos ?? s.accounts ?? 0);
+    const used = num(s.licenses_used ?? s.used ?? 0) || activeAssignments.filter(a=> lower(a.owner_email || a.payer_email || "") === email).length;
+    byOwner[key] = {
+      id: String(s.id || key),
+      key,
+      email,
+      name: s.school_name || s.nombre || s.plan_name || (email ? email : "Colegio / institución"),
+      plan: s.plan_name || s.plan || s.plan_key || "Pack institucional",
+      status: s.status || "active",
+      total,
+      used,
+      available: Math.max(0,total-used),
+      raw:s,
+      teachers: activeAssignments.filter(a=> lower(a.owner_email || a.payer_email || "") === email)
+    };
   });
 
-  alert("Regalo enviado");
+  // Si el backend antiguo no separa por colegio, mostrar una tarjeta global con capacidad total.
+  if(!Object.keys(byOwner).length && num(adminData.licencias.total)){
+    byOwner.global = {
+      id:"global", key:"global", email:"", name:"Cupos institucionales", plan:"Capacidad general",
+      status:"active", total:num(adminData.licencias.total), used:num(adminData.licencias.usadas), available:num(adminData.licencias.disponibles), raw:{}, teachers:activeAssignments
+    };
+  }
+  return Object.values(byOwner);
 }
 
-/* EVENTOS */
-async function loadEvents(){
-  const res=await fetch(API+"/admin/events",{headers:{Authorization:"Bearer "+token}});
-  const data=await res.json();
-
-  events.innerHTML=data.map(e=>`<div>${e}</div>`).join("");
+async function refreshAll(){
+  try{
+    setStatus("Cargando datos reales del backend...","info");
+    const data = await fetchJson(API+"/admin/resumen",{method:"GET"});
+    adminData = normalizeResumen(data);
+    schools = normalizeSchools();
+    renderAll();
+    setStatus("Panel actualizado correctamente.","ok");
+  }catch(e){
+    console.error(e);
+    setStatus(e.message || "No pude cargar el panel.","error");
+  }
 }
 
-/* INIT */
-loadSchools();
-loadEvents();
+function renderAll(){ renderKPIs(); renderSchools(); renderUsers(); renderActivity(); }
+function renderKPIs(){
+  const users = adminData.usuarios || [];
+  const pro = users.filter(u=>lower(u.plan).includes("pro") || lower(u.plan).includes("institutional") || lower(u.plan).includes("colegio")).length || num(adminData.licencias.usadas);
+  document.getElementById("kpiUsers").textContent = users.length || num(adminData.stats.usuarios);
+  document.getElementById("kpiPro").textContent = pro;
+  document.getElementById("kpiLicTotal").textContent = num(adminData.licencias.total);
+  document.getElementById("kpiLicAvail").textContent = num(adminData.licencias.disponibles);
+  document.getElementById("kpiAnalyses").textContent = num(adminData.uso.total_analisis);
+}
+function renderSchools(){
+  const grid=document.getElementById("schoolsGrid");
+  if(!schools.length){ grid.innerHTML='<div class="empty">Aún no hay colegios o packs institucionales. Usa “Simular colegio” para crear uno de prueba.</div>'; return; }
+  grid.innerHTML = schools.map((s,i)=>`
+    <div class="school-card">
+      <h3>${escapeHtml(s.name)}</h3>
+      <div class="school-meta">${escapeHtml(s.email || "Sin correo comprador visible")}<br>${escapeHtml(s.plan)} · ${escapeHtml(s.status)}</div>
+      <div class="progress"><div class="bar" style="width:${pct(s.used,s.total)}%"></div></div>
+      <div><strong>${s.used}/${s.total}</strong> cupos usados · <strong>${s.available}</strong> disponibles</div>
+      <div class="school-actions">
+        <button class="btn btn-primary btn-small" onclick="openSchool(${i})">Entrar como admin</button>
+        ${s.email ? `<button class="btn btn-ghost btn-small" onclick="prefillOwner('${escapeHtml(s.email)}')">Asignar docente</button>` : ""}
+      </div>
+    </div>`).join("");
+}
+function renderUsers(){
+  const q=lower(document.getElementById("userSearch")?.value || "");
+  const users=(adminData.usuarios||[]).filter(u=>lower(`${u.name} ${u.email} ${u.plan}`).includes(q));
+  const tbody=document.getElementById("usersBody");
+  if(!users.length){ tbody.innerHTML='<tr><td colspan="5" class="empty">No encontré usuarios.</td></tr>'; return; }
+  tbody.innerHTML=users.map(u=>{
+    const plan=String(u.plan||"free"); const cls=lower(plan).includes("pro") ? "pro" : "free";
+    return `<tr><td><strong>${escapeHtml(u.name||u.email)}</strong><div class="small">${escapeHtml(u.email)}</div></td><td><span class="pill ${cls}">${escapeHtml(plan)}</span></td><td>${escapeHtml(u.busquedas||0)}</td><td>${escapeHtml(u.minutos||0)} min</td><td><button class="btn btn-ghost btn-small" onclick="selectEmail('${encodeURIComponent(u.email)}')">Usar correo</button></td></tr>`;
+  }).join("");
+}
+function renderActivity(){
+  const list=document.getElementById("activityList");
+  const items=[...(adminData.busquedas_recientes||[]), ...(adminData.payments||[])].slice(0,40);
+  if(!items.length){ list.innerHTML='<div class="empty">Aún no hay actividad reciente visible.</div>'; return; }
+  list.innerHTML=items.map(it=>`<div class="activity"><strong>${escapeHtml(it.titulo || it.title || it.order_id || "Evento")}</strong><span>${escapeHtml(it.artista || it.artist || it.status || it.resultado || "")}</span><span>${escapeHtml(it.fecha || it.date || it.created_at || "")}</span></div>`).join("");
+}
 
+function showTab(tab){
+  ["schools","users","activity"].forEach(t=>{
+    document.getElementById("view-"+t).classList.toggle("hidden",t!==tab);
+    document.getElementById("tab-"+t).classList.toggle("active",t===tab);
+  });
+}
+function openSchool(i){
+  const s=schools[i]; if(!s) return;
+  document.getElementById("schoolDetailCard").classList.remove("hidden");
+  document.getElementById("schoolDetailTitle").textContent=s.name;
+  document.getElementById("schoolDetailMeta").textContent=`${s.email || "Sin correo comprador"} · ${s.plan}`;
+  document.getElementById("schoolDetailSummary").innerHTML=`<strong>${s.used}/${s.total}</strong> cupos usados · <strong>${s.available}</strong> disponibles · Estado: ${escapeHtml(s.status)}`;
+  const teachers=s.teachers||[];
+  const tbody=document.getElementById("schoolTeachersBody");
+  if(!teachers.length){ tbody.innerHTML='<tr><td colspan="4" class="empty">Aún no hay docentes asignados en este colegio.</td></tr>'; }
+  else{
+    tbody.innerHTML=teachers.map(t=>`<tr><td><strong>${escapeHtml(t.assigned_email || t.email || "")}</strong></td><td><span class="pill pro">${escapeHtml(t.status || "active")}</span></td><td>${escapeHtml(t.note || "")}</td><td><button class="btn btn-red btn-small" onclick="revokeLicense('${encodeURIComponent(t.assigned_email || t.email || "")}')">Revocar</button></td></tr>`).join("");
+  }
+  document.getElementById("schoolDetailCard").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function closeSchoolDetail(){ document.getElementById("schoolDetailCard").classList.add("hidden"); }
+function prefillOwner(email){ document.getElementById("licenseOwnerEmail").value=email; document.getElementById("licenseEmail").focus(); }
+function selectEmail(encoded){ const email=decodeURIComponent(encoded||""); document.getElementById("giftEmail").value=email; document.getElementById("licenseEmail").value=email; }
+
+async function sendGift(){
+  const email=lower(document.getElementById("giftEmail").value); const days=num(document.getElementById("giftDays").value); const note=document.getElementById("giftNote").value||"";
+  if(!email || !email.includes("@")){ alert("Ingresa un correo válido."); return; }
+  try{
+    await tryPost(["/admin/gift","/admin/gifts/send","/admin/trials/gift","/admin/invitations/gift"],{email,days,note});
+    alert("Regalo enviado. Si SMTP está activo, también llegará correo.");
+    refreshAll();
+  }catch(e){ alert(e.message || "No pude enviar regalo."); }
+}
+async function simulateSchool(){
+  const owner_email=lower(document.getElementById("schoolOwnerEmail").value); const plan=document.getElementById("schoolPlan").value;
+  if(!owner_email || !owner_email.includes("@")){ alert("Ingresa el correo comprador/colegio."); return; }
+  try{
+    await tryPost(["/admin/test/activate-plan","/admin/schools/simulate","/admin/schools/create-test"],{owner_email,payer_email:owner_email,plan,status:"active",note:"Simulación de colegio desde panel admin"});
+    alert("Colegio simulado/actualizado.");
+    refreshAll();
+  }catch(e){ alert(e.message || "No pude simular colegio."); }
+}
+async function assignLicense(){
+  const owner_email=lower(document.getElementById("licenseOwnerEmail").value); const email=lower(document.getElementById("licenseEmail").value); const note=document.getElementById("licenseNote").value||"Licencia institucional";
+  if(!email || !email.includes("@")){ alert("Ingresa correo docente válido."); return; }
+  try{
+    await tryPost(["/admin/licenses/assign","/admin/schools/license/assign","/admin/license/assign"],{owner_email,email,note});
+    alert("Licencia asignada. Si SMTP está activo, llegará correo al docente.");
+    refreshAll();
+  }catch(e){ alert(e.message || "No pude asignar licencia."); }
+}
+async function revokeLicense(encodedEmail){
+  const email=decodeURIComponent(encodedEmail||""); if(!email) return;
+  if(!confirm("¿Revocar licencia de " + email + "?")) return;
+  try{
+    await tryPost(["/admin/licenses/revoke","/admin/schools/license/revoke","/admin/license/revoke"],{email,note:"Revocada desde panel"});
+    alert("Licencia revocada."); refreshAll();
+  }catch(e){ alert(e.message || "No pude revocar licencia."); }
+}
+async function logout(){
+  try{ await fetch(API+"/auth/logout",{method:"POST",headers:authHeaders()}); }catch(e){}
+  localStorage.clear(); sessionStorage.clear(); window.location.href="/login.html";
+}
+
+refreshAll();
 </script>
-
 </body>
 </html>
