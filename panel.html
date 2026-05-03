@@ -1,180 +1,224 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Panel SaaS | SonarIA</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SonarIA Admin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-:root{
-  --bg:#f6f8fc;--card:#ffffff;--line:#dbe4f0;--text:#172033;--muted:#64748b;
-  --blue:#2f6fed;--green:#16a34a;--red:#dc2626;--orange:#f97316;--purple:#7c3aed;
-  --soft-blue:#eef5ff;--soft-green:#ecfdf3;--soft-red:#fff1f2;--soft-orange:#fff7ed;--soft-purple:#f5f3ff;
-  --shadow:0 18px 50px rgba(34,51,84,.08);--radius:24px;--max:1480px;
+body{
+  margin:0;
+  font-family:Inter;
+  background:#f5f7fb;
+  color:#1e293b;
 }
-*{box-sizing:border-box} body{margin:0;font-family:'Inter',sans-serif;background:radial-gradient(circle at top left,rgba(47,111,237,.10),transparent 22%),radial-gradient(circle at bottom right,rgba(22,163,74,.08),transparent 22%),var(--bg);color:var(--text)}
-.wrap{max-width:var(--max);margin:0 auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap}.brand h1{margin:0;font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.075em;line-height:.92}.brand span{color:var(--blue)}.sub{color:var(--muted);font-weight:700;margin-top:6px;line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:none;border-radius:16px;min-height:46px;padding:0 16px;font:inherit;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,var(--blue),#6598ff);color:white;box-shadow:0 12px 28px rgba(47,111,237,.18)}.btn-green{background:linear-gradient(135deg,#22c55e,#5de38f);color:#062315}.btn-red{background:linear-gradient(135deg,#ef4444,#fb7185);color:white}.btn-ghost{background:#fff;color:var(--text);border:1px solid var(--line)}.btn-orange{background:linear-gradient(135deg,var(--orange),#ffb15e);color:#1f1305}.btn-purple{background:linear-gradient(135deg,var(--purple),#a78bfa);color:white}.btn-small{min-height:34px;border-radius:12px;padding:0 10px;font-size:.82rem}.card{background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-bottom:16px}.panel{padding:22px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--soft-blue);color:#1e56c5;font-size:.82rem;font-weight:900;border:1px solid #d8e7ff}.hero h2{margin:12px 0 8px;font-size:clamp(1.8rem,3vw,3rem);line-height:.98;letter-spacing:-.065em}.muted{color:var(--muted);line-height:1.7}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.kpi{padding:18px}.kpi strong{display:block;font-size:1.8rem;letter-spacing:-.055em}.kpi span{display:block;color:var(--muted);font-weight:750;margin-top:4px;font-size:.92rem}.layout{display:grid;grid-template-columns:360px minmax(0,1fr) 420px;gap:16px;align-items:start}.stack{display:grid;gap:16px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-title h3{margin:0;font-size:1.35rem;letter-spacing:-.045em}.field{display:grid;gap:7px;margin-bottom:12px}.field label{font-size:.9rem;font-weight:800;color:#334155}.field input,.field select,.field textarea{width:100%;border:1px solid #cbd8ea;background:#fff;border-radius:15px;padding:13px 14px;font:inherit;outline:none;color:var(--text)}.field textarea{min-height:80px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus,.search:focus{border-color:#8bb4ff;box-shadow:0 0 0 4px rgba(47,111,237,.10)}.status{min-height:22px;font-weight:800;line-height:1.55}.ok{color:#0f8f50}.error{color:#c82333}.info{color:#456179}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff}table{width:100%;border-collapse:collapse}th,td{padding:13px 12px;border-bottom:1px solid #edf2f8;text-align:left;vertical-align:top;font-size:.92rem}th{background:#f7faff;color:#334155;font-size:.84rem}tr:last-child td{border-bottom:none}.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;font-size:.76rem;font-weight:900;border:1px solid var(--line);white-space:nowrap}.pill.pro{background:var(--soft-green);color:#0f7a43;border-color:#bbebcf}.pill.free{background:#f1f5f9;color:#475569}.pill.trial{background:var(--soft-purple);color:#5b21b6;border-color:#ddd6fe}.pill.warn{background:var(--soft-orange);color:#a34800;border-color:#fed7aa}.pill.bad{background:var(--soft-red);color:#9f1239;border-color:#fecdd3}.list{display:grid;gap:10px}.item{border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px}.item strong{display:block;margin-bottom:5px}.item .meta{font-size:.86rem;color:var(--muted);line-height:1.55}.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.search{flex:1;min-width:220px;border:1px solid #cbd8ea;border-radius:15px;padding:12px 14px;font:inherit}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-weight:900;cursor:pointer}.tab.active{background:var(--soft-blue);color:#1e56c5;border-color:#cfe1ff}.hidden{display:none!important}.empty{padding:18px;color:var(--muted)}.note{padding:14px 16px;border-radius:18px;background:#fff;border:1px dashed #b7c6dc;color:#475569;line-height:1.65;font-weight:650}
-.school-modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:80;backdrop-filter:blur(4px)}.school-modal.open{display:flex}.school-modal-box{width:min(1120px,96vw);max-height:90vh;overflow:auto;background:#f8fbff;border:1px solid var(--line);border-radius:28px;box-shadow:0 28px 90px rgba(15,23,42,.28);padding:22px}.school-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}.school-admin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.school-admin-stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}.school-admin-stat strong{display:block;font-size:1.35rem}.school-admin-stat span{display:block;color:var(--muted);font-weight:750;font-size:.86rem;margin-top:4px}.teacher-card{display:grid;grid-template-columns:1.6fr .7fr .7fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:16px;padding:12px;margin-bottom:8px}.teacher-card .meta{font-size:.86rem}@media(max-width:800px){.school-admin-grid{grid-template-columns:1fr 1fr}.teacher-card{grid-template-columns:1fr}.school-modal-box{padding:16px}}@media(max-width:1180px){.layout,.hero{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.wrap{padding:14px 10px 40px}.actions,.grid2{grid-template-columns:1fr;display:grid;width:100%}.btn{width:100%}.kpis{grid-template-columns:1fr}.panel{padding:16px}th,td{font-size:.84rem;padding:11px 9px}}
+
+.container{
+  max-width:1300px;
+  margin:auto;
+  padding:30px 20px;
+}
+
+h1{
+  font-size:2rem;
+  margin-bottom:20px;
+}
+
+/* KPIs */
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.kpi{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.kpi h2{
+  margin:0;
+  font-size:1.5rem;
+}
+
+/* COLEGIOS */
+.colegios{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.card h3{
+  margin-top:0;
+}
+
+.btn{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btn-primary{background:#3b82f6;color:white;}
+.btn-green{background:#22c55e;color:white;}
+.btn-red{background:#ef4444;color:white;}
+
+/* OPERACIÓN */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .kpis{grid-template-columns:1fr 1fr;}
+  .grid{grid-template-columns:1fr;}
+}
 </style>
+
 </head>
+
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">
-      <h1>Sonar<span>IA</span> Admin</h1>
-      <div class="sub">Panel SaaS simple: regalos, registros, colegios, licencias y usuarios. V143 integración total.</div>
-    </div>
-    <div class="actions">
-      <button class="btn btn-ghost" onclick="location.href='/sonaria.html'">Ir a SonarIA</button>
-      <button class="btn btn-primary" onclick="refreshAll()">Actualizar</button>
-      <button class="btn btn-red" onclick="logout()">Cerrar sesión</button>
-    </div>
+
+<div class="container">
+
+<h1>SonarIA Admin</h1>
+
+<!-- KPIs -->
+
+<div class="kpis">
+  <div class="kpi">
+    <div>Usuarios</div>
+    <h2 id="kpiUsers">-</h2>
   </div>
-
-  <div class="hero">
-    <div class="card panel">
-      <span class="eyebrow">Vista para negocio</span>
-      <h2>Qué está pasando hoy</h2>
-      <p class="muted">Este panel evita lenguaje técnico: muestra usuarios, pruebas regaladas, colegios simulados y eventos importantes.</p>
-      <div id="smtpNote" class="note" style="margin-top:14px">Revisando correo...</div>
-    </div>
-    <div class="card panel">
-      <div class="section-title"><h3>Acciones rápidas</h3></div>
-      <div class="grid2">
-        <button class="btn btn-green" onclick="focusGift()">Enviar regalo PRO</button>
-        <button class="btn btn-purple" onclick="focusSchool()">Simular colegio</button>
-      </div>
-      <p class="muted" style="margin-bottom:0">Si el correo automático falla, el acceso igual queda guardado y puedes copiar el link manualmente.</p>
-    </div>
+  <div class="kpi">
+    <div>PRO activos</div>
+    <h2 id="kpiPro">-</h2>
   </div>
-
-  <div class="kpis">
-    <div class="card kpi"><strong id="kUsers">0</strong><span>Usuarios registrados</span></div>
-    <div class="card kpi"><strong id="kPro">0</strong><span>Usuarios con PRO</span></div>
-    <div class="card kpi"><strong id="kTrials">0</strong><span>Regalos activos</span></div>
-    <div class="card kpi"><strong id="kSchools">0</strong><span>Colegios/packs</span></div>
-    <div class="card kpi"><strong id="kSeats">0</strong><span>Cupos disponibles</span></div>
+  <div class="kpi">
+    <div>Trials</div>
+    <h2 id="kpiTrials">-</h2>
   </div>
-
-  <div class="layout">
-    <div class="stack">
-      <div class="card panel" id="giftBox">
-        <div class="section-title"><h3>🎁 Enviar regalo PRO</h3></div>
-        <div class="field"><label>Correo del docente</label><input id="giftEmail" placeholder="docente@colegio.cl"></div>
-        <div class="field"><label>Días de acceso</label><select id="giftDays"><option value="3">3 días</option><option value="5">5 días</option><option value="7">7 días</option><option value="14">14 días</option></select></div>
-        <div class="field"><label>Nota interna</label><textarea id="giftNote" placeholder="Ej: regalo por demo, contacto por Instagram, etc."></textarea></div>
-        <button class="btn btn-green" onclick="sendGift()">Enviar regalo</button>
-        <div id="giftStatus" class="status"></div>
-      </div>
-
-      <div class="card panel" id="schoolBox">
-        <div class="section-title"><h3>🏫 Simular colegio</h3></div>
-        <div class="field"><label>Nombre colegio</label><input id="schoolName" placeholder="Colegio Demo"></div>
-        <div class="field"><label>Correo encargado</label><input id="schoolOwner" placeholder="coordinador@colegio.cl"></div>
-        <div class="field"><label>Pack</label><select id="schoolPlan"><option value="school_5">5 docentes</option><option value="school_10" selected>10 docentes</option><option value="school_20">20 docentes</option><option value="school_30">30 docentes</option></select></div>
-        <button class="btn btn-purple" onclick="simulateSchool()">Crear pack simulado</button>
-        <div id="schoolStatus" class="status"></div>
-      </div>
-
-      <div class="card panel">
-        <div class="section-title"><h3>📌 Eventos recientes</h3></div>
-        <div id="eventsList" class="list"><div class="empty">Cargando eventos...</div></div>
-      </div>
-    </div>
-
-    <div class="stack">
-      <div class="card panel">
-        <div class="section-title"><h3>👥 Usuarios</h3><button class="btn btn-ghost btn-small" onclick="loadUsers()">Recargar</button></div>
-        <div class="toolbar"><input id="userSearch" class="search" placeholder="Buscar por nombre o correo" oninput="renderUsers()"></div>
-        <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Plan</th><th>Uso</th><th>Acciones</th></tr></thead><tbody id="usersBody"><tr><td colspan="4">Cargando...</td></tr></tbody></table></div>
-      </div>
-
-      <div class="card panel">
-        <div class="section-title"><h3>🎁 Regalos y pruebas</h3><button class="btn btn-ghost btn-small" onclick="loadGifts()">Recargar</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Correo</th><th>Estado</th><th>Vence</th><th>Acción</th></tr></thead><tbody id="giftsBody"><tr><td colspan="4">Cargando...</td></tr></tbody></table></div>
-      </div>
-    </div>
-
-    <div class="stack">
-      <div class="card panel">
-        <div class="section-title"><h3>🏫 Colegios y licencias</h3><button class="btn btn-ghost btn-small" onclick="loadSchools()">Recargar</button></div>
-        <div id="schoolsList" class="list"><div class="empty">Cargando colegios...</div></div>
-      </div>
-
-      <div class="card panel">
-        <div class="section-title"><h3>➕ Asignar docente a colegio</h3></div>
-        <div class="field"><label>Correo encargado/colegio</label><input id="assignOwner" placeholder="coordinador@colegio.cl"></div>
-        <div class="field"><label>Correo docente</label><input id="assignTeacher" placeholder="profesor@colegio.cl"></div>
-        <button class="btn btn-primary" onclick="assignTeacher()">Asignar docente</button>
-        <div id="assignStatus" class="status"></div>
-      </div>
-    </div>
+  <div class="kpi">
+    <div>Colegios</div>
+    <h2 id="kpiSchools">-</h2>
   </div>
 </div>
 
-<div id="schoolModal" class="school-modal" onclick="if(event.target.id==='schoolModal') closeSchoolAdmin()">
-  <div class="school-modal-box">
-    <div class="school-head">
-      <div>
-        <span class="eyebrow">Modo colegio</span>
-        <h2 id="schoolModalTitle" style="margin:10px 0 4px;letter-spacing:-.04em">Colegio</h2>
-        <div id="schoolModalSub" class="muted"></div>
-      </div>
-      <button class="btn btn-ghost" onclick="closeSchoolAdmin()">Cerrar vista colegio</button>
-    </div>
-    <div id="schoolModalStats" class="school-admin-grid"></div>
-    <div class="card panel" style="box-shadow:none">
-      <div class="section-title"><h3>Docentes asignados</h3><button class="btn btn-primary btn-small" onclick="copySchoolReport()">Copiar resumen</button></div>
-      <div id="schoolModalTeachers"></div>
-    </div>
+<!-- COLEGIOS -->
+
+<h2>Colegios</h2>
+<div class="colegios" id="colegios"></div>
+
+<!-- OPERACIÓN -->
+
+<div class="grid">
+
+  <div class="card">
+    <h3>Enviar regalo PRO</h3>
+    <input id="giftEmail" placeholder="correo" style="width:100%;padding:8px;margin-bottom:8px">
+    <select id="giftDays" style="width:100%;padding:8px;margin-bottom:8px">
+      <option value="3">3 días</option>
+      <option value="7">7 días</option>
+    </select>
+    <button class="btn btn-green" onclick="sendGift()">Enviar</button>
   </div>
+
+  <div class="card">
+    <h3>Eventos</h3>
+    <div id="events">Cargando...</div>
+  </div>
+
 </div>
+
+</div>
+
 <script>
-const API = 'https://sonaria-api.onrender.com';
-let token = localStorage.getItem('mejoraria_token') || localStorage.getItem('token') || localStorage.getItem('access_token') || '';
-let USERS=[], GIFTS=[], SCHOOLS=[];
-if(!token){ location.href='/login.html'; }
-function authHeaders(json=true){ const h={Authorization:'Bearer '+token}; if(json) h['Content-Type']='application/json'; return h; }
-async function api(path, opts={}){
-  const res = await fetch(API+path, {headers:authHeaders(opts.body!==undefined), ...opts});
-  const data = await res.json().catch(()=>({}));
-  if(res.status===401){ localStorage.clear(); sessionStorage.clear(); location.href='/login.html'; return {}; }
-  if(!res.ok) throw new Error(data.detail || data.message || 'Error API');
-  return data;
-}
-function esc(s){ return String(s ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
-function pill(text,type){ return `<span class="pill ${type||''}">${esc(text)}</span>`; }
-function setStatus(id,msg,type='info'){ const el=document.getElementById(id); el.textContent=msg; el.className='status '+type; }
-async function logout(){ try{ await api('/auth/logout',{method:'POST'}); }catch(e){} localStorage.clear(); sessionStorage.clear(); location.href='/login.html'; }
-async function loadEmailStatus(){
-  try{ const d=await api('/admin/email/status'); document.getElementById('smtpNote').innerHTML = d.smtp_configured ? `✅ <b>Correo automático activo.</b> Remitente: ${esc(d.smtp_from)} · Avisos admin: ${esc(d.admin_notify_email||'no definido')}` : `⚠️ <b>Correo automático no configurado.</b> Las invitaciones y regalos funcionan igual, pero deberás avisar manualmente al usuario. Configura SMTP_HOST, SMTP_USER, SMTP_PASSWORD, SMTP_FROM y ADMIN_NOTIFY_EMAIL en Render.`; }
-  catch(e){ document.getElementById('smtpNote').textContent='No pude revisar SMTP: '+e.message; }
-}
-async function loadUsers(){ const d=await api('/admin/users'); USERS=d.users||[]; renderUsers(); updateKpis(); }
-function renderUsers(){ const q=(document.getElementById('userSearch').value||'').toLowerCase(); const rows=USERS.filter(u=>(u.email+' '+u.name).toLowerCase().includes(q)); const body=document.getElementById('usersBody'); if(!rows.length){body.innerHTML='<tr><td colspan="4" class="empty">Sin usuarios</td></tr>';return;} body.innerHTML=rows.map(u=>`<tr><td><b>${esc(u.name||'Sin nombre')}</b><br><span class="muted">${esc(u.email)}</span></td><td>${pill(u.plan_label||u.plan,(u.pro_active?'pro':(String(u.plan).includes('trial')?'trial':'free')))}</td><td>${Number(u.analisis||0)} canciones<br><span class="muted">${Number(u.minutos||0)} min</span></td><td>${u.is_admin?pill('Admin','warn'):`<button class="btn btn-red btn-small" onclick="deleteUser(${u.id},'${esc(u.email)}')">Borrar</button>`}</td></tr>`).join(''); }
-async function deleteUser(id,email){ const confirmEmail=prompt('Para borrar este usuario escribe su correo completo:', email); if(!confirmEmail) return; try{ await api('/admin/users/safe-delete',{method:'POST',body:JSON.stringify({user_id:id,confirm_email:confirmEmail})}); await loadUsers(); await loadEvents(); alert('Usuario eliminado de forma segura'); }catch(e){ alert(e.message); } }
-async function loadGifts(){ const d=await api('/admin/gifts/list'); GIFTS=d.trials||d.gifts||[]; renderGifts(); updateKpis(); }
-function renderGifts(){ const body=document.getElementById('giftsBody'); if(!GIFTS.length){body.innerHTML='<tr><td colspan="4" class="empty">Aún no hay regalos</td></tr>';return;} body.innerHTML=GIFTS.map(g=>{ const type=g.active?'pro':(g.status==='revoked'?'bad':'warn'); return `<tr><td>${esc(g.email)}</td><td>${pill(g.status||'active',type)}</td><td>${esc(g.expires_at||'-')}</td><td>${g.status==='active'?`<button class="btn btn-red btn-small" onclick="revokeGift('${esc(g.email)}')">Revocar</button>`:'-'}</td></tr>`; }).join(''); }
-async function sendGift(){ const email=document.getElementById('giftEmail').value.trim(); const days=Number(document.getElementById('giftDays').value||3); const note=document.getElementById('giftNote').value.trim(); if(!email){setStatus('giftStatus','Ingresa un correo','error');return;} try{ const d=await api('/admin/gifts/send',{method:'POST',body:JSON.stringify({email,days,note})}); setStatus('giftStatus', d.email_sent ? `Regalo creado y correo enviado a ${email}` : `Regalo creado. Correo no enviado (${d.email_status||'SMTP pendiente'}). Avísale manualmente: ${location.origin}/login.html`, d.email_sent?'ok':'info'); document.getElementById('giftEmail').value=''; document.getElementById('giftNote').value=''; await loadGifts(); await loadUsers(); await loadEvents(); }catch(e){setStatus('giftStatus',e.message,'error');} }
-async function revokeGift(email){ if(!confirm('¿Revocar regalo PRO para '+email+'?')) return; try{ await api('/admin/gifts/revoke',{method:'POST',body:JSON.stringify({email})}); await loadGifts(); await loadUsers(); await loadEvents(); }catch(e){alert(e.message);} }
-async function loadSchools(){ const d=await api('/admin/schools'); SCHOOLS=d.schools||[]; renderSchools(); updateKpis(); }
-function renderSchools(){ const box=document.getElementById('schoolsList'); if(!SCHOOLS.length){box.innerHTML='<div class="empty">Aún no hay colegios simulados o suscritos.</div>';return;} box.innerHTML=SCHOOLS.map((s,idx)=>`<div class="item"><strong>${esc(s.school_name||s.owner_email)}</strong><div class="meta">Encargado: ${esc(s.owner_email)}<br>${esc(s.plan_name)} · ${pill(s.status,s.status==='active'?'pro':'warn')}<br>Cupos: ${Number(s.licenses_used||0)} usados / ${Number(s.licenses_total||0)} totales · ${Number(s.licenses_available||0)} disponibles</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn btn-primary btn-small" onclick="openSchoolAdmin(${idx})">Entrar como admin</button><button class="btn btn-ghost btn-small" onclick="prefillSchool('${esc(s.owner_email)}')">Asignar aquí</button></div>${(s.teachers||[]).slice(0,3).map(t=>`<div class="meta">• ${esc(t.email)} (${esc(t.status)})</div>`).join('')}${(s.teachers||[]).length>3?`<div class="meta">+${(s.teachers||[]).length-3} más</div>`:''}</div>`).join(''); }
-async function simulateSchool(){ const school_name=document.getElementById('schoolName').value.trim(); const owner_email=document.getElementById('schoolOwner').value.trim(); const plan=document.getElementById('schoolPlan').value; if(!owner_email){setStatus('schoolStatus','Ingresa correo del encargado','error');return;} try{ await api('/admin/schools/simulate',{method:'POST',body:JSON.stringify({school_name,owner_email,plan,note:'Simulación comercial desde panel V143'})}); setStatus('schoolStatus','Pack colegio creado/simulado','ok'); await loadSchools(); await loadEvents(); }catch(e){setStatus('schoolStatus',e.message,'error');} }
-async function assignTeacher(){ const owner_email=document.getElementById('assignOwner').value.trim(); const teacher_email=document.getElementById('assignTeacher').value.trim(); if(!owner_email||!teacher_email){setStatus('assignStatus','Completa ambos correos','error');return;} try{ const d=await api('/admin/schools/teachers/add',{method:'POST',body:JSON.stringify({owner_email,teacher_email,note:'Asignación desde panel V144'})}); const mail = d.email_sent ? ' Correo enviado al docente.' : ` Acceso creado, pero correo no enviado (${d.email_status||'SMTP pendiente'}).`; setStatus('assignStatus','Docente asignado: queda PRO institucional al entrar con ese correo.'+mail,d.email_sent?'ok':'info'); document.getElementById('assignTeacher').value=''; await loadSchools(); await loadUsers(); await loadEvents(); }catch(e){setStatus('assignStatus',e.message,'error');} }
-async function loadEvents(){ try{ const d=await api('/admin/events?limit=30'); const list=document.getElementById('eventsList'); const ev=d.events||[]; if(!ev.length){list.innerHTML='<div class="empty">Sin eventos todavía</div>';return;} list.innerHTML=ev.map(e=>`<div class="item"><strong>${esc(e.title||e.type)}</strong><div class="meta">${esc(e.detail||'')}<br>${esc(e.email||'')} · ${esc(e.created_at||'')}</div></div>`).join(''); }catch(e){ document.getElementById('eventsList').innerHTML='<div class="empty">No pude cargar eventos: '+esc(e.message)+'</div>'; } }
 
-let CURRENT_SCHOOL_INDEX=null;
-function prefillSchool(ownerEmail){ document.getElementById('assignOwner').value=ownerEmail||''; document.getElementById('assignTeacher').focus(); }
-function closeSchoolAdmin(){ document.getElementById('schoolModal').classList.remove('open'); CURRENT_SCHOOL_INDEX=null; }
-function teacherAccountStatus(email){ const u=USERS.find(x=>String(x.email||'').toLowerCase()===String(email||'').toLowerCase()); if(!u) return {label:'Invitado pendiente', cls:'warn', detail:'Aún no inicia sesión con este correo'}; if(u.pro_active) return {label:'Cuenta PRO activa', cls:'pro', detail:(u.plan_label||u.plan||'PRO')}; return {label:'Cuenta creada FREE', cls:'free', detail:'Debe iniciar sesión nuevamente si acaba de asignarse'}; }
-function openSchoolAdmin(idx){ CURRENT_SCHOOL_INDEX=idx; const s=SCHOOLS[idx]; if(!s) return; document.getElementById('schoolModalTitle').textContent=s.school_name||s.owner_email||'Colegio'; document.getElementById('schoolModalSub').innerHTML=`Encargado: <b>${esc(s.owner_email||'-')}</b> · ${esc(s.plan_name||'-')}`; document.getElementById('schoolModalStats').innerHTML=`<div class="school-admin-stat"><strong>${Number(s.licenses_total||0)}</strong><span>Cupos totales</span></div><div class="school-admin-stat"><strong>${Number(s.licenses_used||0)}</strong><span>Cupos usados</span></div><div class="school-admin-stat"><strong>${Number(s.licenses_available||0)}</strong><span>Disponibles</span></div><div class="school-admin-stat"><strong>${(s.teachers||[]).filter(t=>String(t.status).toLowerCase()==='active').length}</strong><span>Docentes activos</span></div>`; const teachers=s.teachers||[]; const target=document.getElementById('schoolModalTeachers'); if(!teachers.length){ target.innerHTML='<div class="empty">Este colegio todavía no tiene docentes asignados.</div>'; } else { target.innerHTML=teachers.map(t=>{ const st=teacherAccountStatus(t.email); const active=String(t.status||'').toLowerCase()==='active'; return `<div class="teacher-card"><div><b>${esc(t.email)}</b><div class="meta">${esc(t.name||'Sin cuenta creada todavía')} · ${esc(t.note||'')}</div></div><div>${pill(t.status||'active',active?'pro':'bad')}</div><div>${pill(st.label,st.cls)}<div class="meta">${esc(st.detail)}</div></div><div>${active?`<button class="btn btn-red btn-small" onclick="revokeTeacherFromSchool('${esc(s.owner_email)}','${esc(t.email)}')">Revocar</button>`:'-'}</div></div>`; }).join(''); } document.getElementById('schoolModal').classList.add('open'); }
-async function revokeTeacherFromSchool(owner_email,teacher_email){ if(!confirm('¿Revocar acceso institucional de '+teacher_email+'?')) return; try{ await api('/admin/schools/teachers/revoke',{method:'POST',body:JSON.stringify({owner_email,teacher_email,note:'Revocado desde vista colegio V144'})}); await loadSchools(); await loadUsers(); await loadEvents(); const idx=SCHOOLS.findIndex(x=>String(x.owner_email||'').toLowerCase()===String(owner_email||'').toLowerCase()); if(idx>=0) openSchoolAdmin(idx); }catch(e){ alert(e.message); } }
-function copySchoolReport(){ const s=SCHOOLS[CURRENT_SCHOOL_INDEX]; if(!s) return; const lines=[`Colegio: ${s.school_name||s.owner_email}`,`Encargado: ${s.owner_email}`,`Plan: ${s.plan_name}`,`Cupos: ${s.licenses_used}/${s.licenses_total} usados · ${s.licenses_available} disponibles`,'', 'Docentes:']; (s.teachers||[]).forEach(t=>{ const st=teacherAccountStatus(t.email); lines.push(`- ${t.email} · licencia ${t.status||'active'} · ${st.label}`); }); navigator.clipboard?.writeText(lines.join('\n')); alert('Resumen copiado'); }
-function updateKpis(){ document.getElementById('kUsers').textContent=USERS.length; document.getElementById('kPro').textContent=USERS.filter(u=>u.pro_active).length; document.getElementById('kTrials').textContent=GIFTS.filter(g=>g.active).length; document.getElementById('kSchools').textContent=SCHOOLS.length; document.getElementById('kSeats').textContent=SCHOOLS.reduce((a,s)=>a+Number(s.licenses_available||0),0); }
-function focusGift(){ document.getElementById('giftBox').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('giftEmail').focus(); }
-function focusSchool(){ document.getElementById('schoolBox').scrollIntoView({behavior:'smooth',block:'center'}); document.getElementById('schoolOwner').focus(); }
-async function refreshAll(){ await Promise.allSettled([loadEmailStatus(),loadUsers(),loadGifts(),loadSchools(),loadEvents()]); updateKpis(); }
-refreshAll();
+const API = "https://sonaria-api.onrender.com";
+const token = localStorage.getItem("mejoraria_token");
+
+/* KPIs */
+async function loadKPIs(){
+  const res = await fetch(API + "/admin/kpis",{headers:{Authorization:"Bearer "+token}});
+  const data = await res.json();
+
+  kpiUsers.innerText = data.users;
+  kpiPro.innerText = data.pro;
+  kpiTrials.innerText = data.trials;
+  kpiSchools.innerText = data.schools;
+}
+
+/* COLEGIOS */
+async function loadSchools(){
+  const res = await fetch(API + "/admin/schools",{headers:{Authorization:"Bearer "+token}});
+  const data = await res.json();
+
+  const container = document.getElementById("colegios");
+  container.innerHTML="";
+
+  data.forEach(s=>{
+    const div = document.createElement("div");
+    div.className="card";
+
+    div.innerHTML=`
+      <h3>${s.name}</h3>
+      <p>${s.used}/${s.total} cupos usados</p>
+      <button class="btn btn-primary" onclick="enterSchool('${s.id}')">Entrar</button>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+/* REGALO */
+async function sendGift(){
+  const email = giftEmail.value;
+  const days = giftDays.value;
+
+  await fetch(API+"/admin/gift",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+token
+    },
+    body:JSON.stringify({email,days})
+  });
+
+  alert("Regalo enviado");
+}
+
+/* EVENTOS */
+async function loadEvents(){
+  const res = await fetch(API+"/admin/events",{headers:{Authorization:"Bearer "+token}});
+  const data = await res.json();
+
+  events.innerHTML = data.map(e=>`<div>${e}</div>`).join("");
+}
+
+/* INIT */
+loadKPIs();
+loadSchools();
+loadEvents();
+
 </script>
+
 </body>
 </html>
