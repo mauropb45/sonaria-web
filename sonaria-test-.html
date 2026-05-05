@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonarIA | Evaluador Pedagógico</title>
+  
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(47,111,237,0.05) 0%, transparent 25%),
+        radial-gradient(circle at 100% 100%, rgba(31,191,117,0.05) 0%, transparent 25%);
+    }
+    .card-modern {
+      @apply bg-white border border-slate-200 rounded-[24px] shadow-sm transition-all duration-300;
+    }
+    .card-modern:hover {
+      @apply shadow-xl border-slate-300 transform -translate-y-1;
+    }
+    .traffic-light-shadow {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .animate-in {
+      animation: fadeInUp 0.6s ease-out both;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen">
+
+  <!-- CABECERA DE IMPACTO -->
+  <header class="max-w-6xl mx-auto pt-12 pb-8 px-4 text-center">
+    <div class="mb-4 inline-block">
+      <span class="bg-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">Tecnología Educativa</span>
+    </div>
+    <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-slate-900 mb-4">
+      🎵 Sonar<span class="text-blue-600">IA</span>
+    </h1>
+    <h2 class="text-xl md:text-2xl font-bold text-slate-500 max-w-2xl mx-auto leading-tight">
+      Evita errores en clase y transforma canciones en herramientas pedagógicas.
+    </h2>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 pb-20">
+    
+    <!-- ÁREA DE ENTRADA -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+      <div class="lg:col-span-5 space-y-6">
+        <div class="card-modern p-8 bg-white/80 backdrop-blur-md">
+          <h3 class="text-lg font-black mb-6 flex items-center gap-2">
+            <span class="w-2 h-6 bg-blue-600 rounded-full"></span> 
+            Analizador de Aula
+          </h3>
+          
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Título</label>
+                <input id="titulo" type="text" placeholder="Ej: Creep" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all">
+              </div>
+              <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Artista</label>
+                <input id="artista" type="text" placeholder="Ej: Radiohead" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all">
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Niveles a evaluar</label>
+              <div id="courseChips" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div>
+              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Letra de la canción (Opcional)</label>
+              <textarea id="texto" placeholder="Si dejas vacío, SonarIA buscará la letra por ti..." class="w-full h-32 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-medium text-sm transition-all"></textarea>
+            </div>
+
+            <button id="analyzeBtn" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+              <span>Iniciar Evaluación</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- INDICADOR DE PROGRESO -->
+        <div id="analysisProgress" class="hidden card-modern p-6 bg-slate-900 text-white overflow-hidden relative">
+          <div class="relative z-10">
+            <div class="flex justify-between items-end mb-4">
+              <p id="progressText" class="text-xs font-black uppercase tracking-widest opacity-70 italic">Escaneando contenido...</p>
+              <span id="progressPercent" class="text-2xl font-black">0%</span>
+            </div>
+            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+              <div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 shadow-[0_0_15px_#3b82f6]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ÁREA DE RESULTADOS (SEMÁFORO) -->
+      <div class="lg:col-span-7">
+        
+        <!-- ESTADO INICIAL / PLACEHOLDER -->
+        <div id="analysisPlaceholder" class="h-full flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 rounded-[32px] bg-white/40">
+          <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-400">Listo para evaluar</h3>
+          <p class="text-slate-400 max-w-xs mx-auto">Ingresa una canción para ver el semáforo de seguridad y la ruta de clase.</p>
+        </div>
+
+        <!-- DASHBOARD DE RESULTADOS (OCULTO POR DEFECTO) -->
+        <div id="resultsWrapper" class="hidden space-y-6 animate-in">
+          
+          <!-- EL SEMÁFORO HERO -->
+          <div id="statusHero" class="card-modern overflow-hidden border-t-[12px] border-slate-200">
+            <div class="p-8">
+              <div class="flex justify-between items-start mb-6">
+                <div id="suitabilityIcon" class="p-5 rounded-[22px] bg-slate-100 text-slate-400 transition-all duration-700">
+                  <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div class="text-right">
+                  <span id="resultPlanChip" class="inline-block px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Análisis de Aula</span>
+                  <div class="text-3xl font-black text-slate-900" id="riskPercent">0%</div>
+                  <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Riesgo Total</div>
+                </div>
+              </div>
+
+              <h2 id="summaryTitle" class="text-4xl font-black tracking-tighter text-slate-900 leading-none mb-3">Veredicto</h2>
+              <p id="summaryCopy" class="text-lg text-slate-500 font-medium leading-relaxed mb-8">Cargando resumen pedagógico...</p>
+
+              <div class="grid grid-cols-3 gap-4 border-t border-slate-100 pt-8">
+                <div class="text-center">
+                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Edad Sugerida</span>
+                  <span id="edadSugerida" class="text-xl font-black text-slate-700">—</span>
+                </div>
+                <div class="text-center border-x border-slate-100 px-2">
+                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Cursos Ideales</span>
+                  <span id="cursosSugeridos" class="text-sm font-black text-slate-700 leading-tight block">—</span>
+                </div>
+                <div class="text-center">
+                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Camino</span>
+                  <span id="lecturaSugerida" class="text-xs font-black text-slate-700 uppercase leading-tight block">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN DE DETALLES Y PEDAGOGÍA -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="veredictoCard" class="card-modern p-8 bg-blue-50/50 border-blue-100">
+              <h4 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-3">Justificación Pedagógica</h4>
+              <p id="explicacionPedagogica" class="text-slate-700 font-bold leading-relaxed italic text-lg">Cargando explicación...</p>
+            </div>
+            
+            <div class="card-modern p-8">
+              <h4 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-4">Señales Detectadas</h4>
+              <div id="themesWrap" class="flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+
+          <!-- BOTONES DE ACCIÓN -->
+          <div class="flex flex-wrap gap-4 pt-4">
+            <button id="btnPedagogia" class="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Ver Plan de Clase</button>
+            <button id="btnDownloadPdf" class="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all shadow-lg shadow-slate-200">Descargar Informe PDF</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- LÓGICA DE INTEGRACIÓN CON BACKEND ---
+    const API_BASE = "https://sonaria-api.onrender.com";
+    const $ = id => document.getElementById(id);
+    let selectedCourses = ["7", "8", "1M"]; // Default Chile
+
+    // Render chips de cursos
+    function renderCourseChips() {
+      const container = $("courseChips");
+      const courses = ["5","6","7","8","1M","2M","3M","4M"];
+      container.innerHTML = "";
+      courses.forEach(c => {
+        const active = selectedCourses.includes(c);
+        const btn = document.createElement("button");
+        btn.className = `px-3 py-2 rounded-xl text-[10px] font-black transition-all ${active ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`;
+        btn.textContent = c.includes('M') ? c : `${c}° Básico`;
+        btn.onclick = () => {
+          if (active) selectedCourses = selectedCourses.filter(x => x !== c);
+          else selectedCourses.push(c);
+          renderCourseChips();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    // Procesa el JSON del backend y aplica el semáforo visual
+    function renderResult(data) {
+      $("analysisPlaceholder").classList.add("hidden");
+      $("resultsWrapper").classList.remove("hidden");
+      
+      const risk = data.risk_percent || 0;
+      const hero = $("statusHero");
+      const iconWrap = $("suitabilityIcon");
+      const bar = $("riskTotalFill");
+
+      // Lógica de Semáforo
+      hero.classList.remove('border-green-400', 'border-orange-400', 'border-red-500', 'bg-green-50/20', 'bg-orange-50/20', 'bg-red-50/20');
+      
+      if (risk < 25) {
+        // VERDE: Seguro
+        hero.classList.add('border-green-400', 'bg-green-50/20');
+        iconWrap.className = "p-5 rounded-[22px] bg-green-100 text-green-600";
+        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>';
+      } else if (risk < 50) {
+        // AMARILLO: Mediación
+        hero.classList.add('border-orange-400', 'bg-orange-50/20');
+        iconWrap.className = "p-5 rounded-[22px] bg-orange-100 text-orange-600";
+        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+      } else {
+        // ROJO: Adaptación necesaria
+        hero.classList.add('border-red-500', 'bg-red-50/20');
+        iconWrap.className = "p-5 rounded-[22px] bg-red-100 text-red-600";
+        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+      }
+
+      // Llenado de datos
+      $("summaryTitle").textContent = data.resultado || "Evaluación Finalizada";
+      $("summaryCopy").textContent = data.resumen || "Análisis completado con éxito.";
+      $("riskPercent").textContent = `${risk}%`;
+      $("edadSugerida").textContent = data.edad_sugerida || "—";
+      $("lecturaSugerida").textContent = data.lectura_sugerida || "Uso Directo";
+      $("cursosSugeridos").textContent = (data.cursos_sugeridos || []).join(", ") || "—";
+      $("explicacionPedagogica").textContent = data.explicacion_pedagogica || data.justificacion || "Sin observaciones adicionales.";
+
+      // Temas
+      const tWrap = $("themesWrap"); tWrap.innerHTML = "";
+      (data.temas_detectados || []).forEach(t => {
+        const span = document.createElement("span");
+        span.className = "px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-wider";
+        span.textContent = t;
+        tWrap.appendChild(span);
+      });
+
+      // Scroll suave a resultados
+      $("resultsWrapper").scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function analizar() {
+      const btn = $("analyzeBtn");
+      const title = $("titulo").value;
+      const artist = $("artista").value;
+      
+      if(!title && !$("texto").value) return alert("Ingresa al menos un título.");
+
+      btn.disabled = true;
+      $("analysisProgress").classList.remove("hidden");
+      let p = 0;
+      const interval = setInterval(() => {
+        if(p < 90) { p += 10; $("progressBar").style.width = p + "%"; $("progressPercent").textContent = p + "%"; }
+      }, 400);
+
+      try {
+        const res = await fetch(`${API_BASE}/analizar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            titulo: title,
+            artista: artist,
+            texto: $("texto").value,
+            cursos: selectedCourses,
+            buscar_letra: $("texto").value === ""
+          })
+        });
+        const data = await res.json();
+        clearInterval(interval);
+        $("progressBar").style.width = "100%";
+        $("progressPercent").textContent = "100%";
+        
+        setTimeout(() => {
+          $("analysisProgress").classList.add("hidden");
+          renderResult(data);
+          btn.disabled = false;
+        }, 500);
+        
+      } catch (e) {
+        alert("Error de conexión. Reintenta.");
+        btn.disabled = false;
+        $("analysisProgress").classList.add("hidden");
+      }
+    }
+
+    $("analyzeBtn").onclick = analizar;
+    renderCourseChips();
+  </script>
+</body>
+</html>
