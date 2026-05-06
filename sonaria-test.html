@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SonarIA | Evaluador Pedagógico</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SonarIA | Dashboard de Decisión Docente (Test)</title>
   
-  <!-- Tailwind CSS & Fonts -->
+  <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
@@ -13,188 +13,174 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f8fafc;
-      background-image: 
-        radial-gradient(circle at 0% 0%, rgba(47,111,237,0.05) 0%, transparent 25%),
-        radial-gradient(circle at 100% 100%, rgba(31,191,117,0.05) 0%, transparent 25%);
+      background-image: radial-gradient(circle at 0% 0%, rgba(47,111,237,0.05) 0%, transparent 25%);
     }
-    .card-modern {
-      @apply bg-white border border-slate-200 rounded-[24px] shadow-sm transition-all duration-300;
-    }
-    .card-modern:hover {
-      @apply shadow-xl border-slate-300 transform -translate-y-1;
-    }
-    .traffic-light-shadow {
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .animate-in {
-      animation: fadeInUp 0.6s ease-out both;
-    }
+    .card-modern { @apply bg-white border border-slate-200 rounded-[28px] shadow-sm transition-all duration-300; }
+    .card-modern:hover { @apply shadow-xl border-slate-300 transform -translate-y-1; }
+    .btn-primary { @apply bg-slate-900 text-white px-6 py-4 rounded-2xl font-black hover:bg-blue-600 shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center justify-center gap-2; }
+    
+    /* Animación de entrada para los resultados */
+    .animate-result { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    
+    /* Estilo para las barras de progreso */
+    .progress-track { @apply w-full h-2 bg-slate-100 rounded-full overflow-hidden; }
+    .progress-fill { @apply h-full transition-all duration-[1.5s] ease-out rounded-full; }
   </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen">
+<body class="text-slate-800 antialiased pb-20">
 
-  <!-- CABECERA DE IMPACTO -->
-  <header class="max-w-6xl mx-auto pt-12 pb-8 px-4 text-center">
+  <!-- CABECERA -->
+  <header class="max-w-6xl mx-auto pt-12 pb-10 px-4 text-center">
     <div class="mb-4 inline-block">
-      <span class="bg-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em]">Tecnología Educativa</span>
+      <span class="bg-blue-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-md shadow-blue-200">Ambiente de Staging v1.5</span>
     </div>
-    <h1 class="text-5xl md:text-6xl font-black tracking-tighter text-slate-900 mb-4">
-      🎵 Sonar<span class="text-blue-600">IA</span>
+    <h1 class="text-5xl md:text-7xl font-black tracking-tighter text-slate-900 mb-4">
+      Sonar<span class="text-blue-600 italic">IA</span>
     </h1>
     <h2 class="text-xl md:text-2xl font-bold text-slate-500 max-w-2xl mx-auto leading-tight">
       Evita errores en clase y transforma canciones en herramientas pedagógicas.
     </h2>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 pb-20">
+  <main class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
     
-    <!-- ÁREA DE ENTRADA -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-      <div class="lg:col-span-5 space-y-6">
-        <div class="card-modern p-8 bg-white/80 backdrop-blur-md">
-          <h3 class="text-lg font-black mb-6 flex items-center gap-2">
-            <span class="w-2 h-6 bg-blue-600 rounded-full"></span> 
-            Analizador de Aula
-          </h3>
+    <!-- COLUMNA IZQUIERDA: INPUT -->
+    <aside class="lg:col-span-5 space-y-6">
+      <div class="card-modern p-8 sticky top-8">
+        <h3 class="text-sm font-black text-blue-600 uppercase tracking-widest mb-6 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          Analizador de Aula
+        </h3>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Título de la Obra</label>
+            <input id="titulo" type="text" placeholder="Ej: Flowers" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all placeholder:text-slate-300">
+          </div>
           
-          <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Título</label>
-                <input id="titulo" type="text" placeholder="Ej: Creep" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all">
-              </div>
-              <div>
-                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Artista</label>
-                <input id="artista" type="text" placeholder="Ej: Radiohead" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all">
-              </div>
-            </div>
-
-            <div>
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Niveles a evaluar</label>
-              <div id="courseChips" class="flex flex-wrap gap-2"></div>
-            </div>
-
-            <div>
-              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Letra de la canción (Opcional)</label>
-              <textarea id="texto" placeholder="Si dejas vacío, SonarIA buscará la letra por ti..." class="w-full h-32 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none font-medium text-sm transition-all"></textarea>
-            </div>
-
-            <button id="analyzeBtn" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-blue-600 shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2">
-              <span>Iniciar Evaluación</span>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Artista / Banda</label>
+            <input id="artista" type="text" placeholder="Ej: Miley Cyrus" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none font-bold transition-all placeholder:text-slate-300">
           </div>
-        </div>
 
-        <!-- INDICADOR DE PROGRESO -->
-        <div id="analysisProgress" class="hidden card-modern p-6 bg-slate-900 text-white overflow-hidden relative">
-          <div class="relative z-10">
-            <div class="flex justify-between items-end mb-4">
-              <p id="progressText" class="text-xs font-black uppercase tracking-widest opacity-70 italic">Escaneando contenido...</p>
-              <span id="progressPercent" class="text-2xl font-black">0%</span>
-            </div>
-            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-              <div id="progressBar" class="h-full bg-blue-500 w-0 transition-all duration-500 shadow-[0_0_15px_#3b82f6]"></div>
-            </div>
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Cursos (Selección Múltiple)</label>
+            <div id="courseChips" class="flex flex-wrap gap-2"></div>
           </div>
+
+          <div class="pt-2">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 px-1">Letra (Opcional)</label>
+            <textarea id="texto" placeholder="Pega la letra para un análisis más profundo..." class="w-full h-32 px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none font-medium text-sm transition-all"></textarea>
+          </div>
+
+          <button id="analyzeBtn" class="btn-primary w-full mt-4">
+            <span id="btnText">Iniciar Análisis</span>
+            <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </button>
         </div>
       </div>
+    </aside>
 
-      <!-- ÁREA DE RESULTADOS (SEMÁFORO) -->
-      <div class="lg:col-span-7">
+    <!-- COLUMNA DERECHA: RESULTADOS -->
+    <section class="lg:col-span-7">
+      
+      <!-- ESTADO VACÍO -->
+      <div id="analysisPlaceholder" class="h-[600px] flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 rounded-[40px] bg-white/50 transition-all duration-500">
+        <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center text-slate-200 mb-6 shadow-inner">
+          <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+        </div>
+        <h3 class="text-2xl font-black text-slate-300 tracking-tight">Motor SonarIA Listo</h3>
+        <p class="text-slate-400 max-w-xs mx-auto font-medium mt-2">Ingresa una canción para activar el semáforo pedagógico y la ruta de clase.</p>
+      </div>
+
+      <!-- DASHBOARD DE RESULTADOS (OCULTO) -->
+      <div id="resultsWrapper" class="hidden space-y-8 animate-result">
         
-        <!-- ESTADO INICIAL / PLACEHOLDER -->
-        <div id="analysisPlaceholder" class="h-full flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 rounded-[32px] bg-white/40">
-          <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-4">
-            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+        <!-- CARD PRINCIPAL: EL SEMÁFORO -->
+        <div id="statusHero" class="card-modern overflow-hidden border-t-[14px] border-slate-200">
+          <div class="p-10">
+            <div class="flex justify-between items-start mb-8">
+              <div id="suitabilityIcon" class="p-6 rounded-[28px] bg-slate-50 text-slate-300 transition-all duration-1000">
+                <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <div class="text-right">
+                <span class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3 inline-block">Score de Seguridad</span>
+                <div class="text-5xl font-black text-slate-900 tracking-tighter" id="riskValue">0%</div>
+                <div class="text-[10px] font-black uppercase text-slate-400 tracking-widest mt-1">Riesgo Detectado</div>
+              </div>
+            </div>
+
+            <h2 id="summaryTitle" class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 leading-[0.9] mb-4">Veredicto</h2>
+            <p id="summaryCopy" class="text-xl text-slate-500 font-bold leading-relaxed mb-10">—</p>
+
+            <!-- KPI GRID -->
+            <div class="grid grid-cols-3 gap-6 border-t border-slate-100 pt-10">
+              <div class="text-center group">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 group-hover:text-blue-500 transition-colors">Edad Mínima</span>
+                <span id="edadSugerida" class="text-2xl font-black text-slate-800">—</span>
+              </div>
+              <div class="text-center border-x border-slate-100 px-4 group">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 group-hover:text-blue-500 transition-colors">Cursos Ideales</span>
+                <span id="cursosSugeridos" class="text-sm font-black text-slate-800 leading-tight block">—</span>
+              </div>
+              <div class="text-center group">
+                <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 group-hover:text-blue-500 transition-colors">Sugerencia</span>
+                <span id="lecturaSugerida" class="text-[11px] font-black text-slate-800 uppercase leading-tight block">—</span>
+              </div>
+            </div>
           </div>
-          <h3 class="text-xl font-bold text-slate-400">Listo para evaluar</h3>
-          <p class="text-slate-400 max-w-xs mx-auto">Ingresa una canción para ver el semáforo de seguridad y la ruta de clase.</p>
         </div>
 
-        <!-- DASHBOARD DE RESULTADOS (OCULTO POR DEFECTO) -->
-        <div id="resultsWrapper" class="hidden space-y-6 animate-in">
+        <!-- JUSTIFICACIÓN Y SEÑALES -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="card-modern p-8 bg-blue-50/50 border-blue-100 flex flex-col justify-center">
+            <h4 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"></path></svg>
+              Estrategia Docente
+            </h4>
+            <p id="explicacionPedagogica" class="text-slate-700 font-bold leading-relaxed italic text-lg">—</p>
+          </div>
           
-          <!-- EL SEMÁFORO HERO -->
-          <div id="statusHero" class="card-modern overflow-hidden border-t-[12px] border-slate-200">
-            <div class="p-8">
-              <div class="flex justify-between items-start mb-6">
-                <div id="suitabilityIcon" class="p-5 rounded-[22px] bg-slate-100 text-slate-400 transition-all duration-700">
-                  <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="text-right">
-                  <span id="resultPlanChip" class="inline-block px-3 py-1 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Análisis de Aula</span>
-                  <div class="text-3xl font-black text-slate-900" id="riskPercent">0%</div>
-                  <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Riesgo Total</div>
-                </div>
-              </div>
-
-              <h2 id="summaryTitle" class="text-4xl font-black tracking-tighter text-slate-900 leading-none mb-3">Veredicto</h2>
-              <p id="summaryCopy" class="text-lg text-slate-500 font-medium leading-relaxed mb-8">Cargando resumen pedagógico...</p>
-
-              <div class="grid grid-cols-3 gap-4 border-t border-slate-100 pt-8">
-                <div class="text-center">
-                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Edad Sugerida</span>
-                  <span id="edadSugerida" class="text-xl font-black text-slate-700">—</span>
-                </div>
-                <div class="text-center border-x border-slate-100 px-2">
-                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Cursos Ideales</span>
-                  <span id="cursosSugeridos" class="text-sm font-black text-slate-700 leading-tight block">—</span>
-                </div>
-                <div class="text-center">
-                  <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Camino</span>
-                  <span id="lecturaSugerida" class="text-xs font-black text-slate-700 uppercase leading-tight block">—</span>
-                </div>
-              </div>
-            </div>
+          <div class="card-modern p-8">
+            <h4 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-6">Señales en la Letra</h4>
+            <div id="themesWrap" class="flex flex-wrap gap-2"></div>
+            <div id="issuesWrap" class="mt-6 space-y-2 border-t border-slate-50 pt-6 text-sm text-slate-500 font-medium italic"></div>
           </div>
+        </div>
 
-          <!-- SECCIÓN DE DETALLES Y PEDAGOGÍA -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="veredictoCard" class="card-modern p-8 bg-blue-50/50 border-blue-100">
-              <h4 class="text-blue-600 font-black text-[10px] uppercase tracking-widest mb-3">Justificación Pedagógica</h4>
-              <p id="explicacionPedagogica" class="text-slate-700 font-bold leading-relaxed italic text-lg">Cargando explicación...</p>
-            </div>
-            
-            <div class="card-modern p-8">
-              <h4 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-4">Señales Detectadas</h4>
-              <div id="themesWrap" class="flex flex-wrap gap-2"></div>
-            </div>
-          </div>
-
-          <!-- BOTONES DE ACCIÓN -->
-          <div class="flex flex-wrap gap-4 pt-4">
-            <button id="btnPedagogia" class="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Ver Plan de Clase</button>
-            <button id="btnDownloadPdf" class="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all shadow-lg shadow-slate-200">Descargar Informe PDF</button>
-          </div>
+        <!-- ACCIONES -->
+        <div class="flex flex-col md:flex-row gap-4 pt-4">
+          <button id="btnVerPlan" class="flex-1 py-5 bg-blue-600 text-white rounded-[24px] font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 active:scale-95">Descargar Plan de Clase (PDF)</button>
+          <button id="btnVerLetra" class="flex-1 py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-black transition-all shadow-xl shadow-slate-200 active:scale-95">Ver Versión Adaptada</button>
         </div>
 
       </div>
     </section>
   </main>
 
-  <script>
-    // --- LÓGICA DE INTEGRACIÓN CON BACKEND ---
-    const API_BASE = "https://sonaria-api.onrender.com";
-    const $ = id => document.getElementById(id);
-    let selectedCourses = ["7", "8", "1M"]; // Default Chile
+  <footer class="max-w-6xl mx-auto mt-20 pt-10 border-t border-slate-200 text-center">
+    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">SonarIA Staging Environment • Chile 2024</p>
+  </footer>
 
-    // Render chips de cursos
+  <!-- SCRIPT LOGIC -->
+  <script>
+    const API_BASE = "https://sonaria-api-test.onrender.com";
+    const $ = id => document.getElementById(id);
+    let selectedCourses = ["7", "8", "1M", "2M"];
+
+    // Render chips de cursos estilo chileno
     function renderCourseChips() {
       const container = $("courseChips");
-      const courses = ["5","6","7","8","1M","2M","3M","4M"];
+      const opts = ["5", "6", "7", "8", "1M", "2M", "3M", "4M"];
       container.innerHTML = "";
-      courses.forEach(c => {
+      opts.forEach(c => {
         const active = selectedCourses.includes(c);
         const btn = document.createElement("button");
-        btn.className = `px-3 py-2 rounded-xl text-[10px] font-black transition-all ${active ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`;
+        btn.className = `px-4 py-2 rounded-xl text-[10px] font-black tracking-wider transition-all ${active ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`;
         btn.textContent = c.includes('M') ? c : `${c}° Básico`;
         btn.onclick = () => {
           if (active) selectedCourses = selectedCourses.filter(x => x !== c);
@@ -205,99 +191,92 @@
       });
     }
 
-    // Procesa el JSON del backend y aplica el semáforo visual
+    // El Semáforo de Impacto
     function renderResult(data) {
       $("analysisPlaceholder").classList.add("hidden");
-      $("resultsWrapper").classList.remove("hidden");
-      
+      const wrapper = $("resultsWrapper");
+      wrapper.classList.remove("hidden");
+      wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       const risk = data.risk_percent || 0;
       const hero = $("statusHero");
       const iconWrap = $("suitabilityIcon");
-      const bar = $("riskTotalFill");
 
-      // Lógica de Semáforo
+      // Resetear colores
       hero.classList.remove('border-green-400', 'border-orange-400', 'border-red-500', 'bg-green-50/20', 'bg-orange-50/20', 'bg-red-50/20');
       
       if (risk < 25) {
-        // VERDE: Seguro
+        // VERDE: Tranquilidad pedagógica
         hero.classList.add('border-green-400', 'bg-green-50/20');
-        iconWrap.className = "p-5 rounded-[22px] bg-green-100 text-green-600";
-        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>';
+        iconWrap.className = "p-6 rounded-[28px] bg-green-100 text-green-600";
+        iconWrap.innerHTML = `<svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`;
       } else if (risk < 50) {
-        // AMARILLO: Mediación
+        // NARANJA: Mediación requerida
         hero.classList.add('border-orange-400', 'bg-orange-50/20');
-        iconWrap.className = "p-5 rounded-[22px] bg-orange-100 text-orange-600";
-        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+        iconWrap.className = "p-6 rounded-[28px] bg-orange-100 text-orange-600";
+        iconWrap.innerHTML = `<svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
       } else {
-        // ROJO: Adaptación necesaria
+        // ROJO: Alerta / Adaptación necesaria
         hero.classList.add('border-red-500', 'bg-red-50/20');
-        iconWrap.className = "p-5 rounded-[22px] bg-red-100 text-red-600";
-        iconWrap.innerHTML = '<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+        iconWrap.className = "p-6 rounded-[28px] bg-red-100 text-red-600";
+        iconWrap.innerHTML = `<svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
       }
 
-      // Llenado de datos
-      $("summaryTitle").textContent = data.resultado || "Evaluación Finalizada";
-      $("summaryCopy").textContent = data.resumen || "Análisis completado con éxito.";
-      $("riskPercent").textContent = `${risk}%`;
-      $("edadSugerida").textContent = data.edad_sugerida || "—";
-      $("lecturaSugerida").textContent = data.lectura_sugerida || "Uso Directo";
-      $("cursosSugeridos").textContent = (data.cursos_sugeridos || []).join(", ") || "—";
-      $("explicacionPedagogica").textContent = data.explicacion_pedagogica || data.justificacion || "Sin observaciones adicionales.";
+      // Llenado de Datos
+      $("riskValue").textContent = `${risk}%`;
+      $("summaryTitle").textContent = data.resultado;
+      $("summaryCopy").textContent = data.resumen;
+      $("edadSugerida").textContent = data.edad_sugerida;
+      $("cursosSugeridos").textContent = (data.cursos_sugeridos || []).join(", ");
+      $("lecturaSugerida").textContent = data.lectura_sugerida || "Mediación Docente";
+      $("explicacionPedagogica").textContent = data.explicacion_pedagogica;
 
-      // Temas
+      // Señales
       const tWrap = $("themesWrap"); tWrap.innerHTML = "";
       (data.temas_detectados || []).forEach(t => {
         const span = document.createElement("span");
-        span.className = "px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-wider";
+        span.className = "px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm";
         span.textContent = t;
         tWrap.appendChild(span);
       });
-
-      // Scroll suave a resultados
-      $("resultsWrapper").scrollIntoView({ behavior: 'smooth', block: 'start' });
+      
+      $("issuesWrap").innerHTML = (data.contextos_detectados || []).map(i => `<div>• ${i}</div>`).join("");
     }
 
     async function analizar() {
+      const tit = $("titulo").value.trim();
+      const art = $("artista").value.trim();
+      const txt = $("texto").value.trim();
       const btn = $("analyzeBtn");
-      const title = $("titulo").value;
-      const artist = $("artista").value;
-      
-      if(!title && !$("texto").value) return alert("Ingresa al menos un título.");
 
+      if (!tit && !txt) return alert("Por favor, ingresa al menos un título o la letra.");
+
+      // Estado Cargando
       btn.disabled = true;
-      $("analysisProgress").classList.remove("hidden");
-      let p = 0;
-      const interval = setInterval(() => {
-        if(p < 90) { p += 10; $("progressBar").style.width = p + "%"; $("progressPercent").textContent = p + "%"; }
-      }, 400);
+      $("btnText").textContent = "Analizando letra...";
+      $("btnIcon").classList.add("animate-spin");
 
       try {
         const res = await fetch(`${API_BASE}/analizar`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            titulo: title,
-            artista: artist,
-            texto: $("texto").value,
-            cursos: selectedCourses,
-            buscar_letra: $("texto").value === ""
-          })
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("mejoraria_token")}` 
+          },
+          body: JSON.stringify({ titulo: tit, artista: art, texto: txt, cursos: selectedCourses, buscar_letra: txt === "" })
         });
+        
+        if (!res.ok) throw new Error("Error en el servidor de test.");
+        
         const data = await res.json();
-        clearInterval(interval);
-        $("progressBar").style.width = "100%";
-        $("progressPercent").textContent = "100%";
-        
-        setTimeout(() => {
-          $("analysisProgress").classList.add("hidden");
-          renderResult(data);
-          btn.disabled = false;
-        }, 500);
-        
+        renderResult(data);
+
       } catch (e) {
-        alert("Error de conexión. Reintenta.");
+        alert(e.message);
+      } finally {
         btn.disabled = false;
-        $("analysisProgress").classList.add("hidden");
+        $("btnText").textContent = "Iniciar Análisis";
+        $("btnIcon").classList.remove("animate-spin");
       }
     }
 
