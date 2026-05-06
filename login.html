@@ -2,27 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso | SonarIA</title>
+  <title>Acceso SonarIA Test</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-slate-50 flex items-center justify-center min-h-screen">
-  <div class="bg-white p-10 rounded-[32px] shadow-xl text-center max-w-sm w-full font-sans">
+  <div class="bg-white p-10 rounded-[32px] shadow-xl text-center max-w-sm w-full font-sans border border-slate-100">
     <h1 class="text-4xl font-black mb-4">Sonar<span class="text-blue-600">IA</span></h1>
-    <p class="text-slate-500 font-bold mb-8 uppercase text-[10px] tracking-widest">Ambiente de Test</p>
-    
+    <p class="text-slate-500 font-bold mb-8 uppercase text-[10px] tracking-widest bg-blue-50 py-2 rounded-full">Ambiente de Test v1.5</p>
     <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
     <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large" data-logo_alignment="left"></div>
-    
     <div id="status" class="mt-6 text-sm font-bold text-blue-600"></div>
   </div>
-
   <script>
-    // ESTA ES LA ÚNICA LÍNEA QUE MANDA
     const API_URL = "https://sonaria-api-test.onrender.com";
-
     async function handleCredentialResponse(response) {
-      document.getElementById("status").innerText = "Sincronizando...";
+      document.getElementById("status").innerText = "Sincronizando con Staging...";
       try {
         const res = await fetch(`${API_URL}/auth/google`, {
           method: "POST",
@@ -33,8 +28,8 @@
         if (res.ok) {
           localStorage.setItem("mejoraria_token", data.access_token);
           window.location.href = "sonaria-test.html";
-        } else { alert("Error de servidor"); }
-      } catch (e) { alert("Error de conexión al backend de test"); }
+        } else { alert("Login rechazado por el servidor"); }
+      } catch (e) { alert("Error: Falló la comunicación con el Backend. Revisa CORS."); }
     }
   </script>
 </body>
