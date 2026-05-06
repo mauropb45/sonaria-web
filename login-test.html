@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Staging | SonarIA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
+  <style>body{font-family:'Inter',sans-serif;background:#f8fafc}</style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="bg-white p-10 rounded-[32px] shadow-2xl text-center max-w-sm w-full border border-slate-100">
+    <div class="mb-4 inline-block bg-orange-100 text-orange-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Ambiente de Pruebas</div>
+    <h1 class="text-4xl font-black mb-2 tracking-tighter">Sonar<span class="text-blue-600 italic">IA</span></h1>
+    <p class="text-slate-500 font-medium mb-8 text-sm">Esta versión usa el motor 1.5.3 (Staging)</p>
+    
+    <!-- GOOGLE BUTTON -->
+    <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
+    
+    <div id="status" class="mt-6 text-sm font-bold text-blue-600"></div>
+  </div>
+
+  <script>
+    // CTO: Apuntando a la API de TEST únicamente
+    const API_URL = "https://sonaria-api-test.onrender.com";
+
+    async function handleCredentialResponse(response) {
+      document.getElementById("status").innerText = "Sincronizando con Staging...";
+      try {
+        const res = await fetch(`${API_URL}/auth/google`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem("mejoraria_token", data.access_token);
+          // REDIRIGE AL NUEVO DASHBOARD
+          window.location.href = "sonaria-test.html";
+        } else { alert("Acceso denegado por el servidor de test."); }
+      } catch (e) { alert("Error de CORS: Verifica que esta URL de Vercel esté en Render."); }
+    }
+  </script>
+</body>
+</html>
