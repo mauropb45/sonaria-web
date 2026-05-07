@@ -1,154 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA Pro | Dashboard de Alta Fidelidad</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-        .card { @apply bg-white border border-slate-200 rounded-[32px] shadow-sm transition-all duration-500; }
-        .btn-action { @apply flex-1 py-4 rounded-2xl font-black transition-all active:scale-95 flex items-center justify-center gap-2; }
-    </style>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SonarIA Pro | Dashboard v2.2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .card { @apply bg-white border border-slate-200 rounded-[32px] shadow-sm transition-all duration-500; }
+    .line-row { @apply grid grid-cols-2 gap-4 py-2 border-b border-slate-50 hover:bg-slate-50 transition-colors px-4; }
+    mark { @apply bg-yellow-200 text-yellow-900 px-1 rounded font-bold; }
+  </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-7xl mx-auto">
-        <!-- HEADER -->
-        <header class="flex justify-between items-center mb-10">
-            <h1 class="text-4xl font-black tracking-tighter">Sonar<span class="text-blue-600 italic">IA</span></h1>
-            <div class="flex items-center gap-4 bg-white p-2 pr-6 rounded-full border border-slate-100 shadow-sm">
-                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-sm">M</div>
-                <span class="text-xs font-bold text-slate-500 italic">Mauricio Pinto (Pro)</span>
-            </div>
-        </header>
+<body class="p-4 md:p-10 text-slate-800">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- IZQUIERDA: INPUT -->
-            <div class="lg:col-span-4 space-y-6">
-                <div class="card p-8">
-                    <h3 class="text-blue-600 font-black uppercase text-[10px] tracking-widest mb-6">Analizador de Aula</h3>
-                    <input id="titulo" type="text" placeholder="Canción" class="w-full p-4 bg-slate-50 rounded-2xl mb-4 border border-slate-200 font-bold focus:ring-4 focus:ring-blue-100 outline-none transition-all">
-                    <input id="artista" type="text" placeholder="Artista" class="w-full p-4 bg-slate-50 rounded-2xl mb-6 border border-slate-200 font-bold focus:ring-4 focus:ring-blue-100 outline-none transition-all">
-                    <button id="analyzeBtn" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-blue-600 shadow-xl transition-all">Analizar Ahora</button>
-                </div>
-            </div>
+  <div class="max-w-6xl mx-auto">
+    <header class="text-center mb-12">
+        <h1 class="text-6xl font-black tracking-tighter">Sonar<span class="text-blue-600">IA</span></h1>
+        <p class="text-slate-400 font-bold italic mt-2 text-lg">"Transformando la música en aprendizaje seguro"</p>
+    </header>
 
-            <!-- DERECHA: RESULTADOS + TRÍADA DE VALOR -->
-            <div class="lg:col-span-8 space-y-8">
-                <!-- EL SEMÁFORO (HERO) -->
-                <div id="resultsWrapper" class="hidden space-y-8">
-                    <div id="statusHero" class="card border-t-[16px] p-10">
-                        <div class="flex justify-between items-start mb-6">
-                            <div id="suitIcon" class="p-6 rounded-3xl bg-slate-50 text-slate-300">
-                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-5xl font-black tracking-tighter" id="riskValue">0%</div>
-                                <div class="text-[10px] font-black uppercase text-slate-400">Riesgo Escolar</div>
-                            </div>
-                        </div>
-                        <h2 id="summaryTitle" class="text-5xl font-black tracking-tight mb-3 italic text-slate-900">Analizando...</h2>
-                        <div class="grid grid-cols-3 gap-4 border-t pt-8 mt-6 text-center">
-                            <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">Edad</span><span id="edadSugerida" class="text-xl font-black">—</span></div>
-                            <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">OA Priorizado</span><span id="oaSugerido" class="text-xl font-black text-blue-600">—</span></div>
-                            <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">Ruta</span><span id="lecturaSugerida" class="text-[10px] font-black uppercase">—</span></div>
-                        </div>
-                    </div>
-
-                    <!-- LA TRÍADA DE VALOR -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- COL 1: PEDAGOGÍA -->
-                        <div class="card p-8 bg-blue-50/50 border-blue-100">
-                            <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-widest">Planificación de Clase</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <span class="text-[10px] font-black text-slate-400 block">PREGUNTA DESAFÍO:</span>
-                                    <p id="preguntaDesafio" class="font-bold text-slate-700 italic">"..."</p>
-                                </div>
-                                <p id="explicacionPedagogica" class="text-sm text-slate-600 leading-relaxed">—</p>
-                            </div>
-                        </div>
-
-                        <!-- COL 2: LETRA ADAPTADA -->
-                        <div class="card p-8 relative overflow-hidden">
-                            <h4 class="text-slate-400 font-black text-[10px] uppercase mb-4 tracking-widest italic">Previsualización de Letra</h4>
-                            <div id="lyricsPreview" class="text-[11px] font-medium text-slate-500 leading-relaxed line-clamp-6 italic">
-                                Cargando adaptación de aula...
-                            </div>
-                            <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent"></div>
-                        </div>
-                    </div>
-
-                    <!-- ACCIONES -->
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <button id="pdfBtn" class="btn-action bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-100">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            Descargar Informe UTP
-                        </button>
-                        <button class="btn-action bg-slate-900 text-white hover:bg-black shadow-xl">
-                            Ver Letra Comparada
-                        </button>
-                    </div>
-                </div>
-
-                <!-- PLACEHOLDER -->
-                <div id="analysisPlaceholder" class="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-slate-200 rounded-[40px] bg-white/40">
-                    <p class="text-slate-400 font-bold italic">Ingresa una obra para activar el Flujo de Oro.</p>
-                </div>
-            </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- INPUT -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="card p-8 bg-white/80 backdrop-blur-md sticky top-8">
+          <h3 class="text-blue-600 font-black uppercase text-[10px] tracking-widest mb-6">Analizador de Aula</h3>
+          <input id="titulo" type="text" placeholder="Título" class="w-full p-4 bg-slate-50 rounded-2xl mb-4 border border-slate-200 font-bold outline-none focus:ring-4 focus:ring-blue-100">
+          <input id="artista" type="text" placeholder="Artista" class="w-full p-4 bg-slate-50 rounded-2xl mb-6 border border-slate-200 font-bold outline-none focus:ring-4 focus:ring-blue-100">
+          <button id="analyzeBtn" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-blue-600 shadow-xl transition-all active:scale-95">Evaluar Idoneidad</button>
         </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="lg:col-span-8 space-y-8">
+        <div id="resultsWrapper" class="hidden space-y-8">
+          
+          <!-- SEMÁFORO -->
+          <div id="statusHero" class="card border-t-[16px] p-10">
+            <div class="flex justify-between items-start mb-8">
+              <div id="suitIcon" class="p-6 rounded-3xl bg-slate-50"></div>
+              <div class="text-right">
+                <div class="text-5xl font-black tracking-tighter" id="riskValue">0%</div>
+                <div class="text-[10px] font-black uppercase text-slate-400">Riesgo Escolar</div>
+              </div>
+            </div>
+            <h2 id="summaryTitle" class="text-4xl font-black tracking-tight mb-4 italic text-slate-900">—</h2>
+            
+            <div class="grid grid-cols-3 gap-4 border-t pt-8 text-center">
+              <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">EDAD</span><span id="edadSug" class="text-slate-700 text-xl font-black">6+</span></div>
+              <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">OA CHILE</span><span id="oaSug" class="text-blue-600 text-xl font-black">—</span></div>
+              <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1">RUTA</span><span id="rutaSug" class="text-slate-700 text-[10px] font-black uppercase">—</span></div>
+            </div>
+          </div>
+
+          <!-- COMPARADOR -->
+          <div class="card overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+              <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Letra: Original vs Adaptada</h4>
+            </div>
+            <div class="bg-white">
+              <div class="grid grid-cols-2 gap-4 px-8 py-4 bg-slate-50/50 text-[10px] font-black text-slate-400 uppercase">
+                <div>Versión Original</div>
+                <div>Versión para Aula</div>
+              </div>
+              <div id="lyricsContainer" class="max-h-[500px] overflow-y-auto custom-scrollbar">
+                <!-- Se inyecta aquí -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ESTRATEGIA -->
+          <div class="card p-8 bg-blue-50/50 border-blue-100">
+            <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-widest">Sugerencia Docente</h4>
+            <p id="preguntaDesafio" class="font-bold text-slate-700 italic mb-3 text-lg"></p>
+            <p id="justificacion" class="text-sm text-slate-600 leading-relaxed"></p>
+          </div>
+        </div>
+
+        <!-- PLACEHOLDER -->
+        <div id="analysisPlaceholder" class="h-96 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-[40px] bg-white/40">
+          <p class="text-slate-400 font-bold italic">Listo para el análisis comparativo v2.2</p>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        const API_BASE = "https://sonaria-api-test.onrender.com";
-        const $ = id => document.getElementById(id);
-        let lastAnalysis = null;
+  <script>
+    const API_BASE = "https://sonaria-api-test.onrender.com";
+    const $ = id => document.getElementById(id);
 
-        async function analizar() {
-            const btn = $("analyzeBtn");
-            btn.disabled = true; btn.innerText = "Escaneando con motor 2.0...";
-            try {
-                const res = await fetch(`${API_BASE}/analizar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
-                    body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value })
-                });
-                lastAnalysis = await res.json();
-                renderResult(lastAnalysis);
-            } catch (e) { alert("Error en el puente de datos."); }
-            finally { btn.disabled = false; btn.innerText = "Analizar Ahora"; }
-        }
+    async function analizar() {
+      const btn = $("analyzeBtn");
+      btn.disabled = true; btn.innerText = "Analizando versos...";
+      try {
+        const res = await fetch(`${API_BASE}/analizar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
+          body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value })
+        });
+        const data = await res.json();
+        renderResult(data);
+      } catch (e) { alert("Error de comunicación."); }
+      finally { btn.disabled = false; btn.innerText = "Evaluar Idoneidad"; }
+    }
 
-        function renderResult(data) {
-            $("analysisPlaceholder").classList.add("hidden");
-            $("resultsWrapper").classList.remove("hidden");
-            const hero = $("statusHero");
-            
-            // Lógica de colores v2.0
-            hero.className = `card border-t-[16px] p-10 border-${data.color}-400 bg-${data.color}-50/30`;
-            $("suitIcon").className = `p-6 rounded-3xl bg-${data.color}-100 text-${data.color}-600 shadow-inner`;
-            
-            $("riskValue").innerText = data.risk_percent + "%";
-            $("summaryTitle").innerText = data.resultado;
-            $("edadSugerida").innerText = data.edad_sugerida;
-            $("oaSugerido").innerText = data.oa;
-            $("lecturaSugerida").innerText = data.lectura_sugerida;
-            $("preguntaDesafio").innerText = `"${data.pregunta_desafio}"`;
-            $("explicacionPedagogica").innerText = data.explicacion_pedagogica;
-            $("lyricsPreview").innerText = data.letra_adaptada.slice(0, 4).join('\n') + "...";
-        }
+    function renderResult(data) {
+      $("analysisPlaceholder").classList.add("hidden");
+      $("resultsWrapper").classList.remove("hidden");
+      
+      const hero = $("statusHero");
+      hero.className = `card border-t-[16px] p-10 border-${data.color}-400 bg-${data.color}-50/30`;
+      
+      $("riskValue").innerText = data.risk_percent + "%";
+      $("summaryTitle").innerText = data.resultado;
+      $("edadSug").innerText = data.edad_sugerida;
+      $("oaSug").innerText = data.oa;
+      $("rutaSug").innerText = data.lectura_sugerida;
+      $("preguntaDesafio").innerText = `"${data.pregunta_desafio}"`;
+      $("justificacion").innerText = data.explicacion_pedagogica;
 
-        $("analyzeBtn").onclick = analizar;
-        $("pdfBtn").onclick = async () => {
-            const res = await fetch(`${API_BASE}/analizar/pdf`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(lastAnalysis)
-            });
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = `Informe_${lastAnalysis.titulo}.pdf`;
-            a.click();
-        };
-    </script>
+      const container = $("lyricsContainer");
+      container.innerHTML = data.letra_comparada.map(line => `
+        <div class="line-row">
+          <div class="text-slate-400 text-xs">${line.original || '&nbsp;'}</div>
+          <div class="text-slate-800 font-bold text-xs">${line.adapted || '&nbsp;'}</div>
+        </div>
+      `).join('');
+    }
+    $("analyzeBtn").onclick = analizar;
+  </script>
 </body>
 </html>
