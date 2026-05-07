@@ -2,106 +2,116 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA | Workspace Institucional</title>
+    <title>SonarIA | Professional Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; @apply bg-slate-50; overflow: hidden; }
         .sidebar { @apply bg-[#1a1c23] text-slate-400 transition-all duration-300 flex flex-col h-screen; }
-        .nav-link { @apply flex items-center gap-3 px-6 py-4 hover:bg-slate-800 hover:text-white transition-all cursor-pointer border-l-4 border-transparent; }
+        .nav-link { @apply flex items-center gap-3 px-6 py-4 hover:bg-slate-800 hover:text-white transition-all cursor-pointer border-l-4 border-transparent text-sm font-bold; }
         .nav-link.active { @apply bg-slate-800 text-white border-blue-500; }
-        .workspace-card { @apply bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden; }
-        /* 3 Columnas Pro */
-        .lyrics-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 20px; }
-        .pro-lock { filter: blur(4px); pointer-events: none; user-select: none; }
+        .workspace-card { @apply bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden transition-all duration-500; }
+        .lyrics-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 24px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
     </style>
 </head>
 <body class="antialiased text-slate-800">
 
-    <div class="flex h-screen">
+    <div class="flex h-screen overflow-hidden">
         
-        <!-- SIDEBAR PROFESIONAL (COLAPSABLE) -->
-        <aside id="sidebar" class="w-64 sidebar">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="w-64 sidebar hidden lg:flex">
             <div class="p-8">
                 <h1 class="text-2xl font-black text-white tracking-tighter italic">Sonar<span class="text-blue-500">IA</span></h1>
-                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">Institutional Suite</p>
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Institutional v9.1</p>
             </div>
 
             <nav class="flex-1 mt-4">
                 <div class="nav-link active">Radar de Aula</div>
-                <div class="nav-link">Planificación (v9)</div>
                 <div class="nav-link">Historial SQL</div>
-                <div id="adminLink" class="nav-link text-blue-400 border-blue-900 bg-blue-900/20">Panel de Coordinador</div>
+                <div class="nav-link text-blue-400/60">Panel Coordinador</div>
             </nav>
 
-            <div class="p-6 mt-auto bg-black/20">
-                <div class="flex items-center gap-3 mb-4 text-white">
-                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-xs shadow-lg shadow-blue-500/20">M</div>
-                    <div class="text-xs font-bold leading-tight">Mauricio Pinto<br><span class="text-[9px] text-slate-500 uppercase font-black">Plan School (8 Lic)</span></div>
+            <div class="p-8 mt-auto bg-black/20">
+                <div class="flex items-center gap-3 mb-6 text-white text-left">
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-black shadow-lg shadow-blue-500/20">M</div>
+                    <div class="text-xs font-bold leading-tight italic">Mauricio Pinto<br><span class="text-[9px] text-slate-500 uppercase font-black tracking-tighter">Plan School Active</span></div>
                 </div>
-                <button class="w-full py-2 bg-slate-800 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-red-500 transition-all">Cerrar Sesión</button>
+                <button onclick="location.href='login-test.html'" class="w-full py-3 bg-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-red-500 transition-all">Cerrar Sesión</button>
             </div>
         </aside>
 
-        <!-- ÁREA DE TRABAJO -->
-        <main class="flex-1 overflow-y-auto p-10 custom-scroll">
+        <!-- ÁREA PRINCIPAL -->
+        <main class="flex-1 overflow-y-auto p-10 custom-scroll bg-slate-50/50">
             
             <header class="flex justify-between items-center mb-10">
-                <h2 class="text-3xl font-black tracking-tight text-slate-900 italic">Centro de Análisis y Adaptación</h2>
-                <div class="flex gap-2">
-                    <button class="px-6 py-2 bg-white border border-slate-200 rounded-xl text-xs font-black uppercase shadow-sm">Subir Logo</button>
-                    <button class="px-6 py-2 bg-blue-600 text-white rounded-xl text-xs font-black uppercase shadow-lg shadow-blue-200">Ver Planes</button>
+                <div>
+                    <h2 class="text-4xl font-[950] tracking-tight text-slate-900 italic">Workspace Docente</h2>
+                    <p class="text-slate-400 font-bold text-sm italic">Análisis rítmico y curricular de alta precisión.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-6 py-2.5 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase shadow-sm">Configurar Logo</button>
+                    <button class="px-6 py-2.5 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">Mejorar Plan</button>
                 </div>
             </header>
 
-            <div class="grid grid-cols-1 gap-8">
-                <!-- INPUT CARD -->
-                <div class="workspace-card p-10 border-b-8 border-blue-600">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <input id="titulo" type="text" placeholder="Canción..." class="md:col-span-1 p-4 bg-slate-50 rounded-xl font-bold outline-none focus:ring-4 focus:ring-blue-100 transition-all">
-                        <input id="artista" type="text" placeholder="Artista..." class="md:col-span-1 p-4 bg-slate-50 rounded-xl font-bold outline-none focus:ring-4 focus:ring-blue-100 transition-all">
-                        <button id="analyzeBtn" class="bg-slate-900 text-white rounded-xl font-black hover:bg-blue-600 transition-all shadow-xl italic uppercase text-xs tracking-widest">Evaluar Idoneidad</button>
-                    </div>
+            <!-- INPUT CARD -->
+            <div class="workspace-card p-10 border-b-[12px] border-blue-600 mb-10 bg-white">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <input id="titulo" type="text" placeholder="Imagine..." class="md:col-span-1 p-4 bg-slate-50 rounded-2xl font-bold border-transparent outline-none focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all text-lg">
+                    <input id="artista" type="text" placeholder="John Lennon..." class="md:col-span-1 p-4 bg-slate-50 rounded-2xl font-bold border-transparent outline-none focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all text-lg">
+                    <button id="analyzeBtn" class="bg-slate-900 text-white rounded-2xl font-[950] text-sm hover:bg-blue-600 shadow-2xl transition-all active:scale-95 italic uppercase tracking-widest">Evaluar Obra</button>
                 </div>
+            </div>
 
-                <!-- RESULTADOS v9.0 -->
-                <div id="resultsWrapper" class="hidden space-y-8 animate-in">
-                    
-                    <!-- SEMÁFORO DE GESTIÓN -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div id="statusHero" class="lg:col-span-2 workspace-card p-10 border-t-[16px]">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <span id="resPill" class="px-3 py-1 bg-slate-100 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4 inline-block italic">—</span>
-                                    <h2 id="summaryTitle" class="text-5xl font-black tracking-tighter text-slate-900 italic leading-none mb-2">Analizando...</h2>
-                                    <p id="oaLabel" class="text-blue-600 font-bold text-sm tracking-tight"></p>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-7xl font-black tracking-tighter italic" id="riskValue">0%</div>
-                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Riesgo Escolar</p>
-                                </div>
+            <!-- RESULTADOS -->
+            <div id="resultsWrapper" class="hidden space-y-10 animate-in pb-20">
+                
+                <!-- DASHBOARD: SEMÁFORO + CONTEXTO -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div id="statusHero" class="lg:col-span-2 workspace-card p-12 border-t-[20px] bg-white transition-all duration-1000">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+                            <div class="flex-1 text-left">
+                                <span class="px-4 py-1 bg-slate-100 rounded-full text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 inline-block italic">Veredicto Profesional</span>
+                                <h2 id="summaryTitle" class="text-5xl md:text-7xl font-[950] tracking-tighter text-slate-900 italic leading-[0.8] mb-6">—</h2>
+                                <p id="bandContext" class="text-slate-400 font-bold text-xl italic max-w-xl"></p>
+                            </div>
+                            <div class="text-center md:text-right">
+                                <div class="text-8xl font-[950] tracking-tighter italic leading-none" id="riskValue">0%</div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Riesgo Escolar</p>
                             </div>
                         </div>
-                        <div class="workspace-card p-8 bg-slate-900 text-white flex flex-col justify-center">
-                            <h4 class="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-2">Dato Artístico (Contexto)</h4>
-                            <p class="text-sm font-medium italic opacity-80 italic">"Esta obra de Radiohead permite trabajar la MU08 OA 01 enfocada en la recepción de audiencias juveniles."</p>
-                        </div>
                     </div>
-
-                    <!-- COMPARADOR DE 3 COLUMNAS (PRO MODE) -->
-                    <div class="workspace-card overflow-hidden">
-                        <div class="p-6 bg-slate-100 flex justify-between items-center border-b border-slate-200">
-                            <h4 class="text-[10px] font-black uppercase tracking-widest italic">Comparativa de Triple Impacto (Original | Aula | Traducción)</h4>
-                            <button id="pdfBtn" class="text-[9px] font-black text-blue-600 uppercase border-b-2 border-blue-600">Exportar Informe UTP</button>
-                        </div>
-                        <div class="p-6 bg-slate-50 border-b border-slate-200 lyrics-grid text-[9px] font-black text-slate-400 uppercase px-8">
-                            <span>Letra Original</span><span>Versión Cantable (Métrica OK)</span><span>Traducción / Significado</span>
-                        </div>
-                        <div id="lyricsContainer" class="max-h-[500px] overflow-y-auto p-4 bg-white divide-y divide-slate-50">
-                            <!-- Inyección dinámica -->
-                        </div>
+                    <div class="workspace-card p-10 bg-slate-900 text-white flex flex-col justify-center relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-white"><svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"></path></svg></div>
+                        <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3 italic">Estrategia Docente</h4>
+                        <p id="oaLabel" class="text-base font-bold italic leading-relaxed opacity-90"></p>
                     </div>
                 </div>
+
+                <!-- TRIPLE COMPARADOR (PROFESSIONAL MODE) -->
+                <div class="workspace-card">
+                    <div class="p-8 bg-slate-50 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-200">
+                        <div>
+                            <h4 class="text-[10px] font-black uppercase tracking-[0.3em] mb-1">Triple Comparativa de Impacto</h4>
+                            <p class="text-[10px] text-slate-400 font-bold italic">Original | Aula (Métrica OK) | Traducción</p>
+                        </div>
+                        <button id="pdfBtn" class="px-8 py-3 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-xl hover:bg-blue-700 transition-all italic">Descargar Informe UTP</button>
+                    </div>
+                    <div class="lyrics-grid p-6 bg-slate-100/50 border-b border-slate-200 text-[9px] font-black text-slate-400 uppercase tracking-widest px-12">
+                        <span>Lírica Original</span><span>Versión Cantable</span><span>Significado / Traducción</span>
+                    </div>
+                    <div id="lyricsContainer" class="max-h-[600px] overflow-y-auto p-6 bg-white space-y-1">
+                        <!-- Versos -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="placeholder" class="h-[600px] flex flex-col items-center justify-center border-4 border-dashed border-slate-200 rounded-[48px] bg-white/40 text-center p-20">
+                <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center text-slate-100 shadow-inner mb-8"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+                <h3 class="text-3xl font-[950] text-slate-300 uppercase italic tracking-tighter">Radar SonarIA v9.1 Esperando...</h3>
             </div>
         </main>
     </div>
@@ -112,35 +122,53 @@
 
         async function analizar() {
             const btn = $("analyzeBtn");
-            btn.disabled = true; btn.innerText = "ESCANEO DE IMPACTO...";
+            const titulo = $("titulo").value.trim();
+            if (!titulo) return alert("Por favor, ingresa el título.");
+
+            btn.disabled = true; 
+            btn.innerHTML = `<span class="animate-pulse">SINCRONIZANDO...</span>`;
+
             try {
                 const res = await fetch(`${API_BASE}/analizar/v9`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ titulo: $("titulo").value })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
+                    body: JSON.stringify({ titulo: titulo, artista: $("artista").value })
                 });
+
+                if (!res.ok) throw new Error("Error de servidor");
                 const data = await res.json();
                 renderResult(data);
-            } catch(e) { alert("Error de comunicación"); }
-            finally { btn.disabled = false; btn.innerText = "Evaluar Idoneidad"; }
+
+            } catch(e) {
+                alert("Error de comunicación. Revisa si Render está en versión 9.1.0");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Evaluar Obra</span>`;
+            }
         }
 
         function renderResult(data) {
+            $("placeholder").classList.add("hidden");
             $("resultsWrapper").classList.remove("hidden");
-            const hero = $("statusHero");
-            hero.style.borderColor = data.analysis.color === "green" ? "#22c55e" : data.analysis.color === "orange" ? "#f97316" : "#ef4444";
             
-            $("riskValue").innerText = data.analysis.risk + "%";
-            $("summaryTitle").innerText = data.analysis.veredicto;
-            $("oaLabel").innerText = data.analysis.oa + ": " + data.analysis.actividad;
+            const hero = $("statusHero");
+            hero.style.borderColor = data.color === "green" ? "#22c55e" : data.color === "orange" ? "#f97316" : "#ef4444";
+            hero.classList.add(`bg-${data.color}-50/30`);
+            
+            $("riskValue").innerText = data.intelligence.risk + "%";
+            $("summaryTitle").innerText = data.resultado;
+            $("bandContext").innerText = data.intelligence.context;
+            $("oaLabel").innerText = data.oa_priorizado + ": " + data.intelligence.pedagogy_hint;
 
             $("lyricsContainer").innerHTML = data.matrix.map(l => `
-                <div class="lyrics-grid p-4 hover:bg-slate-50 transition-all items-center">
-                    <div class="text-[10px] text-slate-300 italic font-medium">${l.original}</div>
-                    <div class="text-[10px] font-bold ${l.changed ? 'text-blue-600' : 'text-slate-800'} transition-all italic">${l.adapted}</div>
-                    <div class="text-[10px] text-slate-400 font-medium">${l.translated}</div>
+                <div class="lyrics-grid p-5 hover:bg-slate-50 transition-all items-center rounded-2xl group">
+                    <div class="text-[10px] text-slate-300 italic font-medium group-hover:text-blue-400 transition-colors">${l.original}</div>
+                    <div class="text-[11px] font-black ${l.changed ? 'text-blue-600' : 'text-slate-800'} transition-all">${l.adapted}</div>
+                    <div class="text-[10px] text-slate-400 font-bold italic opacity-70">${l.translated}</div>
                 </div>
             `).join('');
+
+            hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         $("analyzeBtn").onclick = analizar;
