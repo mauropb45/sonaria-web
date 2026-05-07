@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planes | SonarIA Staging</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .antigravity-card { @apply bg-white border border-slate-100 rounded-[40px] shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl; }
+  </style>
+</head>
+<body class="p-6 md:p-20 text-slate-800">
+  <div class="max-w-5xl mx-auto text-center">
+    <h1 class="text-5xl font-[950] tracking-tighter mb-4">Elige tu nivel de <span class="text-blue-600 italic">Impacto</span></h1>
+    <p class="text-slate-500 font-bold mb-16 italic text-lg">Potencia tus clases con la inteligencia rítmica de SonarIA.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <!-- PLAN FREE -->
+      <div class="antigravity-card p-12 opacity-80 border-b-8 border-slate-200">
+        <h3 class="text-slate-400 font-black uppercase text-[10px] tracking-widest mb-6 italic">Plan Actual</h3>
+        <div class="text-5xl font-black mb-4 tracking-tighter">Free</div>
+        <p class="text-slate-500 mb-8 font-medium">Ideal para probar el radar en canciones básicas.</p>
+        <ul class="text-left space-y-4 mb-10 text-sm font-bold text-slate-400">
+            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Semáforo de Riesgo</li>
+            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> 3 Análisis mensuales</li>
+        </ul>
+        <button disabled class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl font-black uppercase text-xs tracking-widest cursor-not-allowed">Tu plan actual</button>
+      </div>
+
+      <!-- PLAN PRO -->
+      <div class="antigravity-card p-12 border-2 border-blue-500 border-b-[12px] relative overflow-hidden bg-gradient-to-b from-white to-blue-50/30">
+        <div class="absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black px-8 py-2 rotate-45 translate-x-6 translate-y-3 shadow-lg uppercase tracking-tighter">Popular</div>
+        <h3 class="text-blue-600 font-black uppercase text-[10px] tracking-widest mb-6 italic">Docente Pro</h3>
+        <div class="text-5xl font-black mb-4 tracking-tighter">$4.990 <span class="text-sm text-slate-400">/mes</span></div>
+        <p class="text-slate-600 mb-8 font-bold italic">Sincronización rítmica e informes oficiales.</p>
+        <ul class="text-left space-y-4 mb-10 text-sm font-black text-slate-700">
+            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Análisis Ilimitados</li>
+            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Sincronización Métrica Artística</li>
+            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Informe PDF para UTP (Oficial)</li>
+        </ul>
+        <button id="btnPay" class="w-full py-5 bg-blue-600 text-white rounded-[24px] font-black shadow-xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95 uppercase text-xs tracking-widest">Activar Pro Ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://sonaria-api-test.onrender.com";
+    document.getElementById("btnPay").onclick = async () => {
+        const btn = document.getElementById("btnPay");
+        btn.innerText = "Conectando con MercadoPago...";
+        try {
+            const res = await fetch(`${API_BASE}/payments/create-preference`, { method: 'POST' });
+            const data = await res.json();
+            window.location.href = data.init_point;
+        } catch (e) { alert("Error de conexión"); btn.innerText = "Activar Pro Ahora"; }
+    };
+  </script>
+</body>
+</html>
