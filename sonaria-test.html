@@ -1,18 +1,224 @@
-<script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonarIA | Professional Workspace v8.1</title>
+    
+    <!-- Tailwind CSS & Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --accent: #2f6fed; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            @apply bg-slate-50 transition-colors duration-1000 ease-in-out; 
+            overflow: hidden;
+        }
+        
+        /* Layout Animaciones */
+        .sidebar { @apply bg-white border-r border-slate-200 transition-all duration-500 flex flex-col h-screen relative z-50; }
+        .card-pro { @apply bg-white border border-slate-200 rounded-[40px] shadow-sm hover:shadow-2xl transition-all duration-500 ease-out; }
+        
+        /* Skeleton Animation (Efecto WOW de carga) */
+        .skeleton { @apply bg-slate-200 animate-pulse rounded-2xl; }
+        
+        /* Estados de Fondo Dinámicos */
+        .bg-safe { background-color: #f0fdf4; }
+        .bg-warn { background-color: #fff7ed; }
+        .bg-danger { background-color: #fef2f2; }
+
+        /* Sincronización de Letras (Mirror) */
+        .mirror-row { @apply grid grid-cols-2 gap-8 p-5 rounded-[22px] transition-all duration-300 border border-transparent; }
+        .mirror-row:hover { @apply bg-blue-50/50 border-blue-100 shadow-inner; }
+        .line-changed { @apply text-orange-600 font-[900] underline decoration-dotted decoration-2 underline-offset-4 italic; }
+        
+        /* Badge Métrica */
+        .metric-badge { @apply px-2 py-0.5 bg-green-100 text-green-700 text-[8px] font-black rounded-md ml-2 border border-green-200 uppercase align-middle; }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+        
+        .shimmer-text {
+            background: linear-gradient(90deg, #64748b 25%, #3b82f6 50%, #64748b 75%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shimmer 2.5s linear infinite;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+    </style>
+</head>
+<body id="appBody" class="antialiased text-slate-800">
+
+  <div class="flex h-screen overflow-hidden">
+    
+    <!-- SIDEBAR COLAPSABLE -->
+    <aside id="sidebar" class="sidebar w-80">
+        <div class="p-10">
+            <div class="flex justify-between items-center mb-12">
+                <h1 class="text-3xl font-[950] tracking-tighter italic">Sonar<span class="text-blue-600">IA</span></h1>
+                <button onclick="toggleSidebar()" class="text-slate-300 hover:text-slate-900 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+
+            <nav class="space-y-4">
+                <div class="flex items-center gap-4 p-4 bg-blue-50 text-blue-600 rounded-[24px] font-black text-sm shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    Radar de Aula
+                </div>
+                <div class="flex items-center gap-4 p-4 text-slate-300 font-bold text-sm cursor-not-allowed group">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    Pedagogía (v9.0)
+                </div>
+            </nav>
+        </div>
+
+        <!-- PERFIL Y CONTROL DE SESIÓN -->
+        <div class="mt-auto p-10 border-t border-slate-100 bg-slate-50/30">
+            <div class="flex items-center gap-4 mb-6">
+                <div id="userLetter" class="w-12 h-12 rounded-[20px] bg-blue-600 flex items-center justify-center text-white font-[900] shadow-lg shadow-blue-100 text-xl">M</div>
+                <div class="text-left">
+                    <span id="userName" class="block text-sm font-black italic tracking-tight">Mauricio Pinto</span>
+                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest leading-none">Suscripción Pro</span>
+                </div>
+            </div>
+            <button onclick="logout()" class="w-full py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black text-slate-400 hover:text-red-500 hover:border-red-100 transition-all uppercase tracking-widest">Cerrar Sesión</button>
+        </div>
+    </aside>
+
+    <!-- ÁREA DE TRABAJO PRINCIPAL -->
+    <main class="flex-1 overflow-y-auto p-8 lg:p-16 custom-scroll relative">
+        
+        <header class="flex justify-between items-center mb-16 relative z-10">
+            <div>
+                <h2 class="text-5xl font-[950] tracking-tighter text-slate-900 italic">Radar de Aula</h2>
+                <p class="text-slate-400 font-bold italic text-lg mt-2 tracking-tight">Análisis, adaptación y planificación institucional.</p>
+            </div>
+            <div id="btnSidebarTrigger" class="hidden">
+                 <button onclick="toggleSidebar()" class="p-4 bg-white rounded-2xl shadow-sm border border-slate-100 text-blue-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                 </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 relative z-10">
+            
+            <!-- PANEL DE ENTRADA (MÉTODOS) -->
+            <div class="xl:col-span-4 space-y-8">
+                <div class="card-pro p-10 border-b-[12px] border-blue-600 bg-white/90 backdrop-blur-md">
+                    <h3 class="text-blue-600 font-black uppercase text-[10px] tracking-[0.3em] mb-8 italic">Paso 1: Identificación</h3>
+                    <div class="space-y-6">
+                        <div class="group">
+                            <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-2 px-1">Título de la canción</label>
+                            <input id="titulo" type="text" placeholder="Imagine, Creep, Flowers..." class="w-full p-5 bg-slate-50 rounded-[22px] border-transparent font-black text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-50 transition-all">
+                        </div>
+                        <div class="group">
+                            <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest block mb-2 px-1 text-slate-300">Artista / Banda</label>
+                            <input id="artista" type="text" placeholder="Radiohead, John Lennon..." class="w-full p-5 bg-slate-50 rounded-[22px] border-transparent font-black text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-50 transition-all">
+                        </div>
+                        <button id="analyzeBtn" class="w-full py-6 bg-slate-900 text-white rounded-[32px] font-[950] text-xl shadow-2xl transition-all active:scale-95 italic">Evaluar Canción</button>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-blue-600 rounded-[40px] text-white shadow-xl relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                        <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 20 20"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"></path></svg>
+                    </div>
+                    <h4 class="text-[10px] font-black uppercase tracking-widest mb-3 opacity-60">Sugerencia Inteligente</h4>
+                    <p class="text-sm font-bold italic leading-relaxed relative z-10">"SonarIA v8.1 sincroniza la rima para que la versión protegida sea 100% cantable en el aula."</p>
+                </div>
+            </div>
+
+            <!-- PANEL DE RESULTADOS (DINÁMICO) -->
+            <div class="xl:col-span-8">
+                
+                <!-- SKELETON LOADER -->
+                <div id="loader" class="hidden space-y-10">
+                    <div class="h-64 skeleton"></div>
+                    <div class="h-96 skeleton"></div>
+                </div>
+
+                <!-- ESTADO INICIAL -->
+                <div id="placeholder" class="h-full min-h-[550px] flex flex-col items-center justify-center border-4 border-dashed border-slate-200 rounded-[64px] bg-white/40 text-center p-20">
+                    <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center text-slate-100 shadow-inner mb-10">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                    </div>
+                    <h3 class="text-3xl font-[900] text-slate-300 uppercase italic tracking-tighter shimmer-text">SonarIA Esperando Obra...</h3>
+                </div>
+
+                <!-- RESULTADOS REVELADOS -->
+                <div id="resultsWrapper" class="hidden space-y-10">
+                    
+                    <!-- HERO: SEMÁFORO DE IMPACTO -->
+                    <div id="statusHero" class="card-pro p-12 border-t-[28px] relative overflow-hidden bg-white transition-all duration-1000">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-12 relative z-10">
+                            <div class="flex-1 text-left">
+                                <span class="px-5 py-2 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 inline-block italic">Reporte de Idoneidad</span>
+                                <h2 id="summaryTitle" class="text-5xl md:text-7xl font-[950] tracking-tighter leading-none mb-6 italic text-slate-900">—</h2>
+                                <p id="bandContext" class="text-slate-400 font-bold text-xl italic max-w-xl"></p>
+                            </div>
+                            <div class="text-center md:text-right">
+                                <div class="text-9xl font-[950] tracking-tighter italic leading-none" id="riskValue">0%</div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">Riesgo Escolar</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COMPARADOR DE ESPEJO ARTÍSTICO -->
+                    <div class="card-pro overflow-hidden">
+                        <div class="p-10 bg-slate-900 text-white flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div>
+                                <h4 class="text-[10px] font-black uppercase tracking-[0.4em] mb-1 italic">Sincronización Métrica S-IA</h4>
+                                <p class="text-xs text-slate-400 font-medium italic italic">Resaltamos en color lo adaptado para tu aula.</p>
+                            </div>
+                            <button onclick="window.print()" class="px-8 py-3 bg-white text-slate-900 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-500 hover:text-white transition-all shadow-xl">Exportar a PDF</button>
+                        </div>
+                        <div id="lyricsContainer" class="max-h-[600px] overflow-y-auto bg-white p-8 custom-scroll">
+                            <!-- Los versos se inyectan aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+  </div>
+
+  <script>
     const API_BASE = "https://sonaria-api-test.onrender.com";
     const $ = id => document.getElementById(id);
 
+    // CONTROL DE SIDEBAR
+    function toggleSidebar() {
+        const side = $("sidebar");
+        const btn = $("btnSidebarTrigger");
+        if(side.style.width === "0px") {
+            side.style.width = "320px";
+            side.style.opacity = "1";
+            btn.classList.add("hidden");
+        } else {
+            side.style.width = "0px";
+            side.style.opacity = "0";
+            btn.classList.remove("hidden");
+        }
+    }
+
+    // FUNCIÓN PRINCIPAL DE ANÁLISIS
     async function analizar() {
         const btn = $("analyzeBtn");
-        const tituloInput = $("titulo").value.trim();
+        const ph = $("placeholder");
+        const ld = $("loader");
+        const res = $("resultsWrapper");
+        const tit = $("titulo").value.trim();
 
-        if (!tituloInput) return alert("Por favor, indica qué canción evaluaremos.");
+        if (!tit) return alert("Por favor, ingresa el título de la canción.");
 
-        // UI Feedback
-        $("placeholder").classList.add("hidden");
-        $("resultsWrapper").classList.add("hidden");
-        $("loader").classList.remove("hidden");
+        // UI INMERSIVA: SKELETON LOADERS
+        ph.classList.add("hidden");
+        res.classList.add("hidden");
+        ld.classList.remove("hidden");
         btn.disabled = true;
+        btn.innerHTML = `<span class="shimmer-text font-black uppercase text-xs tracking-widest">Sincronizando Métrica...</span>`;
 
         try {
             const fetchRes = await fetch(`${API_BASE}/analizar/v8`, {
@@ -21,36 +227,94 @@
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + (localStorage.getItem("mejoraria_token") || "dummy")
                 },
-                body: JSON.stringify({ titulo: tituloInput })
+                body: JSON.stringify({ titulo: tit })
             });
 
+            // GESTIÓN DE SESIÓN ÚNICA (BEYOND TOKEN EXPIRY)
             if (fetchRes.status === 401) {
-                alert("Tu sesión expiró. Por favor, ingresa de nuevo.");
-                location.href = "login-test.html";
+                alert("Sesión no válida o abierta en otro dispositivo. Ingresa de nuevo.");
+                logout();
                 return;
             }
 
             const data = await fetchRes.json();
-            
             if (!fetchRes.ok) throw new Error(data.detail || "Error en motor");
 
-            // Efecto WOW de revelación
+            // EFECTO WOW DE REVELACIÓN
             setTimeout(() => {
-                $("loader").classList.add("hidden");
-                $("resultsWrapper").classList.remove("hidden");
+                ld.classList.add("hidden");
+                res.classList.remove("hidden");
                 renderResult(data);
                 btn.disabled = false;
-            }, 800);
+                btn.innerHTML = `<span>Evaluar Obra</span>`;
+            }, 1000);
 
         } catch (e) {
-            console.error("DEBUG:", e);
             alert("Error: " + e.message);
-            $("loader").classList.add("hidden");
-            $("placeholder").classList.remove("hidden");
+            ld.classList.add("hidden");
+            ph.classList.remove("hidden");
             btn.disabled = false;
+            btn.innerHTML = `<span>Reintentar Evaluación</span>`;
         }
     }
-    
-    // ... mantén el resto de las funciones (renderResult, toggleSidebar, etc.) ...
+
+    function renderResult(data) {
+        const risk = data.intel.risk;
+        const body = $("appBody");
+        const hero = $("statusHero");
+
+        // CAMBIO DE ATMÓSFERA SEGÚN RIESGO (PSICOLOGÍA DEL COLOR)
+        body.className = "antialiased text-slate-800 pb-20 transition-all duration-1000 ";
+        if (risk < 30) {
+            body.classList.add("bg-safe");
+            hero.style.borderColor = "#22c55e";
+        } else if (risk < 60) {
+            body.classList.add("bg-warn");
+            hero.style.borderColor = "#f97316";
+        } else {
+            body.classList.add("bg-danger");
+            hero.style.borderColor = "#ef4444";
+        }
+        
+        $("riskValue").innerText = risk + "%";
+        $("summaryTitle").innerText = data.resultado;
+        $("bandContext").innerText = data.intel.context;
+
+        // INYECCIÓN DE LETRAS CON HANDOVER Y TOOLTIPS
+        $("lyricsContainer").innerHTML = data.comparativa.map(l => `
+            <div class="mirror-row group">
+                <div class="text-slate-300 font-bold italic text-sm group-hover:text-blue-500 transition-all duration-500">${l.original}</div>
+                <div class="text-slate-800 font-[900] text-sm group-hover:pl-4 transition-all duration-500 ${l.changed ? 'pl-4 border-l-2 border-orange-400' : ''}">
+                    ${l.changed ? `
+                        <span class="smart-tooltip">
+                            <span class="line-changed">${l.adapted}</span>
+                            <span class="tooltip-box">
+                                <span class="block mb-1 text-blue-400 font-black tracking-widest uppercase">Sincro Artística:</span>
+                                ${l.reason} para no romper el ritmo original.
+                            </span>
+                        </span>
+                        <span class="metric-badge">Métrica OK</span>
+                    ` : l.adapted}
+                </div>
+            </div>
+        `).join('');
+
+        hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function logout() {
+        localStorage.clear();
+        location.href = "login-test.html";
+    }
+
     $("analyzeBtn").onclick = analizar;
+
+    // Cargar perfil básico al inicio
+    const user = JSON.parse(localStorage.getItem("mejoraria_user") || "{}");
+    if (user.name) {
+        $("userName").innerText = user.name;
+        $("userLetter").innerText = user.name.charAt(0);
+    }
   </script>
+</body>
+</html>
