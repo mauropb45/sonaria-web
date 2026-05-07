@@ -1,172 +1,176 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA Pro | Dashboard v3.2</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; background-image: radial-gradient(circle at 2% 2%, rgba(47,111,237,0.08) 0%, transparent 25%); }
-        .antigravity { @apply bg-white border border-slate-100 rounded-[32px] shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl; }
-        .mirror-row { @apply grid grid-cols-2 gap-8 p-4 rounded-2xl transition-all duration-300 border border-transparent hover:bg-blue-50/50 hover:border-blue-100; }
-        .bar-bg { @apply w-full h-2.5 bg-slate-100 rounded-full overflow-hidden; }
-        .bar-fill { @apply h-full transition-all duration-[1.5s] ease-out; }
-        .metric-badge { @apply px-2 py-0.5 bg-orange-100 text-orange-700 text-[8px] font-black rounded-md ml-2 border border-orange-200 uppercase tracking-tighter; }
-    </style>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SonarIA | Workspace Docente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; @apply bg-slate-50; }
+    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer; }
+    .sidebar-link.active { @apply bg-blue-600 text-white shadow-lg shadow-blue-200; }
+    .sidebar-link:not(.active) { @apply text-slate-400 hover:bg-slate-100 hover:text-slate-600; }
+    .glass-card { @apply bg-white border border-slate-200 rounded-[32px] shadow-sm; }
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
+  </style>
 </head>
-<body class="p-6 md:p-10 text-slate-800 antialiased">
-    <div class="max-w-7xl mx-auto">
+<body class="antialiased text-slate-800">
+
+  <div class="flex min-h-screen">
+    
+    <!-- BARRA LATERAL (MENÚ DE PROCESO) -->
+    <aside class="w-72 bg-white border-r border-slate-200 p-6 flex flex-col hidden lg:flex">
+      <div class="mb-10 px-2">
+        <h1 class="text-2xl font-[950] tracking-tighter italic">Sonar<span class="text-blue-600">IA</span></h1>
+        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-1">Staging v4.0</p>
+      </div>
+
+      <nav class="flex-1 space-y-2">
+        <div class="sidebar-link active">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            Radar de Aula
+        </div>
+        <div class="sidebar-link">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            Pedagogía & OAs
+        </div>
+        <div class="sidebar-link">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5c1.382 3.307 3.416 6.333 5.92 8.922"></path></svg>
+            Adaptación Artística
+        </div>
+        <div class="sidebar-link">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Reportes UTP
+        </div>
+      </nav>
+
+      <div class="mt-auto bg-slate-50 p-4 rounded-2xl border border-slate-100">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-xs">M</div>
+            <span class="text-xs font-bold">Mauricio Pinto</span>
+        </div>
+        <button onclick="localStorage.clear(); location.href='login-test.html'" class="w-full text-[10px] font-black text-slate-400 hover:text-red-500 uppercase tracking-widest transition-all">Cerrar Sesión</button>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="flex-1 p-8 overflow-y-auto custom-scroll">
+      
+      <!-- TOP INFO -->
+      <div class="flex justify-between items-center mb-10">
+        <div>
+            <h2 class="text-3xl font-[950] tracking-tight">Radar de Aula</h2>
+            <p class="text-slate-400 font-medium text-sm">Evaluación pedagógica y sincronización métrica.</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="glass-card px-4 py-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Motor Online</span>
+            </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
         
-        <!-- HEADER -->
-        <header class="flex justify-between items-center mb-10">
-            <h1 class="text-4xl font-[950] tracking-tighter italic">Sonar<span class="text-blue-600">IA</span></h1>
-            <div id="userInfo" class="flex items-center gap-4 bg-white p-2 pr-6 rounded-full border border-slate-100 shadow-sm">
-                <div id="userLetter" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-sm uppercase">M</div>
-                <div class="flex flex-col text-left">
-                    <span id="userName" class="text-[11px] font-[900] text-slate-800 leading-none mb-1 italic">Mauricio Pinto</span>
-                    <span class="text-[9px] font-black text-blue-500 uppercase tracking-widest italic">Docente Pro Activo</span>
-                </div>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <!-- IZQUIERDA -->
-            <div class="lg:col-span-4 space-y-6">
-                <div class="antigravity p-8 border-b-4 border-blue-500 bg-white/80 backdrop-blur-md">
-                    <h3 class="text-blue-600 font-black uppercase text-[10px] tracking-widest mb-8">Radar de Aula</h3>
-                    <div class="space-y-4">
-                        <input id="titulo" type="text" placeholder="Título" class="w-full p-4 bg-slate-50 rounded-2xl font-bold border-transparent outline-none focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all">
-                        <input id="artista" type="text" placeholder="Artista" class="w-full p-4 bg-slate-50 rounded-2xl font-bold border-transparent outline-none focus:bg-white focus:ring-4 focus:ring-blue-50 transition-all">
-                        <button id="analyzeBtn" class="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-blue-600 shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3 italic">Evaluar Canción</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DERECHA -->
-            <div class="lg:col-span-8 space-y-8">
-                <div id="resultsWrapper" class="hidden space-y-8">
-                    <!-- HERO -->
-                    <div id="statusHero" class="antigravity border-t-[20px] p-10">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
-                            <div>
-                                <div id="suitabilityIcon" class="w-20 h-20 rounded-[32px] bg-white shadow-xl flex items-center justify-center mb-6"></div>
-                                <h2 id="summaryTitle" class="text-4xl md:text-5xl font-[950] tracking-tighter text-slate-900 leading-none italic mb-4">—</h2>
-                                <span id="lecturaSug" class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500">—</span>
-                            </div>
-                            <div class="space-y-5">
-                                <div>
-                                    <div class="flex justify-between text-[10px] font-black mb-2 tracking-widest"><span>RIESGO DETECTADO</span><span id="riskText">0%</span></div>
-                                    <div class="bar-bg"><div id="riskBar" class="bar-fill"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[10px] font-black mb-2 tracking-widest"><span>PERTINENCIA ESCOLAR</span><span id="schoolText">0%</span></div>
-                                    <div class="bar-bg"><div id="schoolBar" class="bar-fill bg-green-400"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6 border-t border-slate-100 pt-10 text-center">
-                            <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1 italic">Edad</span><span id="edadSug" class="text-2xl font-black">—</span></div>
-                            <div class="border-x border-slate-100 px-4">
-                                <span class="block text-[10px] font-black text-blue-600 uppercase mb-1 italic tracking-widest">OA Chile</span>
-                                <span id="oaSug" class="text-2xl font-black text-blue-600">—</span>
-                            </div>
-                            <div><span class="block text-[10px] font-black text-slate-400 uppercase mb-1 italic">Estrategia</span><span id="rutaSug" class="text-xs font-black uppercase text-slate-700">—</span></div>
-                        </div>
-                    </div>
-
-                    <!-- PLANIFICACIÓN -->
-                    <div class="antigravity p-10 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 flex items-start gap-8">
-                        <div>
-                            <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-[0.3em]">Planificación de Aula</h4>
-                            <p id="preguntaDesafio" class="text-2xl font-black text-slate-800 leading-tight mb-4 italic tracking-tight"></p>
-                            <p id="oaDesc" class="text-xs text-slate-400 font-bold mb-3 uppercase tracking-widest leading-relaxed"></p>
-                            <p id="justificacion" class="text-sm text-slate-600 font-medium leading-relaxed italic"></p>
-                        </div>
-                    </div>
-
-                    <!-- COMPARADOR -->
-                    <div class="antigravity overflow-hidden">
-                        <div class="p-8 bg-slate-900 text-white flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                            <span>Sincronización Artística Métrica OK</span>
-                            <button id="pdfBtn" class="bg-white/10 px-6 py-2 rounded-2xl italic hover:bg-white hover:text-slate-900 transition-all uppercase tracking-widest">Bajar PDF UTP</button>
-                        </div>
-                        <div id="lyricsContainer" class="max-h-[600px] overflow-y-auto bg-white p-4 custom-scrollbar"></div>
-                    </div>
-                </div>
-
-                <div id="analysisPlaceholder" class="h-[600px] flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[40px] text-slate-300 font-black italic">
-                    SonarIA Esperando Análisis...
+        <!-- PANEL DE ACCIÓN (3 COL) -->
+        <div class="xl:col-span-4 space-y-6">
+            <div class="glass-card p-8 bg-white border-b-8 border-blue-500">
+                <div class="space-y-5">
+                    <input id="titulo" type="text" placeholder="Imagine..." class="w-full p-4 bg-slate-50 rounded-2xl border-transparent font-bold focus:ring-4 focus:ring-blue-50 outline-none transition-all">
+                    <input id="artista" type="text" placeholder="John Lennon..." class="w-full p-4 bg-slate-50 rounded-2xl border-transparent font-bold focus:ring-4 focus:ring-blue-50 outline-none transition-all">
+                    <button id="analyzeBtn" class="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black hover:bg-blue-600 shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 italic">
+                        <span>Iniciar Análisis</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        const API_BASE = "https://sonaria-api-test.onrender.com";
-        const $ = id => document.getElementById(id);
-        let lastData = null;
+        <!-- PANEL DE RESULTADOS (9 COL) -->
+        <div class="xl:col-span-8">
+            <div id="analysisPlaceholder" class="h-full min-h-[400px] flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[40px] text-slate-300">
+                <p class="font-black italic text-xl uppercase tracking-tighter">Esperando análisis...</p>
+            </div>
 
-        async function analizar() {
-            const btn = $("analyzeBtn");
-            if (!$("titulo").value) return alert("Ingresa el título.");
-            btn.disabled = true; btn.innerText = "Sincronizando Métrica...";
-            try {
-                const res = await fetch(`${API_BASE}/analizar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
-                    body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value })
-                });
-                lastData = await res.json();
-                renderResult(lastData);
-            } catch (e) { alert("Error de conexión."); }
-            finally { btn.disabled = false; btn.innerText = "Evaluar Canción"; }
-        }
-
-        function renderResult(data) {
-            $("analysisPlaceholder").classList.add("hidden");
-            $("resultsWrapper").classList.remove("hidden");
-            const hero = $("statusHero");
-            const risk = data.risk_percent;
-            
-            hero.className = `antigravity border-t-[24px] p-10 border-${data.color}-400 bg-${data.color}-50/30 transition-all duration-1000`;
-            $("suitabilityIcon").innerHTML = risk < 25 ? '<svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg>' : '<svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
-            
-            $("riskBar").style.width = risk + "%";
-            $("riskBar").className = `bar-fill bg-${data.color}-500`;
-            $("riskText").innerText = risk + "%";
-            
-            // FIX DEFINITIVO PERTINENCIA
-            $("schoolBar").style.width = data.risk_school + "%";
-            $("schoolText").innerText = data.risk_school + "%";
-            
-            $("summaryTitle").innerText = data.resultado;
-            $("lecturaSug").innerText = data.lectura_sugerida;
-            $("edadSug").innerText = data.edad_sugerida;
-            $("oaSug").innerText = data.oa;
-            $("oaDesc").innerText = data.oa_desc;
-            $("rutaSug").innerText = data.lectura_sugerida;
-            $("justificacion").innerText = data.justificacion;
-            $("preguntaDesafio").innerText = `"${data.pregunta_desafio}"`;
-
-            $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
-                <div class="mirror-row group">
-                    <div class="text-xs text-slate-300 italic group-hover:text-blue-400 transition-all">${l.original}</div>
-                    <div class="text-xs font-bold ${l.changed ? 'text-orange-600 pl-4 border-l-2 border-orange-400 bg-orange-50/10' : 'text-slate-700'} group-hover:text-slate-900 transition-all">
-                        ${l.adapted} ${l.changed ? '<span class="metric-badge">Métrica OK</span>' : ''}
+            <div id="resultsWrapper" class="hidden space-y-8 animate-in">
+                <!-- SEMÁFORO HERO -->
+                <div id="statusHero" class="glass-card border-t-[20px] p-10 flex flex-col md:flex-row justify-between items-center gap-10">
+                    <div class="flex items-center gap-8">
+                        <div id="suitIcon" class="w-20 h-20 rounded-[32px] bg-slate-100 flex items-center justify-center shadow-inner"></div>
+                        <div>
+                            <h2 id="summaryTitle" class="text-4xl font-black tracking-tighter leading-none mb-2">Analizando</h2>
+                            <p id="lecturaSug" class="text-[10px] font-black uppercase text-slate-400 tracking-widest">—</p>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-right">
+                        <div class="text-6xl font-[950] tracking-tighter" id="riskValue">0%</div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Riesgo Escolar</p>
                     </div>
                 </div>
-            `).join('');
-            $("resultsWrapper").scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
 
-        $("analyzeBtn").onclick = analizar;
-        $("pdfBtn").onclick = async () => {
-            if(!lastData) return;
-            const res = await fetch(`${API_BASE}/analizar/pdf`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(lastData) });
-            const blob = await res.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = `Informe_SonarIA_${lastData.titulo}.pdf`; a.click();
-        };
-    </script>
+                <!-- SECCIÓN COMPARATIVA -->
+                <div class="glass-card overflow-hidden">
+                    <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+                        <span class="text-[10px] font-black uppercase tracking-widest">Comparativa Métrica v4.0</span>
+                    </div>
+                    <div id="lyricsContainer" class="max-h-[400px] overflow-y-auto p-4 bg-white"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = "https://sonaria-api-test.onrender.com";
+    const $ = id => document.getElementById(id);
+
+    async function analizar() {
+      const btn = $("analyzeBtn");
+      if (!$("titulo").value) return alert("Ingresa el título.");
+      btn.disabled = true; btn.innerHTML = `<span class="animate-pulse">Sincronizando...</span>`;
+
+      try {
+        const res = await fetch(`${API_BASE}/analizar`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + (localStorage.getItem("mejoraria_token") || "token-stg")
+          },
+          body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value })
+        });
+        
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.detail || "Error");
+        renderResult(data);
+
+      } catch (e) {
+        alert("Error: " + e.message);
+      } finally {
+        btn.disabled = false; btn.innerHTML = `<span>Iniciar Análisis</span>`;
+      }
+    }
+
+    function renderResult(data) {
+      $("analysisPlaceholder").classList.add("hidden");
+      $("resultsWrapper").classList.remove("hidden");
+      const hero = $("statusHero");
+      hero.className = `glass-card border-t-[20px] p-10 border-${data.color}-400 bg-${data.color}-50/30 transition-all duration-1000`;
+      
+      $("riskValue").innerText = data.risk_percent + "%";
+      $("summaryTitle").innerText = data.resultado;
+      $("suitIcon").innerHTML = data.risk_percent < 30 ? '<svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg>' : '<svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+
+      $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
+        <div class="grid grid-cols-2 gap-8 p-3 border-b border-slate-50 hover:bg-slate-50 transition-all">
+          <div class="text-[11px] text-slate-300 italic font-medium">${l.original}</div>
+          <div class="text-[11px] font-bold ${l.changed ? 'text-orange-600' : 'text-slate-700'}">${l.adapted}</div>
+        </div>
+      `).join('');
+    }
+
+    $("analyzeBtn").onclick = analizar;
+  </script>
 </body>
 </html>
