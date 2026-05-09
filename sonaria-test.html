@@ -2,175 +2,210 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA Pro | Professional Workspace</title>
+  <title>SonarIA Pro | Workspace Docente</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-[#F4F7FE] text-slate-900; overflow: hidden; }
-    .sidebar { @apply w-72 bg-[#111C44] text-white transition-all duration-500 flex flex-col h-screen relative z-50; }
-    .nav-link { @apply flex items-center gap-3 px-6 py-4 mx-4 rounded-2xl transition-all cursor-pointer text-slate-400 font-semibold text-sm mb-1; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-[#F8FAFD] text-slate-900; overflow: hidden; }
+    
+    /* SIDEBAR ESTILO ENTERPRISE */
+    .sidebar { @apply w-72 bg-[#0F172A] text-slate-400 transition-all duration-300 flex flex-col h-screen relative z-50; }
+    .nav-link { @apply flex items-center gap-3 px-6 py-3.5 mx-4 rounded-xl transition-all cursor-pointer font-bold text-xs uppercase tracking-widest mb-1; }
     .nav-link.active { @apply bg-blue-600 text-white shadow-xl shadow-blue-900/40; }
-    .nav-link:hover:not(.active) { @apply bg-white/5 text-white; }
-    
-    .workspace-card { @apply bg-white rounded-[30px] border border-slate-100 shadow-sm transition-all duration-500; }
-    .workspace-card:hover { @apply shadow-2xl shadow-blue-900/5; }
+    .nav-link:hover:not(.active) { @apply bg-slate-800 text-slate-100; }
 
-    /* Estilo del Semáforo Premium */
-    .status-light { @apply w-4 h-4 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)]; }
+    /* CONTENEDORES PRO */
+    .workspace-shell { @apply flex-1 flex flex-col h-screen overflow-hidden; }
+    .glass-card { @apply bg-white border border-slate-200 rounded-[32px] shadow-sm transition-all duration-500; }
+    .glass-card:hover { @apply shadow-2xl shadow-blue-900/5 border-blue-100; }
     
-    /* Triple Columna Estilo "IDE" */
-    .lyrics-container { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-6 p-6 border-b border-slate-50 transition-all items-center; }
-    .lyrics-container:hover { @apply bg-blue-50/50; }
-
-    /* Custom Scrollbar Pro */
+    /* COMPARADOR TIPO EDITOR DE CÓDIGO */
+    .comparison-header { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-6 px-8 py-4 bg-slate-50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]; }
+    .lyrics-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-8 px-8 py-5 border-b border-slate-50 transition-all items-start; }
+    .lyrics-row:hover { @apply bg-blue-50/40; }
+    
+    /* KPI METRICS */
+    .kpi-pill { @apply px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-tighter; }
+    
+    /* SCROLLBAR INVISIBLE PERO FUNCIONAL */
     .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
     .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
-    
-    .course-tab { @apply px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all border border-slate-100 hover:bg-slate-50; }
-    .course-tab.active { @apply bg-blue-600 text-white border-blue-600 shadow-lg; }
 
-    .shimmer { background: linear-gradient(90deg, #eff6ff 25%, #dbeafe 50%, #eff6ff 75%); background-size: 200% 100%; animation: shimmer 2s infinite; }
-    @keyframes shimmer { to { background-position: 200% 0; } }
+    /* ANIMACIONES */
+    .section-enter { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body class="antialiased">
 
-  <div class="flex h-screen">
+  <div class="flex h-screen overflow-hidden">
     
-    <!-- SIDEBAR DE GESTIÓN (IZQUIERDA) -->
-    <aside id="sidebar" class="sidebar">
-        <div class="p-8">
-            <h1 class="text-2xl font-extrabold tracking-tighter italic">Sonar<span class="text-blue-400">IA</span></h1>
-            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Suite Institucional</p>
+    <!-- SIDEBAR MODULAR -->
+    <aside class="sidebar">
+        <div class="p-8 mb-4">
+            <h1 class="text-2xl font-black text-white tracking-tighter italic">Sonar<span class="text-blue-500">IA</span></h1>
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-[0.4em] mt-1">Workspace v12.0</p>
         </div>
 
-        <div class="flex-1 overflow-y-auto custom-scroll px-4 space-y-8">
-            <!-- SECCIÓN: CONFIGURACIÓN -->
-            <div>
-                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-4 px-4">Centro de Mando</label>
-                <div class="nav-link active" onclick="showView('radar')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> Radar de Aula
-                </div>
-                <div class="nav-link" onclick="showView('setup')">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg> Mi Colegio
-                </div>
+        <nav class="flex-1 space-y-1">
+            <div class="nav-link active" onclick="switchTab('radar')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> Radar Docente
             </div>
+            <div class="nav-link" onclick="switchTab('config')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg> Mi Colegio
+            </div>
+            <div class="nav-link" onclick="switchTab('historial')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Historial SQL
+            </div>
+        </nav>
 
-            <!-- SECCIÓN: CURSOS RÁPIDOS -->
-            <div id="sidebarCursos" class="px-4">
-                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-4">Cursos Activos</label>
-                <div id="cursosSidebarList" class="grid grid-cols-2 gap-2">
-                    <!-- Dinámico -->
-                </div>
+        <!-- MINI WIDGET: ESTADO COLEGIO -->
+        <div class="m-6 p-5 bg-white/5 rounded-3xl border border-white/10">
+            <div class="flex items-center gap-3 mb-4">
+                <div id="schoolLogoSmall" class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-[10px] font-black italic">LOGO</div>
+                <div class="flex flex-col"><span class="text-[10px] text-white font-bold truncate max-w-[140px]">Establecimiento</span><span class="text-[8px] text-slate-500 font-black uppercase">Activo</span></div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between text-[9px] font-black"><span class="text-slate-500 italic">CUPO DOCENTE</span><span class="text-blue-400">1 / 8</span></div>
+                <div class="w-full h-1 bg-slate-800 rounded-full overflow-hidden"><div class="w-1/8 h-full bg-blue-500"></div></div>
             </div>
         </div>
 
-        <div class="p-8 bg-[#0b1437]">
-            <div class="flex items-center gap-3 text-white">
-                <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center font-black shadow-lg">M</div>
-                <div class="text-xs font-bold leading-tight italic">Mauricio Pinto<br><span class="text-[9px] text-blue-400 font-black uppercase">Plan School</span></div>
+        <div class="p-8 bg-[#0b1224] border-t border-white/5">
+            <div class="flex items-center gap-4 text-white">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center font-black shadow-lg">M</div>
+                <div class="text-xs font-bold leading-tight italic">Mauricio Pinto<br><span class="text-[9px] text-slate-500 font-black uppercase">Admin Colegio</span></div>
             </div>
         </div>
     </aside>
 
-    <!-- ÁREA DE TRABAJO (DERECHA) -->
-    <main class="flex-1 overflow-y-auto custom-scroll relative">
+    <!-- ÁREA DE TRABAJO -->
+    <div class="workspace-shell">
         
-        <!-- TOPBAR FIJA -->
-        <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-12 py-6 flex justify-between items-center">
-            <h2 id="viewTitle" class="text-2xl font-extrabold tracking-tight">Radar de Aula</h2>
-            <div class="flex gap-4">
-                <div class="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
-                    <span class="status-light bg-green-500 animate-pulse"></span>
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Motor v11 Online</span>
+        <!-- HEADER TOPBAR -->
+        <header class="bg-white/70 backdrop-blur-md border-b border-slate-100 px-12 py-5 flex justify-between items-center relative z-40">
+            <div>
+                <h2 id="pageTitle" class="text-xl font-extrabold tracking-tight text-slate-800 italic">Radar de Aula</h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-2xl border border-emerald-100">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></span>
+                    <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic">Sincronizado</span>
                 </div>
+                <button onclick="location.href='planes-test.html'" class="px-6 py-2.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-200 hover:bg-blue-600 transition-all">Suscripción Pro</button>
             </div>
         </header>
 
-        <!-- CONTENIDO DINÁMICO -->
-        <div id="contentArea" class="max-w-6xl mx-auto p-12 space-y-12">
+        <!-- CONTENIDO CENTRAL -->
+        <main class="flex-1 overflow-y-auto custom-scroll bg-[#F8FAFD] p-12">
             
-            <!-- VISTA: RADAR (INPUT) -->
-            <section id="radarView" class="space-y-10 transition-all duration-700">
-                <div class="workspace-card p-12 border-b-[12px] border-blue-600 bg-white">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2">Nombre de la Canción</label>
-                            <input id="titulo" type="text" placeholder="Imagine..." class="w-full p-5 bg-slate-50 rounded-3xl border-transparent font-bold text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all">
+            <!-- SECCIÓN: RADAR (POR DEFECTO) -->
+            <section id="tab-radar" class="section-enter max-w-6xl mx-auto space-y-10">
+                
+                <!-- INPUT MASTER -->
+                <div class="glass-card p-12 border-b-[12px] border-blue-600">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 italic">Identificación Musical</label>
+                            <input id="titulo" type="text" placeholder="¿Qué canción evaluaremos?" class="w-full p-5 bg-slate-50 rounded-2xl font-bold text-lg border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
+                            <input id="artista" type="text" placeholder="Artista o Banda" class="w-full p-5 bg-slate-50 rounded-2xl font-bold text-lg border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2">Artista / Banda</label>
-                            <input id="artista" type="text" placeholder="John Lennon..." class="w-full p-5 bg-slate-50 rounded-3xl border-transparent font-bold text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all">
+                        <div class="flex flex-col justify-end space-y-4">
+                            <p class="text-xs text-slate-400 font-medium italic">Selecciona el curso para el cual NotebookLM generará la estrategia específica:</p>
+                            <div id="quickCursos" class="flex flex-wrap gap-2"></div>
+                            <button id="analyzeBtn" class="w-full py-6 bg-slate-950 text-white rounded-[32px] font-black text-lg hover:bg-blue-600 shadow-2xl transition-all active:scale-95 italic">Iniciar Análisis e Inteligencia</button>
                         </div>
                     </div>
-                    <button id="analyzeBtn" class="w-full py-6 bg-[#111C44] text-white rounded-[32px] font-black text-lg hover:bg-blue-600 shadow-2xl transition-all active:scale-95 italic">Iniciar Análisis e Inteligencia Artística</button>
                 </div>
 
-                <!-- RESULTADOS v11.0 (OCULTOS INICIALMENTE) -->
-                <div id="resultsWrapper" class="hidden space-y-12 animate-in pb-20">
-                    <!-- DASHBOARD KPIs -->
-                    <div id="statusHero" class="workspace-card p-12 border-t-[24px] relative overflow-hidden">
-                        <div class="flex justify-between items-start relative z-10">
-                            <div class="flex-1">
-                                <span id="resPill" class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 inline-block italic">—</span>
-                                <h2 id="summaryTitle" class="text-6xl font-black tracking-tighter leading-none mb-6 italic">Analizando</h2>
-                                <p id="bandContext" class="text-slate-400 font-bold text-xl italic max-w-xl"></p>
+                <!-- RESULTADOS -->
+                <div id="resultsWrapper" class="hidden space-y-10 pb-20">
+                    
+                    <!-- PANEL DE CONTROL PEDAGÓGICO -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div id="statusHero" class="lg:col-span-2 glass-card p-10 border-t-[20px] relative overflow-hidden">
+                            <div class="flex justify-between items-start relative z-10">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-6">
+                                        <span id="resPill" class="kpi-pill">—</span>
+                                        <span id="edadSug" class="kpi-pill">EDAD: —</span>
+                                    </div>
+                                    <h2 id="summaryTitle" class="text-5xl font-black tracking-tighter italic text-slate-900 leading-[0.8]">Analizando</h2>
+                                    <div id="oaIndicator" class="mt-8 p-6 bg-slate-50 rounded-[28px] border border-slate-100 max-w-lg">
+                                        <span class="text-[9px] font-black text-blue-500 uppercase block mb-1">Mapeo MINEDUC Chile</span>
+                                        <p id="oaLabel" class="text-lg font-black text-slate-800 leading-tight italic"></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-8xl font-black tracking-tighter italic" id="riskValue">0%</div>
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 italic">Riesgo Escolar</p>
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-8xl font-black tracking-tighter italic" id="riskValue">0%</div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Riesgo Escolar</p>
-                            </div>
+                        </div>
+
+                        <!-- PANEL DE INTELIGENCIA NOTEBOOKLM -->
+                        <div class="glass-card p-10 bg-slate-900 text-white relative overflow-hidden flex flex-col justify-center">
+                            <div class="absolute top-0 right-0 p-6 opacity-10 text-white"><svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v2h-2zm0-2h2V7h-2z"></path></svg></div>
+                            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-6 italic italic">Pregunta desafío (v12)</h4>
+                            <p id="preguntaDesafio" class="text-xl font-bold italic leading-tight mb-8"></p>
+                            <button id="pdfBtn" class="w-full py-4 bg-blue-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-blue-700 transition-all italic">Bajar Informe UTP</button>
                         </div>
                     </div>
 
-                    <!-- COMPARATIVA TRIPLE -->
-                    <div class="workspace-card overflow-hidden">
-                        <div class="p-8 bg-[#111C44] text-white flex justify-between items-center">
-                            <h4 class="text-[10px] font-black uppercase tracking-widest">Sincronización Artística & Significado</h4>
-                            <div class="flex gap-4">
-                                <button id="pdfBtn" class="bg-blue-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase hover:bg-blue-700 transition-all">Exportar Pack Aula</button>
+                    <!-- COMPARADOR LADO A LADO PRO -->
+                    <div class="glass-card overflow-hidden bg-white">
+                        <div class="p-8 bg-slate-50 flex justify-between items-center border-b border-slate-100">
+                            <div class="flex flex-col">
+                                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] mb-1">Doble Validación: Original vs Protegida</h4>
+                                <p class="text-[10px] text-slate-400 font-bold italic">Sincronización rítmica v12 activada.</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black text-slate-400 hover:text-slate-600 transition-all italic uppercase tracking-widest">Ver Significado</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-6 p-6 bg-slate-50 border-b border-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest px-10">
-                            <span>Original</span><span>Versión Adaptada</span><span>Traducción / Significado</span>
+                        <div class="comparison-header">
+                            <span>Lírica Original</span><span>Versión Docente</span><span>Intención Pedagógica</span>
                         </div>
-                        <div id="lyricsContainer" class="max-h-[600px] overflow-y-auto bg-white divide-y divide-slate-50 custom-scroll"></div>
+                        <div id="lyricsContainer" class="max-h-[700px] overflow-y-auto custom-scroll bg-white">
+                            <!-- Inyección dinámica -->
+                        </div>
                     </div>
+                </div>
 
-                    <!-- MATRIZ PEDAGÓGICA -->
-                    <div class="workspace-card p-12 bg-gradient-to-br from-indigo-50 to-white border-blue-100">
-                        <div class="flex justify-between items-center mb-10">
-                            <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-widest">Estrategia Diferenciada por Nivel</h3>
-                            <div id="courseTabs" class="flex gap-2"></div>
-                        </div>
-                        <div id="pedagogiaContent" class="animate-in"></div>
+                <!-- PLACEHOLDER INICIAL -->
+                <div id="analysisPlaceholder" class="h-[500px] flex flex-col items-center justify-center border-4 border-dashed border-slate-200 rounded-[64px] text-slate-200 text-center p-20">
+                    <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-inner mb-10 text-slate-100">
+                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
+                    <h3 class="text-3xl font-black uppercase tracking-tighter italic shimmer-text">SonarIA Workspace v12</h3>
                 </div>
             </section>
 
-            <!-- VISTA: MI COLEGIO (SETUP) -->
-            <section id="setupView" class="hidden space-y-10 transition-all duration-700">
-                <div class="workspace-card p-12">
-                    <h3 class="text-3xl font-black tracking-tight mb-8">Personalización Institucional</h3>
+            <!-- SECCIÓN: MI COLEGIO (SETUP) -->
+            <section id="tab-config" class="hidden section-enter max-w-5xl mx-auto">
+                <div class="glass-card p-12">
+                    <h2 class="text-4xl font-black tracking-tight mb-10">Configuración del Establecimiento</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div class="space-y-6">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2">Logo del Establecimiento</label>
-                            <div class="h-64 border-4 border-dashed border-slate-100 rounded-[40px] flex flex-col items-center justify-center text-center p-8 hover:bg-slate-50 transition-all cursor-pointer relative overflow-hidden">
-                                <input type="file" id="logoUpload" class="absolute inset-0 opacity-0 cursor-pointer">
-                                <img id="logoPreview" class="hidden max-h-32 mb-4">
-                                <p id="logoText" class="text-slate-300 font-bold italic">Arrastra tu logo .PNG aquí para el informe PDF</p>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2 italic">Logo Corporativo</label>
+                            <div class="h-72 border-4 border-dashed border-slate-100 rounded-[48px] flex flex-col items-center justify-center p-12 text-center hover:bg-slate-50 transition-all relative overflow-hidden group">
+                                <input type="file" id="logoInput" class="absolute inset-0 opacity-0 cursor-pointer">
+                                <img id="logoPreview" class="hidden max-h-40 mb-6">
+                                <p id="logoText" class="text-slate-300 font-bold italic text-sm">Sube el logo de tu colegio en formato .PNG transparente para personalizar tus informes.</p>
                             </div>
                         </div>
                         <div class="space-y-6">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2">Mis Cursos Reales</label>
-                            <div id="setupCursosList" class="grid grid-cols-3 gap-3"></div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block px-2 italic">Niveles bajo tu Gestión</label>
+                            <div id="fullCursosList" class="grid grid-cols-2 gap-3"></div>
                         </div>
                     </div>
-                    <button onclick="showView('radar')" class="mt-12 bg-blue-600 text-white px-10 py-4 rounded-2xl font-black text-sm shadow-xl shadow-blue-200">Guardar y Volver al Radar</button>
+                    <button onclick="switchTab('radar')" class="mt-12 w-full py-5 bg-blue-600 text-white rounded-3xl font-black shadow-xl shadow-blue-200">Guardar y Abrir Radar</button>
                 </div>
             </section>
-        </div>
-    </main>
+
+        </main>
+    </div>
   </div>
 
   <script>
@@ -179,25 +214,27 @@
     const cursosData = ["1B","2B","3B","4B","5B","6B","7B","8B","IM","IIM","IIIM","IVM"];
     let selectedCourses = ["7B","8B","IM"];
 
-    // NAVEGACIÓN SPA
-    function showView(view) {
-        $("radarView").classList.toggle("hidden", view !== 'radar');
-        $("setupView").classList.toggle("hidden", view !== 'setup');
-        $("viewTitle").innerText = view === 'radar' ? "Radar de Aula" : "Configuración Institucional";
-        document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-        if(view === 'radar') document.querySelectorAll(".nav-link")[0].classList.add("active");
-        else document.querySelectorAll(".nav-link")[1].classList.add("active");
+    // NAVEGACIÓN SPA v12
+    function switchTab(tab) {
+        $("tab-radar").classList.toggle("hidden", tab !== 'radar');
+        $("tab-config").classList.toggle("hidden", tab !== 'config');
+        document.querySelectorAll(".nav-link").forEach((l, i) => {
+            l.classList.toggle("active", (tab === 'radar' && i === 0) || (tab === 'config' && i === 1));
+        });
+        if(tab === 'radar') $("pageTitle").innerText = "Radar de Aula";
+        if(tab === 'config') $("pageTitle").innerText = "Personalización Institucional";
     }
 
     // GESTIÓN DE CURSOS
     function renderCursos() {
-        const renderMap = c => `
+        const renderBtn = c => `
             <button onclick="toggleCourse('${c}')" class="course-tab ${selectedCourses.includes(c)?'active':''}">
                 ${c.replace('B','°B').replace('M','°M')}
             </button>
         `;
-        $("cursosSidebarList").innerHTML = selectedCourses.map(renderMap).join('');
-        $("setupCursosList").innerHTML = cursosData.map(renderMap).join('');
+        $("quickCursos").innerHTML = selectedCourses.slice(0, 4).map(renderBtn).join('');
+        $("fullCursosList").innerHTML = cursosData.map(renderBtn).join('');
+        $("cursosSidebarList").innerHTML = selectedCourses.map(renderBtn).join('');
     }
 
     function toggleCourse(c) {
@@ -207,13 +244,14 @@
     }
 
     // LOGO PREVIEW
-    $("logoUpload").onchange = e => {
+    $("logoInput").onchange = e => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = () => {
             $("logoPreview").src = reader.result;
             $("logoPreview").classList.remove("hidden");
             $("logoText").classList.add("hidden");
+            $("schoolLogoSmall").innerHTML = `<img src="${reader.result}" class="w-full h-full object-contain">`;
         };
         reader.readAsDataURL(file);
     };
@@ -221,66 +259,52 @@
     // ANÁLISIS
     async function analizar() {
         const btn = $("analyzeBtn");
-        btn.disabled = true; btn.innerHTML = `<span class="shimmer-text uppercase italic">Sincronizando con NotebookLM...</span>`;
-        
+        const tit = $("titulo").value.trim();
+        if(!tit) return alert("Indica el título.");
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="shimmer-text italic uppercase">Sincronizando con NotebookLM...</span>`;
+
         try {
             const res = await fetch(`${API_BASE}/api/analizar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
-                body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value, cursos: selectedCourses })
+                body: JSON.stringify({ titulo: tit, artista: $("artista").value, cursos: selectedCourses })
             });
             const data = await res.json();
             renderDashboard(data);
-        } catch(e) { alert("Error"); }
-        finally { btn.disabled = false; btn.innerText = "Iniciar Evaluación Estratégica"; }
+        } catch(e) { alert("Error de comunicación."); }
+        finally { btn.disabled = false; btn.innerText = "Iniciar Análisis e Inteligencia"; }
     }
 
-    function renderDashboard(data) {
+    function renderResult(data) {
+        $("analysisPlaceholder").classList.add("hidden");
         $("resultsWrapper").classList.remove("hidden");
+        
         const hero = $("statusHero");
         hero.style.borderColor = data.veredicto.color === "green" ? "#22c55e" : data.veredicto.color === "orange" ? "#f97316" : "#ef4444";
         hero.classList.add(`bg-${data.veredicto.color}-50/30`);
-        
+
         $("riskValue").innerText = data.veredicto.risk + "%";
         $("summaryTitle").innerText = data.veredicto.res;
-        $("bandContext").innerText = "Radiohead (1992). Obra analizada bajo los criterios de convivencia escolar y madurez afectiva.";
+        $("resPill").innerText = data.veredicto.ruta;
+        $("edadSug").innerText = "EDAD: " + (data.veredicto.risk > 30 ? "12+" : "6+");
+        $("oaLabel").innerText = data.veredicto.oa + ": " + data.veredicto.oa_desc;
+        $("preguntaDesafio").innerText = `"${data.veredicto.pregunta}"`;
 
-        // COMPARATIVA 3 COLUMNAS
+        // TRIPLE COLUMNA DINÁMICA
         $("lyricsContainer").innerHTML = data.comparativa.map(l => `
-            <div class="lyrics-container">
-                <div class="text-[11px] text-slate-300 italic">${l.original}</div>
-                <div class="text-[11px] font-black ${l.changed?'text-blue-600':'text-slate-800'}">${l.adapted} ${l.changed?'<span class="metric-badge">Métrica OK</span>':''}</div>
+            <div class="lyrics-row group">
+                <div class="text-[11px] text-slate-300 font-medium italic group-hover:text-blue-400 transition-colors">${l.original}</div>
+                <div class="text-[11px] font-black ${l.changed ? 'text-blue-600' : 'text-slate-800'} italic">${l.adapted} ${l.changed ? '<span class="metric-badge">Métrica OK</span>':''}</div>
                 <div class="text-[11px] text-slate-400 font-bold opacity-60">${l.translated}</div>
             </div>
         `).join('');
 
-        // TABS PEDAGÓGICOS
-        window.matrix = data.pedagogia;
-        const curs = Object.keys(data.pedagogia);
-        $("courseTabs").innerHTML = curs.map((c, i) => `
-            <button onclick="showPed('${c}')" class="course-tab ${i===0?'active':''} ped-tab-btn">${c}</button>
-        `).join('');
-        showPed(curs[0]);
+        $("resultsWrapper").scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function showPed(curso) {
-        document.querySelectorAll(".ped-tab-btn").forEach(b => b.classList.remove("active"));
-        const d = window.matrix[curso];
-        $("pedagogiaContent").innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="space-y-8">
-                    <div><span class="text-[10px] font-black text-blue-400 uppercase">OA MINEDUC</span><p class="text-3xl font-black text-slate-800">${d.oa}</p><p class="text-sm font-bold text-slate-400 italic">${d.desc}</p></div>
-                    <div><span class="text-[10px] font-black text-blue-400 uppercase">Actividad de Aula</span><p class="text-base font-bold text-slate-600 leading-relaxed">${d.actividad}</p></div>
-                </div>
-                <div class="bg-white p-12 rounded-[48px] shadow-sm border border-blue-50 relative overflow-hidden flex flex-col justify-center">
-                    <div class="absolute top-0 right-0 p-6 opacity-5 text-blue-600"><svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"></path></svg></div>
-                    <span class="text-[10px] font-black text-orange-400 uppercase block mb-4 tracking-widest italic">Pregunta de Mediación</span>
-                    <p class="text-2xl font-black text-slate-900 italic leading-tight relative z-10">"${d.pregunta}"</p>
-                </div>
-            </div>
-        `;
-    }
-
+    // Inicialización
     $("analyzeBtn").onclick = analizar;
     renderCursos();
   </script>
