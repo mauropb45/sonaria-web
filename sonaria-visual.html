@@ -2,129 +2,124 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA Pro | Workspace de Élite</title>
+  <title>SonarIA Pro | Neural Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Outfit:wght@900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-[#F3F5F9] text-[#1A1D23]; overflow: hidden; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-white text-[#060D2E]; overflow: hidden; }
+    .sidebar { @apply bg-[#060D2E] text-white w-20 hover:w-64 transition-all duration-500 fixed left-0 h-screen z-50 flex flex-col items-center group shadow-2xl; }
+    .main-content { @apply ml-20 flex-1 h-screen overflow-y-auto bg-slate-50 p-12 custom-scroll transition-all; }
+    .glass-card { @apply bg-white border border-slate-200 rounded-[40px] shadow-sm hover:shadow-2xl transition-all duration-500; }
+    .f1-red { color: #E10600; }
+    .bg-f1-red { background-color: #E10600; }
     
-    /* Paleta F1 / Racing */
-    .bg-racing-blue { background-color: #060D2E; } /* Red Bull Navy */
-    .text-racing-red { color: #E10600; } /* F1 Red */
-    .bg-racing-red { background-color: #E10600; }
-    
-    .sidebar { @apply transition-all duration-500 fixed top-0 h-screen z-50 shadow-2xl; }
-    .glass-card { @apply bg-white border border-slate-200 rounded-[24px] shadow-sm hover:shadow-xl transition-all duration-300; }
-    
-    /* Panel de Letras (Drawer) */
-    #lyricsDrawer { @apply fixed right-0 top-0 h-screen w-[450px] bg-white border-l border-slate-200 translate-x-full transition-transform duration-500 z-50 p-8 overflow-y-auto; }
+    #lyricsDrawer { @apply fixed right-0 top-0 h-screen w-full lg:w-[600px] bg-white shadow-[-20px_0_60px_rgba(0,0,0,0.1)] translate-x-full transition-transform duration-700 z-[100] p-12 overflow-y-auto; }
     #lyricsDrawer.open { @apply translate-x-0; }
-
-    mark { @apply bg-[#FFD700] text-black px-1 rounded font-bold; } /* Amarillo de destaque */
     
+    mark { @apply bg-yellow-200 text-black px-1 rounded; }
     .custom-scroll::-webkit-scrollbar { width: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
   </style>
 </head>
-<body class="antialiased">
+<body class="flex">
 
-  <!-- SIDEBAR IZQUIERDA (NAVEGACIÓN) -->
-  <aside class="sidebar left-0 w-20 hover:w-64 bg-racing-blue text-white group">
-    <div class="p-6">
-        <h1 class="text-xl font-extrabold italic group-hover:block hidden">Sonar<span class="text-racing-red font-black">IA</span></h1>
-        <div class="w-8 h-8 bg-racing-red rounded-lg flex items-center justify-center font-black italic block group-hover:hidden">S</div>
+  <!-- SIDEBAR DOCK -->
+  <aside class="sidebar">
+    <div class="py-10">
+        <div class="w-12 h-12 bg-f1-red rounded-2xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-red-900/40">S</div>
     </div>
-    <nav class="mt-10 space-y-2">
-        <div class="flex items-center gap-4 px-6 py-4 hover:bg-white/10 cursor-pointer transition-all border-l-4 border-racing-red">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <span class="opacity-0 group-hover:opacity-100 font-bold text-xs uppercase tracking-widest">Radar</span>
-        </div>
-        <div class="flex items-center gap-4 px-6 py-4 hover:bg-white/10 cursor-pointer transition-all">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13"></path></svg>
-            <span class="opacity-0 group-hover:opacity-100 font-bold text-xs uppercase tracking-widest">Historial</span>
-        </div>
+    <nav class="flex-1 space-y-4 w-full">
+        <div class="flex items-center gap-6 px-7 py-4 hover:bg-white/5 cursor-pointer border-l-4 border-f1-red text-white"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> <span class="opacity-0 group-hover:opacity-100 font-bold text-xs uppercase tracking-widest transition-all">Radar</span></div>
+        <div class="flex items-center gap-6 px-7 py-4 hover:bg-white/5 cursor-pointer text-slate-500 hover:text-white"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> <span class="opacity-0 group-hover:opacity-100 font-bold text-xs uppercase tracking-widest transition-all">Config</span></div>
     </nav>
+    <div class="mb-10 w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-black text-xs text-white shadow-lg">MP</div>
   </aside>
 
-  <!-- MAIN WORKSPACE -->
-  <main class="ml-20 flex-1 h-screen overflow-y-auto p-12 custom-scroll">
+  <!-- WORKSPACE -->
+  <main class="main-content">
     
-    <!-- HEADER -->
-    <header class="flex justify-between items-end mb-12">
+    <!-- TOPBAR -->
+    <header class="flex justify-between items-center mb-16">
         <div>
-            <h2 class="text-4xl font-[900] tracking-tighter text-racing-blue italic uppercase">Performance Center</h2>
-            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.4em] mt-2">Versión 3.0 • Staging Pro</p>
-        </div>
-        <div class="flex-1 max-w-xl mx-12">
-            <div class="bg-white p-2 rounded-2xl border-2 border-slate-100 flex shadow-sm focus-within:border-racing-blue transition-all">
-                <input id="titulo" type="text" placeholder="Imagine - John Lennon" class="flex-1 px-4 bg-transparent outline-none font-bold text-lg">
-                <button id="analyzeBtn" class="bg-racing-blue text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-racing-red transition-all">Analizar</button>
-            </div>
+            <h2 class="text-5xl font-[950] tracking-tighter italic text-[#060D2E] uppercase font-outfit">Performance Center</h2>
+            <p class="text-slate-400 font-bold text-xs uppercase tracking-[0.5em] mt-2">v10.0 • Staging Active</p>
         </div>
         <div class="flex gap-4">
-            <div id="clock" class="text-right"><p class="text-lg font-black leading-none" id="time">--:--</p><p class="text-[8px] font-black text-slate-400 uppercase tracking-widest" id="date">-- ---</p></div>
+            <div class="text-right">
+                <p id="time" class="text-2xl font-black leading-none">00:00</p>
+                <p id="date" class="text-[10px] font-black text-f1-red uppercase tracking-widest">Sáb 09 May</p>
+            </div>
         </div>
     </header>
 
-    <!-- BENTO GRID DE RESULTADOS -->
-    <div id="resultsWrapper" class="hidden grid grid-cols-12 gap-6 pb-20">
+    <!-- ÁREA DE BÚSQUEDA FLOTANTE -->
+    <div class="max-w-4xl mx-auto mb-16">
+        <div class="bg-white p-2 rounded-[32px] border-2 border-slate-100 flex shadow-2xl focus-within:border-[#060D2E] transition-all">
+            <input id="titulo" type="text" placeholder="¿Qué canción evaluaremos hoy?" class="flex-1 px-8 py-4 bg-transparent outline-none font-bold text-xl placeholder:text-slate-200">
+            <button id="analyzeBtn" class="bg-[#060D2E] text-white px-12 rounded-[24px] font-black text-sm uppercase tracking-widest hover:bg-f1-red transition-all shadow-xl">Analizar</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD BENTO GRID -->
+    <div id="resultsWrapper" class="hidden grid grid-cols-12 gap-8 pb-32">
         
-        <!-- CARD: VEREDICTO & RIESGO -->
-        <div class="col-span-8 glass-card p-10 flex justify-between items-center border-t-8 border-racing-red">
+        <!-- Veredicto Principal -->
+        <div id="statusHero" class="col-span-8 glass-card p-12 border-t-[20px] flex justify-between items-center">
             <div>
-                <span class="px-3 py-1 bg-racing-red/10 text-racing-red rounded-full text-[9px] font-black uppercase tracking-widest italic">Análisis Crítico</span>
-                <h3 id="summaryTitle" class="text-5xl font-black tracking-tighter mt-4 leading-none italic">—</h3>
-                <div class="mt-8 flex gap-8">
-                    <div><p class="text-[9px] font-black text-slate-400 uppercase">Match OA</p><p id="oaLabel" class="text-xl font-black text-racing-blue">--</p></div>
-                    <div class="border-l border-slate-100 pl-8"><p class="text-[9px] font-black text-slate-400 uppercase">Edad Mínima</p><p id="edadSug" class="text-xl font-black">6+</p></div>
+                <span class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-500 mb-6 inline-block italic">Reporte de Idoneidad</span>
+                <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter leading-none italic font-outfit">—</h3>
+                <div class="mt-10 flex gap-12">
+                    <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Match OA</p><p id="oaLabel" class="text-2xl font-black text-[#060D2E]">--</p></div>
+                    <div class="border-l border-slate-100 pl-12"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Sugerencia</p><p id="edadSug" class="text-2xl font-black">8° Básico</p></div>
                 </div>
             </div>
             <div class="text-right">
-                <div class="text-8xl font-black text-racing-blue tracking-tighter" id="riskValue">0%</div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Riesgo Escolar</p>
+                <div class="text-[100px] font-black text-[#060D2E] tracking-tighter leading-none italic" id="riskValue">0%</div>
+                <p class="text-[10px] font-black text-f1-red uppercase tracking-widest mt-2">Riesgo Escolar</p>
             </div>
         </div>
 
-        <!-- CARD: ACCIONES RÁPIDAS -->
-        <div class="col-span-4 flex flex-col gap-6">
-            <button onclick="toggleDrawer()" class="flex-1 glass-card p-6 flex items-center justify-between hover:bg-racing-blue hover:text-white group">
-                <span class="font-black uppercase text-xs tracking-widest italic">Ver Letra Completa</span>
-                <svg class="w-6 h-6 text-racing-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 5l7 7-7 7"></path></svg>
+        <!-- Acciones Rápidas -->
+        <div class="col-span-4 flex flex-col gap-8">
+            <div class="glass-card p-10 bg-[#060D2E] text-white flex-1 relative overflow-hidden group cursor-pointer" onclick="toggleDrawer()">
+                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-all"><svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg></div>
+                <h4 class="text-[10px] font-black uppercase tracking-widest text-f1-red mb-2">Linguistic Engine</h4>
+                <p class="text-2xl font-black italic tracking-tight">Ver Letra<br>Adaptada</p>
+                <div class="mt-4 text-f1-red font-black text-xs group-hover:translate-x-2 transition-all">ABRIR EDITOR →</div>
+            </div>
+            <button id="pdfBtn" class="glass-card p-8 flex items-center justify-between hover:bg-slate-100 transition-all group">
+                <span class="font-black uppercase text-xs tracking-widest italic text-slate-400 group-hover:text-[#060D2E]">Descargar Informe UTP</span>
+                <svg class="w-6 h-6 text-f1-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </button>
-            <a id="ytLink" target="_blank" class="flex-1 glass-card p-6 flex items-center justify-between hover:bg-[#FF0000] hover:text-white group transition-all">
-                <span class="font-black uppercase text-xs tracking-widest italic">YouTube Lyrics</span>
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            </a>
         </div>
 
-        <!-- CARD: PLANIFICACIÓN (DERECHA) -->
-        <div class="col-span-12 lg:col-span-5 glass-card p-10 bg-white">
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-racing-red mb-6">Planificación de Aula</h4>
-            <div class="space-y-6">
-                <div><span class="text-[9px] font-black text-slate-400 uppercase">Actividad Teórica</span><p id="actTeorica" class="text-sm font-bold mt-1">--</p></div>
-                <div><span class="text-[9px] font-black text-slate-400 uppercase">Ejecución Práctica</span><p id="actPractica" class="text-sm font-bold mt-1">--</p></div>
+        <!-- Planificación Detallada -->
+        <div class="col-span-12 glass-card p-12 bg-white">
+            <h4 class="text-[10px] font-black uppercase tracking-widest text-f1-red mb-8">Estrategia de Aula (Sync NotebookLM)</h4>
+            <div class="grid grid-cols-2 gap-16">
+                <div class="space-y-6">
+                    <p id="oaDesc" class="text-sm font-bold text-slate-500 italic leading-relaxed">--</p>
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                        <span class="text-[9px] font-black text-[#060D2E] uppercase block mb-2">Pregunta de Contexto:</span>
+                        <p id="funFact" class="text-lg font-black text-[#060D2E] italic">"..."</p>
+                    </div>
+                </div>
+                <div class="bg-[#060D2E] p-10 rounded-[40px] text-white">
+                    <span class="text-[9px] font-black text-f1-red uppercase block mb-4 italic tracking-widest">Actividad de Ejecución Musical:</span>
+                    <p id="actividad" class="text-2xl font-bold leading-tight italic">--</p>
+                </div>
             </div>
-        </div>
-
-        <!-- CARD: INTELIGENCIA (IZQUIERDA) -->
-        <div class="col-span-12 lg:col-span-7 glass-card p-10 bg-racing-blue text-white relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-8 opacity-10"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg></div>
-            <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">Reflexión y Contexto</h4>
-            <p id="pregContexto" class="text-2xl font-black italic tracking-tighter leading-tight mb-8">"--"</p>
-            <button class="bg-white text-racing-blue px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl">Bajar Guía de Trabajo</button>
         </div>
     </div>
   </main>
 
-  <!-- LYRICS DRAWER -->
+  <!-- LYRICS DRAWER (EL EDITOR) -->
   <aside id="lyricsDrawer">
-    <div class="flex justify-between items-center mb-10">
-        <h3 class="font-black text-sm uppercase tracking-widest italic">Linguistic Engine</h3>
-        <button onclick="toggleDrawer()" class="text-slate-400 hover:text-black font-black text-xs">CERRAR ✕</button>
+    <div class="flex justify-between items-center mb-12">
+        <div><h3 class="font-[900] text-3xl tracking-tighter italic">Linguistic Sync</h3><p class="text-[10px] font-black text-f1-red uppercase mt-1">Comparativa Artística v10</p></div>
+        <button onclick="toggleDrawer()" class="w-12 h-12 rounded-full hover:bg-slate-100 transition-all flex items-center justify-center font-black">✕</button>
     </div>
-    <div class="space-y-8" id="lyricsContent">
-        <!-- Inyección 3 Columnas -->
-    </div>
+    <div id="lyricsContainer" class="space-y-10"></div>
   </aside>
 
   <script>
@@ -135,7 +130,7 @@
 
     async function analizar() {
         const btn = $("analyzeBtn");
-        btn.disabled = true; btn.innerText = "ESCANEO DE ÉLITE...";
+        btn.disabled = true; btn.innerHTML = `<span class="animate-pulse">SINCRONIZANDO MOTOR V10...</span>`;
         try {
             const res = await fetch(`${API_BASE}/analizar`, {
                 method: 'POST',
@@ -148,32 +143,36 @@
         finally { btn.disabled = false; btn.innerText = "Analizar"; }
     }
 
-    function renderDashboard(data) {
+    function renderResult(data) {
         $("resultsWrapper").classList.remove("hidden");
+        const hero = $("statusHero");
+        hero.style.borderColor = data.color === "green" ? "#22c55e" : data.color === "orange" ? "#f97316" : "#ef4444";
+        
         $("riskValue").innerText = data.risk_percent + "%";
         $("summaryTitle").innerText = data.resultado;
-        $("oaLabel").innerText = data.oa;
-        $("actTeorica").innerText = data.actividad_teorica;
-        $("actPractica").innerText = data.actividad_practica;
-        $("pregContexto").innerText = `"${data.pregunta_desafio}"`;
-        $("ytLink").href = data.yt_link;
+        $("oaLabel").innerText = data.info.oa;
+        $("oaDesc").innerText = data.info.oa_desc;
+        $("funFact").innerText = `"${data.info.fact}"`;
+        $("actividad").innerText = "Actividad Sugerida: " + (data.risk_percent > 30 ? "Debate crítico sobre lenguaje y contexto." : "Reconocimiento de timbres y sensaciones melódicas.");
 
-        // Render Letra en el Drawer
-        $("lyricsContent").innerHTML = data.letra_comparada.map(l => `
-            <div class="grid grid-cols-1 gap-2 border-b border-slate-50 pb-4">
-                <p class="text-[10px] text-slate-300 italic leading-none">${l.original}</p>
-                <p class="text-xs font-bold text-slate-800">${l.adapted.replace(/mark/g, 'mark')}</p>
-                <p class="text-[10px] text-blue-500 font-bold opacity-60 uppercase">${l.translated}</p>
+        // Inyectar en el Drawer
+        $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
+            <div class="border-b border-slate-100 pb-6">
+                <p class="text-[10px] text-slate-300 italic mb-2">${l.original}</p>
+                <div class="flex items-center gap-2">
+                    <p class="text-sm font-bold text-slate-900">${l.adapted.replace(/mark/g, 'mark')}</p>
+                    ${l.changed ? '<span class="px-2 py-0.5 bg-yellow-400 text-[8px] font-black rounded uppercase">Métrica OK</span>' : ''}
+                </div>
+                <p class="text-[10px] text-blue-500 font-bold mt-2 uppercase opacity-60">${l.translated}</p>
             </div>
         `).join('');
     }
 
-    function updateTime() {
+    function time() {
         const n = new Date();
         $("time").innerText = n.toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'});
-        $("date").innerText = n.toLocaleDateString('es-CL', {day:'2-digit', month:'short'}).toUpperCase();
     }
-    setInterval(updateTime, 1000); updateTime();
+    setInterval(time, 1000); time();
     $("analyzeBtn").onclick = analizar;
   </script>
 </body>
