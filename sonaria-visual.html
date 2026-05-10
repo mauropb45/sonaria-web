@@ -1,43 +1,214 @@
-import re, html
-
-def analyze_content(lyrics, titulo):
-    text = lyrics.lower()
-    risk = 85 if any(w in text for w in ["fuck", "mierda"]) else 45 if "creep" in text else 12
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SonarIA Pro | Sovereign Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --racing-blue: #060D2E; --f1-red: #E10600; --pearl: #FDFDFF; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--pearl); @apply text-slate-900 overflow-hidden h-screen; }
     
-    curriculum = {
-        "MU07 OA 01": "Reconocer sensaciones y sentimientos al escuchar manifestaciones musicales.",
-        "MU08 OA 01": "Analizar elementos del lenguaje musical y el impacto de la música en la audiencia.",
-        "MU1M OA 04": "Analizar críticamente la relación entre música e identidad juvenil."
-    }
+    /* Layout Animado */
+    .sidebar { @apply bg-[#060D2E] h-screen transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex flex-col z-50 shadow-2xl; width: 280px; }
+    .sidebar.collapsed { width: 85px; }
+    .main-workspace { @apply flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-500 bg-[#F8FAFD]; }
     
-    oa = "MU01 OA 01"
-    if risk > 60: oa = "MU1M OA 04"
-    elif risk > 25: oa = "MU08 OA 01"
+    /* Elementos de Navegación */
+    .nav-item { @apply flex items-center gap-4 px-6 py-4 mx-3 rounded-2xl transition-all cursor-pointer text-slate-400 font-bold text-sm mb-1; }
+    .nav-item.active { @apply bg-white/5 text-white border-l-4 border-[#E10600] shadow-lg; }
+    .nav-item:hover:not(.active) { @apply bg-white/5 text-white; }
+    
+    /* Bento Cards */
+    .view-section { @apply hidden opacity-0 transition-all duration-700 p-8 lg:p-12 max-w-7xl mx-auto w-full; }
+    .view-section.active { @apply block opacity-100 animate-fade-in; }
+    .glass-card { @apply bg-white border border-slate-200 rounded-[40px] shadow-sm hover:shadow-xl transition-all duration-500; }
 
-    return {
-        "resultado": "🟢 Apta" if risk < 25 else "🟠 Mediación" if risk < 60 else "🔴 Adaptación",
-        "color": "green" if risk < 25 else "orange" if risk < 60 else "red",
-        "risk_percent": risk,
-        "oa": oa,
-        "oa_desc": curriculum.get(oa, "Análisis pedagógico general."),
-        "pregunta": f"¿Cómo crees que el ritmo de {titulo} apoya su mensaje emocional?"
+    /* Triple Mirror Sync */
+    .mirror-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-10 p-6 border-b border-slate-50 transition-all items-center rounded-2xl; }
+    .mirror-row:hover { @apply bg-blue-50/50 scale-[1.01]; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    
+    /* Custom Scroll */
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
+    
+    mark { @apply bg-[#FFD700] text-black px-1.5 rounded-md font-extrabold cursor-help; }
+  </style>
+</head>
+<body class="flex">
+
+  <!-- SIDEBAR (SLIDEBAR DINÁMICA) -->
+  <aside id="sidebar" class="sidebar">
+    <div class="p-8 mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-black text-white italic tracking-tighter sidebar-label">Sonar<span class="text-blue-400">IA</span></h1>
+        <button onclick="toggleSidebar()" class="text-slate-500 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <nav class="flex-1 space-y-1">
+        <div onclick="switchView('radar', this)" class="nav-item active"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> <span class="sidebar-label">Radar de Aula</span></div>
+        <div onclick="switchView('pedagogy', this)" class="nav-item"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13"></path></svg> <span class="sidebar-label">Pedagogía & OAs</span></div>
+        <div onclick="switchView('adaptation', this)" class="nav-item"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10"></path></svg> <span class="sidebar-label">Sincro Artística</span></div>
+        <div onclick="switchView('reports', this)" class="nav-item"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> <span class="sidebar-label">Reportes UTP</span></div>
+    </nav>
+
+    <!-- PERFIL COLEGIO -->
+    <div class="p-6 mt-auto">
+        <div class="bg-white/5 p-4 rounded-3xl border border-white/10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center font-black text-white shadow-lg">M</div>
+            <div class="sidebar-label"><p class="text-xs font-bold leading-none text-white">Mauricio P.</p><p class="text-[9px] text-slate-500 font-black uppercase mt-1">Admin School</p></div>
+        </div>
+    </div>
+  </aside>
+
+  <!-- ÁREA DE TRABAJO -->
+  <main class="main-workspace custom-scroll">
+    
+    <!-- TOPBAR -->
+    <header class="bg-white/60 backdrop-blur-md sticky top-0 z-40 px-12 py-6 flex justify-between items-center border-b border-slate-100">
+        <h2 id="viewTitle" class="text-xl font-black uppercase tracking-widest text-[#060D2E] italic">Radar de Aula</h2>
+        <div class="flex gap-4">
+            <button onclick="switchView('setup', null)" class="px-5 py-2 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase shadow-sm">Configurar Logo</button>
+            <button class="px-5 py-2 bg-[#E10600] text-white rounded-xl text-[10px] font-black uppercase shadow-lg shadow-red-900/20 italic">Plan Premium</button>
+        </div>
+    </header>
+
+    <!-- SECCIÓN: RADAR -->
+    <section id="view-radar" class="view-section active">
+        <div class="glass-card p-12 border-b-[16px] border-blue-600 mb-12">
+            <h3 class="text-blue-600 font-black text-[10px] uppercase tracking-[0.3em] mb-8">Escaneo de Impacto Pedagógico</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <input id="titulo" type="text" placeholder="Imagine - John Lennon" class="w-full p-5 bg-slate-50 rounded-[28px] font-bold text-xl border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
+                <button id="analyzeBtn" class="bg-[#060D2E] text-white rounded-[32px] font-black text-lg hover:bg-[#E10600] shadow-2xl transition-all active:scale-95 italic">Evaluar Obra</button>
+            </div>
+        </div>
+
+        <div id="resultsHero" class="hidden space-y-10">
+            <!-- SEMÁFORO DASHBOARD -->
+            <div id="statusHero" class="glass-card p-12 border-t-[24px] flex flex-col md:flex-row justify-between items-center gap-10">
+                <div class="flex-1">
+                    <span id="resPill" class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 mb-6 inline-block italic">Veredicto Oficial</span>
+                    <h2 id="summaryTitle" class="text-6xl font-black tracking-tighter leading-none italic text-[#060D2E]">—</h2>
+                    <p id="oaLabel" class="text-blue-600 font-bold mt-6 text-sm uppercase tracking-widest leading-relaxed"></p>
+                </div>
+                <div class="text-right">
+                    <div class="text-[110px] font-black tracking-tighter italic text-[#060D2E] leading-none" id="riskValue">0%</div>
+                    <p class="text-[10px] font-black text-[#E10600] uppercase tracking-widest mt-2 italic">Riesgo Escolar Proyectado</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: ADAPTACIÓN (SIDE-BY-SIDE) -->
+    <section id="view-adaptation" class="view-section">
+        <div class="glass-card overflow-hidden">
+            <div class="p-8 bg-[#060D2E] text-white flex justify-between items-center">
+                <div>
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.4em] mb-1">Mirror Sync v200.0</h4>
+                    <p class="text-xs text-slate-400 italic font-medium italic">Sincronización Métrica y Rítmica de Grado Ministerial</p>
+                </div>
+                <div class="px-5 py-2 bg-green-500/20 text-green-400 rounded-xl text-[9px] font-black uppercase tracking-widest">Métrica OK</div>
+            </div>
+            <div class="grid grid-cols-3 gap-10 p-6 bg-slate-50 border-b border-slate-100 font-black text-[10px] text-slate-400 uppercase px-12 tracking-[0.2em]">
+                <span>Original</span><span>Versión Docente</span><span>Significado / Traducción</span>
+            </div>
+            <div id="lyricsContainer" class="bg-white max-h-[600px] overflow-y-auto">
+                <!-- Se inyecta aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: PEDAGOGÍA -->
+    <section id="view-pedagogy" class="view-section">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div class="glass-card p-12 bg-white">
+                <h4 class="text-[#E10600] font-black text-[10px] uppercase mb-8 tracking-widest italic italic">Planificación de Aula (NotebookLM)</h4>
+                <div class="space-y-10">
+                    <div><span class="text-[10px] font-black text-slate-400 uppercase block mb-2">OA MINEDUC</span><p id="oaFull" class="text-2xl font-black text-[#060D2E] leading-tight italic"></p></div>
+                    <div><span class="text-[10px] font-black text-slate-400 uppercase block mb-2">Actividad Práctica</span><p id="actividad" class="text-sm font-bold text-slate-600 leading-relaxed italic"></p></div>
+                </div>
+            </div>
+            <div class="glass-card p-12 bg-[#060D2E] text-white flex flex-col justify-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-10 opacity-10"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg></div>
+                <span class="text-[10px] font-black text-slate-500 uppercase block mb-4 tracking-widest italic">Pregunta de Mediación Crítica:</span>
+                <p id="preguntaDesafio" class="text-3xl font-black italic leading-tight text-white italic">"--"</p>
+            </div>
+        </div>
+    </section>
+
+  </main>
+
+  <script>
+    const API_BASE = "https://sonaria-api-test.onrender.com";
+    const $ = id => document.getElementById(id);
+
+    // SISTEMA SPA: CAMBIO DE VISTAS
+    function switchView(viewName, el) {
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+        $(`view-${viewName}`).classList.add('active');
+        $(`viewTitle`).innerText = viewName.toUpperCase();
+        
+        if (el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
     }
 
-def adapt_lyrics_artistic(lyrics):
-    lines = lyrics.split('\n')
-    replaces = {"fuck": "oh", "weirdo": "special", "creep": "strange"}
-    comparativa = []
-    for line in lines:
-        if not line.strip(): continue
-        adapted = line
-        changed = False
-        for bad, good in replaces.items():
-            if re.search(rf"\b{bad}\b", line, flags=re.IGNORECASE):
-                adapted = re.sub(rf"\b{bad}\b", good, adapted, flags=re.IGNORECASE)
-                changed = True
-        comparativa.append({"original": line.strip(), "adapted": adapted.strip(), "changed": changed})
-    return comparativa
+    function toggleSidebar() {
+        const sb = $("sidebar");
+        const labels = document.querySelectorAll(".sidebar-label");
+        sb.classList.toggle("collapsed");
+        labels.forEach(l => l.classList.toggle("hidden"));
+    }
 
-def fetch_lyrics_if_missing(t, a):
-    if "creep" in t.lower(): return "I'm a creep\nI'm a weirdo\nWhat the hell am I doing here?"
-    return "Imagine there's no heaven\nIt's easy if you try..."
+    async function analizar() {
+        const btn = $("analyzeBtn");
+        btn.disabled = true; btn.innerHTML = `<span class="animate-pulse italic">EJECUTANDO ESCANEO MINISTERIAL...</span>`;
+        
+        try {
+            const res = await fetch(`${API_BASE}/api/analizar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
+                body: JSON.stringify({ titulo: $("titulo").value, artista: "" })
+            });
+            const raw = await res.json();
+            const data = raw.data;
+
+            // Render Veredicto
+            $("resultsHero").classList.remove("hidden");
+            $("statusHero").style.borderColor = data.color === "green" ? "#22c55e" : data.color === "orange" ? "#f97316" : "#ef4444";
+            $("riskValue").innerText = data.risk_percent + "%";
+            $("summaryTitle").innerText = data.resultado;
+            $("oaLabel").innerText = data.oa;
+            
+            // Render Pedagogía
+            $("oaFull").innerText = data.oa + ": " + data.oa_desc;
+            $("actividad").innerText = "Trabajo práctico de audición dirigida y análisis lírico adaptado.";
+            $("preguntaDesafio").innerText = `"${data.pregunta}"`;
+
+            // Render Comparativa Triple
+            $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
+                <div class="mirror-row group">
+                    <div class="text-[11px] text-slate-300 italic group-hover:text-blue-400 transition-all">${l.original}</div>
+                    <div class="text-[12px] font-black ${l.changed ? 'text-[#E10600]' : 'text-slate-800'} italic">
+                        ${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}
+                    </div>
+                    <div class="text-[10px] text-slate-400 font-bold opacity-60 uppercase italic">Referencia Pedagógica</div>
+                </div>
+            `).join('');
+
+            // Salto automático a la vista de resultados completa
+            setTimeout(() => switchView('adaptation', document.querySelectorAll('.nav-item')[2]), 1000);
+
+        } catch(e) { alert("Error de Sincronización"); }
+        finally { btn.disabled = false; btn.innerText = "Analizar Obra"; }
+    }
+
+    $("analyzeBtn").onclick = analizar;
+  </script>
+</body>
+</html>
