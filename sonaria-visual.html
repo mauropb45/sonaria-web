@@ -3,207 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA Pro | Aura Workspace v150.0</title>
+    <title>SonarIA Pro | Workspace Docente</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Outfit:wght@500;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pearl: #fcfcfd;
-            --satin-bg: #f3f5f9;
-            --accent: #4f46e5; /* Color personalizable */
-            --glass-white: rgba(255, 255, 255, 0.6);
+            --bg: #0c0e14;
+            --card: #161a23;
+            --accent: #3b82f6;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--satin-bg);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
-            color: #1e293b;
+            background-color: var(--bg);
+            color: #e2e8f0;
             height: 100vh;
+            display: flex;
             overflow: hidden;
-            transition: all 0.5s ease;
         }
 
-        .pearl-card {
-            background: var(--glass-white);
-            backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.03);
-            @apply rounded-[48px] transition-all duration-700;
+        /* Sidebar Pro */
+        .sidebar {
+            @apply h-screen bg-[#0f1218] border-r border-white/5 transition-all duration-300 flex flex-col z-50;
+            width: 260px;
         }
-
-        .pearl-card:hover {
-            @apply shadow-2xl -translate-y-1;
-            background: rgba(255, 255, 255, 0.9);
+        .sidebar.collapsed { width: 80px; }
+        
+        .nav-item {
+            @apply flex items-center gap-4 px-6 py-4 transition-all cursor-pointer text-slate-500 hover:text-white;
         }
+        .nav-item.active { @apply bg-blue-600/10 text-blue-500 border-r-4 border-blue-600; }
 
-        /* Floating Dock */
-        .dock {
-            @apply fixed left-6 top-1/2 -translate-y-1/2 w-16 hover:w-64 bg-white/40 backdrop-blur-3xl border border-white/60 rounded-[32px] p-2 transition-all duration-500 flex flex-col items-center gap-4 z-50 overflow-hidden shadow-2xl;
+        /* Workspace */
+        .workspace { @apply flex-1 flex flex-col overflow-y-auto p-12 custom-scroll relative; }
+
+        /* Bento Cards */
+        .bento-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            @apply rounded-[32px] p-8 shadow-2xl transition-all duration-500;
         }
+        .bento-card:hover { border-color: rgba(59, 130, 246, 0.3); }
 
-        .dock-item {
-            @apply w-12 h-12 flex items-center justify-center rounded-2xl transition-all duration-300 text-slate-400 hover:bg-white hover:text-indigo-600 hover:shadow-lg cursor-pointer shrink-0;
-        }
-
-        .dock-label {
-            @apply opacity-0 pointer-events-none transition-opacity duration-300 text-[10px] font-black uppercase tracking-widest text-slate-600 absolute left-20 whitespace-nowrap;
-        }
-        .dock:hover .dock-label { @apply opacity-100; }
-
-        /* Linguistic Mirror Aura */
+        /* Mirror Table */
         .mirror-row {
-            display: grid; grid-template-columns: 1fr 1fr 1.2fr;
-            @apply gap-12 py-6 border-b border-slate-100/50 items-start transition-all;
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            @apply gap-8 py-5 border-b border-white/5 items-center transition-all px-4;
         }
-        .mirror-row .original { @apply opacity-20 transition-opacity duration-500 italic; }
-        .mirror-row:hover .original { @apply opacity-100; }
+        .mirror-row:hover { @apply bg-white/[0.02] rounded-2xl; }
+        .original { @apply text-slate-600 font-medium italic; }
+        .adapted { @apply text-white font-bold text-base; }
+        
+        /* Tooltip de Métrica */
+        .metric-tooltip {
+            @apply absolute bg-slate-900 border border-blue-500/30 p-4 rounded-2xl shadow-2xl z-50 invisible opacity-0 transition-all text-[10px] w-48;
+        }
+        .has-tooltip:hover .metric-tooltip { @apply visible opacity-100 -translate-y-2; }
 
-        /* Personalized Accent */
-        .theme-pebble {
-            @apply w-6 h-6 rounded-full cursor-pointer border-2 border-white shadow-sm transition-transform hover:scale-125;
-        }
-
-        .shimmer-text {
-            background: linear-gradient(90deg, #94a3b8 25%, #4f46e5 50%, #94a3b8 75%);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shimmer 3s linear infinite;
-        }
-        @keyframes shimmer { to { background-position: 200% center; } }
+        .status-pill { @apply px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest; }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
-<body class="p-12 pl-32">
+<body class="antialiased">
 
-    <!-- FLOATING DOCK -->
-    <aside class="dock group">
-        <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 shrink-0">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+        <div class="p-8 mb-8">
+            <h1 class="text-2xl font-black tracking-tighter italic text-white">Sonar<span class="text-blue-600">IA</span></h1>
         </div>
-        <div class="flex flex-col gap-3 w-full">
-            <div class="dock-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span class="dock-label">Radar</span></div>
-            <div class="dock-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg><span class="dock-label">OAs & Planes</span></div>
-            <div class="dock-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v12a2 2 0 01-2 2z"></path></svg><span class="dock-label">Reportes UTP</span></div>
-            <div class="dock-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span class="dock-label">Configuración Colegio</span></div>
-        </div>
-        
-        <!-- PERSONALIZADOR DE COLOR -->
-        <div class="mt-auto flex flex-col gap-3 mb-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <div class="theme-pebble bg-indigo-600" onclick="setTheme('#4f46e5')"></div>
-            <div class="theme-pebble bg-emerald-500" onclick="setTheme('#10b981')"></div>
-            <div class="theme-pebble bg-rose-500" onclick="setTheme('#f43f5e')"></div>
+
+        <nav class="flex-1">
+            <div class="nav-item active"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> <span>Radar de Aula</span></div>
+            <div class="nav-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253"></path></svg> <span>OAs & Planes</span></div>
+            <div class="nav-item"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2a4 4 0 10-8 0v2"></path></svg> <span>Mi Colegio</span></div>
+        </nav>
+
+        <div class="p-8 mt-auto">
+            <div class="flex items-center gap-3 bg-white/5 p-4 rounded-3xl border border-white/5">
+                <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-black text-xs">M</div>
+                <div class="flex flex-col"><span class="text-[10px] font-bold">Mauricio P.</span><span class="text-[8px] text-slate-500 font-black uppercase">Plan Pro</span></div>
+            </div>
         </div>
     </aside>
 
-    <main class="h-full flex flex-col">
+    <!-- WORKSPACE -->
+    <main class="workspace">
         
-        <!-- HEADER ZEN -->
-        <header class="flex justify-between items-end mb-16 px-6">
-            <div class="space-y-1">
-                <h2 class="text-4xl font-[900] tracking-tighter italic text-slate-900">Aura Workspace</h2>
-                <p class="text-indigo-500 font-bold text-[10px] uppercase tracking-[0.5em]">Lógica Curricular v150.0</p>
+        <!-- HEADER DE BÚSQUEDA -->
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h2 class="text-3xl font-black tracking-tight italic">Radar Docente</h2>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-[0.3em] mt-1">Staging v2.0 stable</p>
             </div>
             
-            <div class="flex-1 max-w-2xl mx-16">
-                <div class="bg-white/60 p-1 rounded-[32px] border border-white flex shadow-sm focus-within:shadow-xl focus-within:bg-white transition-all duration-500">
-                    <input type="text" placeholder="¿Qué analizaremos hoy?" class="flex-1 bg-transparent px-8 py-4 outline-none font-bold text-lg text-slate-800 placeholder:text-slate-300">
-                    <button class="bg-indigo-600 text-white px-10 rounded-[24px] font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-100 hover:bg-indigo-500 transition-all italic">Analizar</button>
+            <div class="flex-1 max-w-xl mx-12">
+                <div class="bg-[#161a23] p-1.5 rounded-full border border-white/5 flex shadow-2xl focus-within:border-blue-500/50 transition-all">
+                    <input type="text" placeholder="Imagine - John Lennon" class="bg-transparent flex-1 px-6 font-bold text-slate-200 outline-none">
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest transition-all italic">Analizar</button>
                 </div>
             </div>
 
-            <div class="flex items-center gap-6">
-                <div class="w-14 h-14 rounded-[24px] pearl-card flex items-center justify-center font-black text-indigo-600">MP</div>
-            </div>
+            <button class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/5 text-slate-400 hover:text-white transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            </button>
         </header>
 
-        <!-- BENTO AURA GRID -->
-        <div class="flex-1 grid grid-cols-12 grid-rows-6 gap-8 pb-10">
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-12 gap-8">
             
-            <!-- CARD: SCORE (AURA DIAL) -->
-            <div class="pearl-card col-span-4 row-span-3 flex flex-col justify-between p-12">
-                <div class="flex justify-between items-start">
-                    <div class="space-y-4">
-                        <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[9px] font-black uppercase tracking-widest italic">Análisis Seguro</span>
-                        <h3 class="text-4xl font-black tracking-tight leading-none text-slate-800">Apta con<br>Mediación</h3>
+            <!-- Veredicto Principal -->
+            <div class="col-span-8 bento-card border-t-8 border-orange-500">
+                <div class="flex justify-between items-start mb-12">
+                    <div>
+                        <span class="status-pill bg-orange-500/10 text-orange-500 italic">Mediación Requerida</span>
+                        <h3 class="text-6xl font-black tracking-tighter mt-4 italic font-outfit">Apta con<br>Acompañamiento</h3>
                     </div>
                     <div class="text-right">
-                        <div class="text-6xl font-black font-outfit text-indigo-600 italic tracking-tighter shimmer-text">12%</div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Riesgo Escolar</p>
+                        <div class="text-7xl font-black text-white italic tracking-tighter">12%</div>
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Riesgo Escolar</p>
                     </div>
                 </div>
-                <div class="flex gap-8 border-t border-slate-100 pt-8 mt-4">
-                    <div class="flex-1"><p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Vía Aula</p><p class="text-xl font-bold text-slate-700">8° Básico</p></div>
-                    <div class="flex-1"><p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Estado</p><p class="text-xl font-bold text-emerald-500">Aprobado</p></div>
-                </div>
-            </div>
-
-            <!-- CARD: LINGUISTIC MIRROR (FOCUS AREA) -->
-            <div class="pearl-card col-span-8 row-span-6 !p-0 flex flex-col overflow-hidden">
-                <div class="p-8 border-b border-slate-100/50 flex justify-between items-center bg-white/20">
-                    <div class="flex flex-col">
-                        <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 italic">Linguistic Mirror v150</h4>
-                        <p class="text-[10px] text-indigo-400 font-bold mt-1">Métrica Sincronizada Activa</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <button class="px-4 py-2 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-xl italic">Descargar Pack PDF</button>
-                    </div>
-                </div>
-                <div class="flex-1 overflow-y-auto px-10 py-4 custom-scroll space-y-2">
-                    <div class="mirror-row group cursor-default">
-                        <p class="original text-sm">I'm a creep</p>
-                        <p class="text-slate-800 font-bold text-base tracking-tight font-outfit">I feel out of place</p>
-                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity italic">Toolkit: Identidad</p>
-                    </div>
-                    <div class="mirror-row group cursor-default">
-                        <p class="original text-sm">I'm a weirdo</p>
-                        <p class="text-indigo-600 font-[900] text-base tracking-tight italic font-outfit underline decoration-indigo-200 decoration-4 underline-offset-8">I'm a special</p>
-                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity italic">Toolkit: Métrica OK</p>
-                    </div>
-                    <div class="mirror-row group cursor-default">
-                        <p class="original text-sm">What the hell am I doing here?</p>
-                        <p class="text-slate-800 font-bold text-base tracking-tight font-outfit">What the world am I doing here?</p>
-                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity italic">Toolkit: Lenguaje</p>
-                    </div>
+                <div class="flex gap-10 border-t border-white/5 pt-8">
+                    <div class="flex-1"><p class="text-[9px] font-black text-slate-500 uppercase mb-1 italic">Sugerencia</p><p class="text-xl font-bold">8° Básico</p></div>
+                    <div class="flex-1"><p class="text-[9px] font-black text-slate-500 uppercase mb-1 italic">Objetivo</p><p class="text-xl font-bold text-blue-500 italic">MU08 OA 01</p></div>
+                    <div class="flex-1"><p class="text-[9px] font-black text-slate-500 uppercase mb-1 italic">Estado</p><p class="text-xl font-bold text-emerald-500">Auditado</p></div>
                 </div>
             </div>
 
-            <!-- CARD: NOTEBOOKLM INTELLIGENCE -->
-            <div class="pearl-card col-span-4 row-span-3 bg-white p-12 border-none flex flex-col justify-center gap-6">
-                <div class="flex items-center gap-4 text-indigo-600">
-                    <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center font-black italic">OA</div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.4em]">Propuesta de Aula</span>
+            <!-- Columna Derecha: Inteligencia -->
+            <div class="col-span-4 space-y-8">
+                <div class="bento-card bg-blue-600 border-none text-white relative overflow-hidden h-1/2">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    <h4 class="text-[10px] font-black uppercase tracking-widest opacity-60 italic mb-4">Estrategia Docente</h4>
+                    <p class="text-lg font-bold italic leading-tight">"Enfoca la clase en la construcción de la identidad juvenil frente a la presión social."</p>
                 </div>
-                <p class="text-xl font-bold italic leading-tight text-slate-800">"Usa esta obra para trabajar la MU08 OA 01 enfocada en la recepción de audiencias juveniles y la construcción de la rima asonante."</p>
-                <div class="mt-4 p-6 bg-slate-50 rounded-[32px] border border-slate-100">
-                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Dato Artístico:</span>
-                    <p class="text-xs font-bold text-slate-500 italic leading-relaxed">Thom Yorke escribió esto en Exeter; la canción fue prohibida en la radio de UK en el 92 por ser "demasiado depresiva".</p>
+                <div class="bento-card h-[calc(50%-2rem)] flex flex-col justify-center gap-4">
+                    <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Dato Artístico</h4>
+                    <p class="text-sm font-medium text-slate-300 italic leading-relaxed">"Radiohead escribió esta obra como una respuesta a la alienación emocional en los años 90."</p>
                 </div>
             </div>
 
+            <!-- Tabla de Triple Espejo (Full Width) -->
+            <div class="col-span-12 bento-card !p-0 overflow-hidden">
+                <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic">Linguistic Mirror (Original | Adaptada | Sentido)</h4>
+                    <button class="bg-blue-600 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl italic">Bajar Informe PDF</button>
+                </div>
+                <div class="max-h-[500px] overflow-y-auto">
+                    <div class="mirror-row group">
+                        <p class="original text-xs">I'm a creep</p>
+                        <p class="text-white text-sm font-bold">I feel out of place</p>
+                        <p class="text-blue-500 font-black text-[9px] uppercase italic opacity-40">Contexto: Desajuste social</p>
+                    </div>
+                    <div class="mirror-row group">
+                        <p class="original text-xs">I'm a weirdo</p>
+                        <div class="relative has-tooltip">
+                            <p class="text-blue-400 text-sm font-black italic underline decoration-blue-500/30 underline-offset-8 cursor-help">I'm a special</p>
+                            <div class="metric-tooltip">
+                                <p class="font-black text-blue-400 mb-1">MÉTRICA OK</p>
+                                <p class="text-slate-300">Sincronización de 2 sílabas con rima asonante preservada para canto.</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-500 font-black text-[9px] uppercase italic opacity-40">Contexto: Diferencia</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
-
-    <script>
-        function setTheme(color) {
-            document.documentElement.style.setProperty('--accent', color);
-            // Efecto visual de ripple al cambiar color
-            document.body.style.backgroundColor = color + '05';
-            setTimeout(() => document.body.style.backgroundColor = '#f3f5f9', 300);
-        }
-
-        // Staggered Entrance
-        window.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.pearl-card');
-            cards.forEach((card, i) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * i);
-            });
-        });
-    </script>
 </body>
 </html>
