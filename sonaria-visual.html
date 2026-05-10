@@ -3,234 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA Pro | Neural Workspace v50.0</title>
+    <title>SonarIA Pro | Singularity Workspace v100.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Outfit:wght@300;500;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #05070a;
-            --card-bg: rgba(17, 24, 39, 0.7);
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
+            --obsidian: #080a0f;
+            --card-glass: rgba(15, 18, 25, 0.8);
+            --electric-blue: #6366f1;
+            --mint-green: #10b981;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--obsidian);
             background-image: 
-                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
-            color: #f3f4f6;
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            color: #e2e8f0;
             height: 100vh;
             overflow: hidden;
         }
 
-        .glass {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        h1, h2, .font-outfit { font-family: 'Outfit', sans-serif; }
+
+        .glass-panel {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .sidebar-icon {
-            @apply w-12 h-12 flex items-center justify-center rounded-2xl transition-all duration-300 text-slate-500 hover:bg-blue-600/20 hover:text-blue-400 cursor-pointer;
-        }
-
-        .sidebar-icon.active {
-            @apply bg-blue-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.4)];
-        }
-
-        /* Bento Grid Layout */
-        .bento-grid {
+        /* Bento Grid 2.0 */
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
             gap: 1.5rem;
-            height: calc(100vh - 180px);
+            height: calc(100vh - 160px);
         }
 
-        .bento-item {
-            @apply glass rounded-[32px] p-8 transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_0_40px_-15px_rgba(59,130,246,0.3)];
+        .bento-card {
+            @apply glass-panel rounded-[40px] p-8 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)];
         }
 
-        /* Linguistic Mirror */
+        .bento-card:hover {
+            @apply transform scale-[1.01] -translate-y-1;
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Circular Risk Dial */
+        .dial-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+
+        .dial-svg { transform: rotate(-90deg); }
+        .dial-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 12; }
+        .dial-progress { 
+            fill: none; stroke: var(--electric-blue); stroke-width: 12; 
+            stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 320;
+            transition: stroke-dashoffset 2s ease-in-out;
+            filter: drop-shadow(0 0 8px var(--electric-blue));
+        }
+
+        /* Mirror Sync */
         .mirror-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1.2fr;
-            @apply gap-8 py-4 border-b border-white/5 transition-all duration-300;
+            display: grid; grid-template-columns: 1fr 1fr 1.2fr;
+            @apply gap-10 py-5 border-b border-white/5 items-start transition-all;
         }
-        .mirror-row:hover {
-            @apply bg-white/5 px-4 rounded-xl -mx-4;
+        .mirror-row:hover { @apply bg-white/[0.03] px-6 -mx-6 rounded-2xl; }
+
+        /* Custom UI */
+        .command-strip { @apply w-20 bg-black/40 border-r border-white/5 flex flex-col items-center py-8 gap-6 backdrop-blur-3xl; }
+        .strip-item { @apply w-12 h-12 flex items-center justify-center rounded-[18px] transition-all duration-300 text-slate-500 hover:text-white cursor-pointer; }
+        .strip-item.active { @apply bg-indigo-600 text-white shadow-lg shadow-indigo-500/40 scale-110; }
+
+        .search-bar {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            @apply px-8 py-4 rounded-full w-full max-w-xl font-medium text-lg outline-none focus:border-indigo-500/50 focus:bg-white/5 transition-all;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.2); border-radius: 10px; }
-
-        .glow-text {
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        .btn-singularity {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            @apply px-10 py-4 rounded-full font-black text-sm uppercase tracking-[0.2em] shadow-xl hover:shadow-indigo-500/20 active:scale-95 transition-all;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        /* Animations */
+        @keyframes drift {
+            from { background-position: 0% 50%; }
+            to { background-position: 100% 50%; }
         }
-        .animate-float { animation: float 6s ease-in-out infinite; }
+        .bg-animate { background-size: 200% 200%; animation: drift 15s linear infinite alternate; }
     </style>
 </head>
 <body class="flex">
 
-    <!-- SIDEBAR ESTILO COMMAND CENTER -->
-    <aside class="w-24 border-r border-white/5 flex flex-col items-center py-10 gap-8 glass">
-        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+    <!-- COMMAND STRIP (SIDEBAR) -->
+    <nav class="command-strip">
+        <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="3" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
         </div>
-        <nav class="flex flex-col gap-4">
-            <div class="sidebar-icon active"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-            <div class="sidebar-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>
-            <div class="sidebar-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg></div>
-            <div class="sidebar-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
-        </nav>
-        <div class="mt-auto w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10">
-            <span class="text-[10px] font-black">MP</span>
-        </div>
-    </aside>
+        <div class="strip-item active"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+        <div class="strip-item"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V7a2 2 0 01-2 2h-2"></path></svg></div>
+        <div class="strip-item"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg></div>
+        <div class="mt-auto strip-item text-slate-700 hover:text-red-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg></div>
+    </nav>
 
-    <!-- ÁREA PRINCIPAL -->
+    <!-- MAIN WORKSPACE -->
     <main class="flex-1 flex flex-col p-12 overflow-hidden">
         
-        <!-- HEADER DINÁMICO -->
+        <!-- TOP NAVIGATION -->
         <header class="flex justify-between items-center mb-12">
-            <div>
-                <h2 class="text-4xl font-[900] tracking-tighter italic glow-text">Neural Workspace</h2>
-                <p class="text-blue-500 font-bold text-xs uppercase tracking-[0.4em] mt-2">Sincronización Curricular Staging v50.0</p>
+            <div class="flex items-center gap-12">
+                <div>
+                    <h2 class="text-3xl font-black italic tracking-tighter text-white opacity-90">Singularity Workspace</h2>
+                    <p class="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-500">Staging Active v100.0</p>
+                </div>
+                <input type="text" placeholder="Imagine - John Lennon" class="search-bar">
+                <button class="btn-singularity">Analizar</button>
             </div>
             
-            <!-- INPUT PREMIUM -->
-            <div class="flex-1 max-w-2xl mx-20">
-                <div class="glass flex items-center p-2 rounded-[24px] border border-white/10 shadow-2xl focus-within:border-blue-500/50 transition-all">
-                    <input type="text" placeholder="Imagine - John Lennon" class="bg-transparent flex-1 px-6 font-bold text-lg outline-none placeholder:text-slate-700">
-                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-2xl font-black text-sm transition-all uppercase tracking-tighter italic">Analizar</button>
+            <div class="flex items-center gap-6">
+                <div class="text-right hidden xl:block">
+                    <p class="text-xs font-black text-white italic">Mauricio Pinto</p>
+                    <p class="text-[9px] font-black uppercase text-indigo-400">Administrador Pro</p>
                 </div>
-            </div>
-
-            <div class="flex gap-4">
-                <div class="w-12 h-12 rounded-2xl glass flex items-center justify-center text-slate-400 hover:text-white transition-all cursor-pointer border border-white/5">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                </div>
+                <div class="w-12 h-12 rounded-2xl glass-panel flex items-center justify-center font-black text-sm">MP</div>
             </div>
         </header>
 
-        <!-- BENTO GRID SYSTEM -->
-        <div class="bento-grid">
+        <!-- BENTO SINGULARITY GRID -->
+        <div class="main-grid">
             
-            <!-- TARJETA 1: SCORE DE RIESGO (HERO) -->
-            <div class="bento-item col-span-2 row-span-2 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
-                <div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 italic">Seguridad Escolar</span>
-                    <h3 class="text-4xl font-black mt-2">Apta con Mediación</h3>
-                </div>
-                <div class="flex items-end justify-between">
+            <!-- CARD 1: Veredicto Visual -->
+            <div class="bento-card col-span-3 row-span-3 flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-[100px]"></div>
+                
+                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-7xl font-[950] tracking-tighter italic glow-text">12%</p>
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Riesgo Detectado</p>
+                        <span class="px-4 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400">Idoneidad Pedagógica</span>
+                        <h3 class="text-5xl font-black mt-6 tracking-tighter">Apta con <span class="text-indigo-400">Mediación</span></h3>
                     </div>
-                    <div class="text-right">
-                        <p class="text-sm font-bold text-slate-400 italic">Sugerencia: 8° Básico</p>
-                        <div class="flex gap-1 mt-2">
-                            <div class="w-8 h-1 bg-green-500 rounded-full"></div>
-                            <div class="w-8 h-1 bg-green-500 rounded-full"></div>
-                            <div class="w-8 h-1 bg-slate-700 rounded-full"></div>
+                    <div class="dial-container">
+                        <svg class="dial-svg" width="140" height="140">
+                            <circle class="dial-bg" cx="70" cy="70" r="60"></circle>
+                            <circle id="riskDial" class="dial-progress" cx="70" cy="70" r="60"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-4xl font-black font-outfit">12%</span>
+                            <span class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Riesgo</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- TARJETA 2: INTELIGENCIA ARTÍSTICA (CONTEXTO) -->
-            <div class="bento-item col-span-2 row-span-1 bg-gradient-to-br from-blue-600 to-indigo-700 border-none shadow-2xl shadow-blue-900/20">
-                <h4 class="text-[10px] font-black uppercase tracking-widest opacity-60">Contexto de la Obra</h4>
-                <p class="text-xl font-bold italic mt-4 leading-tight">Radiohead (1992). "Creep" es un estudio profundo sobre la otredad y la vulnerabilidad social en la juventud.</p>
-            </div>
-
-            <!-- TARJETA 3: EXPORTACIÓN RÁPIDA -->
-            <div class="bento-item col-span-1 row-span-1 flex flex-col items-center justify-center text-center gap-4">
-                <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-blue-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <div class="flex gap-12 border-t border-white/5 pt-8">
+                    <div><p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Sugerencia</p><p class="text-xl font-bold">8° Básico</p></div>
+                    <div><p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Vía Aula</p><p class="text-xl font-bold text-indigo-400">Híbrida</p></div>
+                    <div><p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Estado</p><p class="text-xl font-bold text-mint-green">Verificado</p></div>
                 </div>
-                <p class="text-[10px] font-black uppercase tracking-widest">Informe UTP</p>
             </div>
 
-            <!-- TARJETA 4: PANEL ADMIN (LOGO) -->
-            <div class="bento-item col-span-1 row-span-1 flex flex-col items-center justify-center text-center border-dashed border-slate-700 group cursor-pointer">
-                <div class="w-12 h-12 rounded-full border-2 border-slate-800 flex items-center justify-center text-slate-600 group-hover:border-blue-500 group-hover:text-blue-500 transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <!-- CARD 2: NotebookLM Deep Insight -->
+            <div class="bento-card col-span-3 row-span-2 bg-gradient-to-br from-indigo-600/20 to-transparent border-indigo-500/20 flex flex-col justify-center">
+                <div class="flex items-center gap-4 mb-6 text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em]">Insight Pedagógico</span>
                 </div>
-                <p class="text-[10px] font-black uppercase tracking-widest mt-4">Subir Logo</p>
+                <p class="text-2xl font-bold italic leading-tight text-white/90">"Esta obra permite trabajar la MU08 OA 01 enfocada en la recepción de audiencias juveniles y la construcción de identidad."</p>
             </div>
 
-            <!-- TARJETA 5: LINGUISTIC MIRROR (EL TRIPLE ESPEJO) -->
-            <div class="bento-item col-span-3 row-span-2 !p-0 flex flex-col overflow-hidden">
-                <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic">Linguistic Mirror (Original | Adaptada | Sentido)</h4>
-                    <span class="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-[8px] font-black uppercase">Métrica Sincronizada</span>
+            <!-- CARD 3: Linguistic Mirror (Triple Espejo) -->
+            <div class="bento-card col-span-4 row-span-3 !p-0 flex flex-col overflow-hidden">
+                <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+                    <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic font-outfit">Linguistic Mirror v100</h4>
+                    <button class="text-[9px] font-black uppercase text-indigo-400 border-b border-indigo-400/30">Expandir Vista</button>
                 </div>
-                <div class="flex-1 overflow-y-auto px-8 py-4 custom-scroll">
+                <div class="flex-1 overflow-y-auto px-8 py-2 custom-scroll">
                     <div class="mirror-row">
                         <p class="text-slate-600 text-xs italic">I'm a creep</p>
-                        <p class="text-white text-sm font-bold tracking-tight">I feel out of place</p>
-                        <p class="text-blue-400 font-black text-[9px] uppercase tracking-tighter opacity-50 italic">Foco: Identidad</p>
+                        <p class="text-white text-sm font-bold tracking-tight font-outfit">I feel out of place</p>
+                        <p class="text-indigo-400 font-black text-[9px] uppercase tracking-tighter opacity-40">Identidad</p>
                     </div>
                     <div class="mirror-row">
                         <p class="text-slate-600 text-xs italic">I'm a weirdo</p>
-                        <p class="text-blue-500 text-sm font-black tracking-tight italic">I'm a special</p>
-                        <p class="text-blue-400 font-black text-[9px] uppercase tracking-tighter opacity-50 italic">Foco: Rima Original</p>
+                        <p class="text-indigo-500 text-sm font-black tracking-tight italic font-outfit underline decoration-indigo-500/30 underline-offset-4">I'm a special</p>
+                        <p class="text-indigo-400 font-black text-[9px] uppercase tracking-tighter opacity-40">Métrica OK</p>
                     </div>
                     <div class="mirror-row">
                         <p class="text-slate-600 text-xs italic">What the hell am I doing here?</p>
-                        <p class="text-white text-sm font-bold tracking-tight">What the world am I doing here?</p>
-                        <p class="text-blue-400 font-black text-[9px] uppercase tracking-tighter opacity-50 italic">Foco: Lenguaje</p>
+                        <p class="text-white text-sm font-bold tracking-tight font-outfit">What the world am I doing here?</p>
+                        <p class="text-indigo-400 font-black text-[9px] uppercase tracking-tighter opacity-40">Contexto</p>
                     </div>
                 </div>
             </div>
 
-            <!-- TARJETA 6: OA MINEDUC -->
-            <div class="bento-item col-span-1 row-span-2 bg-slate-900/50 flex flex-col justify-center gap-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-600/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
-                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-blue-600 font-black text-xl italic shadow-lg">OA</div>
-                <div>
-                    <p class="text-2xl font-black text-white italic leading-tight">MU08 OA 01</p>
-                    <p class="text-[9px] font-bold text-slate-500 mt-2 leading-relaxed uppercase tracking-tighter">Analizar elementos del lenguaje musical y su impacto en la audiencia.</p>
+            <!-- CARD 4: Export Card -->
+            <div class="bento-card col-span-2 row-span-1 flex items-center justify-between group cursor-pointer hover:bg-white/5 transition-all">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 bg-indigo-600/20 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Informe UTP</p>
+                        <p class="text-xs font-bold">Descargar Pack PDF</p>
+                    </div>
                 </div>
+                <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            </div>
+
+            <!-- CARD 5: Perfil Institucional -->
+            <div class="bento-card col-span-2 row-span-1 flex items-center gap-6 border-dashed border-slate-800 hover:bg-white/5 cursor-pointer group">
+                <div class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center text-slate-600 group-hover:border-indigo-500 group-hover:text-indigo-500 transition-all font-bold">
+                    +
+                </div>
+                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Vincular Logotipo Colegio</p>
             </div>
 
         </div>
 
-        <!-- FOOTER INFO -->
-        <footer class="mt-8 flex justify-between items-center text-[10px] font-black text-slate-600 uppercase tracking-widest">
-            <p>SonarIA Enterprise Suite • Chile 2024</p>
-            <div class="flex gap-6">
-                <span class="text-blue-500">Documentación</span>
-                <span>Soporte Premium</span>
+        <footer class="mt-auto pt-8 flex justify-between items-center text-[9px] font-black text-slate-600 uppercase tracking-[0.5em] italic">
+            <p>SonarIA Enterprise • Chile 2024</p>
+            <div class="flex gap-10">
+                <span class="text-indigo-500">Documentación de Ingeniería</span>
+                <span>Terminos & Privacidad</span>
             </div>
         </footer>
     </main>
 
-    <!-- EFECTO WOW DE ANIMACIÓN AL CARGAR -->
     <script>
+        // Animación dinámica del Dial de Riesgo
         window.addEventListener('DOMContentLoaded', () => {
-            const items = document.querySelectorAll('.bento-item');
-            items.forEach((item, index) => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateY(20px)';
+            const dial = document.getElementById('riskDial');
+            const targetScore = 12; // Ejemplo del 12%
+            const offset = 400 - (targetScore * 4);
+            setTimeout(() => {
+                dial.style.strokeDashoffset = offset;
+            }, 500);
+
+            // Staggered Reveal Animation
+            const cards = document.querySelectorAll('.bento-card');
+            cards.forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
                 setTimeout(() => {
-                    item.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
-        });
-    </script>
-</body>
-</html>
+                    card.style.transition = 'all 1s cubic-bezier(0.23, 1, 0.32, 1)';
+                    card.style
