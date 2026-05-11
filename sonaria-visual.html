@@ -2,155 +2,209 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA Pro | Desktop Suite</title>
+  <title>SonarIA Pro | Sovereign Workspace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-black text-slate-300; overflow: hidden; }
-    .sidebar { @apply w-64 bg-black flex flex-col h-screen fixed left-0 top-0 z-[100] transition-all duration-500 p-2 border-r border-white/5; }
-    .main-view { @apply ml-64 bg-[#121212] rounded-lg mt-2 mr-2 h-[calc(100vh-112px)] overflow-y-auto custom-scroll relative transition-all; }
-    .safety-player { @apply fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-white/5 px-8 flex items-center justify-between z-[110]; }
-    .glass-card { @apply bg-white/5 border border-white/10 rounded-[32px] p-10 transition-all duration-500 hover:bg-white/[0.08]; }
-    .mirror-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-10 p-6 border-b border-white/5 transition-all items-center; }
-    .mirror-row:hover { @apply bg-white/5 scale-[1.01]; }
-    mark { @apply bg-yellow-400 text-black px-1.5 rounded-md font-black; }
-    .risk-bar-fill { @apply h-full transition-all duration-[2s] ease-out shadow-[0_0_20px_rgba(37,99,235,0.4)]; }
-    .custom-scroll::-webkit-scrollbar { width: 5px; }
-    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full; }
+    :root { --pearl: #FDFDFF; --racing-blue: #060D2E; --f1-red: #E10600; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--pearl); @apply text-slate-900 overflow-hidden h-screen; }
+    
+    /* SIDEBAR LINEAR STYLE */
+    .sidebar { @apply bg-[#060D2E] h-screen transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex flex-col z-50 shadow-2xl; width: 80px; }
+    .sidebar:hover { width: 280px; }
+    .nav-item { @apply flex items-center gap-4 px-6 py-4 mx-3 rounded-2xl transition-all cursor-pointer text-slate-400 font-bold text-sm mb-1; }
+    .nav-item:hover { @apply bg-white/5 text-white; }
+    .nav-item.active { @apply bg-white/5 text-white border-l-4 border-[#E10600]; }
+    .nav-text { @apply opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap ml-2; }
+
+    /* WORKSPACE BENTO */
+    .workspace { @apply ml-20 transition-all duration-500 h-screen overflow-y-auto p-8 lg:p-12 custom-scroll bg-[#F8FAFD] relative; }
+    .bento-card { @apply bg-white border border-slate-200 rounded-[32px] shadow-sm hover:shadow-xl transition-all duration-500; }
+    
+    /* MIRROR ENGINE */
+    .mirror-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-8 p-6 border-b border-slate-50 transition-all items-start rounded-3xl; }
+    .mirror-row:hover { @apply bg-blue-50/50 scale-[1.01] shadow-inner; }
+    .mirror-row:hover .original { @apply text-blue-500 opacity-100; }
+    .original { @apply text-slate-300 italic opacity-40 transition-all text-xs; }
+    .adapted { @apply text-[#060D2E] font-black text-sm; }
+
+    /* TOOLTIPS */
+    mark { @apply bg-[#FFD700] text-black px-1.5 rounded-md font-extrabold cursor-help relative inline-block; }
+    .toolkit { @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-4 bg-slate-900 text-white text-[10px] rounded-2xl opacity-0 invisible transition-all duration-300 z-50 shadow-2xl; }
+    mark:hover .toolkit { @apply opacity-100 visible -translate-y-2; }
+
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
+    
+    .shimmer-text {
+      background: linear-gradient(90deg, #64748b 25%, #3b82f6 50%, #64748b 75%);
+      background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 2s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
   </style>
 </head>
-<body class="antialiased select-none">
+<body class="antialiased">
 
-  <!-- SIDEBAR (SPOTIFY STYLE) -->
-  <aside class="sidebar">
-    <div class="p-6 mb-6">
-        <h1 class="text-2xl font-[950] tracking-tighter italic text-blue-500">SonarIA</h1>
-    </div>
-    <nav class="flex-1 space-y-1">
-        <div onclick="switchView('radar', this)" class="flex items-center gap-4 px-6 py-3 rounded-xl text-white bg-white/5 cursor-pointer font-bold text-sm"><i data-lucide="radar"></i> Radar de Aula</div>
-        <div onclick="switchView('pedagogy', this)" class="flex items-center gap-4 px-6 py-3 rounded-xl text-slate-400 hover:text-white cursor-pointer font-bold text-sm transition-all"><i data-lucide="graduation-cap"></i> Inteligencia</div>
-        <div onclick="switchView('sync', this)" class="flex items-center gap-4 px-6 py-3 rounded-xl text-slate-400 hover:text-white cursor-pointer font-bold text-sm transition-all"><i data-lucide="languages"></i> Sincro & Letra</div>
-    </nav>
-    <div class="mt-auto p-4 bg-white/5 rounded-2xl m-2 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-black text-white">M</div>
-        <div class="text-[10px] font-bold"><p class="text-white italic">Mauricio P.</p><p class="text-slate-500 uppercase">Plan School</p></div>
+  <!-- SIDEBAR DOCK -->
+  <aside id="sidebar" class="sidebar group">
+    <div class="h-full flex flex-col py-10 w-full overflow-hidden">
+        <div class="px-6 mb-16 flex items-center justify-center group-hover:justify-start">
+            <div class="w-10 h-10 bg-[#E10600] rounded-2xl flex items-center justify-center text-white shadow-xl italic font-black text-xl">S</div>
+            <span class="nav-text text-xl font-black text-white italic font-[Outfit]">SonarIA</span>
+        </div>
+
+        <nav class="flex-1 space-y-2 px-2">
+            <div class="nav-item active"><i data-lucide="radar"></i> <span class="nav-text">Radar de Aula</span></div>
+            <div class="nav-item"><i data-lucide="settings"></i> <span class="nav-text">Configuración</span></div>
+            <div class="nav-item"><i data-lucide="graduation-cap"></i> <span class="nav-text">Pedagogía</span></div>
+            <div class="nav-item"><i data-lucide="languages"></i> <span class="nav-text">Sincro Artística</span></div>
+            <div class="nav-item"><i data-lucide="database"></i> <span class="nav-text">Historial SQL</span></div>
+            <div class="nav-item"><i data-lucide="file-bar-chart"></i> <span class="nav-text">Reportes UTP</span></div>
+        </nav>
+
+        <div class="p-6">
+            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-black text-[10px] text-white shadow-lg">MP</div>
+        </div>
     </div>
   </aside>
 
   <!-- MAIN WORKSPACE -->
-  <main class="main-view custom-scroll">
-    <header class="sticky top-0 bg-[#121212]/90 backdrop-blur-md px-12 py-8 flex justify-between items-center z-40 border-b border-white/5">
-        <h2 id="viewTitle" class="text-xl font-black uppercase tracking-widest italic opacity-40">Radar de Aula</h2>
-        <button class="bg-blue-600 text-white px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">Pro Active</button>
+  <main class="workspace flex-1">
+    
+    <!-- TOPBAR -->
+    <header class="flex justify-between items-end mb-16 px-4">
+        <div>
+            <h2 class="text-4xl font-[950] tracking-tighter text-[#060D2E] uppercase italic font-[Outfit]">Performance Center</h2>
+            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.5em] mt-2 italic">Intelligence Core v500.0</p>
+        </div>
+        
+        <!-- BUSCADOR TIPO APPLE -->
+        <div class="flex-1 max-w-xl mx-20">
+            <div class="bg-white p-1 rounded-[30px] border-2 border-slate-100 flex shadow-2xl focus-within:border-[#060D2E] transition-all">
+                <input id="titulo" type="text" placeholder="¿Qué canción evaluaremos?" class="flex-1 px-8 py-4 bg-transparent outline-none font-bold text-xl text-[#060D2E] placeholder:text-slate-200">
+                <button id="analyzeBtn" class="bg-[#060D2E] text-white px-10 rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-[#E10600] transition-all italic">Analizar</button>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <p class="text-2xl font-black leading-none tabular-nums" id="time">00:00</p>
+            <p class="text-[9px] font-black text-[#E10600] uppercase tracking-widest mt-1 italic">Live Staging</p>
+        </div>
     </header>
 
-    <div class="p-12 max-w-6xl mx-auto space-y-12">
-        <!-- RADAR SECTION -->
-        <div id="view-radar" class="block animate-in space-y-12">
-            <div class="glass-card border-b-8 border-blue-600">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <input id="titulo" type="text" placeholder="Imagine - John Lennon" class="bg-white/5 p-5 rounded-2xl font-bold text-xl outline-none focus:ring-4 focus:ring-blue-900 border-none text-white">
-                    <button id="analyzeBtn" class="bg-white text-black py-5 rounded-[24px] font-[900] text-lg hover:scale-105 transition-all italic">Analizar e Iniciar Sincro</button>
+    <div id="resultsWrapper" class="hidden space-y-12 pb-32">
+        
+        <!-- BENTO ROW 1: SEMÁFORO + CONTEXTO -->
+        <div class="grid grid-cols-12 gap-10">
+            <div id="statusHero" class="col-span-8 bento-card border-t-[20px] p-12 flex justify-between items-center relative overflow-hidden bg-white">
+                <div class="relative z-10 text-left">
+                    <span id="resPill" class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 mb-8 inline-block italic tracking-widest">—</span>
+                    <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter italic leading-none mb-10 text-[#060D2E]">Analizando</h3>
+                    <div class="flex gap-12 border-t border-slate-50 pt-10">
+                        <div><p class="text-[9px] font-black text-slate-400 uppercase mb-2">OA Mineduc</p><p id="oaLabel" class="text-2xl font-black text-blue-600 italic">--</p></div>
+                        <div class="border-l border-slate-50 pl-12"><p class="text-[9px] font-black text-slate-400 uppercase mb-2">Edad Mínima</p><p id="edadSug" class="text-2xl font-black text-[#060D2E]">6+ años</p></div>
+                    </div>
+                </div>
+                <div class="text-right relative z-10">
+                    <div class="text-[140px] font-black italic tracking-tighter leading-none text-slate-50" id="riskValue">0%</div>
+                    <p class="text-[10px] font-black text-[#E10600] uppercase tracking-[0.4em] italic mt-2">Riesgo Escolar</p>
                 </div>
             </div>
-            
-            <div id="bigStatus" class="hidden glass-card p-12 border-t-[20px] flex justify-between items-center">
-                <div class="flex-1">
-                    <span id="resPill" class="px-4 py-1.5 bg-white/5 rounded-full text-[10px] font-black uppercase text-slate-500 mb-6 inline-block italic">—</span>
-                    <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter italic text-white">—</h3>
-                </div>
-                <div class="text-right"><div class="text-[110px] font-black italic tracking-tighter text-white/10 leading-none" id="riskBig">0%</div><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Riesgo Escolar</p></div>
+
+            <div class="col-span-4 bento-card bg-[#060D2E] text-white flex flex-col justify-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path></svg></div>
+                <h4 class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-6 italic italic">Cerebrote Pedagógico</h4>
+                <p id="funFact" class="text-xl font-bold italic leading-tight text-white mb-8 italic">"Esta obra permite trabajar el MU08 OA 01 sobre la recepción de audiencias juveniles."</p>
+                <button class="bg-blue-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-blue-900/40 hover:bg-blue-500 transition-all italic">Descargar Informe UTP</button>
             </div>
         </div>
 
-        <!-- SYNC SECTION -->
-        <div id="view-sync" class="hidden space-y-8">
-            <div class="glass-card !p-0 overflow-hidden">
-                <div class="p-8 bg-white/5 flex justify-between items-center border-b border-white/5">
-                    <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 italic">Comparativa Métrica v22</h4>
-                    <span class="px-4 py-1.5 bg-green-500/20 text-green-400 rounded-xl text-[9px] font-black uppercase tracking-widest">Métrica OK</span>
-                </div>
-                <div id="lyricsContainer" class="bg-black/20"></div>
+        <!-- BENTO ROW 2: EL ESPEJO (FULL WIDTH) -->
+        <div class="bento-card !p-0 overflow-hidden">
+            <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                <h4 class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 italic font-[Outfit]">Linguistic Mirror (Original | Adaptada | Sentido)</h4>
+                <span class="px-4 py-1.5 bg-green-50 text-green-600 rounded-xl text-[9px] font-black uppercase tracking-widest italic">Métrica Sincronizada</span>
+            </div>
+            <div id="lyricsContainer" class="max-h-[600px] overflow-y-auto custom-scroll bg-white">
+                <!-- Inyección dinámica -->
             </div>
         </div>
 
-        <!-- PEDAGOGY SECTION -->
-        <div id="view-pedagogy" class="hidden space-y-12">
-            <div class="grid grid-cols-2 gap-10">
-                <div class="glass-card"><h4 class="text-blue-500 font-black text-[10px] uppercase mb-6 italic">Planificación por OA</h4><p id="oaLabel" class="text-3xl font-black text-white italic mb-2 leading-none"></p><p id="oaDesc" class="text-sm font-bold text-slate-400 italic"></p></div>
-                <div class="glass-card bg-[#060D2E] text-white flex flex-col justify-center"><span class="text-[10px] font-black text-blue-400 uppercase mb-4 italic">Sugerencia de Aula:</span><p id="preguntaDesafio" class="text-2xl font-black italic leading-tight italic"></p></div>
+        <!-- BENTO ROW 3: ESTRATEGIA -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="bento-card p-12 bg-white flex flex-col justify-center border-l-[16px] border-blue-600">
+                <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-widest">Actividad de Aula</h4>
+                <p id="actividad" class="text-2xl font-black text-[#060D2E] leading-tight italic tracking-tighter">--</p>
+            </div>
+            <div class="bento-card p-12 bg-[#060D2E] text-white flex flex-col justify-center">
+                <span class="text-[10px] font-black text-slate-500 uppercase block mb-3 italic italic">Pregunta de Mediación Crítica:</span>
+                <p id="preguntaDesafio" class="text-2xl font-black italic leading-tight text-blue-400 italic">"..."</p>
             </div>
         </div>
     </div>
+
+    <!-- PLACEHOLDER -->
+    <div id="placeholder" class="h-full flex flex-col items-center justify-center text-center opacity-10 transition-all duration-1000">
+        <h3 class="text-[150px] font-black italic tracking-tighter text-[#060D2E]">READY</h3>
+        <p class="text-2xl font-bold uppercase tracking-[1em] -mt-10 shimmer-text">SonarIA Engine</p>
+    </div>
+
   </main>
-
-  <!-- SAFETY PLAYER -->
-  <footer class="safety-player">
-    <div class="flex items-center gap-4 w-[30%]">
-        <div id="miniStatus" class="w-14 h-14 bg-white/5 rounded-lg flex items-center justify-center font-black text-xs italic text-white/10 shadow-inner">S</div>
-        <div class="overflow-hidden"><p id="playingTitle" class="font-black text-sm truncate text-white uppercase italic">Esperando Análisis</p><p id="playingResult" class="text-[10px] text-slate-500 font-black uppercase italic">—</p></div>
-    </div>
-    <div class="flex flex-col items-center gap-3 w-[40%]">
-        <span class="text-[10px] font-black italic text-slate-500 uppercase tracking-widest">Monitor de Seguridad Persistente</span>
-        <div class="w-full flex items-center gap-4"><span class="text-[9px] font-bold text-slate-600">0%</span><div class="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="riskBar" class="risk-bar-fill w-0 bg-blue-600 shadow-[0_0_15px_#3b82f6]"></div></div><span class="text-[9px] font-bold text-slate-600">100%</span></div>
-    </div>
-    <div class="flex items-center justify-end gap-6 w-[30%] text-slate-500 italic font-black text-[10px] uppercase tracking-widest">v22.0 Sovereign Sync</div>
-  </footer>
 
   <script>
     lucide.createIcons();
     const API_BASE = "https://sonaria-api-test.onrender.com";
     const $ = id => document.getElementById(id);
 
-    function switchView(viewName, el) {
-        document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
-        $(`view-${viewName}`).classList.remove('hidden');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active', 'text-white', 'bg-white/5'));
-        el.classList.add('active', 'text-white', 'bg-white/5');
-        $("viewTitle").innerText = viewName.toUpperCase();
-    }
-
     async function analizar() {
         const btn = $("analyzeBtn");
-        btn.disabled = true; btn.innerHTML = `<span class="animate-pulse">ESCANEANDO...</span>`;
+        const tit = $("titulo").value.trim();
+        if(!tit) return;
+
+        btn.disabled = true; btn.innerHTML = `<span class="shimmer-text italic uppercase font-black text-xs tracking-widest">Sincronizando...</span>`;
         try {
             const res = await fetch(`${API_BASE}/api/analizar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
-                body: JSON.stringify({ titulo: $("titulo").value, artista: "" })
+                body: JSON.stringify({ titulo: tit, artista: "" })
             });
             const raw = await res.json();
             renderDashboard(raw.data);
-        } catch(e) { alert("Error"); }
-        finally { btn.disabled = false; btn.innerText = "Analizar e Iniciar Sincro"; }
+        } catch(e) { alert("Error de Sincronización"); }
+        finally { btn.disabled = false; btn.innerText = "Analizar"; }
     }
 
     function renderResult(data) {
-        $("bigStatus").classList.remove("hidden");
+        $("placeholder").classList.add("hidden");
+        $("resultsWrapper").classList.remove("hidden");
+        
+        const hero = $("statusHero");
+        hero.style.borderColor = data.color === "green" ? "#22c55e" : data.color === "orange" ? "#f97316" : "#ef4444";
+        
+        $("riskValue").innerText = data.risk_percent + "%";
         $("summaryTitle").innerText = data.resultado;
-        $("resPill").innerText = data.resultado;
-        $("riskBig").innerText = data.risk_percent + "%";
-        
-        // El "Player"
-        $("playingTitle").innerText = data.titulo;
-        $("playingResult").innerText = data.resultado;
-        $("riskBar").style.width = data.risk_percent + "%";
-        $("riskBar").className = `risk-bar-fill h-full transition-all duration-[2s] bg-${data.color}-500`;
-        
-        // Pedagogía
-        $("oaLabel").innerText = data.oa.oa;
-        $("oaDesc").innerText = data.oa.desc;
+        $("oaLabel").innerText = data.oa;
+        $("edadSug").innerText = data.risk_percent > 30 ? "12+ años" : "6+ años";
+        $("actividad").innerText = data.risk_percent > 30 ? "Debate crítico: ¿Cómo influye el entorno en el lenguaje del artista?" : "Identificación de timbres y emociones melódicas.";
         $("preguntaDesafio").innerText = `"${data.pregunta}"`;
 
-        // Letras
         $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
             <div class="mirror-row group">
-                <div class="original text-[10px] italic group-hover:text-blue-400 transition-all">${l.original}</div>
-                <div class="adapted font-black text-sm ${l.changed ? 'text-blue-400' : 'text-slate-100'} transition-all italic">${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}</div>
+                <div class="original">${l.original}</div>
+                <div class="adapted ${l.changed ? 'text-[#E10600]' : ''} transition-all italic italic">
+                    ${l.changed ? `<mark>${l.adapted}<span class="toolkit shadow-2xl"><b class="text-[#E10600] uppercase block mb-1 tracking-widest font-black">Métrica OK:</b> ${l.reason}</span></mark>` : l.adapted}
+                </div>
+                <div class="text-[10px] text-slate-400 font-bold opacity-60 uppercase italic tracking-widest">Sentido Docente</div>
             </div>
         `).join('');
+
+        $("workspace").scrollTo({ top: 400, behavior: 'smooth' });
     }
+
+    function time() { $("time").innerText = new Date().toLocaleTimeString('es-CL', {hour:'2-digit', minute:'2-digit'}); }
+    setInterval(time, 1000); time();
     $("analyzeBtn").onclick = analizar;
   </script>
 </body>
