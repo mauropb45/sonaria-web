@@ -2,124 +2,137 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA | Sovereign Suite v400</title>
+  <title>SonarIA Pro | Sovereign Workspace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root { --mclaren: #FF8000; --redbull: #000B29; --aston: #00665E; --pearl: #FDFDFF; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--pearl); @apply text-slate-900 overflow-hidden h-screen; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-[#F4F7FE] text-slate-900; overflow: hidden; }
     
-    .sidebar { @apply bg-[#000B29] h-screen transition-all duration-500 flex flex-col z-50 shadow-2xl; width: 280px; }
+    /* SIDEBAR FIJA E INDEPENDIENTE */
+    .sidebar { @apply w-72 bg-[#060D2E] text-white flex flex-col h-screen fixed left-0 top-0 z-50 shadow-2xl; }
     .nav-link { @apply flex items-center gap-4 px-6 py-4 mx-3 rounded-2xl transition-all cursor-pointer text-slate-400 font-bold text-sm mb-1; }
-    .nav-link.active { @apply bg-white/5 text-white border-l-4 border-[#FF8000] shadow-lg; }
+    .nav-link.active { @apply bg-white/5 text-white border-l-4 border-[#E10600] shadow-lg; }
     .nav-link:hover:not(.active) { @apply bg-white/5 text-white; }
     
-    .main-workspace { @apply flex-1 flex flex-col h-screen overflow-y-auto custom-scroll p-12 bg-white/50 relative; }
-    .view-section { @apply hidden opacity-0; }
-    .view-section.active { @apply block opacity-100; animation: fadeIn 0.5s ease-out; }
+    /* MAIN ÁREA CON SCROLL */
+    .main-workspace { @apply ml-72 flex-1 h-screen overflow-y-auto custom-scroll p-12 bg-white/50 relative; }
     
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* SECCIONES SPA */
+    .view-section { @apply hidden opacity-0 transition-all duration-700; }
+    .view-section.active { @apply block opacity-100; }
 
-    .mirror-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; @apply gap-8 p-6 border-b border-slate-50 transition-all items-start rounded-3xl; }
-    .mirror-grid:hover { @apply bg-blue-50/50 scale-[1.01]; }
+    .glass-card { @apply bg-white border border-slate-200 rounded-[40px] shadow-sm hover:shadow-xl transition-all duration-500; }
     
+    /* COMPARADOR DE 3 COLUMNAS COMPLETO */
+    .mirror-row { display: grid; grid-template-columns: 1fr 1fr 1fr; @apply gap-8 p-6 border-b border-slate-50 transition-all items-start rounded-3xl; }
+    .mirror-row:hover { @apply bg-blue-50/50 scale-[1.01] shadow-inner; }
+    .mirror-row:hover .original { @apply text-blue-500; }
+
     mark { @apply bg-yellow-300 text-black px-1.5 rounded-md font-extrabold; }
-    
-    /* La Cruz Sutil */
-    .cross-mark { @apply absolute top-6 right-6 text-slate-100 opacity-5; }
-    
     .custom-scroll::-webkit-scrollbar { width: 4px; }
     .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
   </style>
 </head>
 <body class="antialiased">
 
-  <div class="flex h-screen overflow-hidden">
+  <div class="flex">
     
-    <!-- SIDEBAR (MENU FUNCIONAL) -->
-    <aside id="sidebar" class="sidebar">
-        <div class="p-8 mb-6 relative">
-            <h1 class="text-2xl font-black text-white italic tracking-tighter">Sonar<span class="text-[#FF8000]">IA</span></h1>
-            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Sovereign Pro v400</p>
-            <div class="cross-mark"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2h2v9h9v2h-9v9h-2v-9H2v-2h9V2z"/></svg></div>
+    <!-- SIDEBAR (MENU DE PROCESO) -->
+    <aside class="sidebar">
+        <div class="p-8 mb-6">
+            <h1 class="text-2xl font-black italic tracking-tighter">Sonar<span class="text-blue-400">IA</span></h1>
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Sovereign Suite v450</p>
         </div>
 
-        <nav id="sidebarNav" class="flex-1 space-y-1">
-            <div onclick="switchView('radar')" id="nav-radar" class="nav-link active"><i data-lucide="radar"></i> <span>01 Radar (Semáforo)</span></div>
-            <div onclick="switchView('mirror')" id="nav-mirror" class="nav-link"><i data-lucide="languages"></i> <span>02 Letra & Sincro</span></div>
-            <div onclick="switchView('pedagogy')" id="nav-pedagogy" class="nav-link"><i data-lucide="graduation-cap"></i> <span>03 Taller de Aula</span></div>
-            <div onclick="switchView('reports')" id="nav-reports" class="nav-link"><i data-lucide="file-text"></i> <span>04 Reporte UTP</span></div>
+        <nav class="flex-1 space-y-1">
+            <div onclick="switchView('radar', this)" class="nav-link active"><i data-lucide="radar"></i> <span>01 Radar (Semáforo)</span></div>
+            <div onclick="switchView('lyrics', this)" class="nav-link"><i data-lucide="languages"></i> <span>02 Letra & Sincro</span></div>
+            <div onclick="switchView('pedagogy', this)" class="nav-link"><i data-lucide="graduation-cap"></i> <span>03 Taller de Aula</span></div>
+            <div onclick="switchView('setup', this)" class="nav-item p-4 text-slate-500 hover:text-white cursor-pointer"><i data-lucide="settings"></i> <span class="ml-4 font-bold text-sm">Mi Colegio</span></div>
         </nav>
 
         <div class="p-8 mt-auto border-t border-white/5 bg-black/20">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-[#00665E] flex items-center justify-center font-black text-white italic">M</div>
-                <div class="leading-tight"><p class="text-xs font-bold text-white italic">Mauricio P.</p><p class="text-[9px] text-slate-500 uppercase font-black">Plan School</p></div>
+                <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center font-black text-white italic shadow-lg">M</div>
+                <div class="leading-tight"><p class="text-xs font-bold text-white italic">Mauricio Pinto</p><p class="text-[9px] font-black uppercase text-slate-500">Plan School</p></div>
             </div>
         </div>
     </aside>
 
-    <!-- ÁREA DE TRABAJO -->
-    <main class="main-workspace custom-scroll">
+    <!-- ÁREA DE TRABAJO PRINCIPAL -->
+    <main id="workspace" class="main-workspace">
         
-        <!-- HEADER -->
-        <header class="flex justify-between items-center mb-16 border-b border-slate-100 pb-8">
-            <h2 id="viewTitle" class="text-3xl font-[950] tracking-tight text-[#000B29] uppercase italic leading-none">Radar de Aula</h2>
-            <div class="flex gap-4">
-                <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl flex items-center gap-3">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
-                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Sincronizado</span>
-                </div>
+        <header class="flex justify-between items-center mb-16 px-4">
+            <h2 id="viewTitle" class="text-3xl font-[950] tracking-tighter text-[#060D2E] uppercase italic">Radar de Aula</h2>
+            <div class="glass-card px-6 py-2 flex items-center gap-3 bg-white">
+                <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Motor v450 Online</span>
             </div>
         </header>
 
-        <!-- VIEW: RADAR -->
-        <div id="view-radar" class="view-section active space-y-12">
-            <div class="bg-white border border-slate-100 rounded-[40px] p-12 shadow-sm border-b-[16px] border-[#000B29]">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <input id="titulo" type="text" placeholder="¿Qué canción evaluaremos?" class="p-5 bg-slate-50 rounded-3xl font-bold text-xl border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
-                    <button id="analyzeBtn" class="bg-[#000B29] text-white rounded-[32px] font-black text-lg hover:bg-[#FF8000] shadow-2xl transition-all active:scale-95 italic">Iniciar Evaluación</button>
+        <!-- SECCIÓN 01: RADAR -->
+        <section id="section-radar" class="view-section active space-y-12">
+            <div class="glass-card p-12 border-b-[16px] border-blue-600">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <input id="titulo" type="text" placeholder="Título de la canción..." class="p-5 bg-slate-50 rounded-2xl font-bold text-xl border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
+                    <input id="artista" type="text" placeholder="Artista..." class="p-5 bg-slate-50 rounded-2xl font-bold text-xl border-transparent focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all outline-none">
                 </div>
+                <button id="analyzeBtn" class="w-full mt-8 py-6 bg-[#060D2E] text-white rounded-[32px] font-black text-lg hover:bg-red-600 shadow-2xl active:scale-95 transition-all italic">Analizar e Iniciar Inteligencia</button>
             </div>
 
-            <div id="resultsWrapper" class="hidden space-y-12">
-                <div id="statusHero" class="bg-white border border-slate-100 rounded-[40px] p-12 border-t-[24px] flex justify-between items-center shadow-xl">
-                    <div class="flex-1">
-                        <span id="resPill" class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 mb-6 inline-block italic tracking-widest">—</span>
-                        <h3 id="summaryTitle" class="text-7xl font-black tracking-tighter italic text-[#000B29] leading-none">—</h3>
+            <!-- RESULTADO HERO (EL SEMÁFORO) -->
+            <div id="resultsHero" class="hidden space-y-10">
+                <div id="statusHero" class="glass-card p-12 border-t-[24px] flex flex-col md:flex-row justify-between items-center bg-white shadow-xl relative overflow-hidden">
+                    <div class="flex-1 text-left">
+                        <span class="px-4 py-1.5 bg-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 mb-6 inline-block tracking-widest italic italic">Veredicto Oficial</span>
+                        <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter italic text-[#060D2E] leading-none mb-4">—</h3>
+                        <p class="text-slate-400 font-bold text-lg italic">Utiliza el menú lateral para ver la adaptación y planificación.</p>
                     </div>
                     <div class="text-right">
-                        <div class="text-[110px] font-black italic tracking-tighter text-[#000B29] leading-none" id="riskValue">0%</div>
-                        <p class="text-[10px] font-black text-red-600 uppercase tracking-widest italic tracking-[0.3em]">Riesgo Escolar</p>
+                        <div class="text-[110px] font-black italic tracking-tighter text-[#060D2E] leading-none" id="riskValue">0%</div>
+                        <p class="text-[10px] font-black text-red-600 uppercase tracking-widest italic tracking-[0.3em]">Riesgo Escolar Detectado</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- VIEW: MIRROR (LETRA ENTERA) -->
-        <div id="view-mirror" class="view-section">
-            <div class="bg-white border border-slate-100 rounded-[40px] overflow-hidden shadow-2xl relative">
-                <div class="cross-mark text-[#000B29] opacity-5"><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2h2v9h9v2h-9v9h-2v-9H2v-2h9V2z"/></svg></div>
-                <div class="p-8 bg-[#000B29] text-white flex justify-between items-center px-12">
+        <!-- SECCIÓN 02: LETRA ENTERA (LYRICS) -->
+        <section id="section-lyrics" class="view-section space-y-10">
+            <div class="glass-card overflow-hidden bg-white shadow-2xl">
+                <div class="p-8 bg-[#060D2E] text-white flex justify-between items-center px-12 italic">
                     <h4 class="text-[10px] font-black uppercase tracking-[0.5em]">Linguistic Mirror: Comparativa 3 Columnas</h4>
-                    <span class="px-4 py-1 bg-emerald-500/20 text-emerald-400 rounded-xl text-[9px] font-black uppercase">Métrica OK</span>
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-xl hover:bg-blue-700 transition-all italic">Exportar PDF</button>
                 </div>
-                <div class="grid grid-cols-3 gap-8 p-6 bg-slate-50 border-b border-slate-100 font-black text-[9px] text-slate-400 uppercase tracking-[0.3em] px-14">
-                    <span>Original</span><span>Adaptada</span><span>Significado</span>
+                <div class="grid grid-cols-3 gap-6 p-6 bg-slate-50 border-b border-slate-100 font-black text-[9px] text-slate-400 uppercase tracking-[0.3em] px-14">
+                    <span>Original</span><span>Versión Docente</span><span>Significado</span>
                 </div>
-                <div id="lyricsContainer" class="bg-white max-h-[600px] overflow-y-auto pr-4 custom-scroll">
-                    <!-- Dinámico -->
+                <div id="lyricsContainer" class="bg-white p-6 space-y-2 max-h-[1200px] overflow-y-auto">
+                    <!-- Se inyecta la letra entera aquí -->
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- VIEW: PEDAGOGY -->
-        <div id="view-pedagogy" class="view-section space-y-12">
-            <div id="pedagogyTabs" class="flex gap-4 mb-10 overflow-x-auto pb-4 custom-scroll"></div>
-            <div id="pedagogyContent">
-                <!-- Se llena dinámicamente -->
+        <!-- SECCIÓN 03: PEDAGOGÍA -->
+        <section id="section-pedagogy" class="view-section space-y-10">
+            <div class="glass-card p-12 bg-white">
+                <h4 class="text-blue-600 font-black text-[10px] uppercase mb-10 tracking-[0.3em] italic italic">Estrategia de Aula (Sync NotebookLM)</h4>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div class="space-y-8 text-left">
+                        <div><span class="text-[10px] font-black text-slate-400 uppercase block mb-2 px-1 italic">OA MINEDUC:</span><p id="oaLabel" class="text-3xl font-black text-[#060D2E] italic leading-none"></p></div>
+                        <div><span class="text-[10px] font-black text-slate-400 uppercase block mb-2 px-1 italic">Descripción:</span><p id="oaDesc" class="text-sm font-bold text-slate-500 leading-relaxed italic italic"></p></div>
+                    </div>
+                    <div class="bg-[#060D2E] p-10 rounded-[40px] text-white shadow-2xl flex flex-col justify-center text-center">
+                        <span class="text-[10px] font-black text-[#E10600] uppercase block mb-4 italic tracking-widest italic italic italic">Pregunta de Mediación Crítica:</span>
+                        <p id="preguntaDesafio" class="text-2xl font-black italic italic leading-tight italic tracking-tighter italic">¿Cómo el ritmo apoya el mensaje de la obra?</p>
+                    </div>
+                </div>
             </div>
+        </section>
+
+        <!-- PLACEHOLDER ZEN -->
+        <div id="placeholder" class="h-96 flex flex-col items-center justify-center border-4 border-dashed border-slate-200 rounded-[48px] text-slate-200 p-20 text-center italic">
+            <h3 class="text-3xl font-black uppercase tracking-widest italic italic">SonarIA Sovereign Ready</h3>
         </div>
 
     </main>
@@ -130,13 +143,12 @@
     const API_BASE = "https://sonaria-api-test.onrender.com";
     const $ = id => document.getElementById(id);
 
-    // NAVEGACIÓN SPA REFORZADA
-    function switchView(viewName) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        $(`view-${viewName}`).classList.add('active');
-        $(`nav-${viewName}`).classList.add('active');
-        $("viewTitle").innerText = viewName.toUpperCase().replace('RADAR', 'Radar de Aula').replace('MIRROR', 'Letra & Sincro').replace('PEDAGOGY', 'Pedagogía');
+    function switchView(viewName, el) {
+        document.querySelectorAll(".view-section").forEach(s => s.classList.remove("active"));
+        document.querySelectorAll(".nav-link").forEach(n => n.classList.remove("active"));
+        $(`section-${viewName}`).classList.add("active");
+        if(el) el.classList.add("active");
+        $("viewTitle").innerText = viewName.toUpperCase().replace('RADAR', 'Radar de Aula').replace('LYRICS', 'Letra & Sincro').replace('PEDAGOGY', 'Pedagogía');
     }
 
     async function analizar() {
@@ -145,73 +157,41 @@
         btn.disabled = true; btn.innerHTML = `<span class="animate-pulse italic">ESCANEO DE IMPACTO...</span>`;
 
         try {
-            const res = await fetch(`${API_BASE}/analizar`, {
+            const res = await fetch(`${API_BASE}/api/analizar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
-                body: JSON.stringify({ titulo: $("titulo").value, artista: "" })
+                body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value, curso: "7B" })
             });
-            const raw = await res.json();
-            if(raw.status === "error") throw new Error(raw.message);
-            const data = raw.data;
+            const data = await res.json();
 
-            // Render Radar
-            $("resultsWrapper").classList.remove("hidden");
-            $("statusHero").style.borderColor = data.color === "green" ? "#00665E" : data.color === "orange" ? "#FF8000" : "#E10600";
+            // 1. Mostrar Semáforo (Veredicto)
+            $("placeholder").classList.add("hidden");
+            $("resultsHero").classList.remove("hidden");
+            $("statusHero").style.borderColor = data.color === "green" ? "#22c55e" : data.color === "orange" ? "#f97316" : "#ef4444";
             $("riskValue").innerText = data.risk_percent + "%";
             $("summaryTitle").innerText = data.resultado;
-            $("resPill").innerText = data.resultado;
 
-            // Render Mirror (3 Columnas)
+            // 2. Preparar Letra Completa (Para la sección 02)
             $("lyricsContainer").innerHTML = data.letra_comparada.map(l => `
-                <div class="mirror-grid group">
-                    <div class="text-[10px] text-slate-300 italic group-hover:text-blue-600 transition-all">${l.original}</div>
-                    <div class="text-[12px] font-black ${l.changed ? 'text-[#FF8000]' : 'text-slate-800'} transition-all">
+                <div class="mirror-row group">
+                    <div class="original text-[11px] text-slate-300 italic group-hover:text-blue-500 transition-all">${l.original}</div>
+                    <div class="text-[12px] font-black ${l.changed ? 'text-[#E10600]' : 'text-slate-800'} transition-all italic">
                         ${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}
                     </div>
-                    <div class="text-[10px] text-slate-400 font-bold opacity-60 uppercase italic">Significado Pedagógico</div>
+                    <div class="text-[10px] text-slate-400 font-bold opacity-60 uppercase italic italic">Significado Pedagógico</div>
                 </div>
             `).join('');
 
-            // Render Pedagogy Matrix (NotebookLM Tabs)
-            window.matrix = data.pedagogy_matrix;
-            const tabs = $("pedagogyTabs");
-            tabs.innerHTML = Object.keys(data.pedagogy_matrix).map((name, i) => `
-                <button onclick="showPedContent('${name}')" class="px-8 py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#000B29] hover:text-white transition-all shadow-sm shrink-0">
-                    ${name}
-                </button>
-            `).join('');
-            showPedContent(Object.keys(data.pedagogy_matrix)[0]);
+            // 3. Preparar Pedagogía (Para la sección 03)
+            $("oaLabel").innerText = data.oa;
+            $("oaDesc").innerText = data.oa_desc;
 
-            // WOW: Salto automático al veredicto
-            setTimeout(() => switchView('radar'), 500);
+            // Efecto WOW: Invitación a navegar
+            alert("Análisis completado. El semáforo está listo. Navega por la barra lateral para ver la letra adaptada y la planificación.");
 
-        } catch(e) { 
-            console.error(e);
-            alert("Error de Sincronización: El motor Render se está refrescando. Reintenta en 10 seg."); 
-        }
-        finally { btn.disabled = false; btn.innerText = "Iniciar Evaluación"; }
+        } catch(e) { alert("Error de Sincronización"); }
+        finally { btn.disabled = false; btn.innerText = "Analizar Obra e Iniciar Inteligencia"; }
     }
-
-    function showPedContent(name) {
-        const d = window.matrix[name];
-        $("pedagogyContent").innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 animate-fade-in">
-                <div class="bg-white border border-slate-100 rounded-[40px] p-12 shadow-sm border-l-[16px] border-[#00665E]">
-                    <h4 class="text-3xl font-black text-[#000B29] tracking-tighter leading-none mb-4 italic italic">${d.oa}</h4>
-                    <p class="text-sm font-bold text-slate-400 leading-relaxed italic uppercase tracking-widest">${d.desc}</p>
-                    <div class="mt-10 p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                        <span class="text-[9px] font-black text-slate-400 uppercase block mb-2 italic italic">Actividad:</span>
-                        <p class="text-sm font-black text-slate-700 italic italic">${d.actividad}</p>
-                    </div>
-                </div>
-                <div class="bg-[#000B29] rounded-[40px] p-12 text-white shadow-2xl flex flex-col justify-center text-center">
-                    <span class="text-[9px] font-black text-[#FF8000] uppercase block mb-6 italic tracking-widest italic italic">Pregunta de Mediación Crítica:</span>
-                    <p class="text-3xl font-black italic italic italic leading-tight tracking-tighter italic">"${d.reflexion}"</p>
-                </div>
-            </div>
-        `;
-    }
-
     $("analyzeBtn").onclick = analizar;
   </script>
 </body>
