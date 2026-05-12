@@ -1,35 +1,29 @@
 <script>
-    const API_URL = "https://sonaria-api-test.onrender.com";
+  // ESTA ES LA LÍNEA CRÍTICA: Debe apuntar al servidor que tiene la v23.3
+  const API_URL = "https://sonaria-api-test.onrender.com"; 
 
-    async function handleCredentialResponse(response) {
-      const status = document.getElementById("status");
-      status.innerText = "Sincronizando Matrix...";
-      
-      try {
-        const res = await fetch(`${API_URL}/auth/google`, {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-            // Eliminamos cabeceras extra para evitar preflights complejos
-          },
-          body: JSON.stringify({ credential: response.credential })
-        });
+  async function handleCredentialResponse(response) {
+    const statusBox = document.querySelector(".status-box") || { innerText: "" }; // Para evitar errores si no existe el div
+    console.log("Iniciando Handshake con Google...");
 
-        if (!res.ok) throw new Error("Error en servidor de test");
+    try {
+      const res = await fetch(`${API_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential })
+      });
 
-        const data = await res.json();
-        
-        if (data.access_token) {
-          localStorage.setItem("mejoraria_token", data.access_token);
-          status.innerText = "Conexión Exitosa. Cargando Dashboard...";
-          setTimeout(() => {
-            window.location.href = "sonaria.html";
-          }, 800);
-        }
-      } catch (e) { 
-        console.error(e);
-        status.innerText = "Error de Red. Reintentando conexión segura...";
-        status.style.color = "red";
+      if (!res.ok) throw new Error("El servidor de test no respondió correctamente.");
+
+      const data = await res.json();
+      if (data.access_token) {
+        localStorage.setItem("mejoraria_token", data.access_token);
+        // Te envía al dashboard
+        window.location.href = "sonaria.html"; 
       }
+    } catch (e) {
+      console.error("Error de conexión:", e);
+      alert("Error de comunicación con el motor. Por favor, asegúrate de que el servidor en Render esté 'Live'.");
     }
-  </script>
+  }
+</script>
