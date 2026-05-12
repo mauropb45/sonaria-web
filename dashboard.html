@@ -2,139 +2,133 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA | Teacher Assistant Workspace</title>
+  <title>SonarIA | Sovereign Suite v30.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root { --pearl: #FDFDFF; --navy: #000B29; --orange: #FF8000; --green: #00665E; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--pearl); @apply text-slate-900; overflow: hidden; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--pearl); @apply text-slate-900 overflow-hidden h-screen; }
     
-    /* SIDEBAR F1 */
-    .sidebar { @apply bg-[#000B29] h-screen transition-all duration-500 flex flex-col z-50 shadow-2xl; width: 280px; }
+    /* SIDEBAR FIJA */
+    .sidebar { @apply bg-[#000B29] h-screen flex flex-col z-50 shadow-2xl; width: 280px; }
     .nav-link { @apply flex items-center gap-4 px-6 py-4 mx-3 rounded-2xl transition-all cursor-pointer text-slate-400 font-bold text-sm mb-1 italic; }
-    .nav-link.active { @apply bg-white/5 text-white border-l-4 border-[#FF8000]; }
-    
-    .workspace { @apply flex-1 flex flex-col h-screen overflow-y-auto custom-scroll p-12 bg-white/50 relative; }
-    
-    /* Bento Cards */
-    .glass-card { @apply bg-white border border-slate-100 rounded-[40px] shadow-sm hover:shadow-xl transition-all duration-500; }
-    .view-section { @apply hidden opacity-0; }
-    .view-section.active { @apply block opacity-100 animate-in fade-in duration-700; }
+    .nav-link.active { @apply bg-white/5 text-white border-l-4 border-[#FF8000] shadow-lg; }
+    .nav-link.disabled { @apply opacity-20 cursor-not-allowed; }
 
-    /* La Cruz Cristiana Sutil */
+    /* WORKSPACE FIJO */
+    .workspace { @apply flex-1 flex flex-col h-screen relative bg-white/50; }
+    .content-view { @apply hidden h-full w-full p-12 overflow-y-auto; }
+    .content-view.active { @apply block animate-in fade-in duration-500; }
+
+    /* LADO A LADO */
+    .lyrics-grid { display: grid; grid-template-columns: 1fr 1fr; @apply gap-10 p-6 border-b border-slate-50 transition-all items-start rounded-3xl; }
+    mark { @apply bg-yellow-300 text-black px-1.5 rounded font-black; }
+    
     .christian-cross { position: absolute; top: 40px; right: 40px; width: 30px; height: 30px; opacity: 0.04; pointer-events: none; }
     .christian-cross::before { content: ''; position: absolute; height: 100%; width: 3px; background: currentColor; left: 14px; }
     .christian-cross::after { content: ''; position: absolute; width: 100%; height: 3px; background: currentColor; top: 10px; }
-
-    .mirror-row { display: grid; grid-template-columns: 1fr 1fr 1.2fr; @apply gap-10 p-6 border-b border-slate-50 transition-all items-center rounded-3xl; }
-    mark { @apply bg-yellow-300 text-black px-1.5 rounded-md font-extrabold; }
-
-    /* Barra de Riesgo "Antes y Después" */
-    .diff-bar { @apply h-4 rounded-full overflow-hidden bg-slate-100 flex; }
-
+    
     .custom-scroll::-webkit-scrollbar { width: 4px; }
     .custom-scroll::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
   </style>
 </head>
 <body class="antialiased">
 
-  <div class="flex h-screen">
+  <div class="flex h-screen overflow-hidden">
     
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (SLIDEBAR) -->
     <aside class="sidebar">
-        <div class="p-8 mb-10">
+        <div class="p-8 mb-6 relative">
             <h1 class="text-2xl font-black text-white italic tracking-tighter italic">Sonar<span class="text-[#FF8000]">IA</span></h1>
-            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Teacher Assistant v25.0</p>
+            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Sovereign Pro v30.0</p>
         </div>
 
         <nav class="flex-1 space-y-1">
-            <div onclick="showView('cursos')" class="nav-link"><i data-lucide="users"></i> <span>Mis Cursos</span></div>
-            <div onclick="showView('radar')" class="nav-link active"><i data-lucide="radar"></i> <span>Radar de Aula</span></div>
-            <div onclick="showView('pedagogy')" class="nav-link"><i data-lucide="graduation-cap"></i> <span>Planificación</span></div>
-            <div onclick="showView('sync')" class="nav-link"><i data-lucide="languages"></i> <span>Adaptación & Sync</span></div>
+            <div onclick="switchView('radar')" id="nav-radar" class="nav-link active"><i data-lucide="radar"></i> <span>Radar (Analizar)</span></div>
+            <div onclick="switchView('pedagogy')" id="nav-pedagogy" class="nav-link disabled"><i data-lucide="graduation-cap"></i> <span>Planificación</span></div>
+            <div onclick="switchView('sync')" id="nav-sync" class="nav-link disabled"><i data-lucide="languages"></i> <span>Adaptación & Sync</span></div>
+            <div onclick="switchView('cursos')" class="nav-link mt-10"><i data-lucide="users"></i> <span>Mis Cursos</span></div>
         </nav>
 
-        <div class="p-8 mt-auto border-t border-white/5 bg-black/20 italic text-white text-xs font-bold">
+        <div class="p-8 mt-auto border-t border-white/5 bg-black/20 italic text-white text-[10px] font-black">
             Mauricio Pinto
         </div>
     </aside>
 
-    <!-- ÁREA DE TRABAJO -->
-    <main class="workspace flex-1 custom-scroll">
+    <!-- WORKSPACE -->
+    <main class="workspace">
         <div class="christian-cross"></div>
         
-        <header class="flex justify-between items-end mb-16 px-4">
-            <div>
-                <h2 id="viewTitle" class="text-4xl font-[950] tracking-tighter text-[#000B29] uppercase italic">Performance Center</h2>
-                <p class="text-slate-400 font-bold text-xs uppercase tracking-[0.4em] mt-2 italic">Intelligence Core v25.0 • Chile</p>
-            </div>
-            <button class="bg-white border-2 border-slate-100 p-4 rounded-[24px] shadow-sm font-black text-[10px] uppercase hover:shadow-lg transition-all">Subir Logo Colegio</button>
+        <!-- HEADER TOPBAR -->
+        <header class="h-20 flex justify-between items-center px-12 border-b border-slate-100 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+            <h2 id="viewTitle" class="text-xl font-[950] tracking-tight text-[#000B29] uppercase italic">Radar de Aula</h2>
+            <img id="schoolLogo" src="" class="h-10 hidden">
         </header>
 
-        <div class="max-w-6xl mx-auto space-y-12">
+        <div class="flex-1 overflow-hidden relative">
             
-            <!-- VISTA CURSOS (ONBOARDING) -->
-            <div id="view-cursos" class="view-section">
-                <div class="glass-card p-12">
-                    <h3 class="text-3xl font-black mb-8 italic italic">¿Con qué niveles trabajamos este año?</h3>
-                    <div id="cursosGrid" class="grid grid-cols-4 gap-4">
-                        <!-- Generado por JS -->
-                    </div>
-                    <button onclick="saveCursos()" class="mt-12 bg-blue-600 text-white px-10 py-4 rounded-2xl font-black italic shadow-xl">Guardar Perfil Docente</button>
-                </div>
-            </div>
-
-            <!-- VISTA RADAR (PRINCIPAL) -->
-            <div id="view-radar" class="view-section active space-y-10">
-                <div class="glass-card p-12 border-b-[16px] border-[#000B29]">
-                    <div class="grid grid-cols-2 gap-8 mb-8">
-                        <input id="titulo" type="text" placeholder="¿Qué canción evaluaremos?" class="p-5 bg-slate-50 rounded-3xl font-bold text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all border-transparent">
-                        <input id="artista" type="text" placeholder="Artista..." class="p-5 bg-slate-50 rounded-3xl font-bold text-xl outline-none focus:bg-white focus:ring-8 focus:ring-blue-100 transition-all border-transparent">
-                    </div>
-                    <button id="analyzeBtn" class="w-full py-6 bg-[#000B29] text-white rounded-[32px] font-black text-lg hover:bg-[#FF8000] shadow-2xl active:scale-95 transition-all italic">Analizar e Iniciar Asistente</button>
-                </div>
-
-                <!-- EL "ANTES Y DESPUÉS" (WOW EFFECT) -->
-                <div id="resultsHero" class="hidden grid grid-cols-12 gap-8">
-                    <div class="col-span-8 glass-card p-12 border-t-[20px] border-orange-500 relative overflow-hidden">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 block italic">Impacto de Seguridad</span>
-                        <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter italic text-[#000B29] leading-none mb-10">—</h3>
-                        
-                        <div class="space-y-6">
-                            <div>
-                                <div class="flex justify-between text-[10px] font-black mb-2 uppercase italic italic"><span>Riesgo Original (Original)</span><span id="riskOrigText">0%</span></div>
-                                <div class="diff-bar"><div id="riskOrigBar" class="h-full bg-red-500 transition-all duration-1000"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-black mb-2 uppercase italic italic"><span>Riesgo Final (Adaptación SonarIA)</span><span id="riskFinalText">0%</span></div>
-                                <div class="diff-bar"><div id="riskFinalBar" class="h-full bg-emerald-500 transition-all duration-1000"></div></div>
-                            </div>
+            <!-- VISTA: RADAR (BUSCADOR + SEMÁFORO) -->
+            <section id="view-radar" class="content-view active">
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="bg-white border border-slate-100 rounded-[40px] p-10 shadow-sm border-b-[16px] border-[#000B29]">
+                        <div class="grid grid-cols-2 gap-8">
+                            <input id="titulo" type="text" placeholder="Imagine - John Lennon" class="p-5 bg-slate-50 rounded-3xl font-bold text-xl border-transparent focus:bg-white focus:ring-8 focus:ring-blue-50 transition-all outline-none">
+                            <button id="analyzeBtn" class="bg-[#000B29] text-white rounded-[32px] font-black text-lg hover:bg-[#FF8000] shadow-2xl active:scale-95 transition-all italic">Analizar e Iniciar Asistente</button>
                         </div>
                     </div>
-                    <div class="col-span-4 glass-card p-10 bg-white flex flex-col justify-center text-center">
-                        <div class="text-6xl font-black text-[#000B29] mb-2" id="safetyScore">0%</div>
-                        <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em]">Idoneidad Lograda</p>
+
+                    <!-- SEMÁFORO "ANTES Y DESPUÉS" -->
+                    <div id="resultsHero" class="hidden grid grid-cols-12 gap-8">
+                        <div id="statusHero" class="col-span-8 bg-white border border-slate-100 rounded-[40px] p-10 border-t-[20px] shadow-xl">
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block italic">Diferencial de Seguridad</span>
+                            <h3 id="summaryTitle" class="text-6xl font-black tracking-tighter italic text-[#000B29] mb-8 leading-none">—</h3>
+                            <div class="space-y-4">
+                                <div><p class="text-[9px] font-black text-slate-400 uppercase italic">Riesgo Original</p><div class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div id="riskOrigBar" class="h-full bg-red-500 transition-all duration-1000"></div></div></div>
+                                <div><p class="text-[9px] font-black text-slate-400 uppercase italic">Riesgo Adaptado</p><div class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div id="riskFinalBar" class="h-full bg-emerald-500 transition-all duration-1000"></div></div></div>
+                            </div>
+                        </div>
+                        <div class="col-span-4 bg-white border border-slate-100 rounded-[40px] p-10 flex flex-col justify-center text-center">
+                            <div id="safetyPct" class="text-6xl font-black text-[#000B29]">0%</div>
+                            <p class="text-[9px] font-black uppercase text-slate-400 tracking-widest mt-2 italic">Idoneidad Lograda</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- VISTA SYNC (LYRICS) -->
-            <div id="view-sync" class="view-section">
-                <div class="glass-card overflow-hidden">
-                    <div class="p-8 bg-[#000B29] text-white flex justify-between items-center px-12 italic italic">
-                        <h4 class="text-[10px] font-black uppercase tracking-[0.5em]">Comparativa de Triple Impacto (v25.0)</h4>
-                        <button class="bg-blue-600 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-xl hover:bg-blue-700 transition-all italic italic">Bajar Pack UTP</button>
+            <!-- VISTA: MIS CURSOS -->
+            <section id="view-cursos" class="content-view">
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="bg-white rounded-[40px] p-12 border border-slate-100">
+                        <h3 class="text-3xl font-black mb-8 italic">Configuración Institucional</h3>
+                        <div id="cursosGrid" class="grid grid-cols-4 gap-4 mb-10">
+                            <!-- Inyección JS -->
+                        </div>
+                        <button class="bg-slate-50 border-2 border-slate-100 p-6 rounded-[32px] w-full font-black text-slate-400 uppercase text-xs tracking-widest hover:bg-slate-100 transition-all">Añadir logo de tu institución (.PNG)</button>
+                        <button onclick="saveProfile()" class="mt-6 w-full bg-blue-600 text-white py-4 rounded-3xl font-black italic shadow-xl">Guardar Perfil Docente</button>
                     </div>
-                    <div id="lyricsContainer" class="bg-white max-h-[1200px] overflow-y-auto"></div>
                 </div>
-            </div>
+            </section>
 
-            <!-- VISTA PEDAGOGY (TABS) -->
-            <div id="view-pedagogy" class="view-section">
-                <div id="courseTabs" class="flex gap-4 mb-8 overflow-x-auto pb-4 custom-scroll"></div>
-                <div id="pedagogyContent" class="glass-card p-12 bg-white"></div>
-            </div>
+            <!-- VISTA: ADAPTACIÓN & TRADUCCIÓN -->
+            <section id="view-sync" class="content-view">
+                <div class="max-w-6xl mx-auto bg-white rounded-[40px] overflow-hidden shadow-2xl border border-slate-100">
+                    <div class="p-8 bg-[#000B29] text-white flex justify-between items-center px-12 italic">
+                        <h4 class="text-[10px] font-black uppercase tracking-[0.5em]">Linguistic Mirror: Sincro Lado a Lado</h4>
+                        <span class="px-4 py-1 bg-emerald-500/20 text-emerald-400 rounded-xl text-[9px] font-black uppercase italic italic">Métrica OK</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-10 p-6 bg-slate-50 border-b border-slate-100 font-black text-[9px] text-slate-400 uppercase tracking-widest px-14">
+                        <span>Inglés Adaptado (SonarIA)</span><span>Traducción al Español</span>
+                    </div>
+                    <div id="lyricsContainer" class="bg-white p-6 custom-scroll h-full"></div>
+                </div>
+            </section>
+
+            <!-- VISTA: PEDAGOGÍA -->
+            <section id="view-pedagogy" class="content-view">
+                <div id="coursePedTabs" class="flex gap-4 mb-8 max-w-6xl mx-auto"></div>
+                <div id="pedagogyContent" class="max-w-6xl mx-auto bg-white rounded-[40px] p-12 border border-slate-100 shadow-xl"></div>
+            </section>
 
         </div>
     </main>
@@ -145,17 +139,18 @@
     const API_BASE = "https://sonaria-api-test.onrender.com";
     const $ = id => document.getElementById(id);
     const cursosRaw = ["1B", "2B", "3B", "4B", "5B", "6B", "7B", "8B", "IM", "IIM", "IIIM", "IVM"];
-    let selectedCourses = JSON.parse(localStorage.getItem("sonaria_cursos") || '["7B","8B","IM"]');
+    let selectedCourses = JSON.parse(localStorage.getItem("sonaria_cursos") || '["7B","8B"]');
+    let lastAnalysisData = null;
 
-    function showView(name, el) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    function switchView(name, el) {
+        document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
         $(`view-${name}`).classList.add('active');
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         if(el) el.classList.add('active');
-        $("viewTitle").innerText = name.toUpperCase().replace('RADAR', 'Radar de Aula').replace('SYNC', 'Adaptación').replace('PEDAGOGY', 'Planificación');
+        $("viewTitle").innerText = name.toUpperCase().replace('RADAR', 'Radar de Aula').replace('SYNC', 'Adaptación & Sync').replace('PEDAGOGY', 'Planificación Curricular').replace('CURSOS', 'Mis Cursos');
     }
 
-    function renderCursosGrid() {
+    function renderCursosConfig() {
         $("cursosGrid").innerHTML = cursosRaw.map(c => {
             const active = selectedCourses.includes(c);
             return `<div onclick="toggleCourse('${c}', this)" class="p-6 rounded-3xl border-2 cursor-pointer transition-all ${active ? 'border-blue-600 bg-blue-50 font-black' : 'border-slate-100 text-slate-300 font-bold'}">${c.replace('B','°B').replace('M','°M')}</div>`;
@@ -165,82 +160,79 @@
     function toggleCourse(c, el) {
         if(selectedCourses.includes(c)) selectedCourses = selectedCourses.filter(x => x !== c);
         else selectedCourses.push(c);
-        renderCursosGrid();
+        renderCursosConfig();
     }
 
-    function saveCursos() {
+    function saveProfile() {
         localStorage.setItem("sonaria_cursos", JSON.stringify(selectedCourses));
-        showView('radar');
+        switchView('radar', $("nav-radar"));
     }
 
     async function analizar() {
         const btn = $("analyzeBtn");
-        btn.disabled = true; btn.innerHTML = `<span class="animate-pulse">ASISTENTE ANALIZANDO...</span>`;
-        
+        if (!$("titulo").value) return;
+        btn.disabled = true; btn.innerHTML = `<span class="animate-pulse italic uppercase tracking-[0.1em]">Sincronizando con tus niveles...</span>`;
+
         try {
-            const res = await fetch(`${API_BASE}/api/analizar/v25`, {
+            const res = await fetch(`${API_BASE}/api/analizar/v30`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ titulo: $("titulo").value, artista: $("artista").value })
+                body: JSON.stringify({ titulo: $("titulo").value, artista: "" })
             });
             const raw = await res.json();
-            const data = raw.data;
+            lastAnalysisData = raw.data;
 
-            // 1. Mostrar Semáforo
+            // 1. Desbloquear navegación
+            document.querySelectorAll('.nav-link.disabled').forEach(l => l.classList.remove('disabled'));
+
+            // 2. Render Radar (Semáforo)
             $("resultsHero").classList.remove("hidden");
-            $("riskOrigBar").style.width = data.risk_original + "%";
-            $("riskOrigText").innerText = data.risk_original + "%";
-            $("riskFinalBar").style.width = data.risk_final + "%";
-            $("riskFinalText").innerText = data.risk_final + "%";
-            $("summaryTitle").innerText = data.resultado;
-            $("safetyScore").innerText = (100 - data.risk_final) + "%";
+            $("summaryTitle").innerText = lastAnalysisData.resultado;
+            $("statusHero").style.borderColor = lastAnalysisData.color === "green" ? "#00665E" : "#FF8000";
+            $("riskOrigBar").style.width = lastAnalysisData.risk_orig + "%";
+            $("riskFinalBar").style.width = lastAnalysisData.risk_final + "%";
+            $("safetyPct").innerText = (100 - lastAnalysisData.risk_final) + "%";
 
-            // 2. Letras
-            $("lyricsContainer").innerHTML = data.comparativa.map(l => `
-                <div class="mirror-row group hover:bg-blue-50/50">
-                    <div class="text-[10px] text-slate-300 italic group-hover:text-[#000B29] transition-all">${l.original}</div>
-                    <div class="text-[11px] font-bold ${l.changed ? 'text-[#FF8000]' : 'text-slate-800'} transition-all">
-                        ${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}
-                    </div>
-                    <div class="text-[10px] text-slate-400 font-bold opacity-60 uppercase italic">Traducida S-IA</div>
+            // 3. Preparar Letras (Sync View)
+            $("lyricsContainer").innerHTML = lastAnalysisData.matrix.map(l => `
+                <div class="lyrics-grid group hover:bg-blue-50/50 rounded-2xl p-2">
+                    <div class="text-[12px] font-black text-slate-800 italic">${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}</div>
+                    <div class="text-[10px] text-slate-400 font-bold uppercase italic">${l.translated}</div>
                 </div>
             `).join('');
 
-            // 3. Pestañas de Cursos
-            $("courseTabs").innerHTML = selectedCourses.map(c => `
-                <button onclick="showPedContent('${c}')" class="px-8 py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#000B29] hover:text-white transition-all shadow-sm shrink-0">
-                    ${c}
-                </button>
+            // 4. Preparar Pedagogía (Tabs)
+            $("coursePedTabs").innerHTML = selectedCourses.map(c => `
+                <button onclick="renderPedInfo('${c}')" class="px-8 py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#000B29] hover:text-white transition-all shadow-sm shrink-0">${c}</button>
             `).join('');
-            
-            // Guardar matrix pedagógica para uso frontal
-            window.pedDB = data.curriculum;
-            showPedContent(selectedCourses[0]);
+            renderPedInfo(selectedCourses[0]);
 
-            alert("Análisis e Inteligencia automática completada para todos tus niveles.");
+            alert("Análisis completo. Navega en la barra lateral para ver la adaptación y el taller de aula.");
 
-        } catch(e) { alert("Error"); }
-        finally { btn.disabled = false; btn.innerText = "Iniciar Análisis e Iniciar Asistente"; }
+        } catch(e) { alert("Error de conexión con el motor v30."); }
+        finally { btn.disabled = false; btn.innerText = "Analizar e Iniciar Asistente"; }
     }
 
-    function showPedContent(code) {
-        const d = window.pedDB[code];
+    function renderPedInfo(code) {
+        const d = lastAnalysisData.pedagogia_db[code];
         $("pedagogyContent").innerHTML = `
-            <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-widest italic italic">03 Inteligencia para ${code}</h4>
+            <h4 class="text-blue-600 font-black text-[10px] uppercase mb-4 tracking-widest">Planificación para ${code}</h4>
+            <p class="text-4xl font-black text-[#000B29] mb-4 italic leading-none">${d.oa}</p>
+            <p class="text-sm font-bold text-slate-400 mb-10 uppercase tracking-widest">${d.desc}</p>
             <div class="grid grid-cols-2 gap-10">
-                <div class="space-y-6">
-                    <div><span class="text-[10px] font-black text-slate-400 uppercase">OA MINEDUC</span><p class="text-2xl font-black text-[#000B29] leading-tight italic">${d.oa}</p></div>
-                    <div><span class="text-[10px] font-black text-slate-400 uppercase">Actividad de Aula</span><p class="text-sm font-bold text-slate-500 italic italic leading-relaxed">${d.act}</p></div>
+                <div class="bg-slate-50 p-8 rounded-[40px] border border-slate-100">
+                    <span class="text-[9px] font-black text-slate-400 uppercase block mb-3 italic">Actividad de Aula</span>
+                    <p class="text-sm font-black text-slate-700 italic">${d.act}</p>
                 </div>
-                <div class="bg-[#000B29] p-8 rounded-[40px] text-white flex flex-col justify-center text-center italic italic">
-                    <span class="text-[10px] font-black text-[#FF8000] uppercase block mb-3">Reflexión Docente</span>
-                    <p class="text-xl font-bold">Esta obra es ideal para este nivel debido a su estructura melódica y el mensaje adaptado.</p>
+                <div class="bg-[#000B29] p-8 rounded-[40px] text-white shadow-xl flex flex-col justify-center text-center">
+                    <span class="text-[9px] font-black text-[#FF8000] uppercase block mb-4 italic">Pregunta de Mediación</span>
+                    <p class="text-2xl font-black italic tracking-tighter italic italic">"¿Cómo sientes que esta adaptación protege el sentido original de la música?"</p>
                 </div>
             </div>
         `;
     }
 
-    renderCursosGrid();
+    renderCursosConfig();
     $("analyzeBtn").onclick = analizar;
   </script>
 </body>
