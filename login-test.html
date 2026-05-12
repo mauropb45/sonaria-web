@@ -6,23 +6,22 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen">
+<body class="bg-slate-50 flex items-center justify-center min-h-screen font-sans">
   <div class="bg-white p-12 rounded-[48px] shadow-2xl text-center max-w-sm w-full border border-slate-100">
-    <div class="mb-4 inline-block bg-blue-100 text-blue-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest italic">Matrix Edition v23.4</div>
-    <h1 class="text-4xl font-black mb-10 tracking-tighter italic text-slate-900">Sonar<span class="text-blue-600">IA</span></h1>
+    <div class="mb-4 inline-block bg-blue-100 text-blue-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest italic">Protocolo v23.5</div>
+    <h1 class="text-4xl font-black mb-10 tracking-tighter italic text-slate-900 italic">Sonar<span class="text-blue-600">IA</span></h1>
     
     <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
     <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
     
-    <div id="status" class="mt-8 text-xs font-bold text-blue-400 uppercase tracking-widest italic"></div>
+    <div id="status" class="mt-8 text-xs font-bold text-blue-400 uppercase tracking-widest italic animate-pulse"></div>
   </div>
 
   <script>
     const API_URL = "https://sonaria-api-test.onrender.com";
 
     async function handleCredentialResponse(response) {
-      const status = document.getElementById("status");
-      status.innerText = "Sincronizando Matrix...";
+      document.getElementById("status").innerText = "Sincronizando Matrix...";
       try {
         const res = await fetch(`${API_URL}/auth/google`, {
           method: "POST",
@@ -32,13 +31,12 @@
         const data = await res.json();
         if (data.access_token) {
           localStorage.setItem("mejoraria_token", data.access_token);
-          status.innerText = "Acceso concedido...";
-          window.location.href = "sonaria.html";
+          localStorage.setItem("mejoraria_user", JSON.stringify(data.user));
+          // REDIRECCIÓN AL NUEVO NOMBRE
+          window.location.href = "dashboard.html"; 
         }
       } catch (e) { 
-          console.error(e);
-          status.innerText = "Failed to fetch: Revisa CORS en Render";
-          status.style.color = "red";
+          document.getElementById("status").innerText = "Error de comunicación: Revisa el Health link.";
       }
     }
   </script>
