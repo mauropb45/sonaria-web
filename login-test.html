@@ -1,44 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso Staging | SonarIA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;900&display=swap" rel="stylesheet">
-  <style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#f8fafc}</style>
-</head>
-<body class="flex items-center justify-center min-h-screen">
-  <div class="bg-white p-12 rounded-[48px] shadow-2xl text-center max-w-sm w-full border border-slate-100">
-    <div class="mb-4 inline-block bg-blue-100 text-blue-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Versión 23.0 Matrix Edition</div>
-    <h1 class="text-4xl font-black mb-2 tracking-tighter italic">Sonar<span class="text-blue-600">IA</span></h1>
-    <p class="text-slate-500 font-medium mb-8 text-sm italic">"Inteligencia Curricular Sincronizada"</p>
-    
-    <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
-    
-    <div id="status" class="mt-8 text-xs font-bold text-blue-400 uppercase tracking-widest"></div>
-  </div>
-
-  <script>
+<script>
     const API_URL = "https://sonaria-api-test.onrender.com";
 
     async function handleCredentialResponse(response) {
-      document.getElementById("status").innerText = "Sincronizando Matrix...";
+      const status = document.getElementById("status");
+      status.innerText = "Sincronizando Matrix...";
+      
       try {
         const res = await fetch(`${API_URL}/auth/google`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json"
+            // Eliminamos cabeceras extra para evitar preflights complejos
+          },
           body: JSON.stringify({ credential: response.credential })
         });
+
+        if (!res.ok) throw new Error("Error en servidor de test");
+
         const data = await res.json();
-        if (res.ok) {
+        
+        if (data.access_token) {
           localStorage.setItem("mejoraria_token", data.access_token);
-          // Redirigir al dashboard principal (sonaria.html)
-          window.location.href = "sonaria.html";
-        } else { alert("Acceso denegado"); }
-      } catch (e) { alert("Error de comunicación. Revisa los orígenes de Render."); }
+          status.innerText = "Conexión Exitosa. Cargando Dashboard...";
+          setTimeout(() => {
+            window.location.href = "sonaria.html";
+          }, 800);
+        }
+      } catch (e) { 
+        console.error(e);
+        status.innerText = "Error de Red. Reintentando conexión segura...";
+        status.style.color = "red";
+      }
     }
   </script>
-</body>
-</html>
