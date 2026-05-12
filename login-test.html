@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso | SonarIA Professional</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
-  <style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#F8FAFD;}</style>
-</head>
-<body class="flex items-center justify-center min-h-screen">
-  <div class="bg-white p-12 rounded-[48px] shadow-2xl text-center max-w-sm w-full border border-slate-100">
-    <div class="mb-4 inline-block bg-blue-100 text-blue-600 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest italic">Sovereign Suite v25.0</div>
-    <h1 class="text-4xl font-black mb-10 tracking-tighter italic text-slate-900">Sonar<span class="text-blue-600">IA</span></h1>
-    
-    <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
-    
-    <div id="status" class="mt-8 text-xs font-bold text-blue-400 uppercase tracking-widest italic animate-pulse"></div>
-  </div>
-
-  <script>
+<script>
     const API_URL = "https://sonaria-api-test.onrender.com";
 
     async function handleCredentialResponse(response) {
@@ -32,16 +11,15 @@
           body: JSON.stringify({ credential: response.credential })
         });
         const data = await res.json();
-        if (res.ok) {
+        if (data.access_token) {
           localStorage.setItem("mejoraria_token", data.access_token);
           localStorage.setItem("mejoraria_user", JSON.stringify(data.user));
+          // REDIRIGE AL NUEVO NOMBRE DE ARCHIVO
           window.location.href = "dashboard.html"; 
         }
       } catch (e) { 
-          status.innerText = "Error: El motor está despertando (30s). Reintenta.";
+          status.innerText = "Error: El servidor no tiene la ruta de Auth.";
           status.style.color = "red";
       }
     }
-  </script>
-</body>
-</html>
+</script>
