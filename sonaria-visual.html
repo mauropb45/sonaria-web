@@ -2,166 +2,93 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SonarIA | Sovereign Assistant</title>
+  <title>Dashboard | SonarIA Matrix</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; @apply bg-black text-slate-300; overflow: hidden; }
     .sidebar { @apply w-64 bg-black flex flex-col h-screen fixed left-0 top-0 z-[100] p-2 border-r border-white/5; }
-    .main-view { @apply ml-64 bg-[#121212] rounded-lg mt-2 mr-2 h-[calc(100vh-112px)] overflow-y-auto custom-scroll relative transition-all; }
-    .safety-player { @apply fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-white/5 px-8 flex items-center justify-between z-[110]; }
-    
-    /* Grid de Cursos */
-    .suitability-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-    .course-card { @apply p-4 rounded-2xl border-2 border-transparent transition-all cursor-pointer text-center flex flex-col items-center gap-1; }
+    .main-view { @apply ml-64 bg-[#121212] rounded-lg mt-2 mr-2 h-[calc(100vh-112px)] overflow-y-auto custom-scroll p-12; }
+    .course-card { @apply p-4 rounded-2xl border-2 border-transparent transition-all cursor-pointer text-center; }
     .course-card.green { @apply bg-green-900/20 border-green-500 text-green-400; }
     .course-card.orange { @apply bg-orange-900/20 border-orange-500 text-orange-400; }
     .course-card.red { @apply bg-red-900/20 border-red-500 text-red-600 opacity-40; }
-    .course-card.active { @apply ring-4 ring-white/20 scale-105; }
-    
-    .mirror-row { display: grid; grid-template-columns: 1fr 1fr; @apply gap-10 p-4 border-b border-white/5 items-start; }
+    .mirror-row { display: grid; grid-template-columns: 1fr 1fr; @apply gap-10 p-4 border-b border-white/5; }
     mark { @apply bg-yellow-400 text-black px-1 rounded font-bold; }
   </style>
 </head>
 <body class="antialiased">
 
   <aside class="sidebar">
-    <div class="p-6 mb-6 text-blue-500 italic font-black text-2xl uppercase tracking-tighter">SonarIA</div>
-    <nav class="space-y-1">
-        <div onclick="switchView('radar')" class="flex items-center gap-4 px-6 py-3 rounded-xl text-white bg-white/5 cursor-pointer font-bold text-sm"><i data-lucide="search"></i> Radar / Consultor</div>
-        <div onclick="switchView('sync')" class="flex items-center gap-4 px-6 py-3 rounded-xl text-slate-400 hover:text-white cursor-pointer font-bold text-sm"><i data-lucide="languages"></i> Letra & Sincro</div>
+    <div class="p-6 text-blue-500 italic font-black text-2xl uppercase">SonarIA</div>
+    <nav class="flex-1 space-y-1">
+        <div class="p-4 text-white bg-white/5 rounded-xl font-bold text-sm italic border-l-4 border-blue-600"><i data-lucide="radar"></i> Radar / Matrix</div>
     </nav>
+    <div class="p-4 bg-white/5 rounded-2xl m-2"><p class="text-xs font-bold text-white italic">Mauricio P.</p><p class="text-[9px] uppercase text-slate-500 font-black tracking-widest">Plan School Active</p></div>
   </aside>
 
   <main class="main-view">
-    <header class="sticky top-0 bg-[#121212]/90 backdrop-blur-md px-12 py-8 flex justify-between items-center z-40 border-b border-white/5">
-        <h2 id="viewTitle" class="text-xl font-black uppercase tracking-widest italic opacity-40 italic">Asistente de Planificación</h2>
-    </header>
-
-    <div class="p-12 max-w-6xl mx-auto space-y-12">
+    <div class="max-w-4xl mx-auto space-y-12">
+        <h2 class="text-6xl font-black tracking-tighter text-white italic italic">Consultor Matrix</h2>
         
-        <div id="view-radar" class="space-y-12">
-            <!-- INPUT -->
-            <div class="bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <input id="titulo" type="text" placeholder="Canción (Imagine, Creep...)" class="bg-white/5 p-5 rounded-2xl font-bold text-xl outline-none focus:ring-4 focus:ring-blue-600 border-none text-white">
-                    <button id="analyzeBtn" class="bg-blue-600 text-white py-5 rounded-[24px] font-[900] text-lg hover:bg-blue-500 transition-all italic">Consultar todos los niveles</button>
-                </div>
-            </div>
-
-            <!-- MATRIX DE RESULTADOS -->
-            <div id="matrixArea" class="hidden space-y-8 animate-in">
-                <h3 class="text-2xl font-black italic tracking-tighter">¿Para qué cursos sirve esta canción?</h3>
-                <div id="matrixGrid" class="suitability-grid">
-                    <!-- Los 12 cursos se inyectan aquí -->
-                </div>
-                <p class="text-xs text-slate-500 font-bold italic uppercase">Haz clic en un curso aprobado (Verde/Naranja) para ver su planificación y letra adaptada.</p>
-            </div>
+        <div class="bg-white/5 p-10 rounded-[40px] border border-white/10 flex gap-6">
+            <input id="titulo" type="text" placeholder="Imagine..." class="flex-1 bg-white/5 p-5 rounded-2xl font-bold text-xl border-none outline-none text-white focus:ring-4 focus:ring-blue-600">
+            <button id="analyzeBtn" class="bg-blue-600 text-white px-10 rounded-2xl font-black italic hover:bg-blue-500 transition-all">Analizar</button>
         </div>
 
-        <!-- SYNC AREA -->
-        <div id="view-sync" class="hidden space-y-8 animate-in">
-            <div class="bg-[#181818] p-10 rounded-[40px] border border-white/5">
-                <div class="flex justify-between items-start mb-10">
-                    <div>
-                        <h4 id="targetCourseLabel" class="text-blue-500 font-black uppercase text-[10px] tracking-[0.4em] mb-2">---</h4>
-                        <p id="oaLabel" class="text-3xl font-black italic text-white leading-tight"></p>
-                    </div>
-                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase">Descargar Pack</button>
-                </div>
-                <div id="lyricsContainer" class="bg-black/20 rounded-2xl overflow-hidden"></div>
-            </div>
+        <div id="matrixArea" class="hidden space-y-8">
+            <h3 class="text-2xl font-black italic italic">Idoneidad por Grado</h3>
+            <div id="matrixGrid" class="grid grid-cols-6 gap-4"></div>
+        </div>
+
+        <div id="syncArea" class="hidden bg-[#181818] p-10 rounded-[40px] border border-white/5">
+            <h4 id="courseLabel" class="text-blue-500 font-black uppercase text-[10px] tracking-[0.4em] mb-4">---</h4>
+            <div id="lyricsContainer" class="space-y-2"></div>
         </div>
     </div>
   </main>
-
-  <!-- SAFETY PLAYER -->
-  <footer class="safety-player">
-    <div class="flex items-center gap-4 w-[30%] italic">
-        <div id="statusIcon" class="w-14 h-14 bg-white/5 rounded-lg flex items-center justify-center text-xl shadow-inner">🎹</div>
-        <div>
-            <p id="playingTitle" class="font-black text-sm text-white uppercase italic">Esperando...</p>
-            <p id="playingResult" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">—</p>
-        </div>
-    </div>
-    <div class="flex flex-col items-center gap-3 w-[40%]">
-        <span class="text-[10px] font-black italic text-slate-500 uppercase tracking-widest">Estado de Idoneidad General</span>
-        <div class="w-full flex items-center gap-4">
-            <span id="riskValue" class="text-[9px] font-bold text-slate-600">0%</span>
-            <div class="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="riskBar" class="h-full w-0 transition-all duration-[2s]"></div></div>
-            <span class="text-[9px] font-bold text-slate-600 italic italic">Riesgo</span>
-        </div>
-    </div>
-    <div class="w-[30%] text-right font-black text-[10px] text-slate-600 uppercase tracking-widest">v23.0 Matrix Sync</div>
-  </footer>
 
   <script>
     lucide.createIcons();
     const API_BASE = "https://sonaria-api-test.onrender.com";
     const $ = id => document.getElementById(id);
-    let lastMatrixData = null;
-
-    function switchView(name) {
-        document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
-        $(`view-${name}`).classList.remove('hidden');
-    }
+    let lastData = null;
 
     async function analizar() {
         const btn = $("analyzeBtn");
         if (!$("titulo").value) return;
-        btn.disabled = true; btn.innerText = "ESCANEO MATRICIAL...";
-
+        btn.disabled = true; btn.innerText = "ESCANEO...";
         try {
             const res = await fetch(`${API_BASE}/api/analizar/v23`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ titulo: $("titulo").value, artista: "" })
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("mejoraria_token") },
+                body: JSON.stringify({ titulo: $("titulo").value })
             });
             const raw = await res.json();
-            const data = raw.data;
-            lastMatrixData = data;
-
-            // 1. Mostrar Matrix
+            lastData = raw.data;
             $("matrixArea").classList.remove("hidden");
-            $("playingTitle").innerText = data.titulo;
-            $("riskValue").innerText = data.risk_percent + "%";
-            $("riskBar").style.width = data.risk_percent + "%";
-            $("riskBar").style.backgroundColor = data.risk_percent < 30 ? "#22c55e" : "#f97316";
-
-            $("matrixGrid").innerHTML = Object.entries(data.matrix).map(([code, info]) => `
+            $("matrixGrid").innerHTML = Object.entries(lastData.matrix).map(([code, info]) => `
                 <div onclick="focusCourse('${code}')" class="course-card ${info.status}">
                     <span class="text-xs font-black">${info.label}</span>
-                    <span class="text-[8px] font-bold uppercase opacity-60">${info.status === 'red' ? 'No Recomendado' : 'Aprobado'}</span>
                 </div>
             `).join('');
-
-        } catch(e) { alert("Error de Sincronización"); }
-        finally { btn.disabled = false; btn.innerText = "Consultar todos los niveles"; }
+        } catch(e) { alert("Failed to fetch: Reintenta en 10 seg."); }
+        finally { btn.disabled = false; btn.innerText = "Analizar"; }
     }
 
     async function focusCourse(code) {
-        const course = lastMatrixData.matrix[code];
-        if (course.status === 'red') return alert("Este nivel no es recomendado para esta canción por madurez cognitiva.");
-
-        switchView('sync');
-        $("targetCourseLabel").innerText = "Planificación para " + course.label;
-        $("oaLabel").innerText = course.oa + ": " + course.actividad;
-
-        // Pedir adaptación específica al backend
+        $("syncArea").classList.remove("hidden");
+        $("courseLabel").innerText = "Planificación: " + lastData.matrix[code].label;
         const res = await fetch(`${API_BASE}/api/get-adaptation`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lyrics: lastMatrixData.lyrics_raw, course: code })
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ lyrics: lastData.lyrics_raw, course: code })
         });
         const data = await res.json();
-
         $("lyricsContainer").innerHTML = data.comparativa.map(l => `
-            <div class="mirror-row group hover:bg-white/5">
-                <div class="text-[10px] text-slate-500 italic group-hover:text-white transition-all">${l.original}</div>
-                <div class="text-sm font-black ${l.changed ? 'text-blue-500 italic' : 'text-slate-200'} transition-all italic">
-                    ${l.changed ? `<mark>${l.adapted}</mark>` : l.adapted}
-                </div>
+            <div class="mirror-row">
+                <div class="text-[10px] text-slate-600 italic">${l.original}</div>
+                <div class="text-sm font-black ${l.changed ? 'text-blue-500' : 'text-slate-200'} italic">${l.adapted}</div>
             </div>
         `).join('');
     }
