@@ -1,50 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Acceso Docente | SonarIA Pro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
-  <style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#FDFDFF;}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Docente | SonarIA Sovereign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <!-- Script de Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .f1-card { border-radius: 40px; box-shadow: 0 40px 100px -20px rgba(0,23,57,0.15); }
+        .analyzing-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-  <div class="bg-white p-12 rounded-[48px] shadow-2xl text-center max-w-sm w-full border border-slate-100">
-    <div class="mb-6 inline-block bg-[#000B29] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest italic">Staging v35.1</div>
-    <h1 class="text-4xl font-[950] tracking-tighter text-[#000B29] mb-10 italic">Sonar<span class="text-[#FF8000]">IA</span></h1>
-    
-    <div class="flex justify-center">
-        <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
+<body class="h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white p-12 f1-card w-full max-w-md text-center border border-slate-100 relative overflow-hidden">
+        
+        <!-- Badge de Versión -->
+        <div class="flex justify-center mb-6">
+            <span class="bg-[#001739] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest italic">
+                Staging v35.2 Sovereign
+            </span>
+        </div>
+
+        <h1 class="text-5xl font-black text-[#001739] italic tracking-tighter mb-10">
+            Sonar<span class="text-[#FF8700]">IA</span>
+        </h1>
+
+        <!-- Contenedor del Botón de Google -->
+        <div id="google-login-box" class="min-h-[50px] flex flex-col items-center justify-center gap-4">
+            <div id="g_id_onload"
+                 data-client_id="TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="pill"
+                 data-theme="outline"
+                 data-text="continue_with"
+                 data-size="large"
+                 data-logo_alignment="left">
+            </div>
+        </div>
+
+        <!-- Telemetría de Estado (Hotfix del Error) -->
+        <div id="status-container" class="mt-10">
+            <div id="spinner" class="w-5 h-5 border-2 border-slate-200 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-3"></div>
+            <p id="status-text" class="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500 analyzing-pulse">
+                El motor está despertando (30s). Reintenta.
+            </p>
+        </div>
     </div>
-    
-    <div id="status" class="mt-8 text-xs font-black text-blue-600 uppercase tracking-widest animate-pulse"></div>
-  </div>
 
-  <script>
-    const API_URL = "https://sonaria-api-test.onrender.com";
+    <script>
+        // CONFIGURACIÓN DE TELEMETRÍA - CTO
+        // Verifica que esta URL sea exactamente la de tu servicio en Render
+        const API_BASE = "https://sonaria-api-test.onrender.com"; 
 
-    async function handleCredentialResponse(response) {
-      const statusBox = document.getElementById("status");
-      statusBox.innerText = "Sincronizando con el servidor...";
-      try {
-        const res = await fetch(`${API_URL}/auth/google`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ credential: response.credential })
-        });
-        if (!res.ok) throw new Error("Offline");
-        const data = await res.json();
-        if (data.access_token) {
-          localStorage.setItem("mejoraria_token", data.access_token);
-          statusBox.innerText = "¡Acceso concedido!";
-          setTimeout(() => { window.location.href = "dashboard.html"; }, 500);
+        // 1. SILENT PING: Despierta el motor y cambia el UI cuando está listo
+        async function checkEngineStatus() {
+            const text = document.getElementById('status-text');
+            const spinner = document.getElementById('spinner');
+            
+            try {
+                const response = await fetch(API_BASE + "/");
+                if (response.ok) {
+                    text.innerText = "Motor v35.2 Online - Sovereign Ready";
+                    text.classList.remove('text-orange-500', 'analyzing-pulse');
+                    text.classList.add('text-green-500');
+                    spinner.classList.add('hidden');
+                    console.log("Telemetría OK: Motor Despierto");
+                }
+            } catch (err) {
+                console.log("Telemetría: Motor durmiendo...");
+                setTimeout(checkEngineStatus, 3000); // Reintento automático
+            }
         }
-      } catch (error) {
-        statusBox.innerText = "Error: El motor está despertando (30s). Reintenta.";
-        statusBox.classList.add("text-red-500");
-      }
-    }
-  </script>
+
+        // 2. CALLBACK DE GOOGLE: Se ejecuta tras el clic del docente
+        async function handleCredentialResponse(response) {
+            const text = document.getElementById('status-text');
+            text.innerText = "Validando Credenciales Docentes...";
+            text.classList.add('text-blue-500');
+
+            try {
+                const res = await fetch(API_BASE + "/auth/google", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential })
+                });
+
+                if (!res.ok) throw new Error("Fallo en la ruta /auth/google");
+
+                const data = await res.json();
+                
+                // Almacenamos sesión y saltamos al Dashboard
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                text.innerText = "Acceso Concedido. Entrando...";
+                text.classList.replace('text-blue-500', 'text-green-600');
+
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 800);
+
+            } catch (err) {
+                console.error("Critical Auth Error:", err);
+                alert("Error de conexión con el motor auth. Verifique logs del backend.");
+            }
+        }
+
+        // Iniciar telemetría al cargar
+        window.onload = checkEngineStatus;
+    </script>
 </body>
 </html>
