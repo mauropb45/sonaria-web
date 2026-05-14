@@ -2,42 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso Docente | SonarIA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #001739; }
+        .card { background: white; border-radius: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    </style>
 </head>
-<body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
-    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
+<body class="h-screen flex items-center justify-center p-6">
+    <div class="card w-full max-w-md p-12 text-center border-t-[12px] border-[#FF8700]">
         <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
         
-        <div id="loader-box" class="py-10">
+        <div id="loading-engine">
             <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Estableciendo Conexión de Alta Velocidad...</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Sincronizando con Servidor...</p>
         </div>
 
-        <div id="auth-box" class="hidden">
-            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleAuth"></div>
+        <div id="auth-ui" class="hidden">
+            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="onGoogleLogin"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
-            <p class="mt-8 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sistemas Sovereign v44.0 Listos</p>
+            <p class="mt-8 text-[10px] text-green-500 font-bold uppercase tracking-widest">Motor Listo v45.0</p>
         </div>
     </div>
 
     <script>
-        const API = "https://sonaria-api.onrender.com";
-        async function ignition() {
+        const API_URL = "https://sonaria-api.onrender.com";
+
+        async function wakeUp() {
             try {
-                // Ghost Ping para despertar Render sin importar el CORS
-                await fetch(API + "/", { mode: 'no-cors' });
-                const res = await fetch(API + "/");
+                // Ghost Ping para forzar encendido de Render ignorando CORS inicial
+                await fetch(API_URL + "/", { mode: 'no-cors' });
+                // Verificación real
+                const res = await fetch(API_BASE + "/");
                 if(res.ok) {
-                    document.getElementById('loader-box').classList.add('hidden');
-                    document.getElementById('auth-box').classList.remove('hidden');
+                    document.getElementById('loading-engine').classList.add('hidden');
+                    document.getElementById('auth-ui').classList.remove('hidden');
                 }
-            } catch(e) { setTimeout(ignition, 3000); }
+            } catch(e) { setTimeout(wakeUp, 3000); }
         }
-        async function handleAuth(response) {
-            const res = await fetch(API + "/auth/google", {
+
+        async function onGoogleLogin(response) {
+            const res = await fetch(API_URL + "/auth/google", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ credential: response.credential })
@@ -49,7 +57,7 @@
                 window.location.href = "dashboard.html";
             }
         }
-        window.onload = ignition;
+        window.onload = wakeUp;
     </script>
 </body>
 </html>
