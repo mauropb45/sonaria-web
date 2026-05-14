@@ -2,56 +2,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SonarIA | Sovereign Ignition</title>
+    <title>Acceso Docente | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
-    <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
+    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
         <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
         
+        <div id="loader-box" class="py-10">
+            <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Estableciendo Conexión de Alta Velocidad...</p>
+        </div>
+
         <div id="auth-box" class="hidden">
             <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleAuth"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
-        </div>
-
-        <div id="loader-box">
-            <div class="w-10 h-10 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p id="status-text" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 animate-pulse">Inyectando Energía al Motor Core...</p>
+            <p class="mt-8 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sistemas Sovereign v44.0 Listos</p>
         </div>
     </div>
 
     <script>
         const API = "https://sonaria-api.onrender.com";
-
-        async function ghostWakeUp() {
+        async function ignition() {
             try {
-                // ESTRATEGIA GHOST: Petición sin CORS para forzar el encendido de Render
-                // El navegador enviará la petición sí o sí, despertando la instancia.
+                // Ghost Ping para despertar Render sin importar el CORS
                 await fetch(API + "/", { mode: 'no-cors' });
-                
-                // Una vez enviada la señal, verificamos con una petición real cada 3 seg
-                checkRealConnection();
-            } catch(e) { setTimeout(ghostWakeUp, 2000); }
-        }
-
-        async function checkRealConnection() {
-            try {
                 const res = await fetch(API + "/");
                 if(res.ok) {
                     document.getElementById('loader-box').classList.add('hidden');
                     document.getElementById('auth-box').classList.remove('hidden');
-                } else { throw "Waiting"; }
-            } catch(e) { setTimeout(checkRealConnection, 3000); }
+                }
+            } catch(e) { setTimeout(ignition, 3000); }
         }
-
-        function handleAuth(r) { 
-            localStorage.setItem('token', r.credential); 
-            window.location.href = "dashboard.html"; 
+        async function handleAuth(response) {
+            const res = await fetch(API + "/auth/google", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ credential: response.credential })
+            });
+            const data = await res.json();
+            if(data.ok) {
+                localStorage.setItem('sonaria_token', data.access_token);
+                localStorage.setItem('sonaria_user', JSON.stringify(data.user));
+                window.location.href = "dashboard.html";
+            }
         }
-
-        window.onload = ghostWakeUp;
+        window.onload = ignition;
     </script>
 </body>
 </html>
