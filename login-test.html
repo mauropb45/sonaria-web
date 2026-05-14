@@ -18,28 +18,40 @@
 
         <div id="loader-box">
             <div class="w-10 h-10 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p id="status-text" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Estableciendo Conexión...</p>
+            <p id="status-text" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 animate-pulse">Inyectando Energía al Motor Core...</p>
         </div>
     </div>
 
     <script>
         const API = "https://sonaria-api.onrender.com";
-        async function wake() {
+
+        async function ghostWakeUp() {
             try {
-                // Petición limpia sin headers para evitar CORS inicial
+                // ESTRATEGIA GHOST: Petición sin CORS para forzar el encendido de Render
+                // El navegador enviará la petición sí o sí, despertando la instancia.
+                await fetch(API + "/", { mode: 'no-cors' });
+                
+                // Una vez enviada la señal, verificamos con una petición real cada 3 seg
+                checkRealConnection();
+            } catch(e) { setTimeout(ghostWakeUp, 2000); }
+        }
+
+        async function checkRealConnection() {
+            try {
                 const res = await fetch(API + "/");
                 if(res.ok) {
                     document.getElementById('loader-box').classList.add('hidden');
                     document.getElementById('auth-box').classList.remove('hidden');
-                    console.log("ENGINE_ONLINE");
-                } else { throw "Offline"; }
-            } catch(e) { 
-                console.log("Retrying..."); 
-                setTimeout(wake, 5000); 
-            }
+                } else { throw "Waiting"; }
+            } catch(e) { setTimeout(checkRealConnection, 3000); }
         }
-        function handleAuth(r) { localStorage.setItem('token', r.credential); window.location.href = "dashboard.html"; }
-        window.onload = wake;
+
+        function handleAuth(r) { 
+            localStorage.setItem('token', r.credential); 
+            window.location.href = "dashboard.html"; 
+        }
+
+        window.onload = ghostWakeUp;
     </script>
 </body>
 </html>
