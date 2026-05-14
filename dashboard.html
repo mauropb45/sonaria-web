@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA v36.3 | Sovereign Workspace</title>
+    <title>SonarIA v36.4 | Sovereign Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
     <style>
@@ -26,7 +26,7 @@
             <div id="engine-dot" class="w-2 h-2 rounded-full bg-orange-500 animate-pulse ml-4"></div>
             <span id="engine-status" class="text-[9px] font-black uppercase tracking-widest text-orange-400">Sincronizando...</span>
         </div>
-        <button onclick="location.reload()" class="text-[10px] font-black uppercase text-[#FF8700]">v36.3 REINICIAR</button>
+        <button onclick="location.reload()" class="text-[10px] font-black uppercase text-[#FF8700]">v36.4 Reiniciar</button>
     </header>
 
     <div class="flex flex-grow overflow-hidden">
@@ -41,23 +41,22 @@
         </nav>
 
         <main class="flex-grow p-8 overflow-hidden relative">
-            
             <div id="sec-config" class="section-content active">
                 <div class="max-w-4xl mx-auto space-y-8">
-                    <h2 class="text-5xl font-black italic tracking-tighter uppercase border-l-8 border-[#FF8700] pl-6">Mi Perfil de Aula</h2>
+                    <h2 class="text-5xl font-black italic tracking-tighter uppercase border-l-8 border-[#FF8700] pl-6 text-[#001739]">Mi Perfil de Aula</h2>
                     <div class="grid grid-cols-4 gap-4" id="course-grid"></div>
-                    <button onclick="SonarIA.saveConfig()" class="f1-orange text-white px-10 py-5 rounded-2xl font-black uppercase text-sm shadow-xl active:scale-95 transition-all">Guardar e Ir al Analizador →</button>
+                    <button onclick="SonarIA.saveConfig()" class="f1-orange text-white px-10 py-5 rounded-2xl font-black uppercase text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all">Guardar Perfil →</button>
                 </div>
             </div>
 
             <div id="sec-analyze" class="section-content">
-                <div class="max-w-2xl mx-auto space-y-8 py-10 text-center">
-                    <h2 class="text-4xl font-black italic tracking-tighter uppercase">Analizador de Obra</h2>
-                    <div class="bg-white p-10 rounded-[3rem] shadow-2xl space-y-6 border border-slate-100 text-left">
-                        <input id="in-titulo" type="text" placeholder="Nombre de la canción" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
+                <div class="max-w-2xl mx-auto space-y-8 py-10">
+                    <h2 class="text-4xl font-black italic tracking-tighter uppercase text-[#001739]">Analizador</h2>
+                    <div class="bg-white p-10 rounded-[3rem] shadow-2xl space-y-6 border border-slate-100">
+                        <input id="in-titulo" type="text" placeholder="Título" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
                         <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
                         <button id="btn-run" onclick="SonarIA.analyze()" disabled class="w-full bg-slate-200 text-slate-400 p-6 rounded-2xl font-black uppercase tracking-[0.3em] cursor-not-allowed">Esperando Motor...</button>
-                        <p id="warmup-msg" class="text-center text-[10px] font-bold text-orange-500 animate-pulse uppercase italic">El motor de Render está arrancando. Espere 15s...</p>
+                        <p id="warmup-msg" class="text-center text-[10px] font-bold text-orange-500 animate-pulse uppercase italic">El motor de Render está arrancando. Espere unos segundos...</p>
                     </div>
                 </div>
             </div>
@@ -67,8 +66,8 @@
                     <div class="bg-white rounded-[3.5rem] p-12 shadow-2xl flex justify-between items-center border border-white">
                         <div>
                             <span class="bg-[#001739] text-[#FF8700] text-[10px] font-black px-4 py-1.5 rounded-full uppercase mb-6 inline-block">Resultado Oficial</span>
-                            <h3 id="res-resultado" class="text-7xl font-black tracking-tighter italic mb-6">--</h3>
-                            <p id="res-just" class="text-slate-600 max-w-xl text-xl font-medium italic leading-relaxed"></p>
+                            <h3 id="res-resultado" class="text-7xl font-black tracking-tighter leading-none italic mb-6">--</h3>
+                            <p id="res-just" class="text-slate-600 max-w-xl text-xl font-medium italic"></p>
                         </div>
                         <div class="text-right">
                             <div id="res-risk" class="text-[10rem] font-black tracking-tighter leading-none">0%</div>
@@ -81,7 +80,7 @@
             <div id="sec-canvas" class="section-content h-full pb-20">
                 <div class="grid grid-cols-2 gap-8 h-full">
                     <div class="bg-white rounded-[2.5rem] p-10 shadow-xl flex flex-col border border-slate-100 overflow-hidden">
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-6">Lírica Original</h4>
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-6">Letra Original</h4>
                         <div id="res-orig" class="flex-grow overflow-y-auto canvas-scroll text-base leading-relaxed text-slate-400 italic whitespace-pre-wrap pr-4"></div>
                     </div>
                     <div class="bg-white rounded-[2.5rem] p-10 shadow-xl flex flex-col border-4 border-[#FF8700]/10 overflow-hidden">
@@ -98,26 +97,22 @@
                         <div id="res-oa" class="space-y-6 text-sm font-semibold text-slate-600"></div>
                     </div>
                     <div class="bg-[#001739] p-10 rounded-[3rem] shadow-2xl text-white">
-                        <h4 class="text-xs font-black text-orange-400 uppercase mb-6 italic">Actividad</h4>
-                        <p id="res-act" class="text-2xl font-bold italic leading-tight"></p>
+                        <h4 class="text-xs font-black text-orange-400 uppercase mb-6 italic text-center">Actividad</h4>
+                        <p id="res-act" class="text-2xl font-bold italic leading-tight text-center mt-10"></p>
                     </div>
                 </div>
             </div>
 
             <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center">
                 <div class="w-1.5 h-24 bg-[#FF8700] animate-bounce mb-6"></div>
-                <h4 class="text-sm font-black uppercase animate-pulse">Analizando Frecuencias...</h4>
+                <h4 class="text-sm font-black uppercase animate-pulse">Analizando...</h4>
             </div>
-
         </main>
     </div>
 
     <script>
-        const COURSE_MAP = {
-            "1° Básico": "1", "2° Básico": "2", "3° Básico": "3", "4° Básico": "4",
-            "5° Básico": "5", "6° Básico": "6", "7° Básico": "7", "8° Básico": "8",
-            "I° Medio": "1M", "II° Medio": "2M", "III° Medio": "3M", "IV° Medio": "4M"
-        };
+        // CONFIGURACIÓN DE INFRAESTRUCTURA - CTO
+        const RENDER_URL = "https://sonaria-api.onrender.com";
 
         window.SonarIA = {
             state: { cursos: JSON.parse(localStorage.getItem('my_courses') || '[]') },
@@ -129,10 +124,10 @@
 
             async checkEngine() {
                 try {
-                    // Llamada ultra-básica sin cabeceras
-                    const res = await fetch("https://sonaria-api.onrender.com/");
+                    // Llamada sin barra final para evitar redirecciones de Render
+                    const res = await fetch(RENDER_URL, { cache: "no-cache" });
                     if(res.ok) {
-                        document.getElementById('engine-status').innerText = "ENGINE ONLINE";
+                        document.getElementById('engine-status').innerText = "ONLINE";
                         document.getElementById('engine-status').className = "text-[9px] font-black text-green-400 uppercase";
                         document.getElementById('engine-dot').className = "w-2 h-2 rounded-full bg-green-500";
                         const btn = document.getElementById('btn-run');
@@ -146,7 +141,8 @@
 
             renderCourseGrid() {
                 const grid = document.getElementById('course-grid');
-                grid.innerHTML = Object.keys(COURSE_MAP).map(c => `
+                const list = ["1° Básico", "2° Básico", "3° Básico", "4° Básico", "5° Básico", "6° Básico", "7° Básico", "8° Básico", "I° Medio", "II° Medio", "III° Medio", "IV° Medio"];
+                grid.innerHTML = list.map(c => `
                     <button onclick="SonarIA.toggleCourse('${c}')" 
                             class="p-5 rounded-2xl border-2 text-[11px] font-black uppercase transition-all ${this.state.cursos.includes(c) ? 'f1-navy text-white border-[#001739]' : 'bg-white border-slate-100 text-slate-400'}">
                         ${c}
@@ -179,11 +175,11 @@
                 if(!titulo) return alert("Indique el título");
 
                 document.getElementById('loader').classList.remove('hidden');
+                const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
                 const codigos = this.state.cursos.map(c => COURSE_MAP[c]);
 
                 try {
-                    // POST simplificado para no romper CORS
-                    const response = await fetch("https://sonaria-api.onrender.com/analizar", {
+                    const response = await fetch(`${RENDER_URL}/analizar`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ titulo, artista, cursos_seleccionados: codigos })
@@ -193,7 +189,7 @@
                         this.renderResults(data);
                         this.unlock(true);
                         this.nav('sec-diag');
-                    } else { alert("Fallo Motor: " + (data.error || "Lírica no disponible.")); }
+                    } else { alert("Error: " + (data.error || "Fallo motor")); }
                 } catch (err) { alert("Error de Sincronización."); }
                 finally { document.getElementById('loader').classList.add('hidden'); }
             },
@@ -204,14 +200,8 @@
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
                 document.getElementById('res-orig').innerText = data.letra_original;
                 document.getElementById('res-adapt').innerText = data.letra_adaptada || "APTA PARA USO DIRECTO.";
-                
-                document.getElementById('res-oa').innerHTML = data.cursos_sugeridos.map(c => `
-                    <div class="border-l-4 border-orange-500 pl-6 py-2">
-                        <p class="font-black text-[10px] text-orange-500">NIVEL ${c}</p>
-                        <p class="font-bold">Apreciar manifestaciones musicales considerando contexto e impacto.</p>
-                    </div>
-                `).join('');
-                document.getElementById('res-act').innerText = `Analizar el tema "${data.temas[0] || 'la obra'}" y su relación con el entorno social del curso.`;
+                document.getElementById('res-oa').innerHTML = data.cursos_sugeridos.map(c => `<div class="border-l-4 border-orange-500 pl-6 py-2"><p class="font-black text-[10px] text-orange-500">NIVEL ${c}</p><p class="font-bold">Apreciar manifestaciones musicales considerando contexto e impacto.</p></div>`).join('');
+                document.getElementById('res-act').innerText = `DESAFÍO: Analizar el tema "${data.temas[0] || 'la obra'}" y su relación con el curso.`;
             },
 
             unlock(val) {
@@ -221,7 +211,6 @@
                 });
             }
         };
-
         document.addEventListener('DOMContentLoaded', () => SonarIA.init());
     </script>
 </body>
