@@ -2,61 +2,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Docente | SonarIA Sovereign</title>
+    <title>SonarIA | Acceso</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #001739; }
-        .f1-card { background: white; border-radius: 40px; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5); }
-        .analyzing-pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    </style>
 </head>
-<body class="h-screen flex items-center justify-center p-6">
-    <div class="f1-card w-full max-w-md p-12 text-center relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-2 bg-[#FF8700]"></div>
-        <span class="inline-block bg-[#001739] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] mb-8">v35.4 Sovereign</span>
-        <h1 class="text-6xl font-black text-[#001739] italic tracking-tighter mb-10">Sonar<span class="text-[#FF8700]">IA</span></h1>
+<body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
+    <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center border-t-8 border-[#FF8700]">
+        <h1 class="text-5xl font-black italic text-[#001739] mb-10 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
         
-        <div id="google-btn-container" class="flex justify-center bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8">
+        <!-- Google Botón -->
+        <div class="flex justify-center p-6 bg-slate-50 rounded-3xl border mb-6">
             <div id="g_id_onload"
                  data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
                  data-callback="handleAuth"
                  data-auto_prompt="false">
             </div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="continue_with" data-size="large"></div>
+            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
         </div>
 
-        <div id="engine-status" class="flex items-center justify-center gap-3">
-            <div id="status-dot" class="w-2 h-2 rounded-full bg-orange-500 analyzing-pulse"></div>
-            <span id="status-text" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Calentando Motor v34...</span>
+        <div id="engine-status" class="flex items-center justify-center gap-2">
+            <div id="dot" class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
+            <span id="status-text" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Motor Despertando...</span>
         </div>
     </div>
 
     <script>
-        const API_BASE = "https://sonaria-api.onrender.com";
-
-        async function wakeUp() {
+        const API = "https://sonaria-api.onrender.com";
+        async function check() {
             try {
-                await fetch(API_BASE + "/");
-                document.getElementById('status-text').innerText = "Motor Sovereign Listo";
-                document.getElementById('status-text').classList.replace('text-slate-400', 'text-green-600');
-                document.getElementById('status-dot').classList.replace('bg-orange-500', 'bg-green-500');
-                document.getElementById('status-dot').classList.remove('analyzing-pulse');
-            } catch (e) { setTimeout(wakeUp, 3000); }
+                const res = await fetch(API + "/");
+                if(res.ok) {
+                    document.getElementById('status-text').innerText = "Motor en Línea";
+                    document.getElementById('status-text').className = "text-[10px] font-black text-green-500 uppercase";
+                    document.getElementById('dot').className = "w-2 h-2 rounded-full bg-green-500";
+                }
+            } catch(e) { setTimeout(check, 3000); }
         }
-
-        function handleAuth(response) {
-            localStorage.setItem('token', response.credential);
-            // Simulación de login exitoso para el Staging
+        function handleAuth(resp) {
+            localStorage.setItem('token', resp.credential);
             window.location.href = "dashboard.html";
         }
-
-        window.onload = wakeUp;
+        window.onload = check;
     </script>
 </body>
 </html>
