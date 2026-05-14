@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA v36.4 | Sovereign Workspace</title>
+    <title>SonarIA Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; background-color: #F3F4F6; color: #001739; }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; background-color: #F3F4F6; }
         .f1-navy { background-color: #001739; }
         .f1-orange { background-color: #FF8700; }
         .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255, 135, 0, 0.1); color: #FF8700; }
@@ -18,131 +18,125 @@
         .canvas-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="flex flex-col h-screen">
+<body class="flex flex-col h-screen overflow-hidden">
 
     <header class="h-16 f1-navy flex items-center justify-between px-8 text-white shadow-2xl shrink-0 z-50">
+        <h1 class="text-2xl font-black italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <div class="flex items-center gap-4">
-            <h1 class="text-2xl font-black italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
-            <div id="engine-dot" class="w-2 h-2 rounded-full bg-orange-500 animate-pulse ml-4"></div>
-            <span id="engine-status" class="text-[9px] font-black uppercase tracking-widest text-orange-400">Sincronizando...</span>
+            <span id="engine-status" class="text-[9px] font-black uppercase bg-green-500/20 text-green-400 px-3 py-1 rounded-full">Sovereign v37.0 Online</span>
+            <button onclick="location.reload()" class="text-[10px] font-black uppercase text-orange-400 hover:text-white">Reiniciar</button>
         </div>
-        <button onclick="location.reload()" class="text-[10px] font-black uppercase text-[#FF8700]">v36.4 Reiniciar</button>
     </header>
 
     <div class="flex flex-grow overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
         <nav class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-xl z-40">
             <div class="p-6 flex flex-col gap-2">
-                <button onclick="SonarIA.nav('sec-config')" id="btn-nav-config" class="nav-btn active flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all">⚙️ Mi Aula</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="btn-nav-analyze" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all">🔍 Analizador</button>
-                <button onclick="SonarIA.nav('sec-diag')" id="btn-nav-diag" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all opacity-30" disabled>🚦 Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="btn-nav-canvas" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all opacity-30" disabled>📝 Dual Canvas</button>
-                <button onclick="SonarIA.nav('sec-pedagogy')" id="btn-nav-pedagogy" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold transition-all opacity-30" disabled>🎓 Guía Docente</button>
+                <button onclick="SonarIA.nav('sec-config')" id="btn-nav-config" class="nav-btn active flex items-center gap-3 p-4 rounded-xl text-sm font-bold">⚙️ Mi Aula</button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="btn-nav-analyze" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold">🔍 Analizador</button>
+                <button onclick="SonarIA.nav('sec-diag')" id="btn-nav-diag" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold opacity-30" disabled>🚦 Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="btn-nav-canvas" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold opacity-30" disabled>📝 Dual Canvas</button>
+                <button onclick="SonarIA.nav('sec-pedagogy')" id="btn-nav-pedagogy" class="nav-btn flex items-center gap-3 p-4 rounded-xl text-sm font-bold opacity-30" disabled>🎓 Guía Docente</button>
             </div>
         </nav>
 
         <main class="flex-grow p-8 overflow-hidden relative">
+            
+            <!-- SECTION 1: MI AULA -->
             <div id="sec-config" class="section-content active">
                 <div class="max-w-4xl mx-auto space-y-8">
-                    <h2 class="text-5xl font-black italic tracking-tighter uppercase border-l-8 border-[#FF8700] pl-6 text-[#001739]">Mi Perfil de Aula</h2>
+                    <h2 class="text-5xl font-black italic tracking-tighter uppercase border-l-8 border-[#FF8700] pl-6 text-[#001739]">Configuración de Aula</h2>
+                    <p class="text-slate-500 font-medium italic">Seleccione los cursos para los cuales prepara material didáctico:</p>
                     <div class="grid grid-cols-4 gap-4" id="course-grid"></div>
-                    <button onclick="SonarIA.saveConfig()" class="f1-orange text-white px-10 py-5 rounded-2xl font-black uppercase text-sm shadow-xl hover:scale-[1.02] active:scale-95 transition-all">Guardar Perfil →</button>
+                    <button onclick="SonarIA.saveConfig()" class="f1-orange text-white px-10 py-5 rounded-2xl font-black uppercase text-sm shadow-xl active:scale-95 transition-all">Guardar Perfil de Aula →</button>
                 </div>
             </div>
 
+            <!-- SECTION 2: ANALIZADOR -->
             <div id="sec-analyze" class="section-content">
                 <div class="max-w-2xl mx-auto space-y-8 py-10">
-                    <h2 class="text-4xl font-black italic tracking-tighter uppercase text-[#001739]">Analizador</h2>
+                    <h2 class="text-4xl font-black italic tracking-tighter uppercase text-[#001739]">Analizador de Obra</h2>
                     <div class="bg-white p-10 rounded-[3rem] shadow-2xl space-y-6 border border-slate-100">
-                        <input id="in-titulo" type="text" placeholder="Título" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
-                        <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
-                        <button id="btn-run" onclick="SonarIA.analyze()" disabled class="w-full bg-slate-200 text-slate-400 p-6 rounded-2xl font-black uppercase tracking-[0.3em] cursor-not-allowed">Esperando Motor...</button>
-                        <p id="warmup-msg" class="text-center text-[10px] font-bold text-orange-500 animate-pulse uppercase italic">El motor de Render está arrancando. Espere unos segundos...</p>
+                        <input id="in-titulo" type="text" placeholder="Título de la Canción" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none">
+                        <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none">
+                        <button id="btn-run" onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-6 rounded-2xl font-black uppercase tracking-[0.3em] shadow-xl hover:bg-[#08234d] transition-all">Analizar</button>
                     </div>
                 </div>
             </div>
 
+            <!-- SECTION 3: DIAGNÓSTICO -->
             <div id="sec-diag" class="section-content">
                 <div class="max-w-5xl mx-auto py-10">
                     <div class="bg-white rounded-[3.5rem] p-12 shadow-2xl flex justify-between items-center border border-white">
                         <div>
-                            <span class="bg-[#001739] text-[#FF8700] text-[10px] font-black px-4 py-1.5 rounded-full uppercase mb-6 inline-block">Resultado Oficial</span>
+                            <span class="bg-[#001739] text-[#FF8700] text-[10px] font-black px-4 py-1.5 rounded-full uppercase mb-6 inline-block tracking-widest">Estado Pedagógico</span>
                             <h3 id="res-resultado" class="text-7xl font-black tracking-tighter leading-none italic mb-6">--</h3>
                             <p id="res-just" class="text-slate-600 max-w-xl text-xl font-medium italic"></p>
                         </div>
                         <div class="text-right">
-                            <div id="res-risk" class="text-[10rem] font-black tracking-tighter leading-none">0%</div>
+                            <div id="res-risk" class="text-[10rem] font-black tracking-tighter leading-none text-[#001739]">0%</div>
                             <p class="text-sm font-black text-slate-400 uppercase tracking-[0.4em]">Riesgo</p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- SECTION 4: DUAL CANVAS -->
             <div id="sec-canvas" class="section-content h-full pb-20">
                 <div class="grid grid-cols-2 gap-8 h-full">
                     <div class="bg-white rounded-[2.5rem] p-10 shadow-xl flex flex-col border border-slate-100 overflow-hidden">
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-6">Letra Original</h4>
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase mb-6 tracking-widest">Letra Original</h4>
                         <div id="res-orig" class="flex-grow overflow-y-auto canvas-scroll text-base leading-relaxed text-slate-400 italic whitespace-pre-wrap pr-4"></div>
                     </div>
                     <div class="bg-white rounded-[2.5rem] p-10 shadow-xl flex flex-col border-4 border-[#FF8700]/10 overflow-hidden">
-                        <h4 class="text-[10px] font-black text-[#FF8700] uppercase mb-6">Mediación Sugerida</h4>
+                        <h4 class="text-[10px] font-black text-[#FF8700] uppercase mb-6 tracking-widest">Mediación SonarIA</h4>
                         <div id="res-adapt" class="flex-grow overflow-y-auto canvas-scroll text-base leading-relaxed text-[#001739] font-bold whitespace-pre-wrap pr-4"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- SECTION 5: GUÍA DOCENTE -->
             <div id="sec-pedagogy" class="section-content">
                 <div class="max-w-5xl mx-auto grid grid-cols-2 gap-8 py-10">
                     <div class="bg-white p-10 rounded-[3rem] shadow-xl border border-blue-50">
-                        <h4 class="text-xs font-black text-[#FF8700] uppercase mb-6 italic">OA MINEDUC</h4>
+                        <h4 class="text-xs font-black text-[#FF8700] uppercase mb-6 italic tracking-widest text-center">Match Curricular MINEDUC</h4>
                         <div id="res-oa" class="space-y-6 text-sm font-semibold text-slate-600"></div>
                     </div>
-                    <div class="bg-[#001739] p-10 rounded-[3rem] shadow-2xl text-white">
-                        <h4 class="text-xs font-black text-orange-400 uppercase mb-6 italic text-center">Actividad</h4>
-                        <p id="res-act" class="text-2xl font-bold italic leading-tight text-center mt-10"></p>
+                    <div class="bg-[#001739] p-10 rounded-[3rem] shadow-2xl text-white text-center">
+                        <h4 class="text-xs font-black text-orange-400 uppercase mb-6 italic tracking-widest">Actividad de Aula</h4>
+                        <p id="res-act" class="text-2xl font-bold italic leading-tight mt-10"></p>
                     </div>
                 </div>
             </div>
 
+            <!-- Global Loader -->
             <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center">
                 <div class="w-1.5 h-24 bg-[#FF8700] animate-bounce mb-6"></div>
-                <h4 class="text-sm font-black uppercase animate-pulse">Analizando...</h4>
+                <h4 class="text-sm font-black uppercase animate-pulse">Sincronizando Core...</h4>
             </div>
+
         </main>
     </div>
 
     <script>
-        // CONFIGURACIÓN DE INFRAESTRUCTURA - CTO
-        const RENDER_URL = "https://sonaria-api.onrender.com";
+        const API_URL = "https://sonaria-api.onrender.com/analizar";
+        const COURSE_MAP = {
+            "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4",
+            "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8",
+            "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M"
+        };
 
         window.SonarIA = {
             state: { cursos: JSON.parse(localStorage.getItem('my_courses') || '[]') },
 
             init() {
                 this.renderCourseGrid();
-                this.checkEngine();
-            },
-
-            async checkEngine() {
-                try {
-                    // Llamada sin barra final para evitar redirecciones de Render
-                    const res = await fetch(RENDER_URL, { cache: "no-cache" });
-                    if(res.ok) {
-                        document.getElementById('engine-status').innerText = "ONLINE";
-                        document.getElementById('engine-status').className = "text-[9px] font-black text-green-400 uppercase";
-                        document.getElementById('engine-dot').className = "w-2 h-2 rounded-full bg-green-500";
-                        const btn = document.getElementById('btn-run');
-                        btn.disabled = false;
-                        btn.innerText = "Encender Motor";
-                        btn.className = "w-full f1-navy text-white p-6 rounded-2xl font-black uppercase tracking-[0.3em] hover:bg-[#08234d] shadow-xl cursor-pointer transition-all";
-                        document.getElementById('warmup-msg').classList.add('hidden');
-                    }
-                } catch(e) { setTimeout(() => this.checkEngine(), 3000); }
             },
 
             renderCourseGrid() {
                 const grid = document.getElementById('course-grid');
-                const list = ["1° Básico", "2° Básico", "3° Básico", "4° Básico", "5° Básico", "6° Básico", "7° Básico", "8° Básico", "I° Medio", "II° Medio", "III° Medio", "IV° Medio"];
-                grid.innerHTML = list.map(c => `
+                grid.innerHTML = Object.keys(COURSE_MAP).map(c => `
                     <button onclick="SonarIA.toggleCourse('${c}')" 
                             class="p-5 rounded-2xl border-2 text-[11px] font-black uppercase transition-all ${this.state.cursos.includes(c) ? 'f1-navy text-white border-[#001739]' : 'bg-white border-slate-100 text-slate-400'}">
                         ${c}
@@ -175,11 +169,10 @@
                 if(!titulo) return alert("Indique el título");
 
                 document.getElementById('loader').classList.remove('hidden');
-                const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
                 const codigos = this.state.cursos.map(c => COURSE_MAP[c]);
 
                 try {
-                    const response = await fetch(`${RENDER_URL}/analizar`, {
+                    const response = await fetch(API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ titulo, artista, cursos_seleccionados: codigos })
@@ -189,8 +182,8 @@
                         this.renderResults(data);
                         this.unlock(true);
                         this.nav('sec-diag');
-                    } else { alert("Error: " + (data.error || "Fallo motor")); }
-                } catch (err) { alert("Error de Sincronización."); }
+                    } else { alert("Fallo Motor: " + (data.error || "No se encontró lírica.")); }
+                } catch (err) { alert("Error de Sincronización con el Servidor."); }
                 finally { document.getElementById('loader').classList.add('hidden'); }
             },
 
@@ -199,9 +192,15 @@
                 document.getElementById('res-just').innerText = data.justificacion;
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
                 document.getElementById('res-orig').innerText = data.letra_original;
-                document.getElementById('res-adapt').innerText = data.letra_adaptada || "APTA PARA USO DIRECTO.";
-                document.getElementById('res-oa').innerHTML = data.cursos_sugeridos.map(c => `<div class="border-l-4 border-orange-500 pl-6 py-2"><p class="font-black text-[10px] text-orange-500">NIVEL ${c}</p><p class="font-bold">Apreciar manifestaciones musicales considerando contexto e impacto.</p></div>`).join('');
-                document.getElementById('res-act').innerText = `DESAFÍO: Analizar el tema "${data.temas[0] || 'la obra'}" y su relación con el curso.`;
+                document.getElementById('res-adapt').innerText = data.letra_adaptada || "CANCION SEGURA PARA USO DIRECTO.";
+                
+                document.getElementById('res-oa').innerHTML = data.cursos_sugeridos.map(c => `
+                    <div class="border-l-4 border-orange-500 pl-6 py-2">
+                        <p class="font-black text-[10px] text-orange-500">NIVEL ${c}</p>
+                        <p class="font-bold">Apreciar manifestaciones musicales considerando contexto e impacto en los oyentes.</p>
+                    </div>
+                `).join('');
+                document.getElementById('res-act').innerText = `DESAFÍO: Analizar el tema "${data.temas[0] || 'la obra'}" y su relación con el grupo curso.`;
             },
 
             unlock(val) {
@@ -211,6 +210,7 @@
                 });
             }
         };
+
         document.addEventListener('DOMContentLoaded', () => SonarIA.init());
     </script>
 </body>
