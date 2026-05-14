@@ -2,48 +2,41 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SonarIA | Acceso</title>
+    <title>SonarIA | Sovereign Ignition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
-    <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center border-t-8 border-[#FF8700]">
-        <h1 class="text-5xl font-black italic text-[#001739] mb-10 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
+    <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
+        <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
         
-        <!-- Google Botón -->
-        <div class="flex justify-center p-6 bg-slate-50 rounded-3xl border mb-6">
-            <div id="g_id_onload"
-                 data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
-                 data-callback="handleAuth"
-                 data-auto_prompt="false">
-            </div>
+        <div id="auth-container" class="opacity-30 pointer-events-none transition-opacity duration-1000">
+            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleAuth"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
         </div>
 
-        <div id="engine-status" class="flex items-center justify-center gap-2">
-            <div id="dot" class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
-            <span id="status-text" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Motor Despertando...</span>
+        <div id="engine-status" class="mt-8 flex items-center justify-center gap-3">
+            <div id="dot" class="w-3 h-3 rounded-full bg-orange-500 animate-pulse"></div>
+            <span id="status-text" class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Despertando Motor Core...</span>
         </div>
     </div>
 
     <script>
         const API = "https://sonaria-api.onrender.com";
-        async function check() {
+        async function wake() {
             try {
                 const res = await fetch(API + "/");
                 if(res.ok) {
-                    document.getElementById('status-text').innerText = "Motor en Línea";
-                    document.getElementById('status-text').className = "text-[10px] font-black text-green-500 uppercase";
-                    document.getElementById('dot').className = "w-2 h-2 rounded-full bg-green-500";
+                    document.getElementById('auth-container').classList.remove('opacity-30', 'pointer-events-none');
+                    document.getElementById('status-text').innerText = "Sistemas en Línea";
+                    document.getElementById('status-text').className = "text-[10px] font-black text-green-500 uppercase tracking-widest";
+                    document.getElementById('dot').className = "w-3 h-3 rounded-full bg-green-500";
                 }
-            } catch(e) { setTimeout(check, 3000); }
+            } catch(e) { setTimeout(wake, 3000); }
         }
-        function handleAuth(resp) {
-            localStorage.setItem('token', resp.credential);
-            window.location.href = "dashboard.html";
-        }
-        window.onload = check;
+        function handleAuth(r) { localStorage.setItem('token', r.credential); window.location.href = "dashboard.html"; }
+        window.onload = wake;
     </script>
 </body>
 </html>
