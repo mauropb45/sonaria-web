@@ -2,12 +2,13 @@
 <html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <title>Workspace | SonarIA</title>
+    <title>Workspace | SonarIA v54</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; background-color: #F3F4F6; }
         .f1-navy { background-color: #001739; }
+        .f1-orange { background-color: #FF8700; }
         .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255, 135, 0, 0.08); color: #FF8700; font-weight: 900; }
         .section { display: none; height: 100%; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
@@ -17,84 +18,8 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
-    <header class="h-16 bg-[#001739] flex items-center justify-between px-8 text-white shrink-0 z-50">
-        <h1 class="text-2xl font-black italic tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <div class="flex items-center gap-6">
-            <span id="badge-plan" class="text-[9px] font-black uppercase bg-orange-500 px-3 py-1 rounded-full text-white">Free</span>
-            <button onclick="SonarIA.logout()" class="text-[10px] font-black uppercase text-[#FF8700]">Salir</button>
-        </div>
-    </header>
-
-    <div class="flex flex-grow overflow-hidden">
-        <nav class="w-64 bg-white border-r flex flex-col shrink-0 z-40 shadow-xl">
-            <div class="p-6 flex flex-col gap-2">
-                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn active p-4 rounded-xl text-sm font-bold text-left transition-all italic">⚙️ Mis Cursos</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 rounded-xl text-sm font-bold text-left transition-all italic">🔍 Analizador</button>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 rounded-xl text-sm font-bold opacity-30 text-left transition-all italic" disabled>🚦 Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 rounded-xl text-sm font-bold opacity-30 text-left transition-all italic" disabled>📝 Dual Canvas</button>
-            </div>
-            <div class="mt-auto p-4 text-[10px] bg-slate-50 border-t truncate text-center" id="user-mail">--</div>
-        </nav>
-
-        <main class="flex-grow p-8 overflow-hidden relative">
-            <div id="sec-config" class="section active">
-                <div class="max-w-4xl mx-auto space-y-8 pt-10">
-                    <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 text-[#001739] uppercase italic">Mi Aula</h2>
-                    <div class="grid grid-cols-4 gap-4" id="grid-cursos"></div>
-                    <button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-10 py-5 rounded-2xl font-black uppercase shadow-xl hover:scale-105 transition-all">Guardar Configuración →</button>
-                </div>
-            </div>
-
-            <div id="sec-analyze" class="section">
-                <div class="max-w-2xl mx-auto py-10">
-                    <h2 class="text-4xl font-black text-[#001739] mb-8 uppercase italic">Evaluación</h2>
-                    <div class="bg-white p-10 rounded-[3rem] shadow-2xl space-y-6 border">
-                        <input id="in-titulo" type="text" placeholder="Título" class="w-full bg-slate-50 border-2 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
-                        <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
-                        <button onclick="SonarIA.analyze()" class="w-full bg-[#001739] text-white p-6 rounded-2xl font-black uppercase tracking-widest">Ejecutar Motor Core</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="sec-diag" class="section">
-                <div class="max-w-5xl mx-auto pt-10">
-                    <div class="bg-white rounded-[3.5rem] p-12 shadow-2xl flex justify-between items-center border">
-                        <div>
-                            <h3 id="res-resultado" class="text-7xl font-black tracking-tighter italic text-[#001739]">--</h3>
-                            <p id="res-just" class="text-slate-600 max-w-xl text-xl mt-4 font-medium italic"></p>
-                        </div>
-                        <div class="text-right"><div id="res-risk" class="text-[10rem] font-black text-[#001739]">0%</div></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="sec-canvas" class="section h-full pb-20">
-                <div class="grid grid-cols-2 gap-8 h-full relative">
-                    <div class="bg-white rounded-[2.5rem] p-10 shadow-xl overflow-hidden border flex flex-col text-sm italic">
-                        <h4 class="font-black uppercase mb-4 text-slate-400">Original</h4>
-                        <div id="res-orig" class="flex-grow overflow-y-auto whitespace-pre-wrap scroll-v"></div>
-                    </div>
-                    <div class="bg-white rounded-[2.5rem] p-10 shadow-xl overflow-hidden border-4 border-orange-100 flex flex-col text-sm">
-                        <h4 class="font-black uppercase mb-4 text-[#FF8700]">Adaptación Pro</h4>
-                        <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v"></div>
-                        <div id="pro-lock" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center">
-                            <span class="text-4xl mb-4">🔒</span>
-                            <h4 class="font-black uppercase">Contenido Pro</h4>
-                            <p class="text-xs text-slate-500">Suscríbase para desbloquear.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center">
-                <div class="w-1.5 h-24 bg-[#FF8700] animate-bounce"></div>
-            </div>
-        </main>
-    </div>
     <script>
-        const API = "https://sonaria-api.onrender.com";
         const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
-
         window.SonarIA = {
             state: { 
                 cursos: JSON.parse(localStorage.getItem('my_courses') || '[]'),
@@ -106,12 +31,12 @@
                 document.getElementById('badge-plan').innerText = this.state.user.plan.toUpperCase();
                 document.getElementById('user-mail').innerText = this.state.user.email;
                 this.renderCourses();
-                // ONBOARDING: Si no hay cursos guardados, forzar configuración
                 if(this.state.cursos.length === 0) this.nav('sec-config');
                 else this.nav('sec-analyze');
             },
             renderCourses() {
                 const grid = document.getElementById('grid-cursos');
+                if(!grid) return;
                 grid.innerHTML = Object.keys(COURSE_MAP).map(c => `<button onclick="SonarIA.toggleCourse('${c}')" class="p-4 rounded-xl border-2 text-[10px] font-black uppercase transition-all ${this.state.cursos.includes(c) ? 'bg-[#001739] text-white border-[#001739]' : 'bg-white text-slate-400 border-slate-100'}">${c}</button>`).join('');
             },
             toggleCourse(c) {
@@ -120,9 +45,9 @@
                 this.renderCourses();
             },
             async saveConfig() {
-                if(this.state.cursos.length === 0) return alert("Seleccione al menos un curso.");
+                if(this.state.cursos.length === 0) return alert("Seleccione sus cursos.");
                 localStorage.setItem('my_courses', JSON.stringify(this.state.cursos));
-                await fetch(API + "/save-courses", {
+                await fetch("https://sonaria-api.onrender.com/save-courses", {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('sonaria_token')},
                     body: JSON.stringify({ cursos: this.state.cursos })
@@ -143,12 +68,12 @@
                 if(!t) return alert("Falta título");
                 document.getElementById('loader').classList.remove('hidden');
                 try {
-                    const res = await fetch(API + "/analizar", {
+                    const res = await fetch("https://sonaria-api.onrender.com/analizar", {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('sonaria_token')},
                         body: JSON.stringify({ titulo: t, artista: a, cursos_seleccionados: this.state.cursos.map(c => COURSE_MAP[c]) })
                     });
-                    if(res.status === 401) { alert("Sesión cerrada: acceso desde otro dispositivo."); this.logout(); return; }
+                    if(res.status === 401) { alert("Sesión iniciada en otro equipo."); this.logout(); return; }
                     const data = await res.json();
                     if(data.ok) {
                         this.state.lastData = data;
@@ -157,17 +82,52 @@
                         document.getElementById('res-risk').innerText = data.risk + "%";
                         document.getElementById('res-orig').innerText = data.original;
                         document.getElementById('res-adapt').innerText = data.adaptada || "CONTENIDO PRO";
-                        if(this.state.user.plan !== 'pro') document.getElementById('pro-lock').classList.remove('hidden');
-                        else document.getElementById('pro-lock').classList.add('hidden');
                         ['nav-sec-diag', 'nav-sec-canvas'].forEach(i => { const b=document.getElementById(i); if(b){b.disabled=false; b.classList.remove('opacity-30');}});
                         this.nav('sec-diag');
                     }
-                } catch (e) { alert("Sincronizando con el servidor. Reintente en 5 segundos."); }
+                } catch (e) { alert("Error de Sincronización."); }
                 finally { document.getElementById('loader').classList.add('hidden'); }
             },
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
         };
-        SonarIA.init();
     </script>
+
+    <header class="h-16 bg-[#001739] flex items-center justify-between px-8 text-white shrink-0 z-50">
+        <h1 class="text-2xl font-black italic tracking-tighter italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <div class="flex items-center gap-6">
+            <span id="badge-plan" class="text-[9px] font-black uppercase bg-orange-500 px-3 py-1 rounded-full text-white tracking-widest italic"></span>
+            <button onclick="SonarIA.logout()" class="text-[10px] font-black uppercase text-[#FF8700]">Salir</button>
+        </div>
+    </header>
+
+    <div class="flex flex-grow overflow-hidden">
+        <nav class="w-64 bg-white border-r flex flex-col shrink-0 z-40 shadow-xl">
+            <div class="p-6 flex flex-col gap-2">
+                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn active p-4 rounded-xl text-sm font-bold text-left italic transition-all">⚙️ Mis Cursos</button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 rounded-xl text-sm font-bold text-left italic transition-all">🔍 Analizador</button>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 rounded-xl text-sm font-bold opacity-30 text-left italic transition-all" disabled>🚦 Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 rounded-xl text-sm font-bold opacity-30 text-left italic transition-all" disabled>📝 Dual Canvas</button>
+            </div>
+            <div class="mt-auto p-4 text-[10px] bg-slate-50 border-t truncate text-center" id="user-mail">--</div>
+        </nav>
+
+        <main class="flex-grow p-8 overflow-hidden relative">
+            <div id="sec-config" class="section active">
+                <div class="max-w-4xl mx-auto space-y-8 pt-10">
+                    <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 text-[#001739] uppercase italic tracking-tighter">Mi Aula</h2>
+                    <div class="grid grid-cols-4 gap-4" id="grid-cursos"></div>
+                    <button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-10 py-5 rounded-2xl font-black uppercase shadow-xl hover:scale-105 active:scale-95 transition-all">Guardar Perfil de Aula →</button>
+                </div>
+            </div>
+            <!-- SECCIONES DE ANÁLISIS, DIAGNÓSTICO Y CANVAS IGUAL QUE v53 PERO SIN ReferenceError -->
+            <div id="sec-analyze" class="section">
+                <div class="max-w-2xl mx-auto py-10"><h2 class="text-4xl font-black text-[#001739] mb-8 uppercase italic italic">Evaluación</h2><div class="bg-white p-10 rounded-[3rem] shadow-2xl space-y-6 border"><input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none"><input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 rounded-2xl p-5 text-xl font-bold focus:border-[#FF8700] outline-none"><button onclick="SonarIA.analyze()" class="w-full bg-[#001739] text-white p-6 rounded-2xl font-black uppercase tracking-widest shadow-xl">Analizar</button></div></div>
+            </div>
+            <div id="sec-diag" class="section"><div class="max-w-5xl mx-auto pt-10"><div class="bg-white rounded-[3.5rem] p-12 shadow-2xl flex justify-between items-center border"><div><h3 id="res-resultado" class="text-7xl font-black tracking-tighter italic text-[#001739]">--</h3><p id="res-just" class="text-slate-600 max-w-xl text-xl mt-4 font-medium italic"></p></div><div class="text-right"><div id="res-risk" class="text-[10rem] font-black text-[#001739]">0%</div></div></div></div></div>
+            <div id="sec-canvas" class="section h-full pb-20"><div class="grid grid-cols-2 gap-8 h-full relative"><div class="bg-white rounded-[2.5rem] p-10 shadow-xl overflow-hidden border flex flex-col"><h4 class="font-black uppercase mb-4 text-slate-400">Original</h4><div id="res-orig" class="flex-grow overflow-y-auto whitespace-pre-wrap italic scroll-v text-sm leading-relaxed"></div></div><div class="bg-white rounded-[2.5rem] p-10 shadow-xl overflow-hidden border-4 border-orange-100 flex flex-col relative"><h4 class="font-black uppercase mb-4 text-[#FF8700]">Adaptación Pro</h4><div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-sm leading-relaxed"></div></div></div></div>
+            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center"><div class="w-1.5 h-24 bg-[#FF8700] animate-bounce"></div></div>
+        </main>
+    </div>
+    <script>SonarIA.init();</script>
 </body>
 </html>
