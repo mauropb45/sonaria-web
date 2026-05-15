@@ -2,51 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso | SonarIA v55</title>
+    <title>Acceso SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
-    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
-        <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <div id="loader">
-            <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[10px] font-black uppercase text-slate-400">Sincronizando con Motor Core...</p>
+<body class="bg-[#001739] h-screen flex items-center justify-center font-sans">
+    <div class="bg-white p-10 rounded-[2rem] shadow-2xl text-center w-full max-w-sm">
+        <h1 class="text-4xl font-black italic mb-8 text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        
+        <!-- ESTADO DEL MOTOR -->
+        <div id="status-container" class="mb-6">
+            <div id="spinner" class="w-8 h-8 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-4"></div>
+            <p id="status-text" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Despertando Servidor...</p>
         </div>
-        <div id="auth-ui" class="hidden">
-            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="onLogin"></div>
+
+        <!-- BOTÓN DE GOOGLE (OCULTO HASTA QUE EL MOTOR DESPIERTE) -->
+        <div id="google-btn" class="hidden flex justify-center">
+            <div id="g_id_onload"
+                 data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
+                 data-callback="handleLogin">
+            </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
         </div>
     </div>
+
     <script>
         const API = "https://sonaria-api.onrender.com";
-        async function ignition() {
+
+        // Función para despertar el motor ignorando errores de CORS iniciales
+        async function wakeUp() {
             try {
-                // Ghost Spark
-                fetch(API + "/", { mode: 'no-cors' });
-                const res = await fetch(API + "/");
-                if(res.ok) {
-                    document.getElementById('loader').classList.add('hidden');
-                    document.getElementById('auth-ui').classList.remove('hidden');
+                // Intentamos un fetch simple
+                const response = await fetch(API + "/");
+                if (response.ok) {
+                    document.getElementById('status-container').classList.add('hidden');
+                    document.getElementById('google-btn').classList.remove('hidden');
+                } else {
+                    throw "Aún cargando";
                 }
-            } catch(e) { setTimeout(ignition, 3000); }
-        }
-        async function onLogin(r) {
-            const res = await fetch(API + "/auth/google", {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ credential: r.credential })
-            });
-            const data = await res.json();
-            if(data.token) {
-                localStorage.setItem('sonaria_token', data.token);
-                localStorage.setItem('sonaria_user', JSON.stringify(data.user));
-                localStorage.setItem('my_courses', JSON.stringify(data.user.cursos || []));
-                window.location.href = "dashboard.html";
+            } catch (e) {
+                console.log("Servidor durmiendo, reintentando...");
+                setTimeout(wakeUp, 3000); // Reintenta cada 3 segundos
             }
         }
-        window.onload = ignition;
+
+        async function handleLogin(googleResponse) {
+            document.getElementById('status-text').innerText = "Validando...";
+            document.getElementById('status-container').classList.remove('hidden');
+            document.getElementById('google-btn').classList.add('hidden');
+
+            try {
+                const res = await fetch(API + "/auth/google", {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ credential: googleResponse.credential })
+                });
+                
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem('sonaria_token', data.token);
+                    localStorage.setItem('sonaria_user', JSON.stringify(data.user));
+                    // Salto directo al dashboard
+                    window.location.href = "dashboard.html";
+                }
+            } catch (err) {
+                alert("Error al validar el acceso. Reintenta.");
+                location.reload();
+            }
+        }
+
+        window.onload = wakeUp;
     </script>
 </body>
 </html>
