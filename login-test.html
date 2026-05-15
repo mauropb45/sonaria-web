@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso | SonarIA v63</title>
+    <title>Acceso | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -13,7 +13,7 @@
         
         <div id="loader">
             <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[10px] font-black uppercase text-slate-400">Despertando Motor Sovereign...</p>
+            <p id="status-text" class="text-[10px] font-black uppercase text-slate-400">Preparando Motor de Análisis...</p>
         </div>
 
         <div id="auth-ui" class="hidden flex justify-center">
@@ -25,20 +25,22 @@
     <script>
         const API = "https://sonaria-api.onrender.com";
 
-        function ignition() {
-            // "Ghost Spark": Las imágenes saltan el bloqueo CORS. Esto fuerza el encendido de Render.
-            const spark = new Image();
-            spark.src = API + "/?ignite=" + Date.now();
-            
-            const check = setInterval(async () => {
+        async function ignition() {
+            // Intentamos despertar Render de forma persistente
+            const check = async () => {
                 try {
                     const res = await fetch(API + "/");
                     if (res.ok) {
-                        clearInterval(check);
                         document.getElementById('loader').classList.add('hidden');
                         document.getElementById('auth-ui').classList.remove('hidden');
+                        return true;
                     }
-                } catch (e) { console.log("Motor fríó..."); }
+                } catch (e) { return false; }
+                return false;
+            };
+
+            const interval = setInterval(async () => {
+                if (await check()) clearInterval(interval);
             }, 3000);
         }
 
