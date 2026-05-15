@@ -2,22 +2,22 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SonarIA | Acceso</title>
+    <title>SonarIA | Sovereign Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
     <div class="bg-white p-12 rounded-[3rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
-        <h1 class="text-6xl font-black italic text-[#001739] mb-12">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
         
-        <div id="loading-engine">
+        <div id="loader">
             <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[10px] font-black uppercase text-slate-400 animate-pulse">Sincronizando Sistemas...</p>
+            <p id="status-text" class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Sincronizando con Google Cloud...</p>
         </div>
 
         <div id="auth-ui" class="hidden">
-            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="onLogin"></div>
+            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="handleLogin"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
         </div>
     </div>
@@ -27,19 +27,15 @@
 
         async function ignition() {
             try {
-                // GHOST PING: Petición opaca que despierta Render saltándose el CORS inicial
-                await fetch(API + "/", { mode: 'no-cors' });
-                
-                // Petición de verificación
                 const res = await fetch(API + "/");
                 if(res.ok) {
-                    document.getElementById('loading-engine').classList.add('hidden');
+                    document.getElementById('loader').classList.add('hidden');
                     document.getElementById('auth-ui').classList.remove('hidden');
-                } else { throw "retry"; }
+                }
             } catch(e) { setTimeout(ignition, 3000); }
         }
 
-        async function onLogin(r) {
+        async function handleLogin(r) {
             const res = await fetch(API + "/auth/google", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
