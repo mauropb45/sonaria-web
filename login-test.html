@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso | SonarIA</title>
+    <title>SonarIA | Sovereign Ignition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -13,7 +13,7 @@
         
         <div id="loader">
             <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[10px] font-black uppercase text-slate-400">Despertando Motor Sovereign...</p>
+            <p id="status-text" class="text-[10px] font-black uppercase text-slate-400 animate-pulse">Sincronizando con Google Cloud...</p>
         </div>
 
         <div id="auth-ui" class="hidden">
@@ -26,10 +26,10 @@
         const API = "https://sonaria-api.onrender.com";
 
         function ignition() {
-            // Técnica de Impacto de Imagen: Despierta a Render saltándose el bloqueo CORS
-            const spark = new Image();
-            spark.src = API + "/?t=" + Date.now();
-
+            // "Ghost Ignition": Las imágenes saltan el CORS. Forzamos a Render a despertar.
+            const img = new Image();
+            img.src = API + "/?ping=" + Date.now();
+            
             const check = setInterval(async () => {
                 try {
                     const res = await fetch(API + "/");
