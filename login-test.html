@@ -9,38 +9,33 @@
 </head>
 <body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
     <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
-        <h1 class="text-6xl font-black italic text-[#001739] mb-12 tracking-tighter italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        
+        <h1 class="text-6xl font-black italic text-[#001739] mb-12 italic tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <div id="loader">
             <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p id="status-text" class="text-[10px] font-black uppercase text-slate-400">Preparando Motor de Análisis...</p>
+            <p class="text-[10px] font-black uppercase text-slate-400">Despertando Motor Sovereign v65...</p>
         </div>
-
         <div id="auth-ui" class="hidden flex justify-center">
             <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="onLogin" data-auto_prompt="false"></div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
         </div>
     </div>
-
     <script>
-        const API = "https://sonaria-api.onrender.com";
+        // URL CORREGIDA SEGÚN TUS LOGS
+        const API = "https://sonaria-api-test.onrender.com";
 
-        async function ignition() {
-            // Intentamos despertar Render de forma persistente
-            const check = async () => {
+        function ignition() {
+            // Impacto por imagen para saltar CORS inicial
+            const spark = new Image();
+            spark.src = API + "/?t=" + Date.now();
+            const check = setInterval(async () => {
                 try {
                     const res = await fetch(API + "/");
-                    if (res.ok) {
+                    if(res.ok) {
+                        clearInterval(check);
                         document.getElementById('loader').classList.add('hidden');
                         document.getElementById('auth-ui').classList.remove('hidden');
-                        return true;
                     }
-                } catch (e) { return false; }
-                return false;
-            };
-
-            const interval = setInterval(async () => {
-                if (await check()) clearInterval(interval);
+                } catch(e) {}
             }, 3000);
         }
 
