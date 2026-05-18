@@ -3,151 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SonarIA | Cockpit Master v35.3</title>
+    <title>SonarIA | Dashboard v35.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #001739; color: #001739; }
-        .f1-gradient { background: linear-gradient(135deg, #001739 0%, #002b66 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
-        .orange-glow { box-shadow: 0 10px 25px -5px rgba(255, 135, 0, 0.3); }
-        .btn-animate { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f7fa; color: #001739; }
+        .f1-navy { background-color: #001739; }
+        .f1-orange { background-color: #FF8700; }
+        .glass-card { background: white; border-radius: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eef2f6; }
         .btn-animate:active { transform: scale(0.96); }
-        
-        /* Layout fix for wide screens */
-        @media (min-width: 1024px) {
-            .main-grid { height: calc(100vh - 80px); overflow: hidden; }
-            .scroll-area { overflow-y: auto; height: 100%; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,135,0,0.3); border-radius: 10px; }
+        /* Estilo para secciones bloqueadas Pro */
+        .pro-locked-content { filter: blur(4px); pointer-events: none; user-select: none; }
+        .pro-badge-inline { background: #FF8700; color: white; padding: 2px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; text-transform: uppercase; margin-left: 8px; }
     </style>
 </head>
-<body class="h-screen overflow-hidden flex flex-col">
+<body class="min-h-screen pb-20">
 
-    <!-- HEADER ELEGANTE Y VISIBLE -->
-    <header class="h-20 f1-gradient text-white px-8 shadow-2xl flex justify-between items-center shrink-0 border-b border-white/10">
-        <div class="flex items-center gap-4">
-            <div class="bg-orange-500 p-2.5 rounded-xl shadow-lg">
-                <i data-lucide="waveform" class="text-white w-6 h-6"></i>
-            </div>
-            <div>
-                <h1 class="text-2xl font-black italic tracking-tighter leading-none uppercase">Sonar<span class="text-orange-500">IA</span></h1>
-                <span id="plan-label" class="text-[10px] font-black tracking-[0.3em] text-orange-500 uppercase">Cuenta Pro Activa</span>
-            </div>
+    <!-- HEADER (Basado en tu Dashboard actual) -->
+    <header class="h-16 f1-navy flex items-center justify-between px-8 text-white sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-black italic tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
+            <span id="header-plan-tag" class="text-[10px] font-black uppercase bg-white/10 px-2 py-0.5 rounded ml-2">Plan Free</span>
         </div>
-        
-        <div class="flex items-center gap-6">
-            <div id="user-info" class="text-right border-r border-white/10 pr-6 hidden md:block">
-                <div id="user-mail" class="text-xs font-black italic opacity-80">maunpb45@gmail.com</div>
-                <div class="text-[9px] font-bold text-blue-300 uppercase tracking-widest">Workspace Docente</div>
-            </div>
-            <button onclick="SonarIA.logout()" class="bg-red-500/10 hover:bg-red-500/20 p-3 rounded-full transition-all text-red-400 border border-red-500/20">
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-            </button>
+        <div class="flex items-center gap-4">
+            <span id="user-mail" class="text-[10px] font-bold opacity-60 italic">maunpb45@gmail.com</span>
+            <button onclick="SonarIA.logout()" class="text-[10px] font-black uppercase text-[#FF8700]">Salir</button>
         </div>
     </header>
 
-    <!-- CONTENEDOR PRINCIPAL: EL COCKPIT -->
-    <main class="flex-grow main-grid grid grid-cols-1 lg:grid-cols-12 gap-0">
+    <main class="max-w-2xl mx-auto mt-8 px-4 space-y-6">
         
-        <!-- COLUMNA IZQUIERDA: CONTROL (Fija en Desktop) -->
-        <aside class="lg:col-span-4 p-6 lg:p-8 scroll-area bg-slate-50/50 border-r border-slate-200">
-            <div class="space-y-6">
-                <!-- MI AULA -->
-                <section class="glass-card rounded-[2.5rem] p-8 shadow-xl">
-                    <div class="flex items-center gap-3 mb-6">
-                        <i data-lucide="layout-grid" class="text-orange-500 w-5 h-5"></i>
-                        <h2 class="text-sm font-black uppercase tracking-widest text-slate-500 italic italic">Mi Aula</h2>
-                    </div>
-                    <div id="grid-cursos" class="grid grid-cols-3 gap-2"></div>
-                </section>
+        <!-- SECCIÓN: MI AULA -->
+        <section class="glass-card p-8">
+            <div class="flex items-center gap-2 mb-6 text-slate-400">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                <h2 class="text-[10px] font-black uppercase tracking-widest">Mi Aula</h2>
+            </div>
+            <div id="grid-cursos" class="grid grid-cols-4 gap-2"></div>
+        </section>
 
-                <!-- ANALIZADOR -->
-                <section class="glass-card rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
-                    <h2 class="text-2xl font-black italic uppercase tracking-tighter mb-8">Análisis</h2>
-                    <div class="space-y-4">
-                        <div class="group">
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block tracking-widest italic italic">Obra</label>
-                            <input id="in-titulo" type="text" placeholder="Ej: Creep" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold focus:border-orange-500 outline-none transition-all">
-                        </div>
-                        <div class="group">
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-4 mb-1 block tracking-widest italic italic">Artista</label>
-                            <input id="in-artista" type="text" placeholder="Ej: Radiohead" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold focus:border-orange-500 outline-none transition-all">
-                        </div>
-                        <button onclick="SonarIA.analyze()" class="w-full f1-gradient text-white p-6 rounded-3xl font-black uppercase italic tracking-tighter text-xl orange-glow btn-animate flex items-center justify-center gap-3 mt-4">
-                            <i data-lucide="zap" class="text-orange-500 fill-orange-500"></i> ANALIZAR
-                        </button>
-                    </div>
-                    
-                    <div id="loader" class="hidden absolute inset-0 bg-white/95 backdrop-blur-md z-20 flex flex-col items-center justify-center p-8 text-center">
-                        <div class="w-16 h-1 bg-orange-500 rounded-full mb-4 animate-pulse"></div>
-                        <h4 class="text-lg font-black italic uppercase tracking-tighter animate-pulse text-[#001739]">Escaneando...</h4>
-                    </div>
-                </section>
-                
-                <div class="p-4 text-center">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic opacity-50 italic">SonarIA v35.3 Powered by Pedagogy AI</p>
+        <!-- SECCIÓN: ANALIZADOR -->
+        <section class="glass-card p-8">
+            <h2 class="text-xl font-black uppercase tracking-tighter mb-6 italic">Análisis de Canción</h2>
+            <div class="space-y-4">
+                <input id="in-titulo" type="text" placeholder="Título" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold focus:border-[#FF8700] outline-none transition-all">
+                <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 font-bold focus:border-[#FF8700] outline-none transition-all">
+                <button onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-5 rounded-2xl font-black uppercase italic tracking-tighter shadow-xl btn-animate flex items-center justify-center gap-2">
+                    <i data-lucide="zap" class="w-5 h-5 text-[#FF8700] fill-[#FF8700]"></i> ANALIZAR
+                </button>
+            </div>
+            <div id="loader" class="hidden pt-6 text-center animate-pulse">
+                <span class="text-[10px] font-black uppercase text-slate-400">Escaneando Frecuencias...</span>
+            </div>
+        </section>
+
+        <!-- RESULTADOS (DIAGNÓSTICO) - SIEMPRE FREE -->
+        <section id="sec-diag" class="hidden glass-card p-10">
+            <div class="flex justify-between items-start">
+                <div class="flex-grow">
+                    <h3 id="res-resultado" class="text-5xl font-black tracking-tighter text-[#001739] leading-none uppercase italic">--</h3>
+                    <p id="res-just" class="text-slate-500 text-sm mt-4 font-medium leading-relaxed"></p>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] font-black text-slate-400 uppercase mb-1">Riesgo Escolar</div>
+                    <div id="res-risk" class="text-5xl font-black text-[#001739]">0%</div>
                 </div>
             </div>
-        </aside>
+        </section>
 
-        <!-- COLUMNA DERECHA: RESULTADOS (Scrollable) -->
-        <section class="lg:col-span-8 p-6 lg:p-10 scroll-area space-y-8 bg-blue-900/5">
+        <!-- AULA SEGURA (ADAPTACIÓN) - LÓGICA FREE/PRO -->
+        <section id="sec-canvas" class="hidden glass-card overflow-hidden">
+            <div class="flex bg-slate-50 border-b">
+                <button onclick="SonarIA.tab('adapt')" id="tab-adapt" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent transition-all">Adaptación <span class="pro-badge-inline">Pro</span></button>
+                <button onclick="SonarIA.tab('trans')" id="tab-trans" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent transition-all">Traducción <span class="pro-badge-inline">Pro</span></button>
+                <button onclick="SonarIA.tab('orig')" id="tab-orig" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b-2 border-transparent transition-all">Original</button>
+            </div>
+            <div class="p-10 relative">
+                <!-- Bloqueo visual para Free -->
+                <div id="pro-overlay-canvas" class="hidden absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm p-6 text-center">
+                    <i data-lucide="lock" class="w-8 h-8 text-[#FF8700] mb-4"></i>
+                    <p class="font-black uppercase text-xs">Adaptación Escolar es PRO</p>
+                    <a href="planes.html" class="mt-4 bg-[#FF8700] text-white px-6 py-2 rounded-xl font-black uppercase text-[10px]">Activar Pro</a>
+                </div>
+
+                <div id="canvas-content" class="text-sm leading-relaxed whitespace-pre-wrap">
+                    <div id="res-adapt" class="font-bold text-slate-800"></div>
+                    <div id="res-trans" class="hidden italic text-slate-700"></div>
+                    <div id="res-orig" class="hidden text-slate-400 italic"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RUTA CURRICULAR - LÓGICA FREE/PRO -->
+        <section id="sec-plan" class="hidden glass-card p-10 relative">
+            <h3 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6 italic">Ruta Curricular</h3>
             
-            <!-- RESULTADO RÁPIDO (GRID) -->
-            <div id="sec-diag" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- DIAGNÓSTICO -->
-                <div class="md:col-span-2 glass-card rounded-[3rem] p-10 shadow-xl flex flex-col justify-center min-h-[240px]">
-                    <div id="diag-empty" class="text-center py-6">
-                        <p class="text-slate-300 font-bold italic text-xl italic">Dashboard en espera...</p>
-                    </div>
-                    <div id="diag-content" class="hidden">
-                        <span class="px-4 py-1 rounded-full bg-orange-500 text-white text-[10px] font-black uppercase mb-4 inline-block shadow-lg">Diagnóstico de Aula</span>
-                        <h3 id="res-resultado" class="text-6xl font-black tracking-tighter text-[#001739] mb-4 uppercase italic leading-none">--</h3>
-                        <p id="res-just" class="text-slate-600 font-medium italic border-l-4 border-orange-500 pl-6 text-lg"></p>
-                    </div>
+            <div id="plan-tabs" class="flex gap-2 mb-6 overflow-x-auto"></div>
+            
+            <div class="relative">
+                <!-- Bloqueo visual para Free -->
+                <div id="pro-overlay-plan" class="hidden absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm p-6 text-center">
+                    <i data-lucide="crown" class="w-8 h-8 text-[#FF8700] mb-4"></i>
+                    <p class="font-black uppercase text-xs italic">La Planificación Detallada es PRO</p>
+                    <a href="planes.html" class="mt-4 bg-[#001739] text-white px-6 py-2 rounded-xl font-black uppercase text-[10px]">Ver Planes</a>
                 </div>
-                <!-- RIESGO -->
-                <div class="glass-card rounded-[3rem] p-10 shadow-xl flex flex-col items-center justify-center text-center border-orange-500/20 border-2">
-                    <div class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">Riesgo Escolar</div>
-                    <div id="res-risk" class="text-7xl font-black text-[#001739] tracking-tighter">0%</div>
-                </div>
+
+                <div id="plan-content" class="space-y-4"></div>
             </div>
 
-            <!-- ADAPTACIÓN Y LETRA -->
-            <section id="sec-canvas" class="hidden glass-card rounded-[3rem] overflow-hidden shadow-xl animate-in fade-in slide-in-from-bottom-10 duration-700">
-                <div class="flex bg-slate-50 border-b border-slate-100 p-1">
-                    <button onclick="SonarIA.tab('adapt')" id="tab-adapt" class="flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 transition-all rounded-2xl">Adaptación Pro</button>
-                    <button onclick="SonarIA.tab('trans')" id="tab-trans" class="flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 transition-all rounded-2xl">Traducción</button>
-                    <button onclick="SonarIA.tab('orig')" id="tab-orig" class="flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 transition-all rounded-2xl">Original</button>
-                </div>
-                <div class="p-10 lg:p-16">
-                    <div id="res-adapt" class="text-xl font-bold text-slate-800 leading-relaxed whitespace-pre-wrap max-w-2xl mx-auto"></div>
-                    <div id="res-trans" class="hidden text-xl italic text-slate-700 leading-relaxed whitespace-pre-wrap max-w-2xl mx-auto"></div>
-                    <div id="res-orig" class="hidden text-sm text-slate-400 font-medium leading-relaxed whitespace-pre-wrap italic opacity-60 max-w-2xl mx-auto"></div>
-                </div>
-            </section>
-
-            <!-- RUTA PEDAGÓGICA -->
-            <section id="sec-plan" class="hidden glass-card rounded-[3rem] p-10 shadow-xl animate-in fade-in slide-in-from-bottom-10 duration-1000">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="bg-emerald-500 text-white p-3 rounded-2xl shadow-lg">
-                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-2xl font-black italic uppercase tracking-tighter">Ruta Curricular Mineduc</h3>
-                </div>
-                <div id="plan-tabs" class="flex gap-2 mb-8 overflow-x-auto pb-4 no-scrollbar"></div>
-                <div id="plan-content" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
-                
-                <div class="mt-12 pt-8 border-t border-slate-100 flex justify-end">
-                    <button onclick="SonarIA.downloadPdf()" class="bg-orange-500 text-white px-10 py-5 rounded-2xl font-black uppercase italic tracking-tighter text-sm flex items-center gap-3 orange-glow hover:bg-orange-600 transition-all btn-animate">
-                        <i data-lucide="file-text"></i> EXPORTAR INFORME PDF
-                    </button>
-                </div>
-            </section>
+            <div class="mt-8 pt-8 border-t flex justify-end">
+                <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Generar PDF <span class="opacity-50">PRO</span>
+                </button>
+            </div>
         </section>
     </main>
 
@@ -158,20 +127,27 @@
         window.SonarIA = {
             state: { 
                 cursos: JSON.parse(localStorage.getItem('my_courses') || '["7", "8", "1M"]'), 
-                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"email":"maunpb45@gmail.com", "plan":"pro"}'), 
+                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "email":"maunpb45@gmail.com"}'), 
                 lastData: null 
             },
 
             init() { 
                 lucide.createIcons();
                 this.renderCourses(); 
+                this.updatePlanUI();
                 document.getElementById('user-mail').innerText = this.state.user.email; 
+            },
+
+            updatePlanUI() {
+                const isPro = this.state.user.plan === 'pro';
+                document.getElementById('header-plan-tag').innerText = isPro ? 'Plan Pro' : 'Plan Free';
+                document.getElementById('header-plan-tag').classList.toggle('text-[#FF8700]', isPro);
             },
 
             renderCourses() { 
                 const grid = document.getElementById('grid-cursos');
                 grid.innerHTML = Object.keys(COURSE_MAP).map(c => `
-                    <button onclick="SonarIA.toggleCourse('${c}')" class="p-3 rounded-xl border-2 text-[9px] font-black uppercase transition-all duration-300 ${this.state.cursos.includes(COURSE_MAP[c]) ? 'f1-gradient text-white border-transparent shadow-md' : 'bg-white text-slate-400 border-slate-100 hover:border-orange-200'}">
+                    <button onclick="SonarIA.toggleCourse('${c}')" class="p-3 rounded-xl border-2 text-[9px] font-black uppercase transition-all ${this.state.cursos.includes(COURSE_MAP[c]) ? 'bg-[#001739] text-white border-[#001739]' : 'bg-white text-slate-400 border-slate-100'}">
                     ${c}</button>`).join('');
             },
 
@@ -185,7 +161,7 @@
 
             async analyze() {
                 const t = document.getElementById('in-titulo').value.trim(); 
-                if(!t) return alert("Indica el título de la canción.");
+                if(!t) return alert("Título obligatorio");
                 document.getElementById('loader').classList.remove('hidden');
                 try {
                     const res = await fetch(API_URL + "/analizar", { 
@@ -197,42 +173,63 @@
                     if(data.ok) { 
                         this.state.lastData = data; 
                         this.showResults(data); 
-                    } else { alert("Error de conexión: " + data.error); }
-                } catch (e) { alert("Error de red."); }
+                    } else { alert("Error: " + data.error); }
+                } catch (e) { alert("Error de conexión"); }
                 finally { document.getElementById('loader').classList.add('hidden'); }
             },
 
             showResults(data) {
-                document.getElementById('diag-empty').classList.add('hidden');
-                document.getElementById('diag-content').classList.remove('hidden');
+                const isPro = this.state.user.plan === 'pro';
+
+                document.getElementById('sec-diag').classList.remove('hidden');
                 document.getElementById('sec-canvas').classList.remove('hidden');
                 document.getElementById('sec-plan').classList.remove('hidden');
 
+                // Diagnóstico (Siempre Free)
                 document.getElementById('res-resultado').innerText = data.resultado;
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
-                // FIX PARA EL UNDEFINED:
-                document.getElementById('res-just').innerText = data.justificacion || data.resumen || "Análisis completado para los niveles seleccionados.";
-                
+                document.getElementById('res-just').innerText = data.justificacion || data.resumen || "Análisis completado.";
+
+                // Safe Classroom (Adaptación/Traducción)
                 document.getElementById('res-orig').innerText = data.original;
                 document.getElementById('res-adapt').innerHTML = data.adaptada;
                 document.getElementById('res-trans').innerText = data.traducida;
-                
-                this.tab('adapt');
+
+                // Lógica de Bloqueo Visual
+                if(!isPro) {
+                    document.getElementById('pro-overlay-canvas').classList.remove('hidden');
+                    document.getElementById('canvas-content').classList.add('pro-locked-content');
+                    document.getElementById('pro-overlay-plan').classList.remove('hidden');
+                    document.getElementById('plan-content').classList.add('pro-locked-content');
+                    this.tab('orig'); // Forzar pestaña original en Free
+                } else {
+                    document.getElementById('pro-overlay-canvas').classList.add('hidden');
+                    document.getElementById('canvas-content').classList.remove('pro-locked-content');
+                    document.getElementById('pro-overlay-plan').classList.add('hidden');
+                    document.getElementById('plan-content').classList.remove('pro-locked-content');
+                    this.tab('adapt');
+                }
+
                 this.renderPlan(data.pedagogia);
             },
 
             tab(m) { 
+                const isPro = this.state.user.plan === 'pro';
+                if(!isPro && (m === 'adapt' || m === 'trans')) {
+                    return; // No dejar cambiar pestañas Pro en Free
+                }
+
                 const modes = ['adapt', 'trans', 'orig'];
                 modes.forEach(mode => {
                     const el = document.getElementById(`res-${mode}`);
                     const btn = document.getElementById(`tab-${mode}`);
                     if(mode === m) {
                         el.classList.remove('hidden');
-                        btn.classList.add('bg-orange-500', 'text-white', 'shadow-lg');
+                        btn.classList.add('border-[#FF8700]', 'text-[#FF8700]');
                         btn.classList.remove('text-slate-400');
                     } else {
                         el.classList.add('hidden');
-                        btn.classList.remove('bg-orange-500', 'text-white', 'shadow-lg');
+                        btn.classList.remove('border-[#FF8700]', 'text-[#FF8700]');
                         btn.classList.add('text-slate-400');
                     }
                 });
@@ -241,35 +238,44 @@
             renderPlan(ped) {
                 const tabs = document.getElementById('plan-tabs');
                 if(!ped.por_curso.length) { 
-                    document.getElementById('plan-content').innerHTML = `<p class="col-span-2 text-center text-slate-400 italic">No se requiere mediación específica.</p>`; 
+                    document.getElementById('plan-content').innerHTML = "<p class='text-[10px] font-bold text-slate-400 italic'>Sin contenido específico.</p>"; 
                     tabs.innerHTML=""; return; 
                 }
                 tabs.innerHTML = ped.por_curso.map((p, i) => `
                     <button onclick="SonarIA.showPlan(${i})" 
-                        class="plan-tab-btn px-6 py-3 border-2 rounded-2xl font-black uppercase text-[10px] transition-all min-w-[120px] ${i===0 ? 'f1-gradient text-white border-transparent shadow-lg' : 'bg-white text-slate-400 border-slate-100'}">
-                        ${p.curso}° Básico</button>`).join('');
+                        class="plan-tab-btn px-4 py-2 border rounded-xl font-black uppercase text-[9px] ${i===0 ? 'bg-[#001739] text-white border-[#001739]' : 'bg-white text-slate-400'}">
+                        ${p.curso}°</button>`).join('');
                 this.showPlan(0);
             },
 
             showPlan(idx) {
                 const p = this.state.lastData.pedagogia.por_curso[idx];
                 document.querySelectorAll('.plan-tab-btn').forEach((btn, i) => {
-                    if(i === idx) btn.className = "plan-tab-btn px-6 py-3 f1-gradient text-white border-transparent rounded-2xl font-black uppercase text-[10px] min-w-[120px] shadow-lg scale-105";
-                    else btn.className = "plan-tab-btn px-6 py-3 bg-white text-slate-400 border-slate-100 border-2 rounded-2xl font-black uppercase text-[10px] min-w-[120px]";
+                    btn.classList.toggle('bg-[#001739]', i===idx);
+                    btn.classList.toggle('text-white', i===idx);
+                    btn.classList.toggle('text-slate-400', i!==idx);
                 });
 
                 document.getElementById('plan-content').innerHTML = `
-                    <div class="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-inner">
-                        <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 tracking-[0.2em] italic">Eje Curricular (OA)</h4>
-                        <p class="text-sm font-bold text-slate-700 leading-relaxed">${p.oa}</p>
+                    <div class="bg-slate-50 p-6 rounded-2xl border">
+                        <h4 class="text-[#FF8700] font-black uppercase text-[9px] mb-2">OA Sugerido</h4>
+                        <p class="text-xs font-bold text-slate-700">${p.oa}</p>
                     </div>
-                    <div class="f1-gradient text-white p-8 rounded-[2rem] shadow-xl">
-                        <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 tracking-[0.2em] italic">Intervención Sugerida</h4>
-                        <p class="text-sm font-medium italic text-blue-50 leading-relaxed">${p.actividades[0]}</p>
+                    <div class="bg-[#001739] text-white p-6 rounded-2xl">
+                        <h4 class="text-orange-400 font-black uppercase text-[9px] mb-2">Actividad</h4>
+                        <p class="text-xs italic leading-relaxed">${p.actividades[0]}</p>
                     </div>`;
             },
 
-            downloadPdf() { alert("Generando Informe Pro..."); },
+            handlePdf() {
+                if(this.state.user.plan !== 'pro') {
+                    alert("Exportar a PDF es una función exclusiva de SonarIA PRO.");
+                    window.location.href = "planes.html";
+                } else {
+                    alert("Generando informe PDF...");
+                }
+            },
+
             logout() { localStorage.clear(); window.location.href = "login.html"; }
         };
 
