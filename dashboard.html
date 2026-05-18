@@ -169,6 +169,14 @@
             },
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
         };
+        SonarIA.checkPro = function(featureName) {
+    if (this.state.user.plan === 'free') {
+        alert(`🚀 ¡Pásate a PRO! La función "${featureName}" está reservada para usuarios Pro. Prepara tus clases con el estándar de los mejores colegios.`);
+        window.location.href = "planes.html";
+        return false;
+    }
+    return true;
+};
         SonarIA.init();
     </script>
 </body>
