@@ -6,21 +6,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white p-12 rounded-[3rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
-        <h1 class="text-5xl font-black italic tracking-tighter mb-8 text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></h1>
+<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6 text-[#001739]">
+    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
+        <h1 class="text-5xl font-black italic tracking-tighter mb-8 uppercase">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <p class="text-slate-400 font-medium mb-10 italic">Evaluador Pedagógico Musical</p>
         
-        <!-- BOTÓN GOOGLE -->
         <div class="flex justify-center">
+            <!-- REINSERTA TU ID DE CLIENTE AQUÍ -->
             <div id="g_id_onload"
-                 data-client_id="TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com"
+                 data-client_id="PONE_AQUI_TU_ID_REAL.apps.googleusercontent.com"
                  data-callback="handleCredentialResponse"
                  data-auto_prompt="false">
             </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large"></div>
         </div>
-        
         <div id="msg" class="mt-6 text-xs font-bold text-red-500 hidden italic"></div>
     </div>
 
@@ -28,7 +27,7 @@
         async function handleCredentialResponse(response) {
             const msg = document.getElementById('msg');
             msg.classList.remove('hidden');
-            msg.innerText = "Validando identidad...";
+            msg.innerText = "Sincronizando sistemas...";
 
             try {
                 const res = await fetch("https://sonaria-api-test.onrender.com/auth/google", {
@@ -36,24 +35,13 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ credential: response.credential })
                 });
-
                 const data = await res.json();
-
                 if (data.ok) {
-                    // GUARDAMOS TODO EN EL ADN LOCAL
                     localStorage.setItem('sonaria_token', data.token);
                     localStorage.setItem('sonaria_user', JSON.stringify(data.user));
-                    
-                    msg.innerText = "¡Bienvenido! Entrando al cockpit...";
-                    msg.className = "mt-6 text-xs font-bold text-emerald-500 italic";
-                    
-                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-                } else {
-                    msg.innerText = "Error: El servidor no autorizó el acceso.";
-                }
-            } catch (e) {
-                msg.innerText = "Error de conexión con la API.";
-            }
+                    window.location.href = "dashboard.html";
+                } else { msg.innerText = "Error: Acceso no autorizado."; }
+            } catch (e) { msg.innerText = "Error de conexión con Render."; }
         }
     </script>
 </body>
