@@ -2,7 +2,7 @@
 <html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <title>Workspace | SonarIA v99.0 PRO</title>
+    <title>Workspace | SonarIA v100.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,24 +14,19 @@
         .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255, 135, 0, 0.05); color: #FF8700; font-weight: 800; }
         .section { display: none; height: 100%; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
-        .glass-card { background: white; border-radius: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; }
+        .glass-card { background: white; border-radius: 3.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; }
         .tab-btn.active { color: #FF8700; border-bottom: 3px solid #FF8700; background: #fff; }
         .course-tab.active { background: #001739; color: #fff; border-radius: 8px; }
         
-        /* CORONITA */
-        .crown-icon { color: #FF8700; width: 14px; height: 14px; display: inline-block; margin-left: 4px; vertical-align: middle; animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        
-        .btn-upgrade-head { background: linear-gradient(135deg, #FF8700, #ffb300); color: white; padding: 6px 14px; border-radius: 12px; font-size: 10px; font-weight: 900; text-transform: uppercase; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255, 135, 0, 0.3); }
-
-        /* TEASER & BLUR FIX */
-        .blur-pro { filter: blur(8px); user-select: none; pointer-events: none; opacity: 0.5; }
-        .teaser-container { position: relative; width: 100%; height: 100%; min-height: 200px; }
-        .unlock-card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 50; width: 85%; }
+        /* CROWN & PRO UI */
+        .crown-icon { color: #FF8700; width: 14px; height: 14px; display: inline-block; margin-left: 6px; }
+        .blur-pro { filter: blur(10px); user-select: none; pointer-events: none; opacity: 0.4; }
+        .teaser-overlay { position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-v::-webkit-scrollbar { width: 4px; }
         .scroll-v::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        input, textarea { line-height: normal !important; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -41,17 +36,17 @@
         <div class="bg-white max-w-lg w-full rounded-[3rem] p-10 shadow-2xl text-center border-4 border-orange-50">
             <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="shield-alert" class="text-[#FF8700]"></i></div>
             <h3 class="text-2xl font-black uppercase italic mb-4">Aviso de Seguridad</h3>
-            <p class="text-slate-500 text-sm mb-8 italic">SonarIA sugiere mediaciones, pero la decisión final sobre el uso de una obra pertenece siempre al <strong>criterio profesional del docente</strong>.</p>
+            <p class="text-slate-500 text-sm mb-8 italic italic">SonarIA sugiere mediaciones, pero la decisión final sobre el uso de una obra pertenece siempre al <strong>criterio profesional del docente</strong>.</p>
             <button onclick="SonarIA.acceptViewer()" class="w-full f1-navy text-white py-5 rounded-2xl font-black uppercase italic shadow-xl hover:bg-orange-600 transition-all">Entiendo y Continuar</button>
         </div>
     </div>
     
     <header class="h-16 f1-navy flex items-center justify-between px-8 text-white z-50">
         <div class="flex items-center gap-4">
-            <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Sonar<span class="text-[#FF8700]">IA</span></h1>
+            <h1 class="text-2xl font-black italic tracking-tighter uppercase">Sonar<span class="text-[#FF8700]">IA</span></h1>
             <div id="plan-pill" class="flex items-center gap-3 border-l border-white/10 pl-4">
-                <span id="plan-indicator" class="text-[9px] font-black uppercase tracking-widest text-slate-400 italic">Plan Free</span>
-                <a id="btn-upgrade-header" href="planes-test.html" class="btn-upgrade-head flex items-center gap-2">
+                <span id="plan-indicator" class="text-[9px] font-black uppercase tracking-widest text-slate-400">Plan Free</span>
+                <a id="btn-upgrade-header" href="planes-test.html" class="bg-orange-500 text-white px-3 py-1 rounded-lg text-[9px] font-black uppercase flex items-center gap-2 animate-pulse">
                     <i data-lucide="crown" class="w-3 h-3"></i> Activar PRO
                 </a>
             </div>
@@ -60,29 +55,33 @@
     </header>
 
     <div class="flex flex-grow overflow-hidden">
-        <!-- SIDEBAR -->
-        <nav class="w-64 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
-            <!-- NUEVO: Saludo al Top del Sidebar -->
-            <div class="p-8 pb-2">
-                <div id="user-greeting" class="text-xl font-black text-[#001739] italic">¡Hola!</div>
-                <div id="user-mail" class="text-[9px] font-bold text-slate-400 truncate uppercase tracking-tighter">--</div>
+        <!-- SIDEBAR REPARADO (Clicable para Free) -->
+        <nav class="w-64 bg-white border-r flex flex-col shrink-0 z-40">
+            <div class="p-8 pb-4">
+                <div id="user-greeting" class="text-2xl font-black text-[#001739] italic">¡Hola!</div>
+                <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase tracking-tighter">--</div>
             </div>
 
             <div class="p-6 flex flex-col gap-2">
                 <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn active p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
                 <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
+                
+                <div class="h-px bg-slate-100 my-2"></div>
+                
+                <!-- Botones habilitados para mostrar el Teaser Pro -->
                 <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-30" disabled><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
                 
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-30" disabled>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40">
                     <i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura <i data-lucide="crown" class="crown-icon"></i>
                 </button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-30" disabled>
+                
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40">
                     <i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="crown-icon"></i>
                 </button>
             </div>
             
             <div class="mt-auto p-6 border-t text-center">
-                <a id="btn-upgrade-sidebar" href="planes-test.html" class="block w-full py-3 bg-slate-50 text-[#FF8700] text-center rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-orange-500 hover:text-white transition-all italic">
+                <a id="btn-upgrade-sidebar" href="planes-test.html" class="block w-full py-3 bg-[#FF8700] text-white text-center rounded-xl font-black uppercase text-[9px] tracking-widest shadow-lg hover:bg-orange-600 transition-all italic">
                     👑 Ser PRO ahora
                 </a>
             </div>
@@ -90,7 +89,7 @@
 
         <main class="flex-grow p-12 overflow-hidden relative">
             
-            <!-- MI AULA -->
+            <!-- SECCIONES -->
             <div id="sec-config" class="section active">
                 <div class="max-w-4xl pt-10">
                     <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic tracking-tighter text-[#001739]">Mi Aula</h2>
@@ -99,24 +98,25 @@
                 </div>
             </div>
 
-            <!-- ANALIZADOR -->
             <div id="sec-analyze" class="section">
-                <div class="max-w-2xl mx-auto py-2">
-                    <h2 class="text-6xl font-black text-[#001739] mb-8 uppercase italic tracking-tighter text-center italic">EVALUACIÓN</h2>
+                <div class="max-w-2xl mx-auto py-2 text-center">
+                    <h2 class="text-6xl font-black text-[#001739] mb-8 uppercase italic tracking-tighter italic">EVALUACIÓN</h2>
                     <div class="glass-card p-10 space-y-4">
                         <div class="grid grid-cols-2 gap-4">
-                            <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-all shadow-inner">
-                            <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-all shadow-inner">
+                            <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-all">
+                            <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-all">
                         </div>
-                        <textarea id="in-texto" placeholder="Pega la letra aquí para un análisis inteligente..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 h-48 text-sm font-medium focus:border-[#FF8700] outline-none transition-all resize-none italic shadow-inner"></textarea>
+                        <!-- SMART PASTE AREA -->
+                        <textarea id="in-texto" placeholder="Pega la letra aquí. El análisis comenzará solo..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl p-6 h-48 text-sm font-medium focus:border-[#FF8700] outline-none transition-all resize-none italic shadow-inner"></textarea>
+                        
                         <button onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-6 rounded-3xl font-black uppercase shadow-xl hover:bg-orange-600 transition-all text-xl tracking-widest flex items-center justify-center gap-3">
                             <i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> ANALIZAR AHORA
                         </button>
+                        <div id="analyze-error" class="hidden bg-red-50 text-red-600 p-4 rounded-2xl text-[10px] font-bold text-center italic border border-red-100 italic"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- DIAGNÓSTICO -->
             <div id="sec-diag" class="section">
                 <div class="max-w-5xl mx-auto pt-10">
                     <div class="glass-card p-12 flex justify-between items-center border">
@@ -125,18 +125,18 @@
                             <p id="res-just" class="text-slate-500 max-w-xl text-xl font-medium italic leading-relaxed italic"></p>
                         </div>
                         <div class="text-right">
-                            <div class="text-[10px] font-black uppercase text-slate-300 tracking-widest mb-1">Índice de Riesgo</div>
+                            <div class="text-[10px] font-black uppercase text-slate-300 tracking-widest mb-1 italic italic">Riesgo Escolar</div>
                             <div id="res-risk" class="text-[10rem] font-black text-[#001739] leading-none tracking-tighter italic">0%</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- AULA SEGURA (PUNTO 4: TEASER BLUR) -->
+            <!-- AULA SEGURA CON TEASER -->
             <div id="sec-canvas" class="section h-full pb-20 relative">
                 <div class="grid grid-cols-2 gap-8 h-full">
-                    <div class="bg-white rounded-[2.5rem] p-10 border flex flex-col overflow-hidden text-center italic">
-                        <h4 class="font-black uppercase mb-4 text-slate-300 text-[10px] tracking-widest">Letra Original</h4>
+                    <div class="bg-white rounded-[2.5rem] p-10 border flex flex-col overflow-hidden text-center italic italic">
+                        <h4 class="font-black uppercase mb-4 text-slate-300 text-[10px] tracking-widest italic">Letra Original</h4>
                         <div id="res-orig" class="flex-grow overflow-y-auto whitespace-pre-wrap italic scroll-v text-xs text-slate-400 pr-4 leading-relaxed italic"></div>
                     </div>
                     
@@ -146,19 +146,28 @@
                             <button onclick="SonarIA.tab('trans')" id="tab-trans" class="tab-btn p-4 text-[10px] font-black uppercase flex-1 italic">Traducción</button>
                         </div>
                         <div class="p-10 flex-grow overflow-hidden flex flex-col relative" id="canvas-wrapper">
-                            <!-- El contenido se inyecta dinámicamente -->
                             <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-sm leading-relaxed pr-4 whitespace-pre-wrap italic"></div>
                             <div id="res-trans" class="hidden flex-grow overflow-y-auto italic text-[#001739] scroll-v text-sm leading-relaxed pr-4 whitespace-pre-wrap italic"></div>
+                            
+                            <!-- TEASER OVERLAY CANVAS -->
+                            <div id="teaser-canvas" class="teaser-overlay hidden">
+                                <div class="bg-white/95 p-10 rounded-[3rem] shadow-2xl text-center border-2 border-orange-100 backdrop-blur-md">
+                                    <i data-lucide="crown" class="w-12 h-12 text-[#FF8700] mx-auto mb-4 animate-bounce"></i>
+                                    <h4 class="font-black uppercase text-sm mb-2">Contenido PRO Lista</h4>
+                                    <p class="text-[11px] text-slate-500 mb-6 italic italic">SonarIA ya adaptó esta canción para tus alumnos.</p>
+                                    <a href="planes-test.html" class="bg-[#FF8700] text-white px-8 py-3 rounded-xl font-black uppercase text-[10px] shadow-lg hover:scale-105 transition-all italic">Activar PRO</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- PLANIFICACIÓN (PUNTO 5: OA VISIBLE / ACTIVIDAD BLOQUEADA) -->
+            <!-- PLANIFICACIÓN CON TEASER -->
             <div id="sec-plan" class="section pt-10 relative">
-                <div class="max-w-5xl mx-auto flex flex-col h-full">
+                <div class="max-w-5xl mx-auto flex flex-col h-full relative" id="plan-container">
                     <div id="plan-tabs" class="flex gap-2 mb-6 overflow-x-auto no-scrollbar italic"></div>
-                    <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 italic"></div>
+                    <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 relative italic italic"></div>
                     
                     <div class="mt-8 flex justify-end pb-8">
                         <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-8 py-4 rounded-xl font-black uppercase italic shadow-lg flex items-center gap-3 text-xs tracking-widest">
@@ -168,10 +177,9 @@
                 </div>
             </div>
 
-            <!-- LOADER -->
             <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center">
-                <div class="w-1.5 h-24 bg-[#FF8700] animate-bounce rounded-full shadow-lg"></div>
-                <h4 class="text-xs font-black uppercase mt-4 animate-pulse italic">Analizando Pedagogía...</h4>
+                <div class="w-1.5 h-24 bg-[#FF8700] animate-bounce rounded-full"></div>
+                <h4 class="text-xs font-black uppercase mt-4 animate-pulse italic italic">Sincronizando Pedagogía...</h4>
             </div>
         </main>
     </div>
@@ -184,9 +192,8 @@
         window.SonarIA = {
             state: { 
                 cursos: JSON.parse(localStorage.getItem('my_courses') || '[]'), 
-                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "email":"docente@sonaria.cl", "name":"Mauricio Pinto"}'), 
-                lastData: null,
-                autoTimer: null
+                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "email":"mauricio@sonaria.cl", "name":"Mauricio Pinto"}'), 
+                lastData: null
             },
 
             init() { 
@@ -196,7 +203,7 @@
                 this.checkViewer();
                 if(this.state.cursos.length === 0) this.nav('sec-config'); else this.nav('sec-analyze'); 
                 
-                // SALUDO MEJORADO (Punto 1 y 2)
+                // SALUDO MAESTRO ARRIBA
                 const fullName = this.state.user.name || "Mauricio Pinto";
                 const firstName = fullName.split(' ')[0];
                 document.getElementById('user-greeting').innerText = `¡Hola, ${firstName}!`;
@@ -207,15 +214,20 @@
             acceptViewer() { sessionStorage.setItem('sonaria_voted', 'true'); document.getElementById('viewer-modal').classList.add('hidden'); },
 
             setupSmartListeners() {
+                // Tecla Enter
                 ['in-titulo', 'in-artista', 'in-texto'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.analyze(); } };
                 });
-                document.getElementById('in-texto').addEventListener('input', (e) => {
-                    if(e.target.value.trim().length > 50) {
-                        clearTimeout(this.state.autoTimer);
-                        this.state.autoTimer = setTimeout(() => { if(document.getElementById('in-titulo').value.trim()) this.analyze(); }, 1000);
-                    }
+
+                // SMART PASTE REPARADO
+                document.getElementById('in-texto').addEventListener('paste', (e) => {
+                    setTimeout(() => {
+                        const val = document.getElementById('in-texto').value;
+                        if(val.length > 50 && document.getElementById('in-titulo').value.trim()) {
+                            this.analyze();
+                        }
+                    }, 200);
                 });
             },
 
@@ -233,27 +245,38 @@
 
             toggleCourse(c) { if(this.state.cursos.includes(c)) this.state.cursos = this.state.cursos.filter(x => x !== c); else this.state.cursos.push(c); this.renderCourses(); },
             saveConfig() { localStorage.setItem('my_courses', JSON.stringify(this.state.cursos)); this.nav('sec-analyze'); },
+            
             nav(id) { 
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
-                if(document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
+                const target = document.getElementById(id);
+                if(target) target.classList.add('active');
+                const navBtn = document.getElementById('nav-' + id);
+                if(navBtn) navBtn.classList.add('active');
             },
 
-            tab(m) { const a = m==='adapt'; document.getElementById('res-adapt').classList.toggle('hidden',!a); document.getElementById('res-trans').classList.toggle('hidden',a); document.getElementById('tab-adapt').classList.toggle('active',a); document.getElementById('tab-trans').classList.toggle('active',!a); },
+            tab(m) { 
+                const a = m==='adapt'; 
+                const isPro = this.state.user.plan === 'pro';
+                if(!isPro && (m === 'adapt' || m === 'trans')) return;
+                document.getElementById('res-adapt').classList.toggle('hidden',!a); 
+                document.getElementById('res-trans').classList.toggle('hidden',a); 
+                document.getElementById('tab-adapt').classList.toggle('active',a); 
+                document.getElementById('tab-trans').classList.toggle('active',!a); 
+            },
 
             async analyze() {
                 const t = document.getElementById('in-titulo').value.trim(); 
-                const txt = document.getElementById('in-texto').value.trim();
-                if(!t) return;
+                if(!t) return alert("Indica la canción.");
                 document.getElementById('loader').classList.remove('hidden');
                 try {
                     const res = await fetch(API_URL + "/analizar", { 
                         method: 'POST', 
                         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('sonaria_token') || '')}, 
                         body: JSON.stringify({ 
-                            titulo: t, artista: document.getElementById('in-artista').value, texto: txt, 
-                            buscar_letra: txt === "", cursos: this.state.cursos.map(c => COURSE_MAP[c]), user_plan: this.state.user.plan 
+                            titulo: t, artista: document.getElementById('in-artista').value, texto: document.getElementById('in-texto').value, 
+                            buscar_letra: document.getElementById('in-texto').value === "", 
+                            cursos: this.state.cursos.map(c => COURSE_MAP[c]), user_plan: this.state.user.plan 
                         }) 
                     });
                     const data = await res.json();
@@ -264,42 +287,26 @@
 
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
-                ['sec-diag', 'sec-canvas', 'sec-plan'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+                ['sec-diag', 'sec-canvas', 'sec-plan'].forEach(id => {
+                    const el = document.getElementById('nav-' + id);
+                    if(el) { el.classList.remove('opacity-30', 'opacity-40'); el.removeAttribute('disabled'); }
+                });
 
                 document.getElementById('res-resultado').innerText = data.resultado;
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
                 document.getElementById('res-just').innerText = data.justificacion;
                 document.getElementById('res-orig').innerText = data.original;
 
-                // FIX PUNTO 4: LÓGICA TEASER CANVAS
+                // TEASER LOGIC
                 const adaptBox = document.getElementById('res-adapt');
-                const transBox = document.getElementById('res-trans');
-                
                 if(isPro) {
                     adaptBox.innerHTML = data.adaptada;
-                    transBox.innerText = data.traducida;
                     adaptBox.classList.remove('blur-pro');
-                    // Remover teaser si existe
-                    const oldTeaser = document.getElementById('teaser-overlay-canvas');
-                    if(oldTeaser) oldTeaser.remove();
+                    document.getElementById('teaser-canvas').classList.add('hidden');
                 } else {
-                    adaptBox.innerHTML = "Esta es la versión segura que SonarIA ha preparado para tu aula...<br>Reescribiendo los conceptos de riesgo...<br>Mantenemos la armonía y la rima original...<br>Proceso de adaptación curricular completado.";
+                    adaptBox.innerHTML = "Línea adaptada 1...<br>Línea adaptada 2...<br>Línea adaptada 3...<br>Proceso curricular SonarIA completado.";
                     adaptBox.classList.add('blur-pro');
-                    
-                    // Inyectar el botón de desbloqueo si no existe
-                    if(!document.getElementById('teaser-overlay-canvas')) {
-                        const teaser = document.createElement('div');
-                        teaser.id = 'teaser-overlay-canvas';
-                        teaser.className = 'teaser-overlay absolute inset-0 flex flex-col items-center justify-center z-50';
-                        teaser.innerHTML = `
-                            <div class="bg-white/90 p-8 rounded-[2rem] shadow-2xl text-center border border-orange-100 backdrop-blur-sm">
-                                <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce"></i>
-                                <h4 class="font-black uppercase text-xs mb-2">Adaptación PRO Lista</h4>
-                                <p class="text-[10px] text-slate-500 mb-6">Desbloquea la versión segura para tu clase.</p>
-                                <a href="planes-test.html" class="bg-[#FF8700] text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] shadow-lg">Activar Ahora</a>
-                            </div>`;
-                        document.getElementById('canvas-wrapper').appendChild(teaser);
-                    }
+                    document.getElementById('teaser-canvas').classList.remove('hidden');
                 }
 
                 this.tab('adapt');
@@ -310,8 +317,8 @@
 
             renderPlan(ped) {
                 const tabs = document.getElementById('plan-tabs');
-                if(!ped.por_curso.length) { document.getElementById('plan-content').innerHTML = "<p class='py-20 text-center font-bold text-slate-400 italic text-xl'>Análisis Finalizado.</p>"; tabs.innerHTML=""; return; }
-                tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-4 border rounded-xl font-black uppercase text-[10px] flex-1 ${i===0 ? 'active':''}">${p.curso}° Básico</button>`).join('');
+                if(!ped.por_curso.length) { document.getElementById('plan-content').innerHTML = "<p class='py-20 text-center font-bold text-slate-400 italic text-xl uppercase opacity-20'>Sin datos.</p>"; tabs.innerHTML=""; return; }
+                tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-4 border rounded-xl font-black uppercase text-[10px] flex-1 ${i===0 ? 'active':''}">${p.curso}°</button>`).join('');
                 this.showPlan(0);
             },
 
@@ -320,26 +327,24 @@
                 const isPro = this.state.user.plan === 'pro';
                 document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
                 
-                // FIX PUNTO 5: OA VISIBLE / ACTIVIDAD BLOQUEADA
                 document.getElementById('plan-content').innerHTML = `
                     <div class="grid grid-cols-2 gap-8">
                         <div class="bg-white p-10 rounded-[3rem] border shadow-xl">
-                            <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic italic">Eje Curricular (OA)</h4>
+                            <h4 class="text-orange-500 font-black uppercase text-[9px] mb-4 italic">OA Mineduc Chile</h4>
                             <p class="text-lg font-medium text-slate-600 leading-relaxed">${p.oa}</p>
                         </div>
-                        <div class="relative rounded-[3rem] overflow-hidden">
-                            <div class="bg-[#001739] text-white p-10 h-full ${!isPro ? 'blur-pro' : ''}">
-                                <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic italic">Actividad Sugerida</h4>
-                                <p class="text-lg italic leading-relaxed font-light">${isPro ? p.actividades[0] : 'Planificando dinámica de grupo y debate guiado para este nivel...'}</p>
+                        <div class="bg-[#001739] text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
+                            <div class="${!isPro ? 'blur-pro' : ''}">
+                                <h4 class="text-orange-400 font-black uppercase text-[9px] mb-4 italic">Actividad Sugerida</h4>
+                                <p class="text-lg italic leading-relaxed font-light">${isPro ? p.actividades[0] : 'Planificando debate y dinámica de aula segura...'}</p>
                             </div>
                             ${!isPro ? `
-                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-50">
-                                <div class="bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/10">
-                                    <p class="text-[9px] font-black text-white uppercase mb-2 italic">Planificación con IA PRO</p>
-                                    <a href="planes-test.html" class="inline-block bg-[#FF8700] text-white px-4 py-2 rounded-lg font-black uppercase text-[9px] shadow-xl">Ver planes-test</a>
+                            <div class="teaser-overlay">
+                                <div class="bg-white/10 p-6 rounded-[2rem] backdrop-blur-md border border-white/10 shadow-2xl">
+                                    <p class="text-[10px] font-black text-white uppercase mb-4 italic">Actividad con IA PRO</p>
+                                    <a href="planes-test.html" class="bg-[#FF8700] text-white px-6 py-3 rounded-xl font-black uppercase text-[9px] shadow-lg">Ver Planes</a>
                                 </div>
-                            </div>
-                            ` : ''}
+                            </div>` : ''}
                         </div>
                     </div>`;
                 lucide.createIcons();
@@ -347,7 +352,7 @@
 
             handlePdf() {
                 if(this.state.user.plan !== 'pro') window.location.href = "planes-test.html";
-                else alert("Generando PDF...");
+                else alert("Generando PDF Pro...");
             },
 
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
