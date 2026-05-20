@@ -9,51 +9,43 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f7fa; }
         .f1-gradient { background: linear-gradient(135deg, #001739 0%, #002b66 100%); }
-        .card-pro { transition: all 0.3s ease; border: 2px solid transparent; }
-        .card-pro:hover { transform: translateY(-10px); border-color: #FF8700; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6">
     <div class="max-w-4xl w-full text-center">
-        <h1 class="text-6xl font-black italic tracking-tighter text-[#001739] mb-4">Sonar<span class="text-orange-500">IA</span> PRO</h1>
-        <p class="text-slate-400 font-medium italic mb-12">Modo Laboratorio: Pruebas de pago habilitadas ($10 CLP).</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-[3rem] p-10 shadow-2xl card-pro">
+        <h1 class="text-6xl font-black italic tracking-tighter text-[#001739] mb-4 uppercase">Sonar<span class="text-orange-500">IA</span> PRO</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            <div class="bg-white rounded-[3rem] p-10 shadow-2xl border">
                 <h3 class="text-2xl font-black uppercase italic mb-2">Mensual Test</h3>
                 <div class="text-5xl font-black text-[#001739] mb-8">$10 <span class="text-lg">CLP</span></div>
                 <button onclick="comprar('pro_monthly', this)" class="w-full f1-gradient text-white py-5 rounded-2xl font-black uppercase italic shadow-lg">Pagar $10</button>
             </div>
-            <div class="f1-navy rounded-[3rem] p-10 shadow-2xl card-pro">
-                <h3 class="text-2xl font-black uppercase italic mb-2 text-white">Anual Test</h3>
-                <div class="text-5xl font-black text-white mb-8">$20 <span class="text-lg">CLP</span></div>
+            <div class="f1-navy text-white rounded-[3rem] p-10 shadow-2xl">
+                <h3 class="text-2xl font-black uppercase italic mb-2">Anual Test</h3>
+                <div class="text-5xl font-black mb-8">$20 <span class="text-lg">CLP</span></div>
                 <button onclick="comprar('pro_annual', this)" class="w-full bg-white text-[#001739] py-5 rounded-2xl font-black uppercase italic shadow-lg">Pagar $20</button>
             </div>
         </div>
-        <a href="dashboard.html" class="inline-block mt-12 text-slate-400 font-bold uppercase text-[10px] tracking-widest">← Volver</a>
     </div>
-
     <script>
         lucide.createIcons();
         async function comprar(plan, btn) {
             const token = localStorage.getItem("sonaria_token");
             const user = JSON.parse(localStorage.getItem("sonaria_user") || "{}");
-            if(!token) return alert("Inicia sesión primero.");
-            
-            btn.disabled = true;
-            btn.innerText = "Generando Orden...";
+            const oldText = btn.innerText;
+            btn.disabled = true; btn.innerText = "Cargando...";
 
             try {
                 const res = await fetch("https://sonaria-api-test.onrender.com/payments/create-checkout", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-                    body: JSON.stringify({ plan: plan, email: user.email })
+                    body: JSON.stringify({ plan, email: user.email })
                 });
                 const data = await res.json();
-                if(data.ok) window.location.href = data.checkout_url;
-                else alert("Error: " + data.error);
-            } catch (e) { alert("Error de red."); }
-            finally { btn.disabled = false; btn.innerText = "Reintentar"; }
+                if(data.ok && data.checkout_url) window.location.href = data.checkout_url;
+                else alert("Error en el servidor: " + data.error);
+            } catch (e) { alert("Error de conexión."); }
+            finally { btn.disabled = false; btn.innerText = oldText; }
         }
     </script>
 </body>
