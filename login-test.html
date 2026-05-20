@@ -2,54 +2,59 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Acceso | SonarIA v68</title>
+    <title>Acceso | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="bg-[#001739] h-screen flex items-center justify-center font-['Inter']">
-    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl w-full max-w-md text-center border-t-[12px] border-[#FF8700]">
-        <h1 class="text-6xl font-black italic text-[#001739] mb-12 italic tracking-tighter">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <div id="loader">
-            <div class="w-12 h-12 border-4 border-slate-100 border-t-[#FF8700] rounded-full animate-spin mx-auto mb-6"></div>
-            <p id="status-text" class="text-[10px] font-black uppercase text-slate-400">Sincronizando Motor Institucional...</p>
+<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white p-12 rounded-[3rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
+        <h1 class="text-5xl font-black italic tracking-tighter mb-8 text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <p class="text-slate-400 font-medium mb-10 italic">Evaluador Pedagógico Musical</p>
+        
+        <!-- BOTÓN GOOGLE -->
+        <div class="flex justify-center">
+            <div id="g_id_onload"
+                 data-client_id="TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large"></div>
         </div>
-        <div id="auth-ui" class="hidden flex justify-center">
-            <div id="g_id_onload" data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com" data-callback="onLogin" data-auto_prompt="false"></div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-size="large"></div>
-        </div>
+        
+        <div id="msg" class="mt-6 text-xs font-bold text-red-500 hidden italic"></div>
     </div>
+
     <script>
-        const API = "https://sonaria-api-test.onrender.com";
-        function ignition() {
-            // Signal Impact: Despierta a Render ignorando seguridad de navegador
-            const spark = new Image(); spark.src = API + "/?t=" + Date.now();
-            const check = setInterval(async () => {
-                try {
-                    const res = await fetch(API + "/");
-                    if (res.ok) {
-                        clearInterval(check);
-                        document.getElementById('loader').classList.add('hidden');
-                        document.getElementById('auth-ui').classList.remove('hidden');
-                    }
-                } catch(e) {}
-            }, 3000);
-        }
-        async function onLogin(r) {
-            const res = await fetch(API + "/auth/google", {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ credential: r.credential })
-            });
-            const data = await res.json();
-            if(data.token) {
-                localStorage.setItem('sonaria_token', data.token);
-                localStorage.setItem('sonaria_user', JSON.stringify(data.user));
-                localStorage.setItem('my_courses', JSON.stringify(data.user.cursos || []));
-                window.location.href = "dashboard.html";
+        async function handleCredentialResponse(response) {
+            const msg = document.getElementById('msg');
+            msg.classList.remove('hidden');
+            msg.innerText = "Validando identidad...";
+
+            try {
+                const res = await fetch("https://sonaria-api-test.onrender.com/auth/google", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential })
+                });
+
+                const data = await res.json();
+
+                if (data.ok) {
+                    // GUARDAMOS TODO EN EL ADN LOCAL
+                    localStorage.setItem('sonaria_token', data.token);
+                    localStorage.setItem('sonaria_user', JSON.stringify(data.user));
+                    
+                    msg.innerText = "¡Bienvenido! Entrando al cockpit...";
+                    msg.className = "mt-6 text-xs font-bold text-emerald-500 italic";
+                    
+                    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+                } else {
+                    msg.innerText = "Error: El servidor no autorizó el acceso.";
+                }
+            } catch (e) {
+                msg.innerText = "Error de conexión con la API.";
             }
         }
-        window.onload = ignition;
     </script>
 </body>
 </html>
