@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><title>Acceso | SonarIA</title>
+    <meta charset="UTF-8">
+    <title>Acceso | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-[#001739] min-h-screen flex items-center justify-center p-6 text-[#001739]">
     <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
-        <h1 class="text-5xl font-black italic tracking-tighter mb-8 uppercase leading-none">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <p class="text-slate-400 font-medium mb-10 italic">Acceso exclusivo para docentes</p>
+        <h1 class="text-5xl font-black italic tracking-tighter mb-8 uppercase leading-none italic">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <p class="text-slate-400 font-medium mb-10 italic italic">Acceso Docente Verificado</p>
         <div class="flex justify-center">
-            723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com
+            <!-- LLAVE RESTAURADA: 138760086383... -->
             <div id="g_id_onload"
                  data-client_id="138760086383-vcl750q8jps3d9f9u0l90mjt3dkl3692.apps.googleusercontent.com"
                  data-callback="handleCredentialResponse" data-auto_prompt="false">
             </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large"></div>
         </div>
-        <div id="msg" class="mt-6 text-xs font-bold text-slate-400 italic">Validando credenciales...</div>
+        <div id="msg" class="mt-6 text-xs font-bold text-slate-400 italic italic">Validando credenciales...</div>
     </div>
     <script>
         async function handleCredentialResponse(response) {
@@ -31,8 +32,8 @@
                     localStorage.setItem('sonaria_token', data.token);
                     localStorage.setItem('sonaria_user', JSON.stringify(data.user));
                     window.location.href = "dashboard.html";
-                } else { alert("Acceso denegado por el servidor."); }
-            } catch (e) { alert("Error de conexión con el Backend."); }
+                }
+            } catch (e) { alert("Error de conexión con Render."); }
         }
     </script>
 </body>
