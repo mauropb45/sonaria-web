@@ -2,26 +2,27 @@
 <html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <title>Workspace | SonarIA v103.0</title>
+    <title>Workspace | SonarIA v104.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; background-color: #F3F4F6; color: #001739; }
         .f1-navy { background-color: #001739; }
+        .f1-orange { background-color: #FF8700; }
+        .nav-btn { transition: all 0.2s; border-right: 4px solid transparent; }
         .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255, 135, 0, 0.05); color: #FF8700; font-weight: 800; }
         .section { display: none; height: 100%; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         .glass-card { background: white; border-radius: 3.5rem; box-shadow: 0 10px 50px rgba(0,0,0,0.04); border: 1px solid #eef2f7; }
+        .tab-btn.active { color: #FF8700; border-bottom: 3px solid #FF8700; background: #fff; }
+        .course-tab.active { background: #001739; color: #fff; border-radius: 12px; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,23,57,0.2); }
         
-        /* FIX: Recuadro Pro pequeño y centrado */
-        .blur-pro { filter: blur(14px); user-select: none; pointer-events: none; opacity: 0.3; }
-        .pro-unlock-container { position: relative; overflow: hidden; border-radius: 3.5rem; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; }
-        .inner-card-white { 
-            position: absolute; z-index: 50; background: white; 
-            padding: 2rem; border-radius: 2.5rem; shadow: 0 20px 40px rgba(0,0,0,0.2);
-            text-align: center; width: 260px; border: 1px solid #fff7ed;
-        }
+        /* FIX ESTÉTICO: Recuadro Pro Pequeño y Centrado */
+        .blur-pro { filter: blur(16px); user-select: none; pointer-events: none; opacity: 0.3; }
+        .pro-unlock-container { position: relative; overflow: hidden; border-radius: 3.5rem; height: 100%; width: 100%; }
+        .pro-floating-card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; padding: 2rem; }
+        .inner-card-white { background: white; padding: 1.5rem 2rem; border-radius: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center; width: 240px; border: 1px solid #fff7ed; transform: scale(0.9); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-v::-webkit-scrollbar { width: 4px; }
@@ -30,20 +31,19 @@
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
 
-    <!-- MODAL: EXPLICACIÓN RESTAURADA -->
+    <!-- MODAL: VIEWER DISCRETION (RESTAURADO COMPLETO) -->
     <div id="viewer-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-[#001739]/80 backdrop-blur-md">
         <div class="bg-white max-w-lg w-full rounded-[3.5rem] p-12 shadow-2xl text-center border-4 border-orange-50">
-            <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-8"><i data-lucide="shield-check" class="text-[#FF8700] w-10 h-10"></i></div>
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="shield-alert" class="text-[#FF8700] w-8 h-8"></i></div>
             <h3 class="text-2xl font-black uppercase italic mb-4">Aviso de Responsabilidad</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-8 italic">
+            <p class="text-slate-500 text-sm leading-relaxed mb-8 italic italic">
                 SonarIA analiza canciones e identifica riesgos para sugerir adaptaciones escolares. Sin embargo, <strong>cada curso tiene una historia y sensibilidad propia</strong>.<br><br>
-                La decisión final de usar una canción o abrir una conversación en clases <strong>pertenece siempre al criterio profesional del docente</strong>. SonarIA acompaña el proceso; educar sigue siendo una responsabilidad humana.
+                La decisión final de usar una canción <strong>pertenece siempre al criterio profesional del docente</strong>. SonarIA acompaña el proceso; educar sigue siendo una responsabilidad humana.
             </p>
-            <button onclick="SonarIA.acceptViewer()" class="w-full f1-navy text-white py-6 rounded-3xl font-black uppercase italic shadow-xl hover:bg-orange-600 transition-all">Entiendo y Continuar</button>
+            <button onclick="SonarIA.acceptViewer()" class="w-full f1-navy text-white py-5 rounded-2xl font-black uppercase italic shadow-xl hover:bg-orange-600 transition-all">Entiendo y Continuar</button>
         </div>
     </div>
     
-    <!-- HEADER -->
     <header class="h-16 f1-navy flex items-center justify-between px-8 text-white z-50">
         <h1 class="text-2xl font-black italic tracking-tighter uppercase leading-none">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <button onclick="SonarIA.logout()" class="text-[10px] font-black uppercase text-[#FF8700]">Salir</button>
@@ -51,32 +51,97 @@
 
     <div class="flex flex-grow overflow-hidden">
         <nav class="w-72 bg-white border-r flex flex-col shrink-0 z-40">
-            <div class="p-10 pb-6 border-b">
-                <div id="user-greeting" class="text-3xl font-black text-[#001739] italic uppercase">¡Hola, Mauricio!</div>
-                <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase mt-1">--</div>
+            <div class="p-10 pb-6 border-b border-slate-50">
+                <div id="user-greeting" class="text-3xl font-black text-[#001739] italic leading-tight uppercase tracking-tighter uppercase">¡Hola, Mauricio!</div>
+                <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase tracking-tighter mt-1">maunpb45@gmail.com</div>
             </div>
-            <div class="p-6 flex flex-col gap-2">
+
+            <div class="p-6 flex flex-col gap-2 mt-4">
                 <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn active p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
                 <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura</button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación</button>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura</button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación</button>
             </div>
+            <div class="mt-auto p-6 border-t"><a href="planes-test.html" class="block w-full py-4 f1-orange text-white text-center rounded-2xl font-black uppercase text-[10px] shadow-xl italic italic">👑 Ser PRO ahora</a></div>
         </nav>
 
         <main class="flex-grow p-12 overflow-hidden relative">
-            <div id="sec-plan" class="section pt-10 relative">
-                <div class="max-w-7xl mx-auto flex flex-col h-full relative" id="plan-container">
-                    <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
-                    <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 relative">
-                        <!-- El contenido se inyecta por JS -->
+            
+            <!-- MI AULA -->
+            <div id="sec-config" class="section">
+                <div class="max-w-4xl pt-10">
+                    <h2 class="text-6xl font-black border-l-[12px] border-[#FF8700] pl-8 uppercase italic tracking-tighter text-[#001739]">Mi Aula</h2>
+                    <div class="grid grid-cols-4 gap-4 mt-12" id="grid-cursos"></div>
+                    <button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl hover:scale-105 transition-all text-xl tracking-tighter italic italic">Guardar Perfil →</button>
+                </div>
+            </div>
+
+            <!-- ANALIZADOR -->
+            <div id="sec-analyze" class="section text-center">
+                <div class="max-w-2xl mx-auto py-2">
+                    <h2 class="text-7xl font-black text-[#001739] mb-10 uppercase italic tracking-tighter italic leading-none italic italic">EVALUACIÓN</h2>
+                    <div class="glass-card p-12 space-y-6">
+                        <div class="grid grid-cols-2 gap-6">
+                            <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
+                            <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-all">
+                        </div>
+                        <textarea id="in-texto" placeholder="Pega la letra aquí..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-8 h-56 text-sm font-medium focus:border-[#FF8700] outline-none transition-all resize-none italic shadow-inner leading-relaxed"></textarea>
+                        <button onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-7 rounded-[2rem] font-black uppercase shadow-2xl hover:bg-orange-600 transition-all text-2xl tracking-tighter flex items-center justify-center gap-4 italic italic"><i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> ANALIZAR AHORA</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DIAGNÓSTICO -->
+            <div id="sec-diag" class="section">
+                <div class="max-w-5xl mx-auto pt-10">
+                    <div class="glass-card p-16 flex flex-col border-none relative overflow-hidden shadow-2xl">
+                        <div class="flex justify-between items-center w-full mb-12">
+                            <div>
+                                <h3 id="res-resultado" class="text-8xl font-black tracking-tighter text-[#001739] leading-none mb-4 uppercase italic">--</h3>
+                                <p id="res-just" class="text-slate-500 max-w-xl text-2xl font-medium italic border-l-4 border-slate-100 pl-8 italic italic"></p>
+                            </div>
+                            <div class="text-right">
+                                <div id="res-risk" class="text-[12rem] font-black text-[#001739] leading-none tracking-tighter italic">0%</div>
+                            </div>
+                        </div>
+                        <div id="diag-cta" class="hidden border-t pt-10 text-center">
+                            <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs hover:bg-[#FF8700] hover:text-white transition-all shadow-lg italic italic">✨ Adaptar canción para trabajar seguro</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AULA SEGURA -->
+            <div id="sec-canvas" class="section h-full pb-20 relative">
+                <div class="grid grid-cols-2 gap-8 h-full">
+                    <div class="bg-white rounded-[3.5rem] p-12 border border-slate-100 flex flex-col overflow-hidden shadow-sm italic italic">
+                        <div id="res-orig" class="flex-grow overflow-y-auto whitespace-pre-wrap italic scroll-v text-lg text-slate-400 leading-relaxed italic"></div>
+                    </div>
+                    <div class="bg-white rounded-[3.5rem] shadow-2xl border-4 border-orange-50 flex flex-col overflow-hidden relative italic italic">
+                        <div class="p-12 flex-grow overflow-hidden flex flex-col relative" id="canvas-wrapper">
+                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-xl leading-relaxed pr-6 whitespace-pre-wrap italic"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLANIFICACIÓN -->
+            <div id="sec-plan" class="section pt-10 relative italic">
+                <div class="max-w-7xl mx-auto flex flex-col h-full relative italic italic" id="plan-container">
+                    <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2 italic italic italic italic"></div>
+                    <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 relative italic italic"></div>
+                    
+                    <div class="mt-8 flex justify-between items-center pb-10 border-t border-slate-100 pt-8 italic italic">
+                        <button onclick="SonarIA.nav('sec-canvas')" class="text-xs font-black text-slate-300 uppercase italic">← Volver</button>
+                        <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-10 py-5 rounded-[2rem] font-black uppercase shadow-2xl flex items-center gap-3 text-sm tracking-tighter italic italic italic"><i data-lucide="file-text"></i> Exportar Pro</button>
                     </div>
                 </div>
             </div>
 
             <!-- Loader -->
-            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center">
-                <div class="w-24 h-2 bg-[#FF8700] animate-bounce rounded-full"></div>
+            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center italic">
+                <div class="w-24 h-2 bg-[#FF8700] animate-pulse rounded-full shadow-lg italic"></div>
             </div>
         </main>
     </div>
@@ -90,58 +155,107 @@
             "7": "MU07 OA 01: Interpretar música de diversas tradiciones y contextos.",
             "3M": "MU3M OA 01: Valorar el rol de la música en la construcción de identidades personales y sociales."
         };
+        const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
 
         window.SonarIA = {
             state: { 
-                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "name":"Mauricio Pinto"}'),
-                lastData: null 
+                cursos: JSON.parse(localStorage.getItem('my_courses') || '[]'), 
+                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "name":"Mauricio Pinto"}'), 
+                lastData: null
             },
-            init() {
+            init() { 
+                this.renderCourses();
+                this.checkViewer();
+                this.nav('sec-analyze'); 
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('payment') === 'success') {
                     this.state.user.plan = 'pro';
                     localStorage.setItem('sonaria_user', JSON.stringify(this.state.user));
                     alert("¡Cuenta PRO Activada!");
                 }
-                document.getElementById('user-greeting').innerText = "¡Hola, Mauricio!";
-                this.checkViewer();
-                this.nav('sec-analyze');
             },
             checkViewer() { if(!sessionStorage.getItem('sonaria_voted')) document.getElementById('viewer-modal').classList.remove('hidden'); },
             acceptViewer() { sessionStorage.setItem('sonaria_voted', 'true'); document.getElementById('viewer-modal').classList.add('hidden'); },
+            
             nav(id) { 
+                const el = document.getElementById(id);
+                if(!el) return;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                el.classList.add('active');
+                if(document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
             },
+
+            renderCourses() { 
+                const grid = document.getElementById('grid-cursos'); if(!grid) return;
+                grid.innerHTML = Object.keys(COURSE_MAP).map(c => `<button onclick="SonarIA.toggleCourse('${c}')" class="p-5 rounded-2xl border-2 text-[10px] font-black uppercase transition-all shadow-sm ${this.state.cursos.includes(c) ? 'bg-[#FF8700] text-white border-[#FF8700]' : 'bg-white text-slate-400 border-slate-100'}">${c}</button>`).join('');
+            },
+            toggleCourse(c) { if(this.state.cursos.includes(c)) this.state.cursos = this.state.cursos.filter(x => x !== c); else this.state.cursos.push(c); this.renderCourses(); },
+            saveConfig() { localStorage.setItem('my_courses', JSON.stringify(this.state.cursos)); this.nav('sec-analyze'); },
+
+            async analyze() {
+                const t = document.getElementById('in-titulo').value.trim(); 
+                if(!t) return alert("Indica la canción.");
+                document.getElementById('loader').classList.remove('hidden');
+                try {
+                    const res = await fetch(API_URL + "/analizar", { 
+                        method: 'POST', 
+                        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('sonaria_token') || '')}, 
+                        body: JSON.stringify({ titulo: t, artista: document.getElementById('in-artista').value, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos.map(c => COURSE_MAP[c]), user_plan: this.state.user.plan }) 
+                    });
+                    const data = await res.json();
+                    if(data.ok) { this.state.lastData = data; this.showResults(data); }
+                } catch (e) { alert("Error de conexión."); }
+                finally { document.getElementById('loader').classList.add('hidden'); }
+            },
+
+            showResults(data) {
+                const isPro = this.state.user.plan === 'pro';
+                document.getElementById('res-resultado').innerText = data.resultado;
+                document.getElementById('res-risk').innerText = data.risk_percent + "%";
+                document.getElementById('res-just').innerText = data.justificacion;
+                document.getElementById('res-orig').innerText = data.original;
+                this.renderPlan(data.pedagogia);
+                this.nav('sec-diag');
+            },
+
+            renderPlan(ped) {
+                const tabs = document.getElementById('plan-tabs');
+                tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0 ? 'active':''} transition-all shadow-sm italic italic">${p.curso}° Básico</button>`).join('');
+                this.showPlan(0);
+            },
+
             showPlan(idx) {
                 const p = this.state.lastData.pedagogia.por_curso[idx];
                 const isPro = this.state.user.plan === 'pro';
-                const fullOA = OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial";
+                const fullOA = OAs_FULL[p.curso] || "OA Ministerial Chile";
+                document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
 
                 document.getElementById('plan-content').innerHTML = `
-                    <div class="grid grid-cols-2 gap-10 h-[400px]">
-                        <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center">
-                            <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest">Match Curricular (OA)</h4>
-                            <p class="text-2xl font-black text-[#001739] mb-4 italic">OA Música Nivel ${p.curso}</p>
-                            <p class="text-[14px] text-slate-400 italic">${fullOA}</p>
+                    <div class="grid grid-cols-2 gap-10">
+                        <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center border-slate-50">
+                            <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest italic italic">Match Curricular (OA)</h4>
+                            <p class="text-2xl font-black text-[#001739] mb-4 italic tracking-tighter italic">${p.oa}</p>
+                            <p class="text-[14px] text-slate-400 leading-relaxed italic font-medium italic">${fullOA}</p>
                         </div>
                         <div class="pro-unlock-container bg-[#001739]">
                             <div class="p-12 w-full h-full flex flex-col justify-center ${!isPro ? 'blur-pro' : ''}">
                                 <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic italic">Actividad Sugerida</h4>
-                                <p class="text-xl text-white italic font-light">${isPro ? p.actividades[0] : 'Diseño de actividad de aula segura...'}</p>
+                                <p class="text-xl text-white italic font-light italic">${isPro ? p.actividades[0] : 'Diseño de actividad de aula segura...'}</p>
                             </div>
                             ${!isPro ? `
                             <div class="pro-floating-card">
-                                <div class="inner-card-white">
-                                    <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce"></i>
-                                    <h4 class="text-lg font-black uppercase mb-2 text-[#001739]">PLANIFICACIÓN PRO</h4>
-                                    <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-3 rounded-2xl font-black uppercase text-[10px] shadow-lg">Ver Planes</a>
+                                <div class="inner-card-white italic">
+                                    <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce italic"></i>
+                                    <h4 class="text-lg font-black uppercase mb-2 text-[#001739] italic">Planificación Pro</h4>
+                                    <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-3 rounded-2xl font-black uppercase text-[10px] shadow-lg italic">Activar PRO</a>
                                 </div>
                             </div>` : ''}
                         </div>
                     </div>`;
                 lucide.createIcons();
-            }
+            },
+            logout() { localStorage.clear(); window.location.href = "login-test.html"; }
         };
         SonarIA.init();
     </script>
