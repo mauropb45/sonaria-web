@@ -6,19 +6,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6 text-[#001739]">
+<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6">
     <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
-        <h1 class="text-5xl font-black italic tracking-tighter mb-8 uppercase leading-none">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <h1 class="text-5xl font-black italic tracking-tighter mb-8 uppercase text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <div class="flex justify-center">
+            <!-- REEMPLAZA "TU_ID_AQUI" POR TU ID REAL DE GOOGLE -->
             <div id="g_id_onload"
-                 data-client_id="138760086383-vcl750q8jps3d9f9u0l90mjt3dkl3692.apps.googleusercontent.com"
+                 data-client_id="TU_ID_AQUI.apps.googleusercontent.com"
                  data-callback="handleCredentialResponse"
                  data-auto_prompt="false">
             </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large"></div>
         </div>
-        <div id="msg" class="mt-6 text-xs font-bold text-slate-400 italic">Identifícate como docente</div>
+        <div id="msg" class="mt-6 text-xs font-bold text-slate-400 italic">Inicia sesión para entrar al cockpit</div>
     </div>
+
     <script>
         async function handleCredentialResponse(response) {
             document.getElementById('msg').innerText = "Validando...";
@@ -34,7 +36,7 @@
                     localStorage.setItem('sonaria_user', JSON.stringify(data.user));
                     window.location.href = "dashboard.html";
                 }
-            } catch (e) { document.getElementById('msg').innerText = "Error de conexión."; }
+            } catch (e) { document.getElementById('msg').innerText = "Error de comunicación con Render."; }
         }
     </script>
 </body>
