@@ -1,38 +1,107 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"><title>Acceso | SonarIA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso | SonarIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Google Identity Services Library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .f1-navy { background-color: #001739; }
+        .sonaria-logo { font-style: italic; letter-spacing: -0.05em; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
 </head>
-<body class="bg-[#001739] min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700]">
-        <h1 class="text-5xl font-black italic tracking-tighter mb-4 uppercase text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <p class="text-slate-400 font-medium mb-10 italic italic">Evaluador Pedagógico Musical</p>
-        <div class="flex justify-center">
+<body class="f1-navy min-h-screen flex items-center justify-center p-6">
+    
+    <!-- Contenedor Principal -->
+    <div class="glass-effect p-12 rounded-[3.5rem] shadow-2xl max-w-md w-full text-center border-b-8 border-[#FF8700] transition-transform duration-500 hover:scale-[1.02]">
+        
+        <!-- Logo SonarIA -->
+        <h1 class="text-6xl font-black sonaria-logo mb-4 uppercase text-[#001739]">
+            Sonar<span class="text-[#FF8700]">IA</span>
+        </h1>
+        
+        <p class="text-slate-400 font-medium mb-10 italic italic">
+            Evaluador Pedagógico Musical
+        </p>
+
+        <!-- Bloque de Google Auth -->
+        <div class="flex flex-col items-center justify-center gap-6">
+            
+            <!-- Configuración del Widget de Google -->
             <div id="g_id_onload"
-                 data-client_id="138760086383-vcl750q8jps3d9f9u0l90mjt3dkl3692.apps.googleusercontent.com"
-                 data-callback="handleCredentialResponse" data-auto_prompt="false">
+                 data-client_id="723828886665-1be2flu5mgq3ptppkb3i5nvn6ak29kme.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false"
+                 data-ux_mode="popup">
             </div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue" data-text="signin_with" data-size="large"></div>
+
+            <!-- Botón Visual de Google -->
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="pill"
+                 data-theme="filled_blue"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="left">
+            </div>
+
+            <!-- Mensaje de Estado / Feedback para el Docente -->
+            <div id="msg" class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest italic italic">
+                Identifícate como docente para comenzar
+            </div>
         </div>
-        <div id="msg" class="mt-6 text-xs font-bold text-slate-400 italic">Identifícate como docente</div>
     </div>
+
+    <!-- Script de Lógica de Autenticación -->
     <script>
         async function handleCredentialResponse(response) {
+            const msg = document.getElementById('msg');
+            msg.innerText = "Verificando identidad en SonarIA...";
+            msg.classList.add('text-[#FF8700]', 'animate-pulse');
+
             try {
+                // Petición al Backend en Render
                 const res = await fetch("https://sonaria-api-test.onrender.com/auth/google", {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ credential: response.credential })
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        credential: response.credential 
+                    })
                 });
+
                 const data = await res.json();
+
                 if (data.ok) {
+                    // Guardamos sesión localmente
                     localStorage.setItem('sonaria_token', data.token);
                     localStorage.setItem('sonaria_user', JSON.stringify(data.user));
-                    window.location.href = "dashboard.html";
+                    
+                    msg.innerText = "¡Acceso concedido! Entrando...";
+                    
+                    // Pequeño delay para UX fluida
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 800);
+                } else {
+                    msg.innerText = "Error: No pudimos validar tu cuenta docente.";
+                    msg.classList.remove('animate-pulse');
+                    msg.classList.add('text-red-500');
                 }
-            } catch (e) { alert("Error de conexión con Render."); }
+            } catch (e) {
+                msg.innerText = "Error de conexión con el servidor.";
+                msg.classList.remove('animate-pulse');
+                msg.classList.add('text-red-500');
+                console.error("Auth Error:", e);
+            }
         }
     </script>
+
 </body>
 </html>
