@@ -156,9 +156,11 @@
                 const t = document.getElementById('in-titulo').value.trim(); if(!t) return;
                 document.getElementById('loader').classList.remove('hidden');
                 try {
-                    const res = await fetch(API_URL + "/analizar", { 
-                        method: 'POST', headers: {'Content-Type': 'application/json'}, 
-                        body: JSON.stringify({ titulo: t, artista: document.getElementById('in-artista').value, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos, user_plan: this.state.user.plan }) 
+                    const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                    const res = await fetch(API_URL + "/analizar", {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+                        body: JSON.stringify({ titulo: t, artista: document.getElementById('in-artista').value, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos })
                     });
                     const data = await res.json();
                     if(data.ok) { this.state.lastData = data; this.showResults(data); }
