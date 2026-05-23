@@ -59,6 +59,26 @@
 
     <!-- Script de Lógica de Autenticación -->
     <script>
+        const API_URL = "https://sonaria-api-test.onrender.com";
+
+        // Despierta Render antes de que el usuario haga clic (evita "failed to fetch" por cold start)
+        (function warmUp() {
+            const msg = document.getElementById('msg');
+            msg.innerText = "Conectando con el servidor...";
+            const check = setInterval(async () => {
+                try {
+                    const res = await fetch(API_URL + "/", { cache: "no-store" });
+                    if (res.ok) {
+                        clearInterval(check);
+                        msg.innerText = "Identifícate como docente para comenzar";
+                        msg.classList.remove('text-[#FF8700]', 'animate-pulse');
+                    }
+                } catch (_) {}
+            }, 3000);
+            // Ping inicial para despertar el contenedor
+            fetch(API_URL + "/", { cache: "no-store" }).catch(() => {});
+        })();
+
         async function handleCredentialResponse(response) {
             const msg = document.getElementById('msg');
             msg.innerText = "Verificando identidad en SonarIA...";
@@ -66,7 +86,7 @@
 
             try {
                 // Petición al Backend en Render
-                const res = await fetch("https://sonaria-api-test.onrender.com/auth/google", {
+                const res = await fetch(API_URL + "/auth/google", {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json'
@@ -79,15 +99,20 @@
                 const data = await res.json();
 
                 if (data.ok) {
-                    // Guardamos sesión localmente
-                    localStorage.setItem('sonaria_token', data.token);
-                    localStorage.setItem('sonaria_user', JSON.stringify(data.user));
-                    
+                    // Guardamos sesión — compatible con ambos dashboards
+                    const token = data.access_token || data.token;
+                    localStorage.setItem('sonaria_token',  token);
+                    localStorage.setItem('mejoraria_token', token);
+                    localStorage.setItem('token',           token);
+                    localStorage.setItem('access_token',    token);
+                    localStorage.setItem('sonaria_user',   JSON.stringify(data.user));
+                    localStorage.setItem('mejoraria_user', JSON.stringify(data.user));
+                    if (data.user?.plan) localStorage.setItem('mejoraria_plan', data.user.plan);
+
                     msg.innerText = "¡Acceso concedido! Entrando...";
-                    
-                    // Pequeño delay para UX fluida
+
                     setTimeout(() => {
-                        window.location.href = "dashboard.html";
+                        window.location.href = "sonaria.html";
                     }, 800);
                 } else {
                     msg.innerText = "Error: No pudimos validar tu cuenta docente.";
