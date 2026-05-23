@@ -19,6 +19,7 @@
         /* TARJETA PRO PEQUEÑA Y CENTRADA */
         .pro-unlock-container { position: relative; overflow: hidden; border-radius: 3.5rem; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; }
         .inner-card-white { position: absolute; z-index: 50; background: white; padding: 1.5rem; border-radius: 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.15); width: 240px; text-align: center; border: 1px solid #fff7ed; transform: scale(0.9); }
+        .pro-floating-card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-v::-webkit-scrollbar { width: 4px; }
@@ -101,13 +102,24 @@
         lucide.createIcons();
         const API_URL = "https://sonaria-api-test.onrender.com";
         const OAs_FULL = {
-            "1": "MU01 OA 01: Escuchar cualidades del sonido (altura, timbre, intensidad, duración) y manifestaciones musicales.",
-            "3": "MU03 OA 01: Escuchar música en forma abundante de diversos contextos y culturas (Nivel 3).",
-            "7": "MU07 OA 01: Interpretar música de diversas tradiciones y contextos.",
-            "1M": "MU1M OA 01: Analizar elementos estéticos...",
-            "3M": "MU3M OA 01: Valorar el rol de la música en la construcción de identidades personales y sociales."
+            "1":  "MU01 OA 01: Escuchar y distinguir cualidades del sonido (altura, timbre, intensidad, duración) en manifestaciones musicales del entorno.",
+            "2":  "MU02 OA 01: Escuchar música en forma abundante de diversos contextos, culturas y épocas, estableciendo relaciones con las propias experiencias.",
+            "3":  "MU03 OA 01: Escuchar música en forma abundante de diversos contextos y culturas, desarrollando la capacidad de apreciación musical.",
+            "4":  "MU04 OA 01: Escuchar y describir música de distintas épocas, culturas y contextos, identificando sus características.",
+            "5":  "MU05 OA 01: Escuchar y caracterizar música de diversas culturas, épocas y contextos, analizando sus elementos.",
+            "6":  "MU06 OA 01: Escuchar y analizar música de diversas tradiciones y contextos, reconociendo sus funciones sociales y culturales.",
+            "7":  "MU07 OA 01: Interpretar y apreciar música de diversas tradiciones y contextos, identificando sus características estéticas.",
+            "8":  "MU08 OA 01: Interpretar y apreciar obras musicales de distintas tradiciones y contextos culturales, analizando sus elementos formales.",
+            "1M": "MU1M OA 01: Analizar elementos estéticos, sociales e históricos de obras musicales de distintas culturas y períodos.",
+            "2M": "MU2M OA 01: Reflexionar sobre el rol de la música en diversas culturas y contextos históricos y sociales.",
+            "3M": "MU3M OA 01: Valorar el rol de la música en la construcción de identidades personales y sociales.",
+            "4M": "MU4M OA 01: Desarrollar y fundamentar juicios estéticos sobre obras musicales, considerando elementos técnicos y contextuales."
         };
         const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
+        function courseLabel(code) {
+            const m = {"1M":"I° Medio","2M":"II° Medio","3M":"III° Medio","4M":"IV° Medio"};
+            return m[code] ? m[code] : code + "° Básico";
+        }
 
         window.SonarIA = {
             state: { 
@@ -115,15 +127,50 @@
                 user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "name":"Mauricio Pinto"}'), 
                 lastData: null
             },
-            init() { 
+            async init() {
                 this.renderCourses(); this.checkViewer(); this.updatePlanUI();
                 const params = new URLSearchParams(window.location.search);
-                if (params.get('payment') === 'success') { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); alert("¡Cuenta PRO!"); }
+                if (params.get('payment') === 'success') { await this.syncPayment(params.get('order_id')); }
                 document.getElementById('user-greeting').innerText = "¡Hola, " + (this.state.user.name || "Mauricio").split(' ')[0] + "!";
                 document.getElementById('user-mail').innerText = this.state.user.email || "maunpb45@gmail.com";
                 this.setupSmartListeners();
+                this.refreshMe();
             },
-            updatePlanUI() { document.getElementById('plan-indicator').innerText = this.state.user.plan === 'pro' ? 'Plan PRO' : 'Plan Free'; },
+            updatePlanUI() { document.getElementById('plan-indicator').innerText = this.state.user.plan === 'pro' ? 'Plan PRO ✓' : 'Plan Free'; },
+            async refreshMe() {
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                if (!token) return;
+                try {
+                    const res = await fetch(API_URL + "/me", { headers: { 'Authorization': 'Bearer ' + token } });
+                    if (res.ok) {
+                        const d = await res.json();
+                        if (d.user) { this.state.user = {...this.state.user, ...d.user}; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
+                    }
+                } catch (_) {}
+            },
+            async syncPayment(orderId) {
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                try {
+                    const res = await fetch(API_URL + "/payments/mercadopago/sync", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify({ order_id: orderId, email: this.state.user.email })
+                    });
+                    const d = await res.json();
+                    if (d.ok) { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); alert("¡Plan PRO activado!"); }
+                } catch (_) { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
+            },
+            handlePdf() {
+                if (this.state.user.plan !== 'pro') { window.location.href = 'planes-test.html'; return; }
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                fetch(API_URL + "/export/pdf", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify(this.state.lastData)
+                }).then(r => r.ok ? r.blob() : Promise.reject())
+                  .then(blob => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'informe-sonaria.pdf'; a.click(); })
+                  .catch(() => alert('La exportación PDF estará disponible próximamente.'));
+            },
             checkViewer() { if(!sessionStorage.getItem('sonaria_voted')) document.getElementById('viewer-modal').classList.remove('hidden'); },
             acceptViewer() { sessionStorage.setItem('sonaria_voted', 'true'); document.getElementById('viewer-modal').classList.add('hidden'); },
             setupSmartListeners() {
@@ -169,6 +216,7 @@
             },
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
+                ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
                 document.getElementById('res-resultado').innerText = data.resultado;
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
                 document.getElementById('res-just').innerText = data.justificacion;
@@ -185,7 +233,7 @@
             },
             renderPlan(ped) {
                 const tabs = document.getElementById('plan-tabs');
-                tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0 ? 'active':''} transition-all shadow-sm italic italic">${p.curso}° Básico</button>`).join('');
+                tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0 ? 'active':''} transition-all shadow-sm italic italic">${courseLabel(p.curso)}</button>`).join('');
                 this.showPlan(0);
             },
             showPlan(idx) {
@@ -197,7 +245,7 @@
                     <div class="grid grid-cols-2 gap-10 h-[450px] items-center">
                         <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center h-full border-slate-50">
                             <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest italic italic">Match Curricular (OA)</h4>
-                            <p class="text-2xl font-black text-[#001739] mb-4 italic leading-tight italic tracking-tighter">OA Música Nivel ${p.curso}</p>
+                            <p class="text-2xl font-black text-[#001739] mb-4 italic leading-tight italic tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
                             <p class="text-[14px] text-slate-400 italic italic italic">${fullOA}</p>
                         </div>
                         <div class="pro-unlock-container bg-[#001739] flex items-center justify-center h-full">
