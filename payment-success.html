@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago exitoso | SonarIA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#f7f9fd;display:grid;place-items:center;min-height:100vh;padding:24px}
+    .card{background:#fff;border-radius:2rem;padding:3rem 2.5rem;text-align:center;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(31,44,74,.12);border:1px solid #e8f0fe}
+    .icon{font-size:4rem;margin-bottom:1.5rem}
+    h1{font-size:2rem;font-weight:900;color:#001739;margin-bottom:.75rem;letter-spacing:-.04em}
+    p{color:#66758c;line-height:1.7;margin-bottom:2rem}
+    .btn{display:inline-block;background:#FF8700;color:#fff;padding:.875rem 2.5rem;border-radius:1rem;font-weight:900;font-size:.95rem;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;transition:.2s}
+    .btn:hover{background:#e67800;transform:translateY(-1px)}
+    .loader{color:#66758c;font-size:.9rem;margin-top:1.5rem}
+    .countdown{font-weight:700;color:#FF8700}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🎉</div>
+    <h1>¡Pago aprobado!</h1>
+    <p>Tu plan <strong>SonarIA PRO</strong> está siendo activado.<br>En unos segundos te redirigimos a tu panel.</p>
+    <a href="sonaria.html" class="btn">Ir a SonarIA PRO</a>
+    <div class="loader">Redirigiendo en <span class="countdown" id="count">5</span>s...</div>
+  </div>
+
+  <script>
+    // MercadoPago pasa ?collection_id=X&collection_status=approved en la URL
+    const params   = new URLSearchParams(location.search);
+    const orderId  = params.get("collection_id")
+                  || params.get("payment_id")
+                  || "";
+
+    // Guardar en sessionStorage para que sonaria.html pueda leerlo
+    if (orderId) sessionStorage.setItem("order_id", orderId);
+
+    // Countdown y redirect
+    let seconds = 5;
+    const countEl = document.getElementById("count");
+    const timer = setInterval(() => {
+      seconds--;
+      countEl.textContent = seconds;
+      if (seconds <= 0) {
+        clearInterval(timer);
+        window.location.href = "sonaria.html?payment=success&order_id=" + encodeURIComponent(orderId);
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
