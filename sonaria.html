@@ -366,6 +366,40 @@ Prueba la IA directamente en tus aplicaciones favoritas … Usa Gemini para gene
     @media (prefers-reduced-motion: reduce){
       *, *::before, *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
+
+    /* Autocompletado de canciones en español */
+    .ac-wrap{position:relative}
+    .ac-dropdown{
+      display:none;
+      position:absolute;
+      top:calc(100% + 4px);
+      left:0;right:0;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:0 16px 40px rgba(31,44,74,.13);
+      z-index:99;
+      overflow:hidden;
+      max-height:280px;
+      overflow-y:auto;
+    }
+    .ac-dropdown.open{display:block}
+    .ac-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 16px;
+      cursor:pointer;
+      border-bottom:1px solid #f1f4fb;
+      transition:background .12s;
+    }
+    .ac-item:last-child{border-bottom:none}
+    .ac-item:hover,.ac-item.focused{background:#eef4ff}
+    .ac-item-icon{font-size:1.1rem;flex-shrink:0}
+    .ac-item-text{flex:1;min-width:0}
+    .ac-item-title{font-weight:800;font-size:.93rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ac-item-artist{font-size:.8rem;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ac-loading{padding:12px 16px;color:var(--muted);font-size:.88rem;font-weight:700;text-align:center}
   </style>
 </head>
 <body>
@@ -416,7 +450,10 @@ Prueba la IA directamente en tus aplicaciones favoritas … Usa Gemini para gene
         <div class="inline" style="margin-top:12px">
           <div class="field" style="margin:0">
             <label for="titulo">Título</label>
-            <input id="titulo" type="text" placeholder="Ej: Creep">
+            <div class="ac-wrap">
+              <input id="titulo" type="text" placeholder="Ej: Besos en Guerra" autocomplete="off">
+              <div id="acDropdown" class="ac-dropdown" role="listbox" aria-label="Sugerencias de canciones"></div>
+            </div>
           </div>
           <div class="field" style="margin:0">
             <label for="artista">Artista</label>
@@ -2149,6 +2186,118 @@ Prueba la IA directamente en tus aplicaciones favoritas … Usa Gemini para gene
       }
       return {title, artist};
     }
+
+    // ─── Autocompletado de canciones en español ───────────────────────────────
+    (function initAutocomplete(){
+      const inputEl   = $("titulo");
+      const artistEl  = $("artista");
+      const dropdown  = $("acDropdown");
+      if(!inputEl || !dropdown) return;
+
+      let debounceTimer = null;
+      let acResults     = [];
+      let focusedIdx    = -1;
+
+      function closeDropdown(){
+        dropdown.classList.remove("open");
+        focusedIdx = -1;
+      }
+
+      function setFocused(idx){
+        const items = dropdown.querySelectorAll(".ac-item");
+        items.forEach((el, i) => el.classList.toggle("focused", i === idx));
+        focusedIdx = idx;
+      }
+
+      function pickItem(item){
+        inputEl.value  = item.title;
+        artistEl.value = item.artist;
+        closeDropdown();
+        handleSongIdentityChange();
+      }
+
+      function renderDropdown(items){
+        if(!items.length){
+          closeDropdown();
+          return;
+        }
+        acResults = items;
+        dropdown.innerHTML = items.map((item, i) =>
+          `<div class="ac-item" role="option" data-idx="${i}">
+            <span class="ac-item-icon">🎵</span>
+            <div class="ac-item-text">
+              <div class="ac-item-title">${escapeHtml(item.title)}</div>
+              <div class="ac-item-artist">${escapeHtml(item.artist)}${item.year ? " · " + escapeHtml(item.year) : ""}</div>
+            </div>
+          </div>`
+        ).join("");
+        dropdown.querySelectorAll(".ac-item").forEach(el => {
+          el.addEventListener("mousedown", e => {
+            e.preventDefault();
+            const idx = Number(el.dataset.idx);
+            if(acResults[idx]) pickItem(acResults[idx]);
+          });
+        });
+        focusedIdx = -1;
+        dropdown.classList.add("open");
+      }
+
+      async function fetchAcSuggestions(query){
+        try{
+          const url = "https://itunes.apple.com/search?entity=song&limit=10&country=cl&lang=es_es&term=" + encodeURIComponent(query);
+          const res  = await fetch(url);
+          const data = await res.json().catch(() => ({}));
+          const rows = Array.isArray(data.results) ? data.results : [];
+          const seen = new Set();
+          return rows.map(item => ({
+            title:  item.trackName   || "",
+            artist: item.artistName  || "",
+            album:  item.collectionName || "",
+            year:   String(item.releaseDate || "").slice(0,4)
+          })).filter(item => {
+            if(!item.title || !item.artist) return false;
+            const key = (item.title + "|" + item.artist).toLowerCase();
+            if(seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          }).slice(0,7);
+        }catch(e){
+          return [];
+        }
+      }
+
+      inputEl.addEventListener("input", () => {
+        clearTimeout(debounceTimer);
+        const q = inputEl.value.trim();
+        if(q.length < 2){ closeDropdown(); return; }
+        dropdown.innerHTML = '<div class="ac-loading">Buscando canciones...</div>';
+        dropdown.classList.add("open");
+        debounceTimer = setTimeout(async () => {
+          const items = await fetchAcSuggestions(q);
+          renderDropdown(items);
+        }, 360);
+      });
+
+      inputEl.addEventListener("keydown", e => {
+        if(!dropdown.classList.contains("open")) return;
+        const items = dropdown.querySelectorAll(".ac-item");
+        if(e.key === "ArrowDown"){
+          e.preventDefault();
+          setFocused(Math.min(focusedIdx + 1, items.length - 1));
+        } else if(e.key === "ArrowUp"){
+          e.preventDefault();
+          setFocused(Math.max(focusedIdx - 1, 0));
+        } else if(e.key === "Enter" && focusedIdx >= 0){
+          e.preventDefault();
+          if(acResults[focusedIdx]) pickItem(acResults[focusedIdx]);
+        } else if(e.key === "Escape"){
+          closeDropdown();
+        }
+      });
+
+      inputEl.addEventListener("blur", () => setTimeout(closeDropdown, 150));
+    })();
+    // ──────────────────────────────────────────────────────────────────────────
 
     $("titulo").addEventListener("input", handleSongIdentityChange);
     $("artista").addEventListener("input", handleSongIdentityChange);
