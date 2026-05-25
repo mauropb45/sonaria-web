@@ -98,6 +98,7 @@
 
                 const data = await res.json();
 
+                console.log("[SonarIA auth]", res.status, data);
                 if (data.ok) {
                     // Guardamos sesión — compatible con ambos dashboards
                     const token = data.access_token || data.token;
@@ -115,9 +116,11 @@
                         window.location.href = "dashboard.html";
                     }, 800);
                 } else {
-                    msg.innerText = "Error: No pudimos validar tu cuenta docente.";
+                    const detail = data.error || "cuenta no autorizada";
+                    msg.innerText = "Error: " + detail;
                     msg.classList.remove('animate-pulse');
                     msg.classList.add('text-red-500');
+                    console.error("[SonarIA] Login error:", detail);
                 }
             } catch (e) {
                 msg.innerText = "Error de conexión con el servidor.";
