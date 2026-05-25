@@ -179,56 +179,88 @@
                     </div>
                 </div>
             </div>
-            <div id="sec-diag" class="section overflow-y-auto h-full pb-16">
-                <div class="max-w-4xl mx-auto pt-10">
-                    <!-- Encabezado: canción analizada -->
-                    <div class="mb-5 flex items-baseline gap-3 pl-1">
-                        <span id="res-cancion-titulo" class="text-2xl font-black uppercase italic text-[#001739] tracking-tighter leading-none">--</span>
-                        <span id="res-cancion-artista" class="text-sm font-bold text-slate-400 italic"></span>
+            <div id="sec-diag" class="section overflow-y-auto scroll-v h-full">
+                <div class="max-w-xl mx-auto pt-8 pb-24 px-2">
+
+                    <!-- Encabezado canción -->
+                    <div class="mb-4 flex items-baseline gap-2 pl-1">
+                        <span id="res-cancion-titulo" class="text-xl font-black uppercase italic text-[#001739] tracking-tighter leading-none">--</span>
+                        <span id="res-cancion-artista" class="text-xs font-bold text-slate-400 italic"></span>
                     </div>
-                    <!-- Tarjeta principal -->
-                    <div class="glass-card p-12 flex flex-col border-none shadow-2xl">
-                        <div class="flex items-start justify-between gap-10 mb-6">
-                            <!-- Izquierda: clasificación + justificación -->
-                            <div class="flex-grow min-w-0">
-                                <h3 id="res-resultado" data-tip="Clasificación pedagógica de la canción para uso en aula" class="text-6xl font-black leading-none uppercase italic mb-4" style="color:#001739">--</h3>
-                                <p id="res-just" class="text-slate-500 text-base font-medium italic leading-relaxed max-w-lg"></p>
-                            </div>
-                            <!-- Derecha: medidor SVG + edad -->
-                            <div class="shrink-0 flex flex-col items-center gap-1" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA">
-                                <svg id="risk-svg" width="120" height="120" viewBox="0 0 120 120">
-                                    <circle cx="60" cy="60" r="48" fill="none" stroke="#e2e8f0" stroke-width="10"/>
-                                    <circle id="risk-arc" cx="60" cy="60" r="48" fill="none" stroke="#16a34a" stroke-width="10"
+
+                    <!-- Card principal -->
+                    <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden">
+
+                        <!-- Zona medidor: fondo suave, centrado -->
+                        <div class="flex flex-col items-center pt-10 pb-7 px-8 bg-gradient-to-b from-slate-50 to-white">
+                            <div data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA">
+                                <svg id="risk-svg" width="150" height="150" viewBox="0 0 150 150">
+                                    <circle cx="75" cy="75" r="60" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+                                    <circle id="risk-arc" cx="75" cy="75" r="60" fill="none" stroke="#16a34a" stroke-width="12"
                                             stroke-linecap="round"
-                                            stroke-dasharray="301.6" stroke-dashoffset="301.6"
-                                            transform="rotate(-90 60 60)"/>
-                                    <text id="risk-text" x="60" y="57" text-anchor="middle"
-                                          font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#001739">0%</text>
-                                    <text x="60" y="74" text-anchor="middle"
-                                          font-family="Inter,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="2">RIESGO</text>
+                                            stroke-dasharray="376.99" stroke-dashoffset="376.99"
+                                            transform="rotate(-90 75 75)"/>
+                                    <text id="risk-text" x="75" y="71" text-anchor="middle"
+                                          font-family="Inter,sans-serif" font-size="28" font-weight="900" fill="#001739">0%</text>
+                                    <text x="75" y="90" text-anchor="middle"
+                                          font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" letter-spacing="2">RIESGO</text>
                                 </svg>
-                                <div id="res-age" class="text-[9px] font-black uppercase italic tracking-widest text-slate-400 text-center max-w-[120px]"></div>
                             </div>
+                            <!-- Clasificación debajo del medidor -->
+                            <h3 id="res-resultado"
+                                class="text-3xl font-black leading-none uppercase italic mt-5 text-center"
+                                style="color:#001739">--</h3>
+                            <div id="res-age"
+                                 class="text-[10px] font-black uppercase italic tracking-widest text-slate-400 mt-2 text-center"></div>
                         </div>
-                        <!-- Chips de temas -->
-                        <div id="res-temas" class="flex gap-2 flex-wrap mb-6"></div>
-                        <!-- Aviso cursos excluidos por edad -->
-                        <div id="diag-excluded" class="hidden mb-4 p-5 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3">
-                            <span class="text-lg shrink-0">🚫</span>
-                            <div>
-                                <p class="text-[10px] font-black uppercase text-red-500 italic tracking-widest mb-1">Contenido no apropiado para:</p>
-                                <p id="diag-excluded-text" class="text-[12px] text-red-400 italic leading-relaxed"></p>
+
+                        <!-- Zona de detalles -->
+                        <div class="px-8 pb-8 flex flex-col gap-4">
+                            <div class="h-px bg-slate-100"></div>
+
+                            <!-- Justificación -->
+                            <p id="res-just" class="text-slate-500 text-sm font-medium italic leading-relaxed"></p>
+
+                            <!-- Chips temas -->
+                            <div id="res-temas" class="flex gap-2 flex-wrap"></div>
+
+                            <!-- Cursos excluidos -->
+                            <div id="diag-excluded" class="hidden p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3">
+                                <span class="text-base shrink-0">🚫</span>
+                                <div>
+                                    <p class="text-[10px] font-black uppercase text-red-500 italic tracking-widest mb-1">No apropiado para:</p>
+                                    <p id="diag-excluded-text" class="text-[11px] text-red-400 italic leading-relaxed"></p>
+                                </div>
                             </div>
-                        </div>
-                        <!-- CTA adaptación -->
-                        <div id="diag-cta" class="hidden border-t border-slate-100 pt-8 text-center">
-                            <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Ver letra adaptada para el aula</button>
+
+                            <!-- CTAs siempre visibles tras análisis -->
+                            <div id="diag-cta" class="hidden grid grid-cols-2 gap-3 pt-2">
+                                <button onclick="SonarIA.nav('sec-canvas')"
+                                        class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 py-4 rounded-2xl font-black uppercase text-[10px] italic hover:bg-orange-100 transition-colors">
+                                    ✨ Letra Adaptada
+                                </button>
+                                <button onclick="SonarIA.nav('sec-plan')"
+                                        class="f1-navy text-white py-4 rounded-2xl font-black uppercase text-[10px] italic hover:opacity-90 transition-opacity">
+                                    Plan Pedagógico →
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="sec-canvas" class="section h-full pb-20 relative">
-                <div class="grid grid-cols-2 gap-8 h-full">
+            <div id="sec-canvas" class="section h-full pb-20 relative flex flex-col gap-4">
+                <!-- Navegación entre secciones -->
+                <div class="flex justify-between items-center shrink-0 px-1 pt-1">
+                    <button onclick="SonarIA.nav('sec-diag')" class="text-[10px] font-black uppercase text-slate-400 hover:text-[#001739] transition-colors flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                        Diagnóstico
+                    </button>
+                    <button onclick="SonarIA.nav('sec-plan')" class="bg-[#001739] text-white text-[10px] font-black uppercase px-5 py-2 rounded-full hover:opacity-90 transition-opacity flex items-center gap-1">
+                        Plan Pedagógico
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-8 flex-grow min-h-0">
                     <!-- Columna izquierda: letra original -->
                     <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden">
                         <h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic">Letra Original</h4>
@@ -508,8 +540,7 @@
                 const arc  = document.getElementById('risk-arc');
                 const txt  = document.getElementById('risk-text');
                 if (!arc || !txt) return;
-                const r = 48;
-                const circ = 2 * Math.PI * r; // 301.59
+                const circ = 376.99; // r=60
                 const offset = circ - (percent / 100) * circ;
                 arc.style.stroke = color;
                 arc.setAttribute('stroke-dashoffset', offset);
@@ -621,7 +652,9 @@
 
                 // ── Clasificación con color dinámico ──────────────────────────
                 const resEl = document.getElementById('res-resultado');
-                resEl.innerText = data.resultado;
+                // Strip emoji characters for clean display
+                const cleanRes = data.resultado.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').replace(/[🟢🟡🟠🔴⚪]/gu, '').trim();
+                resEl.innerText = cleanRes || data.resultado;
                 const isApta    = data.resultado.includes('APTA') && !data.resultado.includes('NO');
                 const isMediado = data.resultado.includes('MEDIADO');
                 const color = isApta ? '#16a34a' : (isMediado ? '#FF8700' : '#dc2626');
@@ -665,9 +698,8 @@
                     exclDiv.classList.add('hidden');
                 }
 
-                // ── CTA adaptar ───────────────────────────────────────────────
-                document.getElementById('diag-cta').classList.add('hidden');
-                if(isMediado || data.resultado.includes("NO APTA")) document.getElementById('diag-cta').classList.remove('hidden');
+                // ── CTA adaptar — siempre visible tras analizar ───────────────
+                document.getElementById('diag-cta').classList.remove('hidden');
 
                 // ── Canvas: adaptada + traducida ──────────────────────────────
                 const adaptBox    = document.getElementById('res-adapt');
