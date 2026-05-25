@@ -112,6 +112,14 @@
                         </div>
                         <!-- Chips de temas -->
                         <div id="res-temas" class="flex gap-2 flex-wrap mb-6"></div>
+                        <!-- Aviso cursos excluidos por edad -->
+                        <div id="diag-excluded" class="hidden mb-4 p-5 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3">
+                            <span class="text-lg shrink-0">🚫</span>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-red-500 italic tracking-widest mb-1">Contenido no apropiado para:</p>
+                                <p id="diag-excluded-text" class="text-[12px] text-red-400 italic leading-relaxed"></p>
+                            </div>
+                        </div>
                         <!-- CTA adaptación -->
                         <div id="diag-cta" class="hidden border-t border-slate-100 pt-8 text-center">
                             <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Ver letra adaptada para el aula</button>
@@ -323,6 +331,18 @@
                     ? temas.map(t => `<span class="bg-orange-50 text-orange-600 border border-orange-100 px-4 py-2 rounded-full text-[10px] font-black uppercase italic">${t}</span>`).join('')
                     : '';
 
+                // ── Cursos excluidos por edad ─────────────────────────────────
+                const excluidos = data.cursos_excluidos || [];
+                const exclDiv   = document.getElementById('diag-excluded');
+                if (excluidos.length > 0) {
+                    const labels = excluidos.map(c => courseLabel(c)).join(', ');
+                    document.getElementById('diag-excluded-text').innerText =
+                        `${labels} — recomendado solo para mayores de ${data.age_min} años.`;
+                    exclDiv.classList.remove('hidden');
+                } else {
+                    exclDiv.classList.add('hidden');
+                }
+
                 // ── CTA adaptar ───────────────────────────────────────────────
                 document.getElementById('diag-cta').classList.add('hidden');
                 if(isMediado || data.resultado.includes("NO APTA")) document.getElementById('diag-cta').classList.remove('hidden');
@@ -368,7 +388,29 @@
                 const content = document.getElementById('plan-content');
                 if (!ped.por_curso || ped.por_curso.length === 0) {
                     tabs.innerHTML = '';
-                    content.innerHTML = '<div class="flex items-center justify-center h-full text-slate-400 italic text-sm">Selecciona cursos en "Mis Cursos" para ver la planificación pedagógica.</div>';
+                    const excl    = this.state.lastData?.cursos_excluidos || [];
+                    const ageMin  = this.state.lastData?.age_min || 0;
+                    if (excl.length > 0 && this.state.cursos.length > 0) {
+                        const labels = excl.map(c => courseLabel(c)).join(', ');
+                        content.innerHTML = `
+                            <div class="flex flex-col items-center justify-center h-full text-center gap-4">
+                                <span class="text-6xl">🚫</span>
+                                <p class="text-xl font-black uppercase italic text-[#001739]">Sin planificación disponible</p>
+                                <p class="text-slate-400 italic text-sm max-w-md leading-relaxed">
+                                    Esta canción no es apropiada para tus cursos actuales (${labels}).
+                                </p>
+                                <p class="text-slate-300 italic text-xs">
+                                    Recomendada solo para estudiantes de ${ageMin}+ años.
+                                </p>
+                                <button onclick="SonarIA.nav('sec-canvas')" class="mt-2 bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-8 py-4 rounded-[2rem] font-black uppercase text-xs italic">
+                                    ✨ Ver letra adaptada
+                                </button>
+                            </div>`;
+                    } else if (this.state.cursos.length === 0) {
+                        content.innerHTML = '<div class="flex items-center justify-center h-full text-slate-400 italic text-sm">Selecciona tus cursos en "Mis Cursos" para ver la planificación pedagógica.</div>';
+                    } else {
+                        content.innerHTML = '<div class="flex items-center justify-center h-full text-slate-400 italic text-sm">Sin planificación disponible para esta canción.</div>';
+                    }
                     return;
                 }
                 tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0 ? 'active':''} transition-all shadow-sm italic italic">${courseLabel(p.curso)}</button>`).join('');
