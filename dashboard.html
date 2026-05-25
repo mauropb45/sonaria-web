@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 <head>
-    <meta charset="UTF-8"><title>Workspace | SonarIA v115.0</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#001739">
+    <title>Workspace | SonarIA v115.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,8 +27,15 @@
         .pro-floating-card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0%{opacity:0;transform:scale(0.7) translateY(4px)} 70%{transform:scale(1.06)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes chipIn { from{opacity:0;transform:translateY(6px) scale(0.9)} to{opacity:1;transform:translateY(0) scale(1)} }
+        .pop-in { animation: popIn 0.45s cubic-bezier(.34,1.56,.64,1) both; }
+        .chip-anim { animation: chipIn 0.35s ease both; }
         .scroll-v::-webkit-scrollbar { width: 4px; }
         .scroll-v::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* SVG risk meter */
+        #risk-arc { transition: stroke-dashoffset 1.2s cubic-bezier(0.25,0.46,0.45,0.94), stroke 0.4s; }
 
         /* Tooltips dinámicos */
         [data-tip] { position: relative; cursor: help; }
@@ -32,6 +44,30 @@
         /* Nav tooltips go to the right */
         nav [data-tip]:hover::after { bottom: auto; left: calc(100% + 12px); top: 50%; transform: translateY(-50%); }
         nav [data-tip]:hover::before { bottom: auto; left: calc(100% + 7px); top: 50%; transform: translateY(-50%) rotate(-90deg); border-top-color: #001739; }
+
+        /* ── MOBILE ──────────────────────────────────────────────────────── */
+        .mobile-nav { display: none; }
+        @media (max-width: 768px) {
+            nav.desktop-nav { display: none !important; }
+            main.desktop-main { padding: 0.875rem 0.875rem 5.5rem !important; }
+            .section { overflow-y: auto !important; height: 100% !important; -webkit-overflow-scrolling: touch; }
+            .glass-card { border-radius: 1.5rem !important; padding: 1.25rem !important; }
+            #grid-cursos { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+            #sec-analyze .grid { grid-template-columns: 1fr !important; }
+            #sec-analyze .grid input:last-child { margin-top: 0 !important; }
+            #sec-canvas .grid { grid-template-columns: 1fr !important; }
+            #sec-canvas .grid > div:first-child { display: none; } /* oculta original en móvil */
+            #sec-canvas .grid > div:last-child { height: 65vh; border-radius: 1.5rem !important; }
+            #plan-content .grid { grid-template-columns: 1fr !important; }
+            #plan-content .h-\[450px\] { height: auto !important; }
+            #sec-diag .flex.items-start.gap-10 { flex-direction: column !important; gap: 1rem !important; }
+            #sec-diag .text-right.shrink-0 { text-align: left !important; align-items: flex-start !important; flex-direction: row !important; gap: 1rem; align-items: center !important; }
+            #risk-svg { width: 80px; height: 80px; }
+            #in-texto { height: 7rem !important; }
+            .mobile-nav { display: flex !important; }
+            /* Plan footer en móvil */
+            #sec-plan .border-t { flex-direction: column; gap: 0.75rem; }
+        }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -44,16 +80,16 @@
         </div>
     </div>
     
-    <header class="h-16 f1-navy flex items-center justify-between px-8 text-white z-50">
-        <h1 class="text-2xl font-black italic uppercase">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <div class="flex items-center gap-4">
+    <header class="h-14 f1-navy flex items-center justify-between px-5 text-white z-50 shrink-0" style="padding-top: env(safe-area-inset-top)">
+        <h1 class="text-xl font-black italic uppercase tracking-tight">Sonar<span class="text-[#FF8700]">IA</span></h1>
+        <div class="flex items-center gap-3">
             <div id="plan-indicator" class="text-[9px] font-black uppercase border-white/20 border px-3 py-1 rounded-full italic tracking-widest text-slate-400">Plan Free</div>
-            <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest">Salir →</button>
+            <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest hidden sm:block">Salir →</button>
         </div>
     </header>
 
     <div class="flex flex-grow overflow-hidden">
-        <nav class="w-72 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
+        <nav class="desktop-nav w-72 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
             <!-- SALUDO MAURICIO PINTO ARRIBA -->
             <div class="p-10 pb-6 border-b">
                 <div id="user-greeting" class="text-3xl font-black text-[#001739] italic leading-tight uppercase tracking-tighter">¡Hola!</div>
@@ -75,7 +111,7 @@
             </div>
         </nav>
 
-        <main class="flex-grow p-12 overflow-hidden relative">
+        <main class="desktop-main flex-grow p-12 overflow-hidden relative">
             <div id="sec-config" class="section">
                 <div class="max-w-4xl pt-10"><h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Mi Aula</h2><div class="grid grid-cols-4 gap-4 mt-12" id="grid-cursos"></div><button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar Perfil →</button></div>
             </div>
@@ -115,10 +151,20 @@
                                 <h3 id="res-resultado" data-tip="Clasificación pedagógica de la canción para uso en aula" class="text-6xl font-black leading-none uppercase italic mb-4" style="color:#001739">--</h3>
                                 <p id="res-just" class="text-slate-500 text-base font-medium italic leading-relaxed max-w-lg"></p>
                             </div>
-                            <!-- Derecha: riesgo % + edad -->
-                            <div class="text-right shrink-0 flex flex-col items-end gap-1">
-                                <div id="res-risk" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA" class="text-8xl font-black leading-none" style="color:#001739">0%</div>
-                                <div id="res-age" class="text-[9px] font-black uppercase italic tracking-widest text-slate-400"></div>
+                            <!-- Derecha: medidor SVG + edad -->
+                            <div class="shrink-0 flex flex-col items-center gap-1" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA">
+                                <svg id="risk-svg" width="120" height="120" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="48" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+                                    <circle id="risk-arc" cx="60" cy="60" r="48" fill="none" stroke="#16a34a" stroke-width="10"
+                                            stroke-linecap="round"
+                                            stroke-dasharray="301.6" stroke-dashoffset="301.6"
+                                            transform="rotate(-90 60 60)"/>
+                                    <text id="risk-text" x="60" y="57" text-anchor="middle"
+                                          font-family="Inter,sans-serif" font-size="22" font-weight="900" fill="#001739">0%</text>
+                                    <text x="60" y="74" text-anchor="middle"
+                                          font-family="Inter,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="2">RIESGO</text>
+                                </svg>
+                                <div id="res-age" class="text-[9px] font-black uppercase italic tracking-widest text-slate-400 text-center max-w-[120px]"></div>
                             </div>
                         </div>
                         <!-- Chips de temas -->
@@ -181,6 +227,37 @@
             </div>
         </main>
     </div>
+
+    <!-- ── Barra de navegación inferior (solo móvil) ── -->
+    <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex">
+            <button onclick="SonarIA.nav('sec-config')" id="mnav-sec-config"
+                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span class="text-[8px] font-black uppercase italic">Cursos</span>
+            </button>
+            <button onclick="SonarIA.nav('sec-analyze')" id="mnav-sec-analyze"
+                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
+                <i data-lucide="search" class="w-5 h-5"></i>
+                <span class="text-[8px] font-black uppercase italic">Analizar</span>
+            </button>
+            <button onclick="SonarIA.nav('sec-diag')" id="mnav-sec-diag"
+                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+                <span class="text-[8px] font-black uppercase italic">Diagnóstico</span>
+            </button>
+            <button onclick="SonarIA.nav('sec-plan')" id="mnav-sec-plan"
+                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+                <span class="text-[8px] font-black uppercase italic">Plan</span>
+            </button>
+            <button onclick="SonarIA.navHistory()" id="mnav-sec-history"
+                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+                <span class="text-[8px] font-black uppercase italic">Historial</span>
+            </button>
+        </div>
+    </nav>
 
     <script>
         lucide.createIcons();
@@ -247,16 +324,40 @@
                     if (d.ok) { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); alert("¡Plan PRO activado!"); }
                 } catch (_) { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
             },
-            handlePdf() {
+            async handlePdf() {
                 if (this.state.user.plan !== 'pro') { window.location.href = 'planes-test.html'; return; }
+                if (!this.state.lastData) {
+                    this.showAnalyzeError('Primero analiza una canción para exportar el informe.');
+                    this.nav('sec-analyze');
+                    return;
+                }
+                const btn = document.querySelector('[onclick="SonarIA.handlePdf()"]');
+                const origText = btn?.innerHTML;
+                if (btn) btn.innerHTML = '<span class="animate-pulse">Generando PDF…</span>';
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
-                fetch(API_URL + "/export/pdf", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify(this.state.lastData)
-                }).then(r => r.ok ? r.blob() : Promise.reject())
-                  .then(blob => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'informe-sonaria.pdf'; a.click(); })
-                  .catch(() => alert('La exportación PDF estará disponible próximamente.'));
+                try {
+                    const res = await fetch(API_URL + "/export/pdf", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify(this.state.lastData),
+                    });
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.error || `HTTP ${res.status}`);
+                    }
+                    const blob = await res.blob();
+                    const titulo = this.state.lastData?._titulo || 'informe';
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `sonaria-${titulo.replace(/[^a-z0-9]/gi, '_').substring(0,30)}.pdf`;
+                    a.click();
+                } catch(e) {
+                    this.showAnalyzeError('Error exportando PDF: ' + (e.message || 'intenta de nuevo.'));
+                    this.nav('sec-analyze');
+                } finally {
+                    if (btn && origText) btn.innerHTML = origText;
+                    lucide.createIcons();
+                }
             },
             checkViewer() { if(!sessionStorage.getItem('sonaria_voted')) document.getElementById('viewer-modal').classList.remove('hidden'); },
             acceptViewer() { sessionStorage.setItem('sonaria_voted', 'true'); document.getElementById('viewer-modal').classList.add('hidden'); },
@@ -269,12 +370,20 @@
                     setTimeout(() => { if(document.getElementById('in-texto').value.length > 50 && document.getElementById('in-titulo').value) this.analyze(); }, 200);
                 });
             },
-            nav(id) { 
+            nav(id) {
                 const el = document.getElementById(id); if(!el) return;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                // mobile nav highlight
+                document.querySelectorAll('.mnav-btn').forEach(b => {
+                    b.style.color = '';
+                });
                 el.classList.add('active');
                 if(document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
+                const mBtn = document.getElementById('mnav-' + id);
+                if (mBtn) mBtn.style.color = '#FF8700';
+                // scroll to top of section
+                el.scrollTop = 0;
             },
             renderCourses() { 
                 const grid = document.getElementById('grid-cursos'); if(!grid) return;
@@ -296,16 +405,49 @@
                 clearTimeout(this._errTimer);
                 this._errTimer = setTimeout(() => div.classList.add('hidden'), 8000);
             },
+            _animateRisk(percent, color) {
+                const arc  = document.getElementById('risk-arc');
+                const txt  = document.getElementById('risk-text');
+                if (!arc || !txt) return;
+                const r = 48;
+                const circ = 2 * Math.PI * r; // 301.59
+                const offset = circ - (percent / 100) * circ;
+                arc.style.stroke = color;
+                arc.setAttribute('stroke-dashoffset', offset);
+                // count-up
+                let cur = 0;
+                const duration = 1200;
+                const start = performance.now();
+                const step = (ts) => {
+                    const p = Math.min((ts - start) / duration, 1);
+                    const e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+                    cur = Math.round(percent * e);
+                    txt.textContent = cur + '%';
+                    txt.setAttribute('fill', color);
+                    if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            },
             _setAnalyzing(active, plan = 'free') {
                 const btn  = document.getElementById('btn-analyze');
                 const txt  = document.getElementById('btn-analyze-text');
                 const ltxt = document.getElementById('loader-text');
                 if (btn) btn.disabled = active;
                 if (txt) txt.innerText = active ? 'Analizando...' : 'ANALIZAR AHORA';
-                if (ltxt) {
-                    ltxt.innerText = active
-                        ? (plan === 'pro' ? 'Consultando IA · Evaluando contenido...' : 'Buscando letra · Evaluando contenido...')
-                        : 'Analizando...';
+                if (active) {
+                    // cycling messages para loader
+                    const msgs = plan === 'pro'
+                        ? ['Buscando letra…', 'Detectando contenido…', 'Consultando IA…', 'Generando planificación…', 'Preparando resultados…']
+                        : ['Buscando letra…', 'Evaluando contenido…', 'Clasificando canción…', 'Preparando resultados…'];
+                    let mi = 0;
+                    if (ltxt) ltxt.innerText = msgs[0];
+                    this._loaderTimer = setInterval(() => {
+                        mi = (mi + 1) % msgs.length;
+                        if (ltxt) ltxt.innerText = msgs[mi];
+                    }, 2200);
+                } else {
+                    clearInterval(this._loaderTimer);
+                    if (ltxt) ltxt.innerText = 'Analizando...';
                 }
                 document.getElementById('loader').classList.toggle('hidden', !active);
             },
@@ -380,14 +522,18 @@
 
                 // ── Clasificación con color dinámico ──────────────────────────
                 const resEl = document.getElementById('res-resultado');
-                const riskEl = document.getElementById('res-risk');
                 resEl.innerText = data.resultado;
                 const isApta    = data.resultado.includes('APTA') && !data.resultado.includes('NO');
                 const isMediado = data.resultado.includes('MEDIADO');
                 const color = isApta ? '#16a34a' : (isMediado ? '#FF8700' : '#dc2626');
                 resEl.style.color = color;
-                riskEl.style.color = color;
-                riskEl.innerText = data.risk_percent + "%";
+                // pop-in animation on result label
+                resEl.classList.remove('pop-in');
+                void resEl.offsetWidth; // reflow
+                resEl.classList.add('pop-in');
+
+                // ── SVG risk meter animado ────────────────────────────────────
+                this._animateRisk(data.risk_percent, color);
 
                 document.getElementById('res-just').innerText = data.justificacion;
                 document.getElementById('res-orig').innerText = data.original;
@@ -402,10 +548,10 @@
                     ageEl.style.color = data.age_min >= 16 ? '#dc2626' : '#FF8700';
                 }
 
-                // ── Chips de temas ────────────────────────────────────────────
+                // ── Chips de temas con stagger ────────────────────────────────
                 const temas = data.temas || [];
                 document.getElementById('res-temas').innerHTML = temas.length
-                    ? temas.map(t => `<span class="bg-orange-50 text-orange-600 border border-orange-100 px-4 py-2 rounded-full text-[10px] font-black uppercase italic">${t}</span>`).join('')
+                    ? temas.map((t, i) => `<span class="chip-anim bg-orange-50 text-orange-600 border border-orange-100 px-4 py-2 rounded-full text-[10px] font-black uppercase italic" style="animation-delay:${i * 60}ms">${t}</span>`).join('')
                     : '';
 
                 // ── Cursos excluidos por edad ─────────────────────────────────
@@ -598,6 +744,8 @@
             },
             async navHistory() {
                 this.nav('sec-history');
+                const mBtn = document.getElementById('mnav-sec-history');
+                if (mBtn) mBtn.style.color = '#FF8700';
                 await this.loadHistory();
             },
             async loadHistory() {
