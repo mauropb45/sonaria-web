@@ -239,23 +239,43 @@
             showPlan(idx) {
                 const p = this.state.lastData.pedagogia.por_curso[idx];
                 const isPro = this.state.user.plan === 'pro';
-                const fullOA = OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
+                const fullOA = p.oa || OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
+                const actividades = p.actividades || [];
+                const preguntas   = p.preguntas   || [];
+                const reflexion   = p.reflexion   || '';
                 document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
-                document.getElementById('plan-content').innerHTML = `
-                    <div class="grid grid-cols-2 gap-10 h-[450px] items-center">
-                        <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center h-full border-slate-50">
-                            <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest italic italic">Match Curricular (OA)</h4>
-                            <p class="text-2xl font-black text-[#001739] mb-4 italic leading-tight italic tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
-                            <p class="text-[14px] text-slate-400 italic italic italic">${fullOA}</p>
-                        </div>
-                        <div class="pro-unlock-container bg-[#001739] flex items-center justify-center h-full">
-                            <div class="p-12 h-full flex flex-col justify-center items-center w-full ${!isPro ? 'blur-pro' : ''}">
-                                <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest italic italic">Actividad Sugerida</h4>
-                                <p class="text-xl text-white italic font-light text-center italic italic italic">${isPro ? p.actividades[0] : 'Diseño de actividad segura...'}</p>
+
+                if (isPro) {
+                    document.getElementById('plan-content').innerHTML = `
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="bg-white p-10 rounded-[3.5rem] border shadow-xl flex flex-col border-slate-50">
+                                <h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Match Curricular (OA)</h4>
+                                <p class="text-xl font-black text-[#001739] mb-3 italic leading-tight tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
+                                <p class="text-[13px] text-slate-400 italic leading-relaxed">${fullOA}</p>
+                                ${actividades.length ? `<div class="mt-6 border-t pt-5"><h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Actividades Sugeridas</h4>${actividades.map(a => `<p class="text-[13px] text-[#001739] font-medium mb-2 italic">• ${a}</p>`).join('')}</div>` : ''}
                             </div>
-                            ${!isPro ? `<div class="pro-floating-card"><div class="inner-card-white italic italic italic"><i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce italic italic italic italic"></i><h4 class="text-lg font-black uppercase mb-2 text-[#001739] leading-none italic italic italic italic">Planificación Pro</h4><a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] mt-4 shadow-lg italic italic italic italic">Activar PRO</a></div></div>` : ''}
-                        </div>
-                    </div>`;
+                            <div class="bg-[#001739] rounded-[3.5rem] p-10 flex flex-col">
+                                ${preguntas.length ? `<h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Preguntas de Análisis</h4>${preguntas.map(q => `<p class="text-[13px] text-white font-medium mb-3 italic leading-relaxed">→ ${q}</p>`).join('')}` : ''}
+                                ${reflexion ? `<div class="mt-6 border-t border-white/20 pt-5"><h4 class="text-orange-400 font-black uppercase text-[10px] mb-3 italic tracking-widest">Reflexión Final</h4><p class="text-[13px] text-slate-300 italic leading-relaxed">${reflexion}</p></div>` : ''}
+                            </div>
+                        </div>`;
+                } else {
+                    document.getElementById('plan-content').innerHTML = `
+                        <div class="grid grid-cols-2 gap-10 h-[450px] items-center">
+                            <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center h-full border-slate-50">
+                                <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest">Match Curricular (OA)</h4>
+                                <p class="text-2xl font-black text-[#001739] mb-4 italic leading-tight tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
+                                <p class="text-[14px] text-slate-400 italic">${fullOA}</p>
+                            </div>
+                            <div class="pro-unlock-container bg-[#001739] flex items-center justify-center h-full">
+                                <div class="p-12 h-full flex flex-col justify-center items-center w-full blur-pro">
+                                    <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Actividades · Preguntas · Reflexión</h4>
+                                    <p class="text-xl text-white italic font-light text-center">Diseño pedagógico completo con IA...</p>
+                                </div>
+                                <div class="pro-floating-card"><div class="inner-card-white"><i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-lg font-black uppercase mb-2 text-[#001739] leading-none italic">Planificación Pro</h4><p class="text-[10px] text-slate-400 italic mb-3">Actividades, preguntas y reflexiones generadas por IA</p><a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] mt-2 shadow-lg">Activar PRO</a></div></div>
+                            </div>
+                        </div>`;
+                }
                 lucide.createIcons();
             },
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
