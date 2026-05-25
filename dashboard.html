@@ -115,20 +115,63 @@
             <div id="sec-config" class="section">
                 <div class="max-w-4xl pt-10"><h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Mi Aula</h2><div class="grid grid-cols-4 gap-4 mt-12" id="grid-cursos"></div><button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar Perfil →</button></div>
             </div>
-            <div id="sec-analyze" class="section text-center">
-                <div class="max-w-2xl mx-auto py-2">
-                    <h2 class="text-7xl font-black text-[#001739] mb-10 uppercase italic">EVALUACIÓN</h2>
-                    <div class="glass-card p-12 space-y-6">
-                        <div class="grid grid-cols-2 gap-6">
+            <div id="sec-analyze" class="section text-center overflow-y-auto scroll-v">
+                <div class="max-w-2xl mx-auto py-6 px-1">
+                    <h2 class="text-4xl sm:text-6xl font-black text-[#001739] mb-6 uppercase italic tracking-tighter">Evaluación</h2>
+                    <div class="glass-card p-7 sm:p-12 space-y-5">
+
+                        <!-- ── YouTube URL ─────────────────────────────── -->
+                        <div id="yt-wrap">
+                            <div class="flex items-center gap-3 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2rem] px-5 py-4 hover:border-red-400 focus-within:border-red-400 transition-colors">
+                                <!-- Ícono YouTube -->
+                                <svg class="w-6 h-6 shrink-0 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+                                </svg>
+                                <input id="in-youtube" type="url" inputmode="url"
+                                       placeholder="Pega un link de YouTube (opcional)"
+                                       class="bg-transparent flex-grow text-sm font-medium outline-none text-slate-600 placeholder-slate-400 min-w-0">
+                                <button id="yt-clear-btn" onclick="SonarIA.clearYT()" class="hidden text-slate-300 hover:text-slate-500 transition-colors text-lg leading-none shrink-0">✕</button>
+                            </div>
+                            <!-- Preview extraído -->
+                            <div id="yt-preview" class="hidden mt-3 items-center gap-3 bg-orange-50 border border-orange-100 rounded-2xl p-3">
+                                <img id="yt-thumb" src="" alt="" class="w-16 h-12 rounded-xl object-cover shrink-0 shadow-sm">
+                                <div class="flex-grow min-w-0 text-left">
+                                    <div id="yt-title-text" class="text-sm font-black text-[#001739] italic truncate"></div>
+                                    <div class="text-[9px] text-emerald-600 font-black uppercase italic tracking-widest mt-0.5">✅ Canción y artista detectados</div>
+                                </div>
+                            </div>
+                            <!-- Divisor -->
+                            <div class="flex items-center gap-4 mt-5">
+                                <div class="flex-grow h-px bg-slate-100"></div>
+                                <span class="text-[9px] text-slate-300 font-black uppercase italic tracking-widest shrink-0">o escribe manualmente</span>
+                                <div class="flex-grow h-px bg-slate-100"></div>
+                            </div>
+                        </div>
+
+                        <!-- ── Canción + Artista ───────────────────────── -->
+                        <div class="grid grid-cols-2 gap-4">
                             <div class="relative">
-                                <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-colors">
+                                <input id="in-titulo" type="text" placeholder="Canción"
+                                       class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                                 <p id="hint-titulo" class="hidden absolute -bottom-5 left-4 text-[9px] font-black text-red-400 uppercase italic tracking-widest">Ingresa el nombre de la canción</p>
                             </div>
-                            <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-colors">
+                            <input id="in-artista" type="text" placeholder="Artista"
+                                   class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                         </div>
-                        <textarea id="in-texto" placeholder="Pega la letra aquí... (o deja vacío para buscarla automáticamente)" class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-8 h-56 text-sm font-medium focus:border-[#FF8700] outline-none resize-none shadow-inner leading-relaxed italic transition-colors"></textarea>
-                        <button id="btn-analyze" onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-7 rounded-[2.5rem] font-black uppercase shadow-2xl flex items-center justify-center gap-4 italic disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"><i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> <span id="btn-analyze-text">ANALIZAR AHORA</span></button>
-                        <!-- Mensaje de error -->
+
+                        <!-- ── Textarea letra ─────────────────────────── -->
+                        <textarea id="in-texto"
+                                  placeholder="Pega la letra aquí… (o déjalo vacío para buscarla automáticamente)"
+                                  class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-7 py-5 h-44 text-sm font-medium focus:border-[#FF8700] outline-none resize-none leading-relaxed italic transition-colors"></textarea>
+
+                        <!-- ── Botón analizar ─────────────────────────── -->
+                        <button id="btn-analyze" onclick="SonarIA.analyze()"
+                                class="w-full f1-navy text-white py-6 rounded-[2rem] font-black uppercase shadow-2xl flex items-center justify-center gap-4 italic disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">
+                            <i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i>
+                            <span id="btn-analyze-text">ANALIZAR AHORA</span>
+                        </button>
+
+                        <!-- ── Error ──────────────────────────────────── -->
                         <div id="analyze-error" class="hidden p-5 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3">
                             <span class="text-lg shrink-0">⚠️</span>
                             <p id="analyze-error-text" class="text-[11px] font-black text-red-500 uppercase italic tracking-widest text-left"></p>
@@ -229,32 +272,35 @@
     </div>
 
     <!-- ── Barra de navegación inferior (solo móvil) ── -->
-    <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex">
+    <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50 shadow-[0_-6px_24px_rgba(0,0,0,0.08)]" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex h-16">
             <button onclick="SonarIA.nav('sec-config')" id="mnav-sec-config"
-                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-                <span class="text-[8px] font-black uppercase italic">Cursos</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
+                <i data-lucide="settings" class="w-[18px] h-[18px]"></i>
+                <span class="text-[9px] font-black uppercase leading-none">Cursos</span>
             </button>
             <button onclick="SonarIA.nav('sec-analyze')" id="mnav-sec-analyze"
-                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
-                <i data-lucide="search" class="w-5 h-5"></i>
-                <span class="text-[8px] font-black uppercase italic">Analizar</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
+                <i data-lucide="search" class="w-[18px] h-[18px]"></i>
+                <span class="text-[9px] font-black uppercase leading-none">Analizar</span>
             </button>
+            <!-- Botón central destacado -->
             <button onclick="SonarIA.nav('sec-diag')" id="mnav-sec-diag"
-                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
-                <i data-lucide="activity" class="w-5 h-5"></i>
-                <span class="text-[8px] font-black uppercase italic">Diagnóstico</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 transition-colors active:scale-95 relative">
+                <div class="absolute -top-5 w-12 h-12 f1-navy rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                    <i data-lucide="activity" class="w-5 h-5 text-[#FF8700]"></i>
+                </div>
+                <span class="text-[9px] font-black uppercase leading-none text-slate-400 mt-5">Diag.</span>
             </button>
             <button onclick="SonarIA.nav('sec-plan')" id="mnav-sec-plan"
-                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
-                <i data-lucide="book-open" class="w-5 h-5"></i>
-                <span class="text-[8px] font-black uppercase italic">Plan</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
+                <i data-lucide="book-open" class="w-[18px] h-[18px]"></i>
+                <span class="text-[9px] font-black uppercase leading-none">Plan</span>
             </button>
             <button onclick="SonarIA.navHistory()" id="mnav-sec-history"
-                    class="mnav-btn flex-1 flex flex-col items-center py-3 gap-0.5 text-slate-400 transition-colors">
-                <i data-lucide="clock" class="w-5 h-5"></i>
-                <span class="text-[8px] font-black uppercase italic">Historial</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
+                <i data-lucide="clock" class="w-[18px] h-[18px]"></i>
+                <span class="text-[9px] font-black uppercase leading-none">Historial</span>
             </button>
         </div>
     </nav>
@@ -369,6 +415,59 @@
                 document.getElementById('in-texto').addEventListener('paste', () => {
                     setTimeout(() => { if(document.getElementById('in-texto').value.length > 50 && document.getElementById('in-titulo').value) this.analyze(); }, 200);
                 });
+                // YouTube listener
+                const ytEl = document.getElementById('in-youtube');
+                if (ytEl) {
+                    ytEl.addEventListener('paste', (e) => setTimeout(() => this.handleYTInput(ytEl.value), 80));
+                    ytEl.addEventListener('input', () => this.handleYTInput(ytEl.value));
+                }
+            },
+
+            // ── YouTube helpers ───────────────────────────────────────────
+            async handleYTInput(val) {
+                if (!val) return;
+                const match = val.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+                if (!match) return;
+                const videoId = match[1];
+                try {
+                    const r = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+                    const data = await r.json();
+                    if (!data.title) return;
+
+                    const { titulo, artista } = this._parseYTTitle(data.title);
+                    const tituloEl  = document.getElementById('in-titulo');
+                    const artistaEl = document.getElementById('in-artista');
+                    if (tituloEl  && !tituloEl.value)  tituloEl.value  = titulo;
+                    if (artistaEl && !artistaEl.value) artistaEl.value = artista;
+
+                    // preview
+                    document.getElementById('yt-thumb').src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                    document.getElementById('yt-title-text').innerText = data.title;
+                    const prev = document.getElementById('yt-preview');
+                    prev.classList.remove('hidden');
+                    prev.classList.add('flex');
+                    document.getElementById('yt-clear-btn').classList.remove('hidden');
+                } catch(e) { /* fail silently */ }
+            },
+            _parseYTTitle(raw) {
+                // limpia sufijos comunes
+                let t = raw
+                    .replace(/\s*[\(\[](official\s*(video|audio|music\s*video|lyric\s*video|lyrics?)|lyrics?|hd|4k|mv|clip|visualizer)[\)\]]/gi, '')
+                    .replace(/\s*[\(\[]ft\.?\s*[^\)\]]*[\)\]]/gi, '')
+                    .replace(/\s*[\(\[]feat\.?\s*[^\)\]]*[\)\]]/gi, '')
+                    .trim();
+                const sep = t.indexOf(' - ');
+                if (sep !== -1) {
+                    return { artista: t.substring(0, sep).trim(), titulo: t.substring(sep + 3).trim() };
+                }
+                return { titulo: t, artista: '' };
+            },
+            clearYT() {
+                document.getElementById('in-youtube').value = '';
+                const prev = document.getElementById('yt-preview');
+                prev.classList.add('hidden');
+                prev.classList.remove('flex');
+                document.getElementById('yt-clear-btn').classList.add('hidden');
             },
             nav(id) {
                 const el = document.getElementById(id); if(!el) return;
