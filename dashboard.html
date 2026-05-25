@@ -281,7 +281,7 @@
                     </div>
                 </div>
             </div>
-            <div id="sec-plan" class="section pt-10 relative">
+            <div id="sec-plan" class="section pt-10 pb-20 relative h-full overflow-y-auto scroll-v">
                 <div class="max-w-7xl mx-auto flex flex-col h-full relative" id="plan-container">
                     <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2 italic italic"></div>
                     <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 relative italic italic"></div>
@@ -652,8 +652,10 @@
 
                 // ── Clasificación con color dinámico ──────────────────────────
                 const resEl = document.getElementById('res-resultado');
-                // Strip emoji characters for clean display
-                const cleanRes = data.resultado.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '').replace(/[🟢🟡🟠🔴⚪]/gu, '').trim();
+                // Strip emoji/symbols: keep only Spanish letters, digits, spaces
+                const cleanRes = data.resultado
+                    .replace(/[^a-zA-Z0-9\s\xC0-\xFF]/g, '')
+                    .replace(/\s+/g, ' ').trim();
                 resEl.innerText = cleanRes || data.resultado;
                 const isApta    = data.resultado.includes('APTA') && !data.resultado.includes('NO');
                 const isMediado = data.resultado.includes('MEDIADO');
@@ -755,6 +757,7 @@
                 });
             },
             renderPlan(ped) {
+                if (!ped) ped = { por_curso: [] };           // guard: API sin pedagogia
                 const tabs = document.getElementById('plan-tabs');
                 const content = document.getElementById('plan-content');
                 if (!ped.por_curso || ped.por_curso.length === 0) {
@@ -788,6 +791,7 @@
                 this.showPlan(0);
             },
             showPlan(idx) {
+                if (!this.state.lastData?.pedagogia?.por_curso?.[idx]) return;
                 const p = this.state.lastData.pedagogia.por_curso[idx];
                 const isPro = this.state.user.plan === 'pro';
                 const fullOA = p.oa || OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
