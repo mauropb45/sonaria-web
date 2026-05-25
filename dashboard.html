@@ -89,31 +89,53 @@
                     <button onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-7 rounded-[2.5rem] font-black uppercase shadow-2xl flex items-center justify-center gap-4 italic italic"><i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> ANALIZAR AHORA</button>
                 </div></div>
             </div>
-            <div id="sec-diag" class="section">
-                <div class="max-w-5xl mx-auto pt-10">
-                    <div class="glass-card p-16 flex flex-col border-none relative overflow-hidden shadow-2xl">
-                        <div class="flex justify-between items-center w-full mb-8">
-                            <div>
-                                <h3 id="res-resultado" data-tip="Clasificación pedagógica de la canción para uso en aula" class="text-8xl font-black text-[#001739] leading-none uppercase italic">--</h3>
-                                <p id="res-just" class="text-slate-500 max-w-xl text-xl font-medium mt-4 italic"></p>
+            <div id="sec-diag" class="section overflow-y-auto h-full pb-16">
+                <div class="max-w-4xl mx-auto pt-10">
+                    <!-- Encabezado: canción analizada -->
+                    <div class="mb-5 flex items-baseline gap-3 pl-1">
+                        <span id="res-cancion-titulo" class="text-2xl font-black uppercase italic text-[#001739] tracking-tighter leading-none">--</span>
+                        <span id="res-cancion-artista" class="text-sm font-bold text-slate-400 italic"></span>
+                    </div>
+                    <!-- Tarjeta principal -->
+                    <div class="glass-card p-12 flex flex-col border-none shadow-2xl">
+                        <div class="flex items-start justify-between gap-10 mb-6">
+                            <!-- Izquierda: clasificación + justificación -->
+                            <div class="flex-grow min-w-0">
+                                <h3 id="res-resultado" data-tip="Clasificación pedagógica de la canción para uso en aula" class="text-6xl font-black leading-none uppercase italic mb-4" style="color:#001739">--</h3>
+                                <p id="res-just" class="text-slate-500 text-base font-medium italic leading-relaxed max-w-lg"></p>
                             </div>
-                            <div class="text-right">
-                                <div id="res-risk" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA" class="text-[11rem] font-black text-[#001739] leading-none">0%</div>
+                            <!-- Derecha: riesgo % + edad -->
+                            <div class="text-right shrink-0 flex flex-col items-end gap-1">
+                                <div id="res-risk" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA" class="text-8xl font-black leading-none" style="color:#001739">0%</div>
+                                <div id="res-age" class="text-[9px] font-black uppercase italic tracking-widest text-slate-400"></div>
                             </div>
                         </div>
-                        <div id="res-temas" class="flex gap-2 flex-wrap mb-8"></div>
-                        <div id="diag-cta" class="hidden border-t pt-8 text-center">
-                            <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Adaptar canción para trabajar seguro</button>
+                        <!-- Chips de temas -->
+                        <div id="res-temas" class="flex gap-2 flex-wrap mb-6"></div>
+                        <!-- CTA adaptación -->
+                        <div id="diag-cta" class="hidden border-t border-slate-100 pt-8 text-center">
+                            <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Ver letra adaptada para el aula</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="sec-canvas" class="section h-full pb-20 relative">
                 <div class="grid grid-cols-2 gap-8 h-full">
-                    <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden"><h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic italic">Letra Original</h4><div id="res-orig" class="flex-grow overflow-y-auto italic text-lg text-slate-400 whitespace-pre-wrap leading-relaxed"></div></div>
+                    <!-- Columna izquierda: letra original -->
+                    <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden">
+                        <h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic">Letra Original</h4>
+                        <div id="res-orig" class="flex-grow overflow-y-auto italic text-lg text-slate-400 whitespace-pre-wrap leading-relaxed scroll-v"></div>
+                    </div>
+                    <!-- Columna derecha: adaptada + traducida (tabs) -->
                     <div class="bg-white rounded-[3.5rem] shadow-2xl border-4 border-orange-50 flex flex-col overflow-hidden relative">
-                        <div class="p-12 flex-grow overflow-hidden flex flex-col relative items-center justify-center" id="canvas-wrapper">
+                        <!-- Tab bar -->
+                        <div class="flex border-b border-orange-50 shrink-0 px-8 pt-6">
+                            <button onclick="SonarIA.switchCanvasTab('adaptada')" id="tab-adaptada" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-[#FF8700] border-[#FF8700]">Adaptada</button>
+                            <button onclick="SonarIA.switchCanvasTab('traducida')" id="tab-traducida" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-slate-300 border-transparent" data-tip="Versión adaptada traducida al español">En Español</button>
+                        </div>
+                        <div class="p-12 flex-grow overflow-hidden flex flex-col relative" id="canvas-wrapper">
                             <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-xl w-full italic"></div>
+                            <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-lg w-full italic leading-relaxed"></div>
                             <div id="teaser-canvas" class="absolute inset-0 z-50 flex items-center justify-center hidden"><div class="inner-card-white"><i data-lucide="crown" class="w-12 h-12 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-xl font-black uppercase mb-2 text-[#001739] italic">Contenido Pro</h4><a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 mt-4 rounded-2xl font-black uppercase text-[10px] shadow-lg">Activar PRO</a></div></div>
                         </div>
                     </div>
@@ -244,41 +266,102 @@
             saveConfig() { localStorage.setItem('my_courses', JSON.stringify(this.state.cursos)); this.nav('sec-analyze'); },
             async analyze() {
                 const t = document.getElementById('in-titulo').value.trim(); if(!t) return;
+                const a = document.getElementById('in-artista').value.trim();
                 document.getElementById('loader').classList.remove('hidden');
                 try {
                     const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
                     const res = await fetch(API_URL + "/analizar", {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                        body: JSON.stringify({ titulo: t, artista: document.getElementById('in-artista').value, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos })
+                        body: JSON.stringify({ titulo: t, artista: a, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos })
                     });
                     const data = await res.json();
-                    if(data.ok) { this.state.lastData = data; this.showResults(data); }
+                    if(data.ok) {
+                        data._titulo = t;
+                        data._artista = a;
+                        this.state.lastData = data;
+                        this.showResults(data);
+                    }
                 } catch (e) { console.error(e); }
                 finally { document.getElementById('loader').classList.add('hidden'); }
             },
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
                 ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
-                document.getElementById('res-resultado').innerText = data.resultado;
-                document.getElementById('res-risk').innerText = data.risk_percent + "%";
+
+                // ── Encabezado: canción analizada ─────────────────────────────
+                document.getElementById('res-cancion-titulo').innerText = data._titulo || data.titulo || '—';
+                document.getElementById('res-cancion-artista').innerText = data._artista || data.artista || '';
+
+                // ── Clasificación con color dinámico ──────────────────────────
+                const resEl = document.getElementById('res-resultado');
+                const riskEl = document.getElementById('res-risk');
+                resEl.innerText = data.resultado;
+                const isApta    = data.resultado.includes('APTA') && !data.resultado.includes('NO');
+                const isMediado = data.resultado.includes('MEDIADO');
+                const color = isApta ? '#16a34a' : (isMediado ? '#FF8700' : '#dc2626');
+                resEl.style.color = color;
+                riskEl.style.color = color;
+                riskEl.innerText = data.risk_percent + "%";
+
                 document.getElementById('res-just').innerText = data.justificacion;
                 document.getElementById('res-orig').innerText = data.original;
-                // Render temas chips
+
+                // ── Edad mínima recomendada ───────────────────────────────────
+                const ageEl = document.getElementById('res-age');
+                if (data.age_min <= 6) {
+                    ageEl.innerText = 'Apto para todos los cursos';
+                    ageEl.style.color = '#16a34a';
+                } else {
+                    ageEl.innerText = 'No recomendado para menores de ' + data.age_min + ' años';
+                    ageEl.style.color = data.age_min >= 16 ? '#dc2626' : '#FF8700';
+                }
+
+                // ── Chips de temas ────────────────────────────────────────────
                 const temas = data.temas || [];
                 document.getElementById('res-temas').innerHTML = temas.length
                     ? temas.map(t => `<span class="bg-orange-50 text-orange-600 border border-orange-100 px-4 py-2 rounded-full text-[10px] font-black uppercase italic">${t}</span>`).join('')
                     : '';
+
+                // ── CTA adaptar ───────────────────────────────────────────────
                 document.getElementById('diag-cta').classList.add('hidden');
-                if(data.resultado.includes("MEDIADO") || data.resultado.includes("NO APTA")) document.getElementById('diag-cta').classList.remove('hidden');
-                
-                const adaptBox = document.getElementById('res-adapt');
+                if(isMediado || data.resultado.includes("NO APTA")) document.getElementById('diag-cta').classList.remove('hidden');
+
+                // ── Canvas: adaptada + traducida ──────────────────────────────
+                const adaptBox    = document.getElementById('res-adapt');
+                const traducidaBox = document.getElementById('res-traducida');
                 if(isPro) {
-                    adaptBox.innerHTML = data.adaptada; adaptBox.classList.remove('blur-pro'); document.getElementById('teaser-canvas').classList.add('hidden');
+                    adaptBox.innerHTML = data.adaptada || '<span class="text-slate-300 italic text-sm">Sin adaptaciones necesarias.</span>';
+                    adaptBox.classList.remove('blur-pro');
+                    traducidaBox.innerHTML = data.traducida
+                        ? data.traducida.replace(/\n/g, '<br>')
+                        : '<span class="text-slate-400 italic text-sm">Traducción disponible para canciones en inglés.</span>';
+                    document.getElementById('teaser-canvas').classList.add('hidden');
                 } else {
-                    adaptBox.innerHTML = "Contenido pro... SonarIA protege tu aula."; adaptBox.classList.add('blur-pro'); document.getElementById('teaser-canvas').classList.remove('hidden');
+                    adaptBox.innerHTML = "Contenido pro... SonarIA protege tu aula.";
+                    adaptBox.classList.add('blur-pro');
+                    document.getElementById('teaser-canvas').classList.remove('hidden');
                 }
-                this.renderPlan(data.pedagogia); this.nav('sec-diag');
+                this.switchCanvasTab('adaptada');
+
+                this.renderPlan(data.pedagogia);
+                this.nav('sec-diag');
+            },
+            switchCanvasTab(tab) {
+                const adapt    = document.getElementById('res-adapt');
+                const trad     = document.getElementById('res-traducida');
+                if(!adapt || !trad) return;
+                adapt.classList.toggle('hidden', tab !== 'adaptada');
+                trad.classList.toggle('hidden', tab !== 'traducida');
+                ['adaptada', 'traducida'].forEach(t => {
+                    const btn = document.getElementById('tab-' + t);
+                    if(!btn) return;
+                    const active = t === tab;
+                    btn.classList.toggle('text-[#FF8700]', active);
+                    btn.classList.toggle('border-[#FF8700]', active);
+                    btn.classList.toggle('text-slate-300', !active);
+                    btn.classList.toggle('border-transparent', !active);
+                });
             },
             renderPlan(ped) {
                 const tabs = document.getElementById('plan-tabs');
@@ -307,11 +390,24 @@
                                 <h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Match Curricular (OA)</h4>
                                 <p class="text-xl font-black text-[#001739] mb-3 italic leading-tight tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
                                 <p class="text-[13px] text-slate-400 italic leading-relaxed">${fullOA}</p>
-                                ${actividades.length ? `<div class="mt-6 border-t pt-5"><h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Actividades Sugeridas</h4>${actividades.map(a => `<p class="text-[13px] text-[#001739] font-medium mb-2 italic">• ${a}</p>`).join('')}</div>` : ''}
+                                <div class="mt-6 border-t pt-5">
+                                    <h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Actividades Sugeridas</h4>
+                                    ${actividades.filter(a => a && a !== 'Disponible en plan Pro.').length
+                                        ? actividades.filter(a => a).map(a => `<p class="text-[13px] text-[#001739] font-medium mb-2 italic">• ${a}</p>`).join('')
+                                        : `<p class="text-[12px] text-slate-300 italic">Analiza una canción para obtener actividades específicas para ${courseLabel(p.curso)}.</p>`}
+                                </div>
                             </div>
                             <div class="bg-[#001739] rounded-[3.5rem] p-10 flex flex-col">
-                                ${preguntas.length ? `<h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Preguntas de Análisis</h4>${preguntas.map(q => `<p class="text-[13px] text-white font-medium mb-3 italic leading-relaxed">→ ${q}</p>`).join('')}` : ''}
-                                ${reflexion ? `<div class="mt-6 border-t border-white/20 pt-5"><h4 class="text-orange-400 font-black uppercase text-[10px] mb-3 italic tracking-widest">Reflexión Final</h4><p class="text-[13px] text-slate-300 italic leading-relaxed">${reflexion}</p></div>` : ''}
+                                <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Preguntas de Análisis</h4>
+                                ${preguntas.length
+                                    ? preguntas.map(q => `<p class="text-[13px] text-white font-medium mb-3 italic leading-relaxed">→ ${q}</p>`).join('')
+                                    : `<p class="text-[12px] text-slate-500 italic">Las preguntas de análisis se generan con el análisis Pro completo.</p>`}
+                                <div class="mt-6 border-t border-white/20 pt-5">
+                                    <h4 class="text-orange-400 font-black uppercase text-[10px] mb-3 italic tracking-widest">Reflexión Final</h4>
+                                    ${reflexion
+                                        ? `<p class="text-[13px] text-slate-300 italic leading-relaxed">${reflexion}</p>`
+                                        : `<p class="text-[12px] text-slate-500 italic">La reflexión de cierre se genera en el análisis Pro completo.</p>`}
+                                </div>
                             </div>
                         </div>`;
                 } else {
