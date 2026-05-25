@@ -80,14 +80,25 @@
                 <div class="max-w-4xl pt-10"><h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Mi Aula</h2><div class="grid grid-cols-4 gap-4 mt-12" id="grid-cursos"></div><button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar Perfil →</button></div>
             </div>
             <div id="sec-analyze" class="section text-center">
-                <div class="max-w-2xl mx-auto py-2"><h2 class="text-7xl font-black text-[#001739] mb-10 uppercase italic italic">EVALUACIÓN</h2><div class="glass-card p-12 space-y-6">
-                    <div class="grid grid-cols-2 gap-6">
-                        <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none">
-                        <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none">
+                <div class="max-w-2xl mx-auto py-2">
+                    <h2 class="text-7xl font-black text-[#001739] mb-10 uppercase italic">EVALUACIÓN</h2>
+                    <div class="glass-card p-12 space-y-6">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="relative">
+                                <input id="in-titulo" type="text" placeholder="Canción" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-colors">
+                                <p id="hint-titulo" class="hidden absolute -bottom-5 left-4 text-[9px] font-black text-red-400 uppercase italic tracking-widest">Ingresa el nombre de la canción</p>
+                            </div>
+                            <input id="in-artista" type="text" placeholder="Artista" class="w-full bg-slate-50 border-2 rounded-[2rem] p-6 text-xl font-bold focus:border-[#FF8700] outline-none transition-colors">
+                        </div>
+                        <textarea id="in-texto" placeholder="Pega la letra aquí... (o deja vacío para buscarla automáticamente)" class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-8 h-56 text-sm font-medium focus:border-[#FF8700] outline-none resize-none shadow-inner leading-relaxed italic transition-colors"></textarea>
+                        <button id="btn-analyze" onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-7 rounded-[2.5rem] font-black uppercase shadow-2xl flex items-center justify-center gap-4 italic disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"><i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> <span id="btn-analyze-text">ANALIZAR AHORA</span></button>
+                        <!-- Mensaje de error -->
+                        <div id="analyze-error" class="hidden p-5 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3">
+                            <span class="text-lg shrink-0">⚠️</span>
+                            <p id="analyze-error-text" class="text-[11px] font-black text-red-500 uppercase italic tracking-widest text-left"></p>
+                        </div>
                     </div>
-                    <textarea id="in-texto" placeholder="Pega la letra aquí..." class="w-full bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-8 h-56 text-sm font-medium focus:border-[#FF8700] outline-none resize-none shadow-inner leading-relaxed italic"></textarea>
-                    <button onclick="SonarIA.analyze()" class="w-full f1-navy text-white p-7 rounded-[2.5rem] font-black uppercase shadow-2xl flex items-center justify-center gap-4 italic italic"><i data-lucide="zap" class="text-[#FF8700] fill-[#FF8700]"></i> ANALIZAR AHORA</button>
-                </div></div>
+                </div>
             </div>
             <div id="sec-diag" class="section overflow-y-auto h-full pb-16">
                 <div class="max-w-4xl mx-auto pt-10">
@@ -164,7 +175,10 @@
                     </div>
                 </div>
             </div>
-            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center italic"><div class="w-24 h-2 bg-[#FF8700] animate-bounce rounded-full shadow-lg"></div></div>
+            <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center gap-6 italic">
+                <div class="w-24 h-2 bg-[#FF8700] animate-bounce rounded-full shadow-lg"></div>
+                <p id="loader-text" class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Analizando...</p>
+            </div>
         </main>
     </div>
 
@@ -272,26 +286,89 @@
                 this.renderCourses(); 
             },
             saveConfig() { localStorage.setItem('my_courses', JSON.stringify(this.state.cursos)); this.nav('sec-analyze'); },
+            showAnalyzeError(msg) {
+                const div  = document.getElementById('analyze-error');
+                const text = document.getElementById('analyze-error-text');
+                if (!div || !text) return;
+                text.innerText = msg;
+                div.classList.remove('hidden');
+                // Auto-ocultar tras 8 segundos
+                clearTimeout(this._errTimer);
+                this._errTimer = setTimeout(() => div.classList.add('hidden'), 8000);
+            },
+            _setAnalyzing(active, plan = 'free') {
+                const btn  = document.getElementById('btn-analyze');
+                const txt  = document.getElementById('btn-analyze-text');
+                const ltxt = document.getElementById('loader-text');
+                if (btn) btn.disabled = active;
+                if (txt) txt.innerText = active ? 'Analizando...' : 'ANALIZAR AHORA';
+                if (ltxt) {
+                    ltxt.innerText = active
+                        ? (plan === 'pro' ? 'Consultando IA · Evaluando contenido...' : 'Buscando letra · Evaluando contenido...')
+                        : 'Analizando...';
+                }
+                document.getElementById('loader').classList.toggle('hidden', !active);
+            },
             async analyze() {
-                const t = document.getElementById('in-titulo').value.trim(); if(!t) return;
+                const tituloEl = document.getElementById('in-titulo');
+                const t = tituloEl.value.trim();
                 const a = document.getElementById('in-artista').value.trim();
-                document.getElementById('loader').classList.remove('hidden');
+
+                // Validación visible: título requerido
+                if (!t) {
+                    const hint = document.getElementById('hint-titulo');
+                    tituloEl.classList.add('border-red-300');
+                    if (hint) hint.classList.remove('hidden');
+                    tituloEl.focus();
+                    setTimeout(() => {
+                        tituloEl.classList.remove('border-red-300');
+                        if (hint) hint.classList.add('hidden');
+                    }, 3000);
+                    return;
+                }
+
+                // Ocultar error previo
+                document.getElementById('analyze-error')?.classList.add('hidden');
+
+                const plan = this.state.user.plan || 'free';
+                this._setAnalyzing(true, plan);
+
                 try {
                     const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                    const texto = document.getElementById('in-texto').value;
                     const res = await fetch(API_URL + "/analizar", {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                        body: JSON.stringify({ titulo: t, artista: a, texto: document.getElementById('in-texto').value, buscar_letra: document.getElementById('in-texto').value === "", cursos: this.state.cursos })
+                        body: JSON.stringify({ titulo: t, artista: a, texto, buscar_letra: texto.trim() === "", cursos: this.state.cursos })
                     });
+
+                    if (res.status === 401) {
+                        this.showAnalyzeError("Tu sesión expiró. Vuelve a iniciar sesión.");
+                        setTimeout(() => this.logout(), 2500);
+                        return;
+                    }
+
                     const data = await res.json();
-                    if(data.ok) {
+                    if (data.ok) {
                         data._titulo = t;
                         data._artista = a;
                         this.state.lastData = data;
                         this.showResults(data);
+                    } else {
+                        // Error de la API (letra no encontrada, plan, etc.)
+                        const msg = data.error || "No pudimos completar el análisis.";
+                        if (msg.toLowerCase().includes("letra") || msg.toLowerCase().includes("lyrics")) {
+                            this.showAnalyzeError("No encontramos la letra automáticamente. Pégala en el campo de texto e intenta de nuevo.");
+                        } else {
+                            this.showAnalyzeError(msg);
+                        }
                     }
-                } catch (e) { console.error(e); }
-                finally { document.getElementById('loader').classList.add('hidden'); }
+                } catch (e) {
+                    console.error("[SonarIA analyze]", e);
+                    this.showAnalyzeError("Error de conexión. Revisa tu internet e intenta de nuevo.");
+                } finally {
+                    this._setAnalyzing(false);
+                }
             },
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
@@ -351,11 +428,28 @@
                 const adaptBox    = document.getElementById('res-adapt');
                 const traducidaBox = document.getElementById('res-traducida');
                 if(isPro) {
-                    adaptBox.innerHTML = data.adaptada || '<span class="text-slate-300 italic text-sm">Sin adaptaciones necesarias.</span>';
+                    if (data.adaptada && data.adaptada.includes('<mark')) {
+                        // Tiene cambios marcados
+                        adaptBox.innerHTML = data.adaptada;
+                    } else if (data.adaptada && data.adaptada.trim()) {
+                        // Letra completa sin cambios (canción ya era apta)
+                        adaptBox.innerHTML = data.adaptada + '<br><br><span class="text-slate-300 italic text-xs">✓ No se realizaron cambios — la letra no requirió adaptación.</span>';
+                    } else {
+                        adaptBox.innerHTML = '<span class="text-slate-300 italic text-sm">La canción no requirió adaptaciones para su uso pedagógico. Puedes usarla tal como está.</span>';
+                    }
                     adaptBox.classList.remove('blur-pro');
-                    traducidaBox.innerHTML = data.traducida
-                        ? data.traducida.replace(/\n/g, '<br>')
-                        : '<span class="text-slate-400 italic text-sm">Traducción disponible para canciones en inglés.</span>';
+                    if (data.traducida && data.traducida.trim()) {
+                        traducidaBox.innerHTML = data.traducida.replace(/\n/g, '<br>');
+                    } else {
+                        // Detectar idioma de la canción por el original
+                        const orig = (data.original || '').toLowerCase();
+                        const enMarkers = [' the ',' i ',' you ',' is ',' are ',' was ',' with '];
+                        const esMarkers = [' el ',' la ',' los ',' que ',' de ',' con ',' para '];
+                        const isEN = enMarkers.filter(w => orig.includes(w)).length > esMarkers.filter(w => orig.includes(w)).length;
+                        traducidaBox.innerHTML = isEN
+                            ? '<span class="text-slate-400 italic text-sm">La traducción al español se genera con el análisis Pro IA completo.</span>'
+                            : '<span class="text-slate-400 italic text-sm">La canción está en español — no requiere traducción.</span>';
+                    }
                     document.getElementById('teaser-canvas').classList.add('hidden');
                 } else {
                     adaptBox.innerHTML = "Contenido pro... SonarIA protege tu aula.";
@@ -443,12 +537,12 @@
                                 <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Preguntas de Análisis</h4>
                                 ${preguntas.length
                                     ? preguntas.map(q => `<p class="text-[13px] text-white font-medium mb-3 italic leading-relaxed">→ ${q}</p>`).join('')
-                                    : `<p class="text-[12px] text-slate-500 italic">Las preguntas de análisis se generan con el análisis Pro completo.</p>`}
-                                <div class="mt-6 border-t border-white/20 pt-5">
+                                    : `<p class="text-[12px] text-white/40 italic">Las preguntas de análisis se generan con el análisis Pro IA.</p>`}
+                                <div class="mt-6 border-t border-white/10 pt-5">
                                     <h4 class="text-orange-400 font-black uppercase text-[10px] mb-3 italic tracking-widest">Reflexión Final</h4>
                                     ${reflexion
-                                        ? `<p class="text-[13px] text-slate-300 italic leading-relaxed">${reflexion}</p>`
-                                        : `<p class="text-[12px] text-slate-500 italic">La reflexión de cierre se genera en el análisis Pro completo.</p>`}
+                                        ? `<p class="text-[13px] text-white/90 italic leading-relaxed">${reflexion}</p>`
+                                        : `<p class="text-[12px] text-white/40 italic">La reflexión de cierre se genera con el análisis Pro IA.</p>`}
                                 </div>
                             </div>
                         </div>`;
