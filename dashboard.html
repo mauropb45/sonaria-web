@@ -24,6 +24,14 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .scroll-v::-webkit-scrollbar { width: 4px; }
         .scroll-v::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Tooltips dinámicos */
+        [data-tip] { position: relative; cursor: help; }
+        [data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #001739; color: #fff; padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; z-index: 200; pointer-events: none; font-style: normal; letter-spacing: .03em; max-width: 260px; white-space: normal; text-align: center; line-height: 1.4; }
+        [data-tip]:hover::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #001739; z-index: 200; pointer-events: none; }
+        /* Nav tooltips go to the right */
+        nav [data-tip]:hover::after { bottom: auto; left: calc(100% + 12px); top: 50%; transform: translateY(-50%); }
+        nav [data-tip]:hover::before { bottom: auto; left: calc(100% + 7px); top: 50%; transform: translateY(-50%) rotate(-90deg); border-top-color: #001739; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -52,12 +60,14 @@
                 <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase mt-1 italic italic">--</div>
             </div>
             <div class="p-6 flex flex-col gap-2">
-                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 italic"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 italic"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
+                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 italic" data-tip="Configura los cursos que impartes"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 italic" data-tip="Analiza una canción por letra o nombre"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Resultado del último análisis pedagógico"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Letra original vs versión adaptada para el aula (PRO)"><i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Actividades, preguntas y reflexiones alineadas al currículo (PRO)"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <div class="h-px bg-slate-100 my-4 mx-4"></div>
+                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400" data-tip="Tus últimos 30 análisis guardados"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
             </div>
             <div class="mt-auto p-6 border-t flex flex-col gap-2 text-center">
                 <a href="planes-test.html" class="block w-full py-4 bg-[#FF8700] text-white rounded-2xl font-black uppercase text-[10px] shadow-xl italic">👑 Ser PRO ahora</a>
@@ -80,7 +90,23 @@
                 </div></div>
             </div>
             <div id="sec-diag" class="section">
-                <div class="max-w-5xl mx-auto pt-10"><div class="glass-card p-16 flex flex-col border-none relative overflow-hidden shadow-2xl"><div class="flex justify-between items-center w-full mb-12"><div><h3 id="res-resultado" class="text-8xl font-black text-[#001739] leading-none uppercase italic italic">--</h3><p id="res-just" class="text-slate-500 max-w-xl text-2xl font-medium mt-4 italic italic"></p></div><div class="text-right"><div id="res-risk" class="text-[12rem] font-black text-[#001739] leading-none">0%</div></div></div><div id="diag-cta" class="hidden border-t pt-10 text-center"><button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Adaptar canción para trabajar seguro</button></div></div></div>
+                <div class="max-w-5xl mx-auto pt-10">
+                    <div class="glass-card p-16 flex flex-col border-none relative overflow-hidden shadow-2xl">
+                        <div class="flex justify-between items-center w-full mb-8">
+                            <div>
+                                <h3 id="res-resultado" data-tip="Clasificación pedagógica de la canción para uso en aula" class="text-8xl font-black text-[#001739] leading-none uppercase italic">--</h3>
+                                <p id="res-just" class="text-slate-500 max-w-xl text-xl font-medium mt-4 italic"></p>
+                            </div>
+                            <div class="text-right">
+                                <div id="res-risk" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA" class="text-[11rem] font-black text-[#001739] leading-none">0%</div>
+                            </div>
+                        </div>
+                        <div id="res-temas" class="flex gap-2 flex-wrap mb-8"></div>
+                        <div id="diag-cta" class="hidden border-t pt-8 text-center">
+                            <button onclick="SonarIA.nav('sec-canvas')" class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 px-10 py-5 rounded-[2rem] font-black uppercase text-xs italic">✨ Adaptar canción para trabajar seguro</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="sec-canvas" class="section h-full pb-20 relative">
                 <div class="grid grid-cols-2 gap-8 h-full">
@@ -98,6 +124,14 @@
                     <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2 italic italic"></div>
                     <div id="plan-content" class="flex-grow overflow-y-auto scroll-v pr-6 relative italic italic"></div>
                     <div class="mt-8 flex justify-between items-center pb-10 border-t pt-8 italic"><button onclick="SonarIA.nav('sec-canvas')" class="text-xs font-black text-slate-300 uppercase">← Volver</button><button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-10 py-5 rounded-[2rem] font-black uppercase shadow-2xl flex items-center gap-3 text-sm italic italic"><i data-lucide="file-text"></i> Exportar Informe PDF Pro</button></div>
+                </div>
+            </div>
+            <div id="sec-history" class="section pt-10 overflow-y-auto scroll-v h-full pb-20">
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739] mb-10">Historial</h2>
+                    <div id="history-list" class="flex flex-col gap-4">
+                        <div class="text-slate-400 italic text-sm text-center py-20">Cargando historial...</div>
+                    </div>
                 </div>
             </div>
             <div id="loader" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-[60] flex flex-col items-center justify-center italic"><div class="w-24 h-2 bg-[#FF8700] animate-bounce rounded-full shadow-lg"></div></div>
@@ -230,6 +264,11 @@
                 document.getElementById('res-risk').innerText = data.risk_percent + "%";
                 document.getElementById('res-just').innerText = data.justificacion;
                 document.getElementById('res-orig').innerText = data.original;
+                // Render temas chips
+                const temas = data.temas || [];
+                document.getElementById('res-temas').innerHTML = temas.length
+                    ? temas.map(t => `<span class="bg-orange-50 text-orange-600 border border-orange-100 px-4 py-2 rounded-full text-[10px] font-black uppercase italic">${t}</span>`).join('')
+                    : '';
                 document.getElementById('diag-cta').classList.add('hidden');
                 if(data.resultado.includes("MEDIADO") || data.resultado.includes("NO APTA")) document.getElementById('diag-cta').classList.remove('hidden');
                 
@@ -324,6 +363,45 @@
                         document.getElementById('btn-test-pro').classList.remove('hidden');
                     }
                 } catch(_) {}
+            },
+            async navHistory() {
+                this.nav('sec-history');
+                await this.loadHistory();
+            },
+            async loadHistory() {
+                const list = document.getElementById('history-list');
+                list.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-20">Cargando historial...</div>';
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                try {
+                    const res = await fetch(API_URL + "/history", { headers: { 'Authorization': 'Bearer ' + token } });
+                    const d = await res.json();
+                    if (!d.ok || !d.items || d.items.length === 0) {
+                        list.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-20">Aún no tienes análisis guardados. ¡Analiza tu primera canción!</div>';
+                        return;
+                    }
+                    const COLORS = { 'APTA': 'text-emerald-600 bg-emerald-50 border-emerald-100', 'USO MEDIADO': 'text-amber-600 bg-amber-50 border-amber-100', 'NO APTA': 'text-red-600 bg-red-50 border-red-100' };
+                    list.innerHTML = d.items.map(item => {
+                        const colorClass = COLORS[item.resultado] || 'text-slate-600 bg-slate-50 border-slate-100';
+                        const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+                        const temas = (item.temas || []).map(t => `<span class="bg-orange-50 text-orange-500 border border-orange-100 px-3 py-1 rounded-full text-[9px] font-black uppercase italic">${t}</span>`).join('');
+                        return `<div class="bg-white rounded-[2rem] border p-8 flex items-center gap-6 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <span class="text-lg font-black uppercase italic text-[#001739] truncate">${item.titulo || '—'}</span>
+                                    <span class="text-xs text-slate-400 italic shrink-0">${item.artista ? '· ' + item.artista : ''}</span>
+                                </div>
+                                <div class="flex flex-wrap gap-2 mt-2">${temas}</div>
+                            </div>
+                            <div class="text-right shrink-0 flex flex-col items-end gap-2">
+                                <span class="border px-4 py-2 rounded-full text-[10px] font-black uppercase italic ${colorClass}">${item.resultado}</span>
+                                <span class="text-[9px] text-slate-300 italic">${fecha}</span>
+                                <span class="text-2xl font-black text-slate-200">${item.risk_percent}%</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } catch(e) {
+                    list.innerHTML = '<div class="text-red-400 italic text-sm text-center py-20">Error al cargar el historial. Intenta más tarde.</div>';
+                }
             },
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
         };
