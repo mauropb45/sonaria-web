@@ -38,12 +38,10 @@
         #risk-arc { transition: stroke-dashoffset 1.2s cubic-bezier(0.25,0.46,0.45,0.94), stroke 0.4s; }
 
         /* Tooltips dinámicos */
-        [data-tip] { position: relative; cursor: help; }
+        [data-tip] { position: relative; cursor: pointer; }
+        [data-tip]:not(button):not(a) { cursor: help; }
         [data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #001739; color: #fff; padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; z-index: 200; pointer-events: none; font-style: normal; letter-spacing: .03em; max-width: 260px; white-space: normal; text-align: center; line-height: 1.4; }
         [data-tip]:hover::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #001739; z-index: 200; pointer-events: none; }
-        /* Nav tooltips go to the right */
-        nav [data-tip]:hover::after { bottom: auto; left: calc(100% + 12px); top: 50%; transform: translateY(-50%); }
-        nav [data-tip]:hover::before { bottom: auto; left: calc(100% + 7px); top: 50%; transform: translateY(-50%) rotate(-90deg); border-top-color: #001739; }
 
         /* ── MOBILE ──────────────────────────────────────────────────────── */
         .mobile-nav { display: none; }
@@ -97,15 +95,15 @@
             </div>
             <!-- Botones de navegación con scroll -->
             <div class="flex-grow overflow-y-auto scroll-v p-6 flex flex-col gap-2">
-                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3" data-tip="Configura los cursos que impartes"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3" data-tip="Analiza una canción por letra o nombre"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
+                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Resultado del último análisis pedagógico"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Letra original, adaptada al aula y traducida (PRO)"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="OA · Actividades · Preguntas · Reflexión (PRO)"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-instrumental')" id="nav-sec-instrumental" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Guía de ejecución por instrumento para banda escolar (PRO)"><i data-lucide="music-2" class="w-4 h-4"></i> Banda Escolar <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-instrumental')" id="nav-sec-instrumental" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="music-2" class="w-4 h-4"></i> Banda Escolar <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
-                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400" data-tip="Tus últimos 30 análisis guardados"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
+                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
             </div>
             <!-- Pie fijo -->
             <div class="shrink-0 p-6 border-t flex flex-col gap-2 text-center">
@@ -385,6 +383,76 @@
             "3M": "MU3M OA 01: Valorar el rol de la música en la construcción de identidades personales y sociales.",
             "4M": "MU4M OA 01: Desarrollar y fundamentar juicios estéticos sobre obras musicales, considerando elementos técnicos y contextuales."
         };
+        // Preguntas pedagógicas de fallback diferenciadas por curso (se usan cuando la IA no genera preguntas propias)
+        // Se llaman con getFallbackQ(curso, titulo, temaStr)
+        function getFallbackQ(curso, titulo, temaStr) {
+            const t = titulo || 'esta canción';
+            const tm = temaStr || 'la vida cotidiana';
+            const map = {
+                "1": [
+                    `¿De qué habla la canción "${t}"? ¿Hay personas, animales o lugares en la letra?`,
+                    `¿Cómo te hace sentir esta música: alegre, triste, tranquilo, emocionado? ¿Por qué?`,
+                    `¿Qué palabras o sonidos de la canción te llamaron más la atención?`
+                ],
+                "2": [
+                    `¿Qué historia cuenta la canción "${t}"? Descríbela con tus propias palabras.`,
+                    `¿Has vivido algo parecido a lo que describe la canción? ¿Cuándo?`,
+                    `¿Qué imagen te imaginas cuando escuchas esta música?`
+                ],
+                "3": [
+                    `¿Cuál es el mensaje principal que quiere entregar la canción "${t}"?`,
+                    `¿Por qué crees que el artista escribió esta canción? ¿Qué quería expresar?`,
+                    `¿Qué parte de la letra te gustó más y por qué?`
+                ],
+                "4": [
+                    `¿Qué quiere transmitir el artista con "${t}" sobre el tema "${tm}"?`,
+                    `¿Hay palabras o frases que no entiendes bien? ¿Qué crees que significan según el contexto?`,
+                    `¿En qué situación de tu vida cotidiana conectas con esta canción?`
+                ],
+                "5": [
+                    `¿Cómo describe la canción "${t}" el tema de "${tm}"? ¿Qué palabras clave lo muestran?`,
+                    `¿Qué recursos usa el artista —repetición, rima, imágenes— para expresar su mensaje?`,
+                    `¿Estás de acuerdo con lo que dice la canción? Explica tu posición con un ejemplo de la letra.`
+                ],
+                "6": [
+                    `¿Qué punto de vista sobre "${tm}" presenta "${t}"? ¿Es positivo, crítico o ambiguo?`,
+                    `¿Qué emociones busca provocar la canción y cómo lo logra con las palabras elegidas?`,
+                    `¿En qué situación o contexto social tiene más sentido escuchar esta canción?`
+                ],
+                "7": [
+                    `¿Qué mensaje central transmite "${t}" sobre "${tm}" y cómo conecta con tu realidad actual?`,
+                    `¿Qué recursos poéticos —metáforas, símiles, hipérboles— identifica en la letra y qué efecto producen?`,
+                    `¿Crees que el artista logra comunicar bien su mensaje? ¿Qué agregarías o cambiarías?`
+                ],
+                "8": [
+                    `¿Qué visión del mundo propone "${t}" y qué tan realista o idealizada te parece?`,
+                    `¿Cómo se relaciona el estilo musical (ritmo, energía, melodía) con el contenido de la letra?`,
+                    `¿Existe alguna tensión o contradicción entre lo que dice la letra y lo que transmite la música? Explica.`
+                ],
+                "1M": [
+                    `¿Qué crítica o propuesta sobre "${tm}" hace "${t}" y cómo se vincula con el contexto social actual?`,
+                    `¿De qué manera el contexto histórico o cultural del artista influye en el mensaje de la canción?`,
+                    `¿Estás de acuerdo con el mensaje? Argumenta tu posición con al menos dos referencias concretas a la letra.`
+                ],
+                "2M": [
+                    `¿Qué relación existe entre la forma de la canción (estructura, ritmo, melodía) y el contenido de su letra?`,
+                    `¿Qué sistema de valores o ideología subyace en el mensaje de "${t}" sobre "${tm}"?`,
+                    `Si fueras el compositor, ¿cómo abordarías el tema "${tm}" de manera diferente? ¿Por qué?`
+                ],
+                "3M": [
+                    `¿Qué posición estética y social adopta "${t}" respecto a "${tm}"? ¿Cómo lo construye el artista?`,
+                    `¿Qué diálogo establece esta canción con otros movimientos artísticos, culturales o épocas históricas?`,
+                    `¿Cómo construye el artista su credibilidad y autoridad a través de las elecciones lingüísticas de la letra?`
+                ],
+                "4M": [
+                    `¿Qué propuesta filosófica o existencial plantea "${t}" sobre "${tm}" y cómo la argumenta?`,
+                    `Analiza el lenguaje figurado de la canción: ¿las elecciones estilísticas refuerzan o contradicen el mensaje explícito?`,
+                    `¿En qué medida esta canción puede considerarse un artefacto cultural representativo de su época y contexto?`
+                ],
+            };
+            return map[curso] || map["7"];
+        }
+
         const COURSE_MAP = { "1° Básico":"1", "2° Básico":"2", "3° Básico":"3", "4° Básico":"4", "5° Básico":"5", "6° Básico":"6", "7° Básico":"7", "8° Básico":"8", "I° Medio":"1M", "II° Medio":"2M", "III° Medio":"3M", "IV° Medio":"4M" };
         function courseLabel(code) {
             const m = {"1M":"I° Medio","2M":"II° Medio","3M":"III° Medio","4M":"IV° Medio"};
@@ -832,26 +900,11 @@
                 const activ  = (p.actividades || []).filter(a => a && !a.includes('Pro'));
                 const reflex = p.reflexion || '';
 
-                // Preguntas: usa las de la IA o genera fallback contextual POR CURSO
+                // Preguntas: usa las generadas por la IA; si no hay, fallback per-curso exacto
                 const rawPregs = p.preguntas || [];
-                const curso = p.curso;
-                const nivelNum = parseInt(curso) || 0;
-                const esMed     = curso.includes('M');
-                const esBasica  = !esMed && nivelNum >= 1 && nivelNum <= 6;
-                const temaStr   = temas.length ? temas[0] : 'la vida cotidiana';
-                const fallbackQ = esBasica ? [
-                    `¿De qué habla la canción "${titulo}"? ¿Qué palabras o frases te llamaron más la atención?`,
-                    `¿Cómo te hace sentir esta canción? ¿Por qué crees que produce esa emoción?`,
-                    `¿Qué imagen o historia te imaginas cuando escuchas esta música?`,
-                ] : esMed ? [
-                    `¿Qué crítica o reflexión sobre "${temaStr}" propone "${titulo}" y cómo se vincula con la realidad actual?`,
-                    `¿De qué manera el contexto histórico o cultural del artista influye en el mensaje de esta canción?`,
-                    `¿Estás de acuerdo con el mensaje de la canción? Argumenta tu posición con al menos dos referencias a la letra.`,
-                ] : [
-                    `¿Qué mensaje central transmite "${titulo}" sobre "${temaStr}" y cómo conecta con tu experiencia personal?`,
-                    `¿Qué recursos poéticos (metáforas, repetición, contraste) usa el artista para reforzar el mensaje?`,
-                    `¿En qué contexto social o histórico fue escrita esta canción? ¿Sigue siendo relevante hoy?`,
-                ];
+                const curso    = p.curso;
+                const temaStr  = temas.length ? temas[0] : 'la vida cotidiana';
+                const fallbackQ = getFallbackQ(curso, titulo, temaStr);
                 const pregs = rawPregs.length ? rawPregs : fallbackQ;
 
                 document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
