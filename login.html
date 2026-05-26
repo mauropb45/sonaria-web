@@ -91,12 +91,23 @@
         (function warmUp() {
             const msg = document.getElementById('msg');
             msg.innerText = "Conectando con el servidor...";
+            let ready = false;
+            // Hint si tarda más de 18s (Render cold start)
+            const slowHint = setTimeout(() => {
+                if (!ready) {
+                    msg.innerText = "El servidor está despertando (puede tomar hasta 30s en el primer acceso). El botón estará listo en breve…";
+                    msg.classList.add('text-amber-500');
+                }
+            }, 18000);
             const check = setInterval(async () => {
                 try {
                     const res = await fetch(API_URL + "/", { cache: "no-store" });
                     if (res.ok) {
+                        ready = true;
                         clearInterval(check);
+                        clearTimeout(slowHint);
                         msg.innerText = "Identifícate como docente para comenzar";
+                        msg.classList.remove('text-amber-500');
                     }
                 } catch (_) {}
             }, 3000);

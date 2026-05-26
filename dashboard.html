@@ -56,10 +56,12 @@
         .mobile-nav { display: none; }
         @media (max-width: 768px) {
             nav.desktop-nav { display: none !important; }
-            main.desktop-main { padding: 0.875rem 0.875rem 5.5rem !important; }
+            main.desktop-main { padding: 0.875rem 0.875rem 5.5rem !important; overflow-y: auto !important; }
             .section { overflow-y: auto !important; height: 100% !important; -webkit-overflow-scrolling: touch; }
             .glass-card { border-radius: 1.5rem !important; padding: 1.25rem !important; }
             #grid-cursos { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+            #sec-config h2 { font-size: 2.2rem !important; }
+            .onboarding-steps { flex-wrap: wrap !important; gap: 0.5rem !important; }
             #sec-analyze .grid { grid-template-columns: 1fr !important; }
             #sec-analyze .grid input:last-child { margin-top: 0 !important; }
             #sec-canvas .grid { grid-template-columns: 1fr !important; }
@@ -74,6 +76,9 @@
             .mobile-nav { display: flex !important; }
             /* Plan footer en móvil */
             #sec-plan { padding-left: 1rem; padding-right: 1rem; }
+            /* History cards en móvil */
+            #history-list > div { flex-direction: column !important; gap: 0.75rem !important; border-radius: 1.25rem !important; padding: 1.25rem !important; }
+            #history-list .text-right { text-align: left !important; align-items: flex-start !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 0.5rem; }
         }
     </style>
 </head>
@@ -91,7 +96,7 @@
         <h1 class="text-xl font-black italic uppercase tracking-tight">Sonar<span class="text-[#FF8700]">IA</span></h1>
         <div class="flex items-center gap-3">
             <div id="plan-indicator" class="text-[9px] font-black uppercase border-white/20 border px-3 py-1 rounded-full italic tracking-widest text-slate-400">Plan Free</div>
-            <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest hidden sm:block">Salir →</button>
+            <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest">Salir →</button>
         </div>
     </header>
 
@@ -132,8 +137,30 @@
         </nav>
 
         <main class="desktop-main flex-grow p-12 overflow-hidden relative">
-            <div id="sec-config" class="section">
-                <div class="max-w-4xl pt-10"><h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Mi Aula</h2><div class="grid grid-cols-4 gap-4 mt-12" id="grid-cursos"></div><button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar Perfil →</button></div>
+            <div id="sec-config" class="section overflow-y-auto scroll-v h-full">
+                <div class="max-w-4xl px-2 pt-10 pb-20">
+                    <!-- Flujo de 3 pasos -->
+                    <div class="onboarding-steps flex items-center gap-3 mb-8">
+                        <span class="flex items-center gap-1.5 bg-[#FF8700] text-white px-4 py-2 rounded-full text-[9px] font-black uppercase italic shadow-sm tracking-widest shrink-0">
+                            <span class="w-4 h-4 rounded-full bg-white/25 flex items-center justify-center font-black text-[8px] shrink-0">1</span>
+                            Mis Cursos
+                        </span>
+                        <span class="text-slate-300 text-base shrink-0">→</span>
+                        <span class="flex items-center gap-1.5 text-slate-400 border border-slate-200 px-4 py-2 rounded-full text-[9px] font-black uppercase italic bg-white tracking-widest shrink-0">
+                            <span class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center font-black text-[8px] shrink-0">2</span>
+                            Analizar
+                        </span>
+                        <span class="text-slate-300 text-base shrink-0">→</span>
+                        <span class="flex items-center gap-1.5 text-slate-400 border border-slate-200 px-4 py-2 rounded-full text-[9px] font-black uppercase italic bg-white tracking-widest shrink-0">
+                            <span class="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center font-black text-[8px] shrink-0">3</span>
+                            Resultados
+                        </span>
+                    </div>
+                    <h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Mi Aula</h2>
+                    <p class="text-slate-400 italic text-sm mt-3 pl-7 leading-relaxed">Selecciona los cursos que impartes. SonarIA personalizará el análisis pedagógico para cada nivel.</p>
+                    <div class="grid grid-cols-4 gap-4 mt-10" id="grid-cursos"></div>
+                    <button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar y analizar →</button>
+                </div>
             </div>
             <div id="sec-analyze" class="section text-center overflow-y-auto scroll-v">
                 <div class="max-w-2xl mx-auto py-6 px-1">
@@ -175,7 +202,7 @@
                                        class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                                 <p id="hint-titulo" class="hidden absolute -bottom-5 left-4 text-[9px] font-black text-red-400 uppercase italic tracking-widest">Ingresa el nombre de la canción</p>
                             </div>
-                            <input id="in-artista" type="text" placeholder="Artista"
+                            <input id="in-artista" type="text" placeholder="Artista (ej: Los Prisioneros)"
                                    class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                         </div>
 
@@ -294,7 +321,7 @@
                             <button onclick="SonarIA.switchCanvasTab('traducida')" id="tab-traducida" class="canvas-tab flex-1 pb-3 text-[10px] font-black uppercase italic border-b-2 transition-all text-slate-300 border-transparent" data-tip="Versión adaptada traducida al español">En Español</button>
                         </div>
                         <div class="px-8 py-6 flex-grow overflow-hidden flex flex-col relative min-h-0" id="canvas-wrapper">
-                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-base w-full italic whitespace-pre-wrap leading-loose min-h-0"></div>
+                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-base w-full italic whitespace-pre-wrap leading-loose min-h-0"><span class="text-slate-300 text-sm not-italic font-normal">La letra adaptada aparecerá aquí tras el análisis.</span></div>
                             <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-sm w-full italic leading-loose whitespace-pre-wrap min-h-0"></div>
                             <div id="teaser-canvas" class="absolute inset-0 z-50 flex items-center justify-center hidden"><div class="inner-card-white"><i data-lucide="crown" class="w-12 h-12 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-xl font-black uppercase mb-2 text-[#001739] italic">Contenido Pro</h4><a href="planes.html" class="block w-full bg-[#FF8700] text-white py-4 mt-4 rounded-2xl font-black uppercase text-[10px] shadow-lg">Activar PRO</a></div></div>
                         </div>
@@ -850,7 +877,7 @@
                     }
                     document.getElementById('teaser-canvas').classList.add('hidden');
                 } else {
-                    adaptBox.innerHTML = "Contenido pro... SonarIA protege tu aula.";
+                    adaptBox.innerHTML = "Verso 1\n\nLa letra adaptada pedagógicamente\naparece aquí, con las palabras\nproblemáticas sustituidas por\nalternativas apropiadas al nivel\nde tus estudiantes.\n\nVerse 2\n\nCada estrofa revisada para garantizar\nun ambiente de aprendizaje seguro\ny enriquecedor para tu aula.";
                     adaptBox.classList.add('blur-pro');
                     document.getElementById('teaser-canvas').classList.remove('hidden');
                 }
@@ -1049,7 +1076,13 @@
                     const res = await fetch(API_URL + "/history", { headers: { 'Authorization': 'Bearer ' + token } });
                     const d = await res.json();
                     if (!d.ok || !d.items || d.items.length === 0) {
-                        list.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-20">Aún no tienes análisis guardados. ¡Analiza tu primera canción!</div>';
+                        list.innerHTML = `<div class="flex flex-col items-center py-20 gap-4">
+                            <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
+                                <svg class="w-7 h-7 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <p class="text-slate-400 italic text-sm font-medium text-center">Aún no tienes análisis guardados.</p>
+                            <button onclick="SonarIA.nav('sec-analyze')" class="bg-[#FF8700] text-white px-8 py-3 rounded-2xl font-black uppercase text-xs italic shadow-lg hover:opacity-90 transition-opacity">Analizar mi primera canción →</button>
+                        </div>`;
                         return;
                     }
                     const COLORS = { 'APTA': 'text-emerald-600 bg-emerald-50 border-emerald-100', 'USO MEDIADO': 'text-amber-600 bg-amber-50 border-amber-100', 'NO APTA': 'text-red-600 bg-red-50 border-red-100' };
@@ -1064,19 +1097,22 @@
                         const colorClass = COLORS[item.resultado] || 'text-slate-600 bg-slate-50 border-slate-100';
                         const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
                         const temas = (item.temas || []).map(t => `<span class="bg-orange-50 text-orange-500 border border-orange-100 px-3 py-1 rounded-full text-[9px] font-black uppercase italic">${t}</span>`).join('');
-                        return `<div class="bg-white rounded-[2rem] border p-8 flex items-center gap-6 shadow-sm hover:shadow-md transition-shadow">
+                        const safeT = (item.titulo  || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+                        const safeA = (item.artista || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+                        return `<div class="bg-white rounded-[2rem] border p-8 flex items-center gap-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group" onclick="SonarIA._openFromHistory('${safeT}','${safeA}')" title="Volver a analizar esta canción">
                             <div class="flex-grow min-w-0">
                                 <div class="flex items-center gap-3 mb-1">
                                     <span class="text-lg font-black uppercase italic text-[#001739] truncate">${item.titulo || '—'}</span>
                                     <span class="text-xs text-slate-400 italic shrink-0">${item.artista ? '· ' + item.artista : ''}</span>
                                 </div>
                                 <div class="flex flex-wrap gap-2 mt-2">${temas}</div>
+                                <span class="hidden group-hover:inline-block text-[9px] font-black uppercase italic text-[#FF8700] tracking-widest mt-2">→ Analizar de nuevo</span>
                             </div>
                             <div class="text-right shrink-0 flex flex-col items-end gap-2">
                                 <span class="border px-4 py-2 rounded-full text-[10px] font-black uppercase italic ${colorClass}">${item.resultado}</span>
                                 <span class="text-[9px] text-slate-300 italic">${fecha}</span>
                                 <span class="text-2xl font-black text-slate-200">${item.risk_percent}%</span>
-                                <button onclick="SonarIA.deleteHistory('${item.id}')" class="mt-1 text-slate-200 hover:text-red-400 transition-colors" title="Eliminar del historial">
+                                <button onclick="event.stopPropagation();SonarIA.deleteHistory('${item.id}')" class="mt-1 text-slate-200 hover:text-red-400 transition-colors" title="Eliminar del historial">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </div>
@@ -1088,6 +1124,15 @@
                 } catch(e) {
                     list.innerHTML = '<div class="text-red-400 italic text-sm text-center py-20">Error al cargar el historial. Intenta más tarde.</div>';
                 }
+            },
+            _openFromHistory(titulo, artista) {
+                const tEl = document.getElementById('in-titulo');
+                const aEl = document.getElementById('in-artista');
+                if (tEl) tEl.value = titulo;
+                if (aEl) aEl.value = artista;
+                this.nav('sec-analyze');
+                // suave scroll al top del formulario
+                setTimeout(() => { const s = document.getElementById('sec-analyze'); if (s) s.scrollTop = 0; }, 80);
             },
             async _showSongSuggestions(titulo, artista) {
                 const box   = document.getElementById('song-suggestions');
