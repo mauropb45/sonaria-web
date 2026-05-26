@@ -250,7 +250,9 @@
                     </div>
                 </div>
             </div>
-            <div id="sec-canvas" class="section h-full pb-20 relative flex flex-col gap-4">
+            <div id="sec-canvas" class="section h-full pb-20 relative">
+                <!-- Wrapper interno con flex — no poner flex directamente en .section o Tailwind rompe display:none -->
+                <div class="flex flex-col gap-4 h-full">
                 <!-- Navegación entre secciones -->
                 <div class="flex justify-between items-center shrink-0 px-1 pt-1">
                     <button onclick="SonarIA.nav('sec-diag')" class="text-[10px] font-black uppercase text-slate-400 hover:text-[#001739] transition-colors flex items-center gap-1">
@@ -282,6 +284,7 @@
                         </div>
                     </div>
                 </div>
+                </div><!-- /flex wrapper -->
             </div>
             <div id="sec-plan" class="section overflow-y-auto scroll-v h-full">
                 <div class="max-w-4xl mx-auto px-8 pt-8 pb-28">
