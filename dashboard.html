@@ -825,14 +825,25 @@
                 const activ  = (p.actividades || []).filter(a => a && !a.includes('Pro'));
                 const reflex = p.reflexion || '';
 
-                // Preguntas: usa las de la IA o genera fallback contextual
+                // Preguntas: usa las de la IA o genera fallback contextual POR CURSO
                 const rawPregs = p.preguntas || [];
-                const fallbackQ = [
-                    `¿Qué mensaje central transmite "${titulo}" y cómo se relaciona con experiencias propias?`,
-                    temas.length
-                        ? `Esta canción trabaja el tema "${temas[0]}" — ¿de qué manera ese tema puede influir en las personas de tu edad?`
-                        : `¿Qué emociones provoca esta canción y por qué crees que produce ese efecto?`,
-                    `¿En qué contexto histórico, social o personal crees que fue escrita esta canción? ¿Qué referencias encuentras en la letra?`,
+                const curso = p.curso;
+                const nivelNum = parseInt(curso) || 0;
+                const esBasica  = nivelNum >= 1 && nivelNum <= 6;
+                const esMed     = curso.includes('M');
+                const temaStr   = temas.length ? temas[0] : 'la vida cotidiana';
+                const fallbackQ = esBasica ? [
+                    `¿De qué habla la canción "${titulo}"? ¿Qué palabras o frases te llamaron más la atención?`,
+                    `¿Cómo te hace sentir esta canción? ¿Por qué crees que produce esa emoción?`,
+                    `¿Qué imagen o historia te imaginas cuando escuchas esta música?`,
+                ] : esMed ? [
+                    `¿Qué crítica o reflexión sobre "${temaStr}" propone "${titulo}" y cómo se vincula con la realidad actual?`,
+                    `¿De qué manera el contexto histórico o cultural del artista influye en el mensaje de esta canción?`,
+                    `¿Estás de acuerdo con el mensaje de la canción? Argumenta tu posición con al menos dos referencias a la letra.`,
+                ] : [
+                    `¿Qué mensaje central transmite "${titulo}" sobre "${temaStr}" y cómo conecta con tu experiencia personal?`,
+                    `¿Qué recursos poéticos (metáforas, repetición, contraste) usa el artista para reforzar el mensaje?`,
+                    `¿En qué contexto social o histórico fue escrita esta canción? ¿Sigue siendo relevante hoy?`,
                 ];
                 const pregs = rawPregs.length ? rawPregs : fallbackQ;
 
