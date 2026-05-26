@@ -970,9 +970,13 @@
 
                 if (!hasArreglo) {
                     document.getElementById('inst-content').innerHTML = `
-                        <div class="bg-[#001739] rounded-2xl p-8 text-center">
-                            <i data-lucide="music-2" class="w-10 h-10 text-orange-400/50 mx-auto mb-3"></i>
-                            <p class="text-white/50 italic text-sm">Analiza esta canción de nuevo para obtener el arreglo de banda.<br>El motor ya fue actualizado para generar guías instrumentales.</p>
+                        <div class="bg-[#001739] rounded-2xl p-8 flex flex-col items-center gap-4 text-center" id="inst-generate-box">
+                            <i data-lucide="music-2" class="w-10 h-10 text-orange-400/60"></i>
+                            <p class="text-white/70 italic text-sm leading-relaxed max-w-xs">Esta canción fue analizada antes de que el motor soportara guías instrumentales.</p>
+                            <button onclick="SonarIA.generateArreglo()" id="btn-gen-arreglo"
+                                class="bg-[#FF8700] text-white px-8 py-4 rounded-2xl font-black uppercase text-[11px] shadow-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4"></i> Generar Guía Instrumental
+                            </button>
                         </div>`;
                     lucide.createIcons(); return;
                 }
@@ -1000,6 +1004,42 @@
                         <div class="px-6 py-2">${rows}</div>
                     </div>`;
                 lucide.createIcons();
+            },
+            async generateArreglo() {
+                if (!this.state.lastData) return;
+                const btn = document.getElementById('btn-gen-arreglo');
+                if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando...'; lucide.createIcons(); }
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                try {
+                    const res = await fetch(API_URL + '/arreglo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                        body: JSON.stringify({
+                            titulo:   this.state.lastData._titulo  || this.state.lastData.titulo  || '',
+                            artista:  this.state.lastData._artista || this.state.lastData.artista || '',
+                            original: this.state.lastData.original || '',
+                            cursos:   this.state.cursos,
+                        })
+                    });
+                    const d = await res.json();
+                    if (!d.ok || !d.por_curso?.length) throw new Error(d.error || 'Sin datos');
+                    // Inyectar arreglo en lastData para cada curso
+                    d.por_curso.forEach(pc => {
+                        const course = (this.state.lastData.pedagogia?.por_curso || []).find(c => c.curso === pc.curso);
+                        if (course) course.arreglo = pc.arreglo;
+                        else if (this.state.lastData.pedagogia?.por_curso) {
+                            // Si el curso no coincide exactamente, aplicar al primer curso
+                            if (this.state.lastData.pedagogia.por_curso[0]) {
+                                this.state.lastData.pedagogia.por_curso[0].arreglo = pc.arreglo;
+                            }
+                        }
+                    });
+                    // Re-renderizar sección instrumental
+                    this.renderInstrumental(this.state.lastData.pedagogia);
+                } catch(e) {
+                    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="zap" class="w-4 h-4"></i> Reintentar'; lucide.createIcons(); }
+                    console.error('[generateArreglo]', e);
+                }
             },
             async activarProTest() {
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
