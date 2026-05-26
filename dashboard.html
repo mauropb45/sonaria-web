@@ -101,7 +101,6 @@
                 <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
                 <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-instrumental')" id="nav-sec-instrumental" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="music-2" class="w-4 h-4"></i> Banda Escolar <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
                 <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
             </div>
@@ -296,20 +295,6 @@
                     <div id="plan-content"></div>
                     <div class="mt-10 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
                         <button onclick="SonarIA.nav('sec-canvas')" class="text-xs font-black text-slate-300 uppercase hover:text-slate-500 transition-colors">← Letra</button>
-                        <button onclick="SonarIA.nav('sec-instrumental')" class="bg-[#001739] text-white px-8 py-4 rounded-[2rem] font-black uppercase flex items-center gap-2 text-xs italic hover:opacity-90 transition-opacity">
-                            <i data-lucide="music-2" class="w-4 h-4"></i> Ejecución Instrumental →
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ── Sección Ejecución Instrumental ── -->
-            <div id="sec-instrumental" class="section overflow-y-auto scroll-v h-full">
-                <div class="max-w-4xl mx-auto px-8 pt-8 pb-28">
-                    <div id="inst-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
-                    <div id="inst-content"></div>
-                    <div class="mt-10 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <button onclick="SonarIA.nav('sec-plan')" class="text-xs font-black text-slate-300 uppercase hover:text-slate-500 transition-colors">← Planificación</button>
                         <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-10 py-5 rounded-[2rem] font-black uppercase shadow-2xl flex items-center gap-3 text-sm italic">
                             <i data-lucide="file-text"></i> Exportar Informe PDF Pro
                         </button>
@@ -745,7 +730,7 @@
             },
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
-                ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan', 'nav-sec-instrumental'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
+                ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
 
                 // ── Encabezado: canción analizada ─────────────────────────────
                 document.getElementById('res-cancion-titulo').innerText = data._titulo || data.titulo || '—';
@@ -839,7 +824,6 @@
                 this.switchCanvasTab('adaptada');
 
                 this.renderPlan(data.pedagogia);
-                this.renderInstrumental(data.pedagogia);
                 this.nav('sec-diag');
             },
             switchCanvasTab(tab) {
@@ -981,136 +965,6 @@
                         </div>`;
                 }
                 lucide.createIcons();
-            },
-            renderInstrumental(ped) {
-                if (!ped) return;
-                const tabs    = document.getElementById('inst-tabs');
-                const content = document.getElementById('inst-content');
-                if (!tabs || !content) return;
-                if (!ped.por_curso || ped.por_curso.length === 0) {
-                    tabs.innerHTML = '';
-                    content.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-12">No hay datos de ejecución instrumental para esta canción.</div>';
-                    return;
-                }
-                tabs.innerHTML = ped.por_curso.map((p, i) =>
-                    `<button onclick="SonarIA.showInstrumental(${i})" class="inst-tab course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0?'active':''} transition-all shadow-sm italic">${courseLabel(p.curso)}</button>`
-                ).join('');
-                this.showInstrumental(0);
-            },
-            showInstrumental(idx) {
-                if (!this.state.lastData?.pedagogia?.por_curso?.[idx]) return;
-                const p      = this.state.lastData.pedagogia.por_curso[idx];
-                const isPro  = this.state.user.plan === 'pro';
-                const arreglo = p.arreglo || {};
-                document.querySelectorAll('.inst-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
-
-                const INST = [
-                    { key:'voces',      label:'Voces',       desc:'Línea melódica y armonías vocales' },
-                    { key:'guitarra',   label:'Guitarra',    desc:'Acordes y riffs principales' },
-                    { key:'bajo',       label:'Bajo',        desc:'Línea de bajo y apoyo rítmico' },
-                    { key:'bateria',    label:'Batería',     desc:'Patrón rítmico y fills' },
-                    { key:'percusion',  label:'Percusión',   desc:'Percusión auxiliar y acentos' },
-                    { key:'teclado',    label:'Teclado',     desc:'Acordes, pads y contracantos' },
-                    { key:'metalofono', label:'Metalófono',  desc:'Melodía en xilófono / metalófono' },
-                    { key:'melodica',   label:'Melódica',    desc:'Línea melódica con melódica/armónica' },
-                ];
-
-                const hasArreglo = INST.some(i => arreglo[i.key]);
-
-                if (!isPro) {
-                    document.getElementById('inst-content').innerHTML = `
-                        <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:280px;">
-                            <div class="p-10 flex flex-col gap-3 blur-pro pointer-events-none select-none">
-                                ${INST.slice(0,5).map(i => `
-                                    <div class="flex gap-4 py-2 border-b border-white/10">
-                                        <div class="w-24 h-3 bg-orange-400/30 rounded-full"></div>
-                                        <div class="flex-1 h-3 bg-white/10 rounded-full"></div>
-                                    </div>`).join('')}
-                            </div>
-                            <div class="pro-floating-card">
-                                <div class="inner-card-white">
-                                    <i data-lucide="music-2" class="w-10 h-10 text-[#FF8700] mx-auto mb-3 animate-bounce"></i>
-                                    <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Banda Escolar Pro</h4>
-                                    <p class="text-[10px] text-slate-400 italic mb-4">Guía de ejecución por instrumento generada por IA</p>
-                                    <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
-                                </div>
-                            </div>
-                        </div>`;
-                    lucide.createIcons(); return;
-                }
-
-                if (!hasArreglo) {
-                    document.getElementById('inst-content').innerHTML = `
-                        <div class="bg-[#001739] rounded-2xl p-8 flex flex-col items-center gap-4 text-center" id="inst-generate-box">
-                            <i data-lucide="music-2" class="w-10 h-10 text-orange-400/60"></i>
-                            <p class="text-white/70 italic text-sm leading-relaxed max-w-xs">Esta canción fue analizada antes de que el motor soportara guías instrumentales.</p>
-                            <button onclick="SonarIA.generateArreglo()" id="btn-gen-arreglo"
-                                class="bg-[#FF8700] text-white px-8 py-4 rounded-2xl font-black uppercase text-[11px] shadow-lg hover:opacity-90 transition-opacity flex items-center gap-2">
-                                <i data-lucide="zap" class="w-4 h-4"></i> Generar Guía Instrumental
-                            </button>
-                        </div>`;
-                    lucide.createIcons(); return;
-                }
-
-                const rows = INST.filter(i => arreglo[i.key]).map(i => `
-                    <div class="py-4 border-b border-slate-100 last:border-0">
-                        <div class="flex items-start gap-4">
-                            <div class="w-28 shrink-0">
-                                <span class="text-[#001739] font-black uppercase text-[10px] tracking-widest">${i.label}</span>
-                                <p class="text-[9px] text-slate-400 italic mt-0.5">${i.desc}</p>
-                            </div>
-                            <p class="text-[13px] text-slate-600 italic leading-relaxed flex-1">${arreglo[i.key]}</p>
-                        </div>
-                    </div>`).join('');
-
-                document.getElementById('inst-content').innerHTML = `
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                            <div>
-                                <span class="text-[#001739] font-black uppercase text-[10px] tracking-widest">Banda Escolar de Rock</span>
-                                <p class="text-[9px] text-slate-400 italic mt-0.5">Percusiones · Voces · Teclados · Metalófonos · Melódicas · Guitarra · Bajo · Batería</p>
-                            </div>
-                            <span class="text-[9px] font-black uppercase text-orange-500 bg-orange-50 border border-orange-100 px-3 py-1 rounded-full">${courseLabel(p.curso)}</span>
-                        </div>
-                        <div class="px-6 py-2">${rows}</div>
-                    </div>`;
-                lucide.createIcons();
-            },
-            async generateArreglo() {
-                if (!this.state.lastData) return;
-                const btn = document.getElementById('btn-gen-arreglo');
-                if (btn) { btn.disabled = true; btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando...'; lucide.createIcons(); }
-                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
-                try {
-                    const res = await fetch(API_URL + '/arreglo', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify({
-                            titulo:   this.state.lastData._titulo  || this.state.lastData.titulo  || '',
-                            artista:  this.state.lastData._artista || this.state.lastData.artista || '',
-                            original: this.state.lastData.original || '',
-                            cursos:   this.state.cursos,
-                        })
-                    });
-                    const d = await res.json();
-                    if (!d.ok || !d.por_curso?.length) throw new Error(d.error || 'Sin datos');
-                    // Inyectar arreglo en lastData para cada curso
-                    d.por_curso.forEach(pc => {
-                        const course = (this.state.lastData.pedagogia?.por_curso || []).find(c => c.curso === pc.curso);
-                        if (course) course.arreglo = pc.arreglo;
-                        else if (this.state.lastData.pedagogia?.por_curso) {
-                            // Si el curso no coincide exactamente, aplicar al primer curso
-                            if (this.state.lastData.pedagogia.por_curso[0]) {
-                                this.state.lastData.pedagogia.por_curso[0].arreglo = pc.arreglo;
-                            }
-                        }
-                    });
-                    // Re-renderizar sección instrumental
-                    this.renderInstrumental(this.state.lastData.pedagogia);
-                } catch(e) {
-                    if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="zap" class="w-4 h-4"></i> Reintentar'; lucide.createIcons(); }
-                    console.error('[generateArreglo]', e);
-                }
             },
             async activarProTest() {
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
