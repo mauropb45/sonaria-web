@@ -83,6 +83,29 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
+    <!-- ── Modal "¿Te refieres a...?" ───────────────────────────────────── -->
+    <div id="suggest-modal" class="hidden fixed inset-0 z-[95] flex items-end sm:items-center justify-center p-4 bg-[#001739]/70 backdrop-blur-sm">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-sm w-full border-t-4 border-[#FF8700] overflow-hidden fade-up">
+            <div class="px-8 pt-7 pb-6">
+                <div class="flex items-start justify-between mb-5">
+                    <div>
+                        <span class="text-[10px] font-black uppercase italic text-[#FF8700] tracking-widest block mb-0.5">¿Te refieres a...?</span>
+                        <span class="text-[11px] text-slate-400 italic">Selecciona la canción correcta</span>
+                    </div>
+                    <button onclick="SonarIA._closeSuggestModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition-colors shrink-0 mt-0.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div id="suggest-modal-list" class="flex flex-col gap-2">
+                    <div class="text-slate-300 text-xs italic text-center py-6 animate-pulse">Buscando sugerencias...</div>
+                </div>
+                <button onclick="SonarIA._closeSuggestModal()" class="mt-5 w-full text-center text-[9px] font-black uppercase italic text-slate-300 hover:text-slate-500 transition-colors tracking-widest py-1">
+                    Prefiero escribir de nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="viewer-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-[#001739]/80 backdrop-blur-md">
         <div class="bg-white max-w-lg w-full rounded-[3rem] p-12 text-center border-4 border-orange-50 shadow-2xl">
             <i data-lucide="shield-check" class="text-[#FF8700] w-12 h-12 mx-auto mb-6"></i>
@@ -160,6 +183,31 @@
                     <p class="text-slate-400 italic text-sm mt-3 pl-7 leading-relaxed">Selecciona los cursos que impartes. SonarIA personalizará el análisis pedagógico para cada nivel.</p>
                     <div class="grid grid-cols-4 gap-4 mt-10" id="grid-cursos"></div>
                     <button onclick="SonarIA.saveConfig()" class="bg-[#FF8700] text-white px-12 py-6 rounded-3xl font-black uppercase mt-10 shadow-2xl italic">Guardar y analizar →</button>
+
+                    <!-- Perfil del Colegio (opcional, para PDF) -->
+                    <div class="mt-12 border-t border-slate-100 pt-8">
+                        <p class="text-[9px] font-black uppercase italic text-slate-400 tracking-widest mb-1">Perfil del Colegio — opcional</p>
+                        <p class="text-[11px] text-slate-400 italic leading-relaxed mb-5">Personaliza el informe PDF con los datos de tu institución.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input id="in-school-name" type="text" placeholder="Nombre del colegio"
+                                   class="bg-slate-50 border-2 rounded-2xl px-5 py-3.5 text-sm font-medium focus:border-[#FF8700] outline-none transition-colors">
+                            <div class="flex items-center gap-3 bg-slate-50 border-2 rounded-2xl px-5 py-3">
+                                <label for="in-school-color" class="text-sm text-slate-400 italic flex-grow cursor-pointer">Color institucional</label>
+                                <input id="in-school-color" type="color" value="#001739"
+                                       class="w-9 h-9 rounded-xl cursor-pointer border-0 bg-transparent p-0.5">
+                            </div>
+                        </div>
+                        <label class="mt-3 flex items-center gap-4 bg-slate-50 border-2 rounded-2xl px-5 py-3.5 cursor-pointer hover:border-[#FF8700] transition-colors group" id="logo-upload-label">
+                            <svg class="w-5 h-5 text-slate-300 group-hover:text-[#FF8700] transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span id="logo-label-text" class="text-sm text-slate-400 italic flex-grow">Logo del colegio (PNG/JPG, max 200 KB)</span>
+                            <input id="in-school-logo" type="file" accept="image/png,image/jpeg,image/jpg,image/gif" class="hidden" onchange="SonarIA._handleLogoUpload(this)">
+                            <img id="logo-preview-img" class="hidden h-10 w-auto rounded-xl object-contain" src="" alt="Logo">
+                        </label>
+                        <button onclick="SonarIA._saveSchoolProfile()" class="mt-4 bg-slate-100 hover:bg-[#001739] hover:text-white text-slate-600 px-8 py-3.5 rounded-2xl font-black uppercase text-xs italic transition-colors">
+                            Guardar datos del colegio
+                        </button>
+                        <p id="school-save-msg" class="hidden mt-2 text-[9px] font-black uppercase italic text-emerald-500 tracking-widest">¡Datos del colegio guardados!</p>
+                    </div>
                 </div>
             </div>
             <div id="sec-analyze" class="section text-center overflow-y-auto scroll-v">
@@ -517,6 +565,7 @@
                 document.getElementById('user-greeting').innerText = "¡Hola, " + (this.state.user.name || "Docente").split(' ')[0] + "!";
                 document.getElementById('user-mail').innerText = this.state.user.email || "";
                 this.setupSmartListeners();
+                this._loadSchoolProfile();
                 this.refreshMe();
                 this.checkTestMode();
                 // Sincroniza nav: si tiene cursos va al analizador, si no a Mis Cursos
@@ -558,10 +607,16 @@
                 if (btn) btn.innerHTML = '<span class="animate-pulse">Generando PDF…</span>';
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
                 try {
+                    const exportData = {
+                        ...this.state.lastData,
+                        school_name:  localStorage.getItem('sonaria_school_name')  || '',
+                        school_color: localStorage.getItem('sonaria_school_color') || '',
+                        school_logo:  localStorage.getItem('sonaria_school_logo')  || '',
+                    };
                     const res = await fetch(API_URL + "/export/pdf", {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                        body: JSON.stringify(this.state.lastData),
+                        body: JSON.stringify(exportData),
                     });
                     if (!res.ok) {
                         const err = await res.json().catch(() => ({}));
@@ -597,6 +652,21 @@
                     ytEl.addEventListener('paste', (e) => setTimeout(() => this.handleYTInput(ytEl.value), 80));
                     ytEl.addEventListener('input', () => this.handleYTInput(ytEl.value));
                 }
+                // Sugerencias proactivas al salir del campo artista (si hay título)
+                let _suggestTimer;
+                const _maybeSuggest = () => {
+                    const t = document.getElementById('in-titulo')?.value.trim() || '';
+                    const a = document.getElementById('in-artista')?.value.trim() || '';
+                    if (t.length < 3) return;
+                    clearTimeout(_suggestTimer);
+                    _suggestTimer = setTimeout(() => {
+                        // Solo sugerir si no hay un análisis reciente con este título
+                        if (!this.state.lastData || this.state.lastData._titulo?.toLowerCase() !== t.toLowerCase()) {
+                            this._showSongSuggestions(t, a);
+                        }
+                    }, 1800);
+                };
+                document.getElementById('in-artista')?.addEventListener('blur', _maybeSuggest);
             },
 
             // ── YouTube helpers ───────────────────────────────────────────
@@ -1131,37 +1201,88 @@
                 if (tEl) tEl.value = titulo;
                 if (aEl) aEl.value = artista;
                 this.nav('sec-analyze');
-                // suave scroll al top del formulario
                 setTimeout(() => { const s = document.getElementById('sec-analyze'); if (s) s.scrollTop = 0; }, 80);
             },
+            // ── Perfil del Colegio ──────────────────────────────────────────
+            _handleLogoUpload(input) {
+                const file = input?.files?.[0];
+                if (!file) return;
+                if (file.size > 300 * 1024) {
+                    alert('El logo no debe superar 300 KB. Usa una versión más pequeña.');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const b64 = e.target.result;
+                    document.getElementById('logo-preview-img').src = b64;
+                    document.getElementById('logo-preview-img').classList.remove('hidden');
+                    document.getElementById('logo-label-text').classList.add('hidden');
+                    localStorage.setItem('sonaria_school_logo', b64);
+                };
+                reader.readAsDataURL(file);
+            },
+            _saveSchoolProfile() {
+                const name  = document.getElementById('in-school-name')?.value.trim() || '';
+                const color = document.getElementById('in-school-color')?.value || '#001739';
+                localStorage.setItem('sonaria_school_name',  name);
+                localStorage.setItem('sonaria_school_color', color);
+                const msg = document.getElementById('school-save-msg');
+                if (msg) { msg.classList.remove('hidden'); setTimeout(() => msg.classList.add('hidden'), 2500); }
+            },
+            _loadSchoolProfile() {
+                const name  = localStorage.getItem('sonaria_school_name')  || '';
+                const color = localStorage.getItem('sonaria_school_color') || '#001739';
+                const logo  = localStorage.getItem('sonaria_school_logo')  || '';
+                const nEl = document.getElementById('in-school-name');
+                const cEl = document.getElementById('in-school-color');
+                if (nEl) nEl.value  = name;
+                if (cEl) cEl.value  = color;
+                if (logo) {
+                    const img = document.getElementById('logo-preview-img');
+                    const lbl = document.getElementById('logo-label-text');
+                    if (img) { img.src = logo; img.classList.remove('hidden'); }
+                    if (lbl) lbl.classList.add('hidden');
+                }
+            },
+            _closeSuggestModal() {
+                document.getElementById('suggest-modal')?.classList.add('hidden');
+            },
             async _showSongSuggestions(titulo, artista) {
-                const box   = document.getElementById('song-suggestions');
-                const chips = document.getElementById('song-suggestions-chips');
-                if (!box || !chips) return;
-                box.classList.add('hidden');
-                chips.innerHTML = '';
+                const modal = document.getElementById('suggest-modal');
+                const list  = document.getElementById('suggest-modal-list');
+                if (!modal || !list) return;
+                // Mostrar modal con spinner
+                list.innerHTML = '<div class="text-slate-300 text-xs italic text-center py-6 animate-pulse">Buscando sugerencias...</div>';
+                modal.classList.remove('hidden');
                 try {
                     const q = encodeURIComponent((titulo + ' ' + artista).trim());
                     const res = await fetch(`https://lrclib.net/api/search?q=${q}`);
-                    if (!res.ok) return;
+                    if (!res.ok) { modal.classList.add('hidden'); return; }
                     const arr = await res.json();
-                    const top = (Array.isArray(arr) ? arr : []).slice(0, 3);
-                    if (!top.length) return;
-                    chips.innerHTML = top.map(s => {
-                        const t2 = (s.trackName || '').replace(/'/g, "\\'");
-                        const a2 = (s.artistName || '').replace(/'/g, "\\'");
+                    const top = (Array.isArray(arr) ? arr : []).slice(0, 4);
+                    if (!top.length) { modal.classList.add('hidden'); return; }
+                    // Si el primero coincide exactamente con lo escrito, no mostrar
+                    const firstT = (top[0]?.trackName || '').toLowerCase().trim();
+                    const firstA = (top[0]?.artistName || '').toLowerCase().trim();
+                    if (firstT === titulo.toLowerCase().trim() && (!artista || firstA === artista.toLowerCase().trim())) {
+                        modal.classList.add('hidden'); return;
+                    }
+                    list.innerHTML = top.map(s => {
+                        const t2 = (s.trackName || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+                        const a2 = (s.artistName || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
                         return `<button onclick="SonarIA._fillAndAnalyze('${t2}','${a2}')"
-                            class="chip-anim bg-orange-50 border border-orange-200 text-orange-700 rounded-full px-4 py-2 text-[10px] font-black uppercase italic hover:bg-orange-100 transition-colors">
-                            ${s.trackName} <span class="font-normal text-orange-400">— ${s.artistName}</span>
+                            class="w-full text-left bg-orange-50 border border-orange-100 hover:border-[#FF8700] rounded-2xl px-5 py-3.5 transition-all group">
+                            <div class="text-sm font-black text-[#001739] italic group-hover:text-[#FF8700] transition-colors">${s.trackName}</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">${s.artistName || '—'}</div>
                         </button>`;
                     }).join('');
-                    box.classList.remove('hidden');
-                } catch(_) {}
+                } catch(_) { modal.classList.add('hidden'); }
             },
             _fillAndAnalyze(titulo, artista) {
                 document.getElementById('in-titulo').value = titulo;
                 document.getElementById('in-artista').value = artista;
                 document.getElementById('song-suggestions')?.classList.add('hidden');
+                this._closeSuggestModal();
                 this.analyze();
             },
             async deleteHistory(id) {
