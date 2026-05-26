@@ -179,6 +179,11 @@
                             <span class="text-lg shrink-0">⚠️</span>
                             <p id="analyze-error-text" class="text-[11px] font-black text-red-500 uppercase italic tracking-widest text-left"></p>
                         </div>
+                        <!-- ── Sugerencias "¿Te refieres a...?" ────────── -->
+                        <div id="song-suggestions" class="hidden">
+                            <p class="text-[9px] font-black uppercase text-slate-400 italic tracking-widest mb-3">¿Te refieres a...?</p>
+                            <div id="song-suggestions-chips" class="flex flex-wrap gap-2"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -651,12 +656,14 @@
                         data._titulo = t;
                         data._artista = a;
                         this.state.lastData = data;
+                        document.getElementById('song-suggestions')?.classList.add('hidden');
                         this.showResults(data);
                     } else {
                         // Error de la API (letra no encontrada, plan, etc.)
                         const msg = data.error || "No pudimos completar el análisis.";
-                        if (msg.toLowerCase().includes("letra") || msg.toLowerCase().includes("lyrics")) {
+                        if (msg.toLowerCase().includes("letra") || msg.toLowerCase().includes("lyrics") || msg.toLowerCase().includes("no encontr") || msg.toLowerCase().includes("not found")) {
                             this.showAnalyzeError("No encontramos la letra automáticamente. Pégala en el campo de texto e intenta de nuevo.");
+                            this._showSongSuggestions(t, a);
                         } else {
                             this.showAnalyzeError(msg);
                         }
@@ -829,8 +836,8 @@
                 const rawPregs = p.preguntas || [];
                 const curso = p.curso;
                 const nivelNum = parseInt(curso) || 0;
-                const esBasica  = nivelNum >= 1 && nivelNum <= 6;
                 const esMed     = curso.includes('M');
+                const esBasica  = !esMed && nivelNum >= 1 && nivelNum <= 6;
                 const temaStr   = temas.length ? temas[0] : 'la vida cotidiana';
                 const fallbackQ = esBasica ? [
                     `¿De qué habla la canción "${titulo}"? ¿Qué palabras o frases te llamaron más la atención?`,
@@ -1124,6 +1131,9 @@
                                 <span class="border px-4 py-2 rounded-full text-[10px] font-black uppercase italic ${colorClass}">${item.resultado}</span>
                                 <span class="text-[9px] text-slate-300 italic">${fecha}</span>
                                 <span class="text-2xl font-black text-slate-200">${item.risk_percent}%</span>
+                                <button onclick="SonarIA.deleteHistory('${item.id}')" class="mt-1 text-slate-200 hover:text-red-400 transition-colors" title="Eliminar del historial">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
                             </div>
                         </div>`;
                     }).join('');
@@ -1133,6 +1143,49 @@
                 } catch(e) {
                     list.innerHTML = '<div class="text-red-400 italic text-sm text-center py-20">Error al cargar el historial. Intenta más tarde.</div>';
                 }
+            },
+            async _showSongSuggestions(titulo, artista) {
+                const box   = document.getElementById('song-suggestions');
+                const chips = document.getElementById('song-suggestions-chips');
+                if (!box || !chips) return;
+                box.classList.add('hidden');
+                chips.innerHTML = '';
+                try {
+                    const q = encodeURIComponent((titulo + ' ' + artista).trim());
+                    const res = await fetch(`https://lrclib.net/api/search?q=${q}`);
+                    if (!res.ok) return;
+                    const arr = await res.json();
+                    const top = (Array.isArray(arr) ? arr : []).slice(0, 3);
+                    if (!top.length) return;
+                    chips.innerHTML = top.map(s => {
+                        const t2 = (s.trackName || '').replace(/'/g, "\\'");
+                        const a2 = (s.artistName || '').replace(/'/g, "\\'");
+                        return `<button onclick="SonarIA._fillAndAnalyze('${t2}','${a2}')"
+                            class="chip-anim bg-orange-50 border border-orange-200 text-orange-700 rounded-full px-4 py-2 text-[10px] font-black uppercase italic hover:bg-orange-100 transition-colors">
+                            ${s.trackName} <span class="font-normal text-orange-400">— ${s.artistName}</span>
+                        </button>`;
+                    }).join('');
+                    box.classList.remove('hidden');
+                } catch(_) {}
+            },
+            _fillAndAnalyze(titulo, artista) {
+                document.getElementById('in-titulo').value = titulo;
+                document.getElementById('in-artista').value = artista;
+                document.getElementById('song-suggestions')?.classList.add('hidden');
+                this.analyze();
+            },
+            async deleteHistory(id) {
+                if (!confirm('¿Eliminar este análisis del historial?')) return;
+                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
+                try {
+                    const res = await fetch(API_URL + '/history/' + id, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    const d = await res.json();
+                    if (d.ok) await this.loadHistory();
+                    else alert(d.error || 'No se pudo eliminar.');
+                } catch(e) { console.error('[deleteHistory]', e); }
             },
             logout() { localStorage.clear(); window.location.href = "login-test.html"; }
         };
