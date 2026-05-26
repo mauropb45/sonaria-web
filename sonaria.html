@@ -271,11 +271,10 @@
                             <span class="text-lg shrink-0">⚠️</span>
                             <p id="analyze-error-text" class="text-[11px] font-black text-red-500 uppercase italic tracking-widest text-left"></p>
                         </div>
-                        <!-- ── Sugerencias "¿Te refieres a...?" ────────── -->
-                        <div id="song-suggestions" class="hidden">
-                            <p class="text-[9px] font-black uppercase text-slate-400 italic tracking-widest mb-3">¿Te refieres a...?</p>
-                            <div id="song-suggestions-chips" class="flex flex-wrap gap-2"></div>
-                        </div>
+                        <!-- ── Link manual sugerencias ───────────────── -->
+                        <button onclick="SonarIA._manualSuggest()" class="text-[9px] font-black uppercase italic text-slate-300 hover:text-[#FF8700] transition-colors tracking-widest w-full text-center pt-1">
+                            ¿No encuentras la canción? Ver sugerencias →
+                        </button>
                     </div>
                 </div>
             </div>
@@ -332,6 +331,16 @@
                                 <div>
                                     <p class="text-[10px] font-black uppercase text-red-500 italic tracking-widest mb-1">No apropiado para:</p>
                                     <p id="diag-excluded-text" class="text-[11px] text-red-400 italic leading-relaxed"></p>
+                                </div>
+                            </div>
+
+                            <!-- ── Card SonarIA: qué hacer con este resultado ── -->
+                            <div id="diag-sonaria-action" class="hidden rounded-2xl border p-5 flex gap-4 items-start">
+                                <div id="diag-action-icon" class="text-2xl shrink-0 mt-0.5"></div>
+                                <div class="flex-grow min-w-0">
+                                    <p id="diag-action-title" class="text-[10px] font-black uppercase italic tracking-widest mb-1"></p>
+                                    <p id="diag-action-body" class="text-[12px] italic leading-relaxed"></p>
+                                    <p class="text-[10px] text-slate-400 italic mt-2 leading-relaxed">La decisión pedagógica es siempre tuya. SonarIA te entrega las herramientas para usarla bien.</p>
                                 </div>
                             </div>
 
@@ -652,21 +661,8 @@
                     ytEl.addEventListener('paste', (e) => setTimeout(() => this.handleYTInput(ytEl.value), 80));
                     ytEl.addEventListener('input', () => this.handleYTInput(ytEl.value));
                 }
-                // Sugerencias proactivas al salir del campo artista (si hay título)
-                let _suggestTimer;
-                const _maybeSuggest = () => {
-                    const t = document.getElementById('in-titulo')?.value.trim() || '';
-                    const a = document.getElementById('in-artista')?.value.trim() || '';
-                    if (t.length < 3) return;
-                    clearTimeout(_suggestTimer);
-                    _suggestTimer = setTimeout(() => {
-                        // Solo sugerir si no hay un análisis reciente con este título
-                        if (!this.state.lastData || this.state.lastData._titulo?.toLowerCase() !== t.toLowerCase()) {
-                            this._showSongSuggestions(t, a);
-                        }
-                    }, 1800);
-                };
-                document.getElementById('in-artista')?.addEventListener('blur', _maybeSuggest);
+                // Las sugerencias se disparan solo al fallar el análisis (API)
+                // o cuando el usuario las pide manualmente con _manualSuggest()
             },
 
             // ── YouTube helpers ───────────────────────────────────────────
@@ -914,6 +910,37 @@
                     exclDiv.classList.remove('hidden');
                 } else {
                     exclDiv.classList.add('hidden');
+                }
+
+                // ── Card SonarIA: mensaje contextual de habilitación ─────────
+                const actionDiv   = document.getElementById('diag-sonaria-action');
+                const actionIcon  = document.getElementById('diag-action-icon');
+                const actionTitle = document.getElementById('diag-action-title');
+                const actionBody  = document.getElementById('diag-action-body');
+                if (actionDiv) {
+                    if (isApta) {
+                        actionDiv.className = 'rounded-2xl border p-5 flex gap-4 items-start bg-emerald-50 border-emerald-100';
+                        actionIcon.textContent  = '✅';
+                        actionTitle.textContent = 'Lista para el aula';
+                        actionTitle.style.color = '#16a34a';
+                        actionBody.style.color  = '#166534';
+                        actionBody.textContent  = 'Esta canción es apta para uso pedagógico directo. Revisa la planificación por curso y las preguntas clave para sacarle el máximo partido en clases.';
+                    } else if (isMediado) {
+                        actionDiv.className = 'rounded-2xl border p-5 flex gap-4 items-start bg-amber-50 border-amber-100';
+                        actionIcon.textContent  = '🎯';
+                        actionTitle.textContent = 'Apta con orientación docente';
+                        actionTitle.style.color = '#b45309';
+                        actionBody.style.color  = '#92400e';
+                        actionBody.textContent  = 'Puedes usar esta canción en el aula siguiendo las recomendaciones de mediación. SonarIA preparó actividades pedagógicas y una versión de letra adaptada que te guiarán en el proceso.';
+                    } else {
+                        actionDiv.className = 'rounded-2xl border p-5 flex gap-4 items-start bg-orange-50 border-orange-100';
+                        actionIcon.textContent  = '🔧';
+                        actionTitle.textContent = 'SonarIA la transforma para el aula';
+                        actionTitle.style.color = '#FF8700';
+                        actionBody.style.color  = '#9a3412';
+                        actionBody.textContent  = 'Esta canción tiene contenido que requiere adaptación antes de usarla. SonarIA ha preparado una versión de letra modificada y una planificación pedagógica completa para que puedas trabajarla de forma segura con tus estudiantes.';
+                    }
+                    actionDiv.classList.remove('hidden');
                 }
 
                 // ── CTA adaptar — siempre visible tras analizar ───────────────
@@ -1243,6 +1270,12 @@
                     if (img) { img.src = logo; img.classList.remove('hidden'); }
                     if (lbl) lbl.classList.add('hidden');
                 }
+            },
+            _manualSuggest() {
+                const t = document.getElementById('in-titulo')?.value.trim() || '';
+                const a = document.getElementById('in-artista')?.value.trim() || '';
+                if (!t) { document.getElementById('in-titulo')?.focus(); return; }
+                this._showSongSuggestions(t, a);
             },
             _closeSuggestModal() {
                 document.getElementById('suggest-modal')?.classList.add('hidden');
