@@ -13,8 +13,17 @@
     <style>
         body { font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; background-color: #F3F4F6; color: #001739; }
         .f1-navy { background-color: #001739; }
-        .nav-btn { transition: all 0.2s; border-right: 4px solid transparent; }
-        .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255, 135, 0, 0.05); color: #FF8700; font-weight: 900; }
+        .nav-btn { transition: all 0.2s; border-right: 4px solid transparent; border-radius: 0.75rem; }
+        .nav-btn:hover:not(.active) { background: rgba(0,23,57,0.05); color: #001739; }
+        .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255,135,0,0.07); color: #FF8700; font-weight: 900; border-radius: 0.75rem; }
+        /* Footer de navegación entre secciones */
+        .sec-footer { flex-shrink:0; display:flex; justify-content:space-between; align-items:center; padding:.75rem 1.5rem; border-top:1px solid #f1f5f9; }
+        .sec-footer .f-prev { font-size:10px; font-weight:900; text-transform:uppercase; font-style:italic; letter-spacing:.1em; color:#cbd5e1; display:flex; align-items:center; gap:5px; transition:color .2s; }
+        .sec-footer .f-prev:hover { color:#001739; }
+        .sec-footer .f-next { font-size:10px; font-weight:900; text-transform:uppercase; font-style:italic; background:#001739; color:white; padding:10px 20px; border-radius:2rem; display:flex; align-items:center; gap:5px; transition:opacity .2s; }
+        .sec-footer .f-next:hover { opacity:.88; }
+        /* Reloj sidebar */
+        #sidebar-clock { font-variant-numeric:tabular-nums; }
         .section { display: none; height: 100%; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         .glass-card { background: white; border-radius: 3.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid #eef2f7; }
@@ -89,20 +98,31 @@
     <div class="flex flex-grow overflow-hidden">
         <nav class="desktop-nav w-72 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
             <!-- Encabezado fijo -->
-            <div class="p-10 pb-6 border-b shrink-0">
-                <div id="user-greeting" class="text-3xl font-black text-[#001739] italic leading-tight uppercase tracking-tighter">¡Hola!</div>
+            <div class="px-8 pt-8 pb-5 border-b shrink-0">
+                <div id="user-greeting" class="text-2xl font-black text-[#001739] italic leading-tight uppercase tracking-tighter">¡Hola!</div>
                 <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase mt-1 italic">--</div>
+                <!-- Reloj en vivo -->
+                <div class="mt-4 flex items-end gap-3">
+                    <span id="sidebar-clock" class="text-4xl font-black italic text-[#001739] tracking-tighter leading-none">--:--</span>
+                    <div class="pb-0.5">
+                        <div id="sidebar-date" class="text-[9px] text-slate-400 font-black uppercase italic tracking-widest leading-tight">...</div>
+                        <div id="sidebar-seconds" class="text-[9px] text-slate-200 font-black italic tabular-nums leading-none mt-0.5">:--</div>
+                    </div>
+                </div>
             </div>
             <!-- Botones de navegación con scroll -->
-            <div class="flex-grow overflow-y-auto scroll-v p-6 flex flex-col gap-2">
-                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i> Mis Cursos</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
-                <div class="h-px bg-slate-100 my-4 mx-4"></div>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <div class="h-px bg-slate-100 my-4 mx-4"></div>
-                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
+            <div class="flex-grow overflow-y-auto scroll-v px-4 py-5 flex flex-col gap-1">
+                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Configuración</p>
+                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4 shrink-0"></i> Mis Cursos</button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4 shrink-0"></i> Analizador</button>
+                <div class="h-px bg-slate-100 my-3 mx-2"></div>
+                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Resultados</p>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4 shrink-0"></i> Diagnóstico</button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="file-text" class="w-4 h-4 shrink-0"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4 shrink-0"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
+                <div class="h-px bg-slate-100 my-3 mx-2"></div>
+                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Actividad</p>
+                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4 shrink-0"></i> Historial</button>
             </div>
             <!-- Pie fijo -->
             <div class="shrink-0 p-6 border-t flex flex-col gap-2 text-center">
@@ -184,8 +204,10 @@
                     </div>
                 </div>
             </div>
-            <div id="sec-diag" class="section overflow-y-auto scroll-v h-full">
-                <div class="max-w-xl mx-auto pt-8 pb-24 px-2">
+            <div id="sec-diag" class="section h-full">
+              <div class="flex flex-col h-full">
+                <div class="flex-grow overflow-y-auto scroll-v">
+                <div class="max-w-xl mx-auto pt-8 pb-8 px-2">
 
                     <!-- Encabezado canción -->
                     <div class="mb-4 flex items-baseline gap-2 pl-1">
@@ -238,68 +260,78 @@
                                 </div>
                             </div>
 
-                            <!-- CTAs siempre visibles tras análisis -->
-                            <div id="diag-cta" class="hidden grid grid-cols-2 gap-3 pt-2">
-                                <button onclick="SonarIA.nav('sec-canvas')"
-                                        class="bg-orange-50 text-[#FF8700] border-2 border-orange-100 py-4 rounded-2xl font-black uppercase text-[10px] italic hover:bg-orange-100 transition-colors">
-                                    ✨ Letra Adaptada
-                                </button>
-                                <button onclick="SonarIA.nav('sec-plan')"
-                                        class="f1-navy text-white py-4 rounded-2xl font-black uppercase text-[10px] italic hover:opacity-90 transition-opacity">
-                                    Plan Pedagógico →
-                                </button>
-                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div id="sec-canvas" class="section h-full pb-20 relative">
-                <!-- Wrapper interno con flex — no poner flex directamente en .section o Tailwind rompe display:none -->
-                <div class="flex flex-col gap-4 h-full">
-                <!-- Navegación entre secciones -->
-                <div class="flex justify-between items-center shrink-0 px-1 pt-1">
-                    <button onclick="SonarIA.nav('sec-diag')" class="text-[10px] font-black uppercase text-slate-400 hover:text-[#001739] transition-colors flex items-center gap-1">
+                </div><!-- /max-w-xl -->
+                </div><!-- /scroll area -->
+                <!-- Footer de navegación — aparece tras el análisis -->
+                <div id="diag-footer" class="hidden sec-footer">
+                    <button onclick="SonarIA.nav('sec-analyze')" class="f-prev">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-                        Diagnóstico
+                        Analizador
                     </button>
-                    <button onclick="SonarIA.nav('sec-plan')" class="bg-[#001739] text-white text-[10px] font-black uppercase px-5 py-2 rounded-full hover:opacity-90 transition-opacity flex items-center gap-1">
-                        Plan Pedagógico
+                    <button onclick="SonarIA.nav('sec-canvas')" class="f-next">
+                        Letra
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
-                <div class="grid grid-cols-2 gap-8 flex-grow min-h-0">
+              </div><!-- /flex col -->
+            </div>
+            <div id="sec-canvas" class="section h-full">
+                <!-- Wrapper interno: NO poner flex directamente en .section (Tailwind CDN rompe display:none) -->
+                <div class="flex flex-col h-full">
+                <div class="grid grid-cols-2 gap-4 flex-grow min-h-0 px-4 pt-4">
                     <!-- Columna izquierda: letra original -->
-                    <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden min-h-0">
-                        <h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic shrink-0">Letra Original</h4>
-                        <div id="res-orig" class="flex-grow overflow-y-auto italic text-lg text-slate-400 whitespace-pre-wrap leading-relaxed scroll-v min-h-0"></div>
+                    <div class="bg-white rounded-[2.5rem] px-8 py-6 border flex flex-col overflow-hidden min-h-0">
+                        <h4 class="font-black uppercase mb-4 text-slate-300 text-[9px] text-center italic tracking-widest shrink-0">Original</h4>
+                        <div id="res-orig" class="flex-grow overflow-y-auto italic text-sm text-slate-400 whitespace-pre-wrap leading-loose scroll-v min-h-0"></div>
                     </div>
                     <!-- Columna derecha: adaptada + traducida (tabs) -->
-                    <div class="bg-white rounded-[3.5rem] shadow-2xl border-4 border-orange-50 flex flex-col overflow-hidden relative min-h-0">
+                    <div class="bg-white rounded-[2.5rem] shadow-xl border-2 border-orange-50 flex flex-col overflow-hidden relative min-h-0">
                         <!-- Tab bar -->
-                        <div class="flex border-b border-orange-50 shrink-0 px-8 pt-6">
-                            <button onclick="SonarIA.switchCanvasTab('adaptada')" id="tab-adaptada" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-[#FF8700] border-[#FF8700]">Adaptada</button>
-                            <button onclick="SonarIA.switchCanvasTab('traducida')" id="tab-traducida" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-slate-300 border-transparent" data-tip="Versión adaptada traducida al español">En Español</button>
+                        <div class="flex border-b border-orange-50 shrink-0 px-8 pt-5">
+                            <button onclick="SonarIA.switchCanvasTab('adaptada')" id="tab-adaptada" class="canvas-tab flex-1 pb-3 text-[10px] font-black uppercase italic border-b-2 transition-all text-[#FF8700] border-[#FF8700]">Adaptada</button>
+                            <button onclick="SonarIA.switchCanvasTab('traducida')" id="tab-traducida" class="canvas-tab flex-1 pb-3 text-[10px] font-black uppercase italic border-b-2 transition-all text-slate-300 border-transparent" data-tip="Versión adaptada traducida al español">En Español</button>
                         </div>
-                        <div class="px-12 py-8 flex-grow overflow-hidden flex flex-col relative min-h-0" id="canvas-wrapper">
-                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-xl w-full italic whitespace-pre-wrap min-h-0"></div>
-                            <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-lg w-full italic leading-relaxed whitespace-pre-wrap min-h-0"></div>
+                        <div class="px-8 py-6 flex-grow overflow-hidden flex flex-col relative min-h-0" id="canvas-wrapper">
+                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-base w-full italic whitespace-pre-wrap leading-loose min-h-0"></div>
+                            <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-sm w-full italic leading-loose whitespace-pre-wrap min-h-0"></div>
                             <div id="teaser-canvas" class="absolute inset-0 z-50 flex items-center justify-center hidden"><div class="inner-card-white"><i data-lucide="crown" class="w-12 h-12 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-xl font-black uppercase mb-2 text-[#001739] italic">Contenido Pro</h4><a href="planes.html" class="block w-full bg-[#FF8700] text-white py-4 mt-4 rounded-2xl font-black uppercase text-[10px] shadow-lg">Activar PRO</a></div></div>
                         </div>
                     </div>
                 </div>
+                <!-- Footer de navegación -->
+                <div class="sec-footer">
+                    <button onclick="SonarIA.nav('sec-diag')" class="f-prev">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                        Diagnóstico
+                    </button>
+                    <button onclick="SonarIA.nav('sec-plan')" class="f-next">
+                        Planificación
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
                 </div><!-- /flex wrapper -->
             </div>
-            <div id="sec-plan" class="section overflow-y-auto scroll-v h-full">
-                <div class="max-w-4xl mx-auto px-8 pt-8 pb-28">
-                    <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
-                    <div id="plan-content"></div>
-                    <div class="mt-10 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <button onclick="SonarIA.nav('sec-canvas')" class="text-xs font-black text-slate-300 uppercase hover:text-slate-500 transition-colors">← Letra</button>
-                        <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-10 py-5 rounded-[2rem] font-black uppercase shadow-2xl flex items-center gap-3 text-sm italic">
-                            <i data-lucide="file-text"></i> Exportar Informe PDF Pro
-                        </button>
+            <div id="sec-plan" class="section h-full">
+              <div class="flex flex-col h-full">
+                <div class="flex-grow overflow-y-auto scroll-v">
+                    <div class="max-w-4xl mx-auto px-8 pt-8 pb-8">
+                        <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
+                        <div id="plan-content"></div>
                     </div>
                 </div>
+                <div class="sec-footer">
+                    <button onclick="SonarIA.nav('sec-canvas')" class="f-prev">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                        Letra
+                    </button>
+                    <button onclick="SonarIA.handlePdf()" class="f-next bg-[#FF8700]">
+                        <i data-lucide="file-text" class="w-3 h-3"></i>
+                        Exportar PDF Pro
+                    </button>
+                </div>
+              </div>
             </div>
 
             <div id="sec-history" class="section pt-10 overflow-y-auto scroll-v h-full pb-20">
@@ -452,6 +484,7 @@
             },
             async init() {
                 this.renderCourses(); this.checkViewer(); this.updatePlanUI();
+                this._startClock();
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('payment') === 'success') { await this.syncPayment(params.get('order_id')); }
                 document.getElementById('user-greeting').innerText = "¡Hola, " + (this.state.user.name || "Docente").split(' ')[0] + "!";
@@ -787,7 +820,7 @@
                 }
 
                 // ── CTA adaptar — siempre visible tras analizar ───────────────
-                document.getElementById('diag-cta').classList.remove('hidden');
+                document.getElementById('diag-footer').classList.remove('hidden');
 
                 // ── Canvas: adaptada + traducida ──────────────────────────────
                 const adaptBox    = document.getElementById('res-adapt');
@@ -1093,6 +1126,24 @@
                     if (d.ok) await this.loadHistory();
                     else alert(d.error || 'No se pudo eliminar.');
                 } catch(e) { console.error('[deleteHistory]', e); }
+            },
+            _startClock() {
+                const DIAS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+                const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+                const tick = () => {
+                    const n  = new Date();
+                    const hh = String(n.getHours()).padStart(2,'0');
+                    const mm = String(n.getMinutes()).padStart(2,'0');
+                    const ss = String(n.getSeconds()).padStart(2,'0');
+                    const clk = document.getElementById('sidebar-clock');
+                    const dat = document.getElementById('sidebar-date');
+                    const sec = document.getElementById('sidebar-seconds');
+                    if (clk) clk.textContent = hh + ':' + mm;
+                    if (dat) dat.textContent = DIAS[n.getDay()] + ' ' + n.getDate() + ' ' + MESES[n.getMonth()];
+                    if (sec) sec.textContent = ':' + ss;
+                };
+                tick();
+                setInterval(tick, 1000);
             },
             logout() { localStorage.clear(); window.location.href = "login.html"; }
         };
