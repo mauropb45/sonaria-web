@@ -100,7 +100,7 @@
                 <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 italic" data-tip="Analiza una canción por letra o nombre"><i data-lucide="search" class="w-4 h-4"></i> Analizador</button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
                 <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Resultado del último análisis pedagógico"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Letra original vs versión adaptada para el aula (PRO)"><i data-lucide="shield-check" class="w-4 h-4"></i> Aula Segura <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Letra original, adaptada al aula y traducida (PRO)"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Actividades, preguntas y reflexiones alineadas al currículo (PRO)"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
                 <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400" data-tip="Tus últimos 30 análisis guardados"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
@@ -262,20 +262,20 @@
                 </div>
                 <div class="grid grid-cols-2 gap-8 flex-grow min-h-0">
                     <!-- Columna izquierda: letra original -->
-                    <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden">
-                        <h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic">Letra Original</h4>
-                        <div id="res-orig" class="flex-grow overflow-y-auto italic text-lg text-slate-400 whitespace-pre-wrap leading-relaxed scroll-v"></div>
+                    <div class="bg-white rounded-[3.5rem] p-12 border flex flex-col overflow-hidden min-h-0">
+                        <h4 class="font-black uppercase mb-6 text-slate-300 text-xs text-center italic shrink-0">Letra Original</h4>
+                        <div id="res-orig" class="flex-grow overflow-y-auto italic text-lg text-slate-400 whitespace-pre-wrap leading-relaxed scroll-v min-h-0"></div>
                     </div>
                     <!-- Columna derecha: adaptada + traducida (tabs) -->
-                    <div class="bg-white rounded-[3.5rem] shadow-2xl border-4 border-orange-50 flex flex-col overflow-hidden relative">
+                    <div class="bg-white rounded-[3.5rem] shadow-2xl border-4 border-orange-50 flex flex-col overflow-hidden relative min-h-0">
                         <!-- Tab bar -->
                         <div class="flex border-b border-orange-50 shrink-0 px-8 pt-6">
                             <button onclick="SonarIA.switchCanvasTab('adaptada')" id="tab-adaptada" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-[#FF8700] border-[#FF8700]">Adaptada</button>
                             <button onclick="SonarIA.switchCanvasTab('traducida')" id="tab-traducida" class="canvas-tab flex-1 pb-4 text-[10px] font-black uppercase italic border-b-2 transition-all text-slate-300 border-transparent" data-tip="Versión adaptada traducida al español">En Español</button>
                         </div>
-                        <div class="p-12 flex-grow overflow-hidden flex flex-col relative" id="canvas-wrapper">
-                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-xl w-full italic"></div>
-                            <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-lg w-full italic leading-relaxed"></div>
+                        <div class="px-12 py-8 flex-grow overflow-hidden flex flex-col relative min-h-0" id="canvas-wrapper">
+                            <div id="res-adapt" class="flex-grow overflow-y-auto font-bold text-[#001739] scroll-v text-xl w-full italic whitespace-pre-wrap min-h-0"></div>
+                            <div id="res-traducida" class="hidden flex-grow overflow-y-auto text-[#001739] scroll-v text-lg w-full italic leading-relaxed whitespace-pre-wrap min-h-0"></div>
                             <div id="teaser-canvas" class="absolute inset-0 z-50 flex items-center justify-center hidden"><div class="inner-card-white"><i data-lucide="crown" class="w-12 h-12 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-xl font-black uppercase mb-2 text-[#001739] italic">Contenido Pro</h4><a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 mt-4 rounded-2xl font-black uppercase text-[10px] shadow-lg">Activar PRO</a></div></div>
                         </div>
                     </div>
@@ -798,49 +798,97 @@
                 const actividades = p.actividades || [];
                 const preguntas   = p.preguntas   || [];
                 const reflexion   = p.reflexion   || '';
+                const arreglo     = p.arreglo     || {};
                 document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
+
+                // Instrumentos con etiquetas amigables
+                const INST = [
+                    { key: 'voces',      label: 'Voces',       icon: 'mic-2' },
+                    { key: 'guitarra',   label: 'Guitarra',    icon: 'music' },
+                    { key: 'bajo',       label: 'Bajo',        icon: 'music' },
+                    { key: 'bateria',    label: 'Batería',     icon: 'music-2' },
+                    { key: 'percusion',  label: 'Percusión',   icon: 'music-2' },
+                    { key: 'teclado',    label: 'Teclado',     icon: 'piano' },
+                    { key: 'metalofono', label: 'Metalófono',  icon: 'music-4' },
+                    { key: 'melodica',   label: 'Melódica',    icon: 'music-4' },
+                ];
+                const arregloRows = INST.filter(i => arreglo[i.key])
+                    .map(i => `<div class="flex flex-col gap-0.5 bg-white/5 rounded-xl p-3">
+                        <span class="text-orange-400 text-[9px] font-black uppercase tracking-widest">${i.label}</span>
+                        <p class="text-white text-[12px] italic leading-snug">${arreglo[i.key]}</p>
+                    </div>`).join('');
 
                 if (isPro) {
                     document.getElementById('plan-content').innerHTML = `
-                        <div class="grid grid-cols-2 gap-8">
-                            <div class="bg-white p-10 rounded-[3.5rem] border shadow-xl flex flex-col border-slate-50">
-                                <h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Match Curricular (OA)</h4>
-                                <p class="text-xl font-black text-[#001739] mb-3 italic leading-tight tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
-                                <p class="text-[13px] text-slate-400 italic leading-relaxed">${fullOA}</p>
-                                <div class="mt-6 border-t pt-5">
-                                    <h4 class="text-orange-500 font-black uppercase text-[10px] mb-3 italic tracking-widest">Actividades Sugeridas</h4>
-                                    ${actividades.filter(a => a && a !== 'Disponible en plan Pro.').length
-                                        ? actividades.filter(a => a).map(a => `<p class="text-[13px] text-[#001739] font-medium mb-2 italic">• ${a}</p>`).join('')
-                                        : `<p class="text-[12px] text-slate-300 italic">Analiza una canción para obtener actividades específicas para ${courseLabel(p.curso)}.</p>`}
-                                </div>
+                        <div class="flex flex-col gap-5 pb-4">
+                            <!-- OA Match -->
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-7 flex flex-col gap-1">
+                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest italic">Match Curricular</span>
+                                <p class="text-lg font-black text-[#001739] italic leading-tight">OA Música ${courseLabel(p.curso)}</p>
+                                <p class="text-[12px] text-slate-400 italic leading-relaxed mt-1">${fullOA}</p>
                             </div>
-                            <div class="bg-[#001739] rounded-[3.5rem] p-10 flex flex-col">
-                                <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Preguntas de Análisis</h4>
+                            <!-- Actividades -->
+                            <div class="bg-orange-50 border border-orange-100 rounded-3xl p-7">
+                                <h4 class="text-orange-500 font-black uppercase text-[9px] tracking-widest italic mb-3">Actividades Sugeridas</h4>
+                                ${actividades.filter(a => a && !a.includes('Pro')).length
+                                    ? actividades.filter(a => a && !a.includes('Pro')).map((a,i) => `
+                                        <div class="flex gap-3 mb-3 last:mb-0">
+                                            <span class="f1-navy text-white text-[9px] font-black rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">${i+1}</span>
+                                            <p class="text-[13px] text-[#001739] italic leading-relaxed">${a}</p>
+                                        </div>`).join('')
+                                    : `<p class="text-[12px] text-orange-300 italic">Las actividades se generan con el análisis Pro IA.</p>`}
+                            </div>
+                            <!-- Arreglo banda escolar -->
+                            ${arregloRows ? `
+                            <div class="bg-[#001739] rounded-3xl p-7">
+                                <h4 class="text-orange-400 font-black uppercase text-[9px] tracking-widest italic mb-4">Arreglo Banda Escolar</h4>
+                                <div class="grid grid-cols-2 gap-2">${arregloRows}</div>
+                            </div>` : `
+                            <div class="bg-[#001739] rounded-3xl p-7 flex flex-col items-center gap-2 opacity-40">
+                                <h4 class="text-orange-400 font-black uppercase text-[9px] tracking-widest italic">Arreglo Banda Escolar</h4>
+                                <p class="text-white/50 text-[11px] italic">Disponible tras el próximo análisis</p>
+                            </div>`}
+                            <!-- Preguntas -->
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-7">
+                                <h4 class="text-[#001739] font-black uppercase text-[9px] tracking-widest italic mb-3">Preguntas de Análisis</h4>
                                 ${preguntas.length
-                                    ? preguntas.map(q => `<p class="text-[13px] text-white font-medium mb-3 italic leading-relaxed">→ ${q}</p>`).join('')
-                                    : `<p class="text-[12px] text-white/40 italic">Las preguntas de análisis se generan con el análisis Pro IA.</p>`}
-                                <div class="mt-6 border-t border-white/10 pt-5">
-                                    <h4 class="text-orange-400 font-black uppercase text-[10px] mb-3 italic tracking-widest">Reflexión Final</h4>
-                                    ${reflexion
-                                        ? `<p class="text-[13px] text-white/90 italic leading-relaxed">${reflexion}</p>`
-                                        : `<p class="text-[12px] text-white/40 italic">La reflexión de cierre se genera con el análisis Pro IA.</p>`}
-                                </div>
+                                    ? preguntas.map(q => `<p class="text-[13px] text-slate-500 font-medium mb-2 italic leading-relaxed">→ ${q}</p>`).join('')
+                                    : `<p class="text-[12px] text-slate-300 italic">Las preguntas se generan con el análisis Pro IA.</p>`}
                             </div>
+                            <!-- Reflexión -->
+                            ${reflexion ? `
+                            <div class="bg-slate-50 border border-slate-100 rounded-3xl p-7">
+                                <h4 class="text-slate-400 font-black uppercase text-[9px] tracking-widest italic mb-2">Reflexión de Cierre</h4>
+                                <p class="text-[13px] text-[#001739] italic leading-relaxed">${reflexion}</p>
+                            </div>` : ''}
                         </div>`;
                 } else {
                     document.getElementById('plan-content').innerHTML = `
-                        <div class="grid grid-cols-2 gap-10 h-[450px] items-center">
-                            <div class="bg-white p-12 rounded-[3.5rem] border shadow-xl flex flex-col justify-center h-full border-slate-50">
-                                <h4 class="text-orange-500 font-black uppercase text-[10px] mb-4 italic tracking-widest">Match Curricular (OA)</h4>
-                                <p class="text-2xl font-black text-[#001739] mb-4 italic leading-tight tracking-tighter">OA Música ${courseLabel(p.curso)}</p>
-                                <p class="text-[14px] text-slate-400 italic">${fullOA}</p>
+                        <div class="flex flex-col gap-5 pb-4">
+                            <!-- OA visible en Free -->
+                            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-7 flex flex-col gap-1">
+                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest italic">Match Curricular</span>
+                                <p class="text-lg font-black text-[#001739] italic leading-tight">OA Música ${courseLabel(p.curso)}</p>
+                                <p class="text-[12px] text-slate-400 italic leading-relaxed mt-1">${fullOA}</p>
                             </div>
-                            <div class="pro-unlock-container bg-[#001739] flex items-center justify-center h-full">
-                                <div class="p-12 h-full flex flex-col justify-center items-center w-full blur-pro">
-                                    <h4 class="text-orange-400 font-black uppercase text-[10px] mb-4 italic tracking-widest">Actividades · Preguntas · Reflexión</h4>
-                                    <p class="text-xl text-white italic font-light text-center">Diseño pedagógico completo con IA...</p>
+                            <!-- Pro wall -->
+                            <div class="pro-unlock-container bg-[#001739] rounded-3xl relative overflow-hidden" style="min-height:280px;">
+                                <div class="p-10 flex flex-col gap-3 blur-pro pointer-events-none">
+                                    <div class="h-3 bg-orange-400/30 rounded-full w-3/4"></div>
+                                    <div class="h-3 bg-white/10 rounded-full w-full"></div>
+                                    <div class="h-3 bg-white/10 rounded-full w-5/6"></div>
+                                    <div class="mt-4 h-3 bg-orange-400/20 rounded-full w-2/3"></div>
+                                    <div class="h-3 bg-white/10 rounded-full w-full"></div>
+                                    <div class="h-3 bg-white/10 rounded-full w-4/5"></div>
                                 </div>
-                                <div class="pro-floating-card"><div class="inner-card-white"><i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce"></i><h4 class="text-lg font-black uppercase mb-2 text-[#001739] leading-none italic">Planificación Pro</h4><p class="text-[10px] text-slate-400 italic mb-3">Actividades, preguntas y reflexiones generadas por IA</p><a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] mt-2 shadow-lg">Activar PRO</a></div></div>
+                                <div class="pro-floating-card">
+                                    <div class="inner-card-white">
+                                        <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-4 animate-bounce"></i>
+                                        <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Planificación Pro</h4>
+                                        <p class="text-[10px] text-slate-400 italic mb-3">Actividades, arreglo de banda y preguntas generadas por IA</p>
+                                        <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] mt-2 shadow-lg text-center">Activar PRO</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>`;
                 }
