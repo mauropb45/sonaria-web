@@ -126,7 +126,7 @@
             </div>
             <!-- Pie fijo -->
             <div class="shrink-0 p-6 border-t flex flex-col gap-2 text-center">
-                <a href="planes-test.html" class="block w-full py-4 bg-[#FF8700] text-white rounded-2xl font-black uppercase text-[10px] shadow-xl italic">👑 Ser PRO ahora</a>
+                <a href="planes.html" class="block w-full py-4 bg-[#FF8700] text-white rounded-2xl font-black uppercase text-[10px] shadow-xl italic">👑 Ser PRO ahora</a>
                 <button id="btn-test-pro" onclick="SonarIA.activarProTest()" class="hidden w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black uppercase text-[9px] italic hover:border-[#FF8700] hover:text-[#FF8700] transition-all">🧪 Activar PRO de prueba (24h)</button>
             </div>
         </nav>
@@ -520,7 +520,7 @@
                 } catch (_) { this.state.user.plan = 'pro'; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
             },
             async handlePdf() {
-                if (this.state.user.plan !== 'pro') { window.location.href = 'planes-test.html'; return; }
+                if (this.state.user.plan !== 'pro') { window.location.href = 'planes.html'; return; }
                 if (!this.state.lastData) {
                     this.showAnalyzeError('Primero analiza una canción para exportar el informe.');
                     this.nav('sec-analyze');
@@ -914,6 +914,9 @@
                 const titulo = this.state.lastData?._titulo || 'esta canción';
                 const temas  = this.state.lastData?.temas  || [];
                 const fullOA = p.oa || OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
+                const _oaColon = fullOA.indexOf(':');
+                const oaCode   = _oaColon > -1 ? fullOA.substring(0, _oaColon).trim() : '';
+                const oaDesc   = _oaColon > -1 ? fullOA.substring(_oaColon + 1).trim() : fullOA;
                 const activ  = (p.actividades || []).filter(a => a && !a.includes('Pro'));
                 const reflex = p.reflexion || '';
 
@@ -930,9 +933,10 @@
                     document.getElementById('plan-content').innerHTML = `
                         <div class="flex flex-col gap-4">
                             <!-- OA -->
-                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
-                                <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
+                            <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
+                                <span class="text-orange-400 font-black uppercase text-[9px] tracking-widest block mb-3">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
+                                ${oaCode ? `<p class="text-xl font-black text-[#FF8700] italic leading-none mb-2">${oaCode}</p>` : ''}
+                                <p class="text-base text-slate-700 italic leading-relaxed">${oaDesc}</p>
                             </div>
                             <!-- Actividades -->
                             <div class="bg-orange-50 border border-orange-100 rounded-2xl p-6">
@@ -964,9 +968,10 @@
                 } else {
                     document.getElementById('plan-content').innerHTML = `
                         <div class="flex flex-col gap-4">
-                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
-                                <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
+                            <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
+                                <span class="text-orange-400 font-black uppercase text-[9px] tracking-widest block mb-3">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
+                                ${oaCode ? `<p class="text-xl font-black text-[#FF8700] italic leading-none mb-2">${oaCode}</p>` : ''}
+                                <p class="text-base text-slate-700 italic leading-relaxed">${oaDesc}</p>
                             </div>
                             <!-- Preguntas siempre disponibles -->
                             <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
@@ -991,7 +996,7 @@
                                         <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-3 animate-bounce"></i>
                                         <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Planificación Pro</h4>
                                         <p class="text-[10px] text-slate-400 italic mb-4">Actividades + preguntas IA + arreglo de banda</p>
-                                        <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
+                                        <a href="planes.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
                                     </div>
                                 </div>
                             </div>
@@ -1145,7 +1150,7 @@
                 tick();
                 setInterval(tick, 1000);
             },
-            logout() { localStorage.clear(); window.location.href = "login-test.html"; }
+            logout() { localStorage.clear(); window.location.href = "login.html"; }
         };
         SonarIA.init();
     </script>
