@@ -102,7 +102,8 @@
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
                 <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Resultado del último análisis pedagógico"><i data-lucide="activity" class="w-4 h-4"></i> Diagnóstico</button>
                 <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Letra original, adaptada al aula y traducida (PRO)"><i data-lucide="file-text" class="w-4 h-4"></i> Letra <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Planificación pedagógica con arreglo de banda (PRO)"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="OA · Actividades · Preguntas · Reflexión (PRO)"><i data-lucide="book-open" class="w-4 h-4"></i> Planificación <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
+                <button onclick="SonarIA.nav('sec-instrumental')" id="nav-sec-instrumental" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip="Guía de ejecución por instrumento para banda escolar (PRO)"><i data-lucide="music-2" class="w-4 h-4"></i> Banda Escolar <i data-lucide="crown" class="w-3 h-3 text-[#FF8700]"></i></button>
                 <div class="h-px bg-slate-100 my-4 mx-4"></div>
                 <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn p-4 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400" data-tip="Tus últimos 30 análisis guardados"><i data-lucide="clock" class="w-4 h-4"></i> Historial</button>
             </div>
@@ -288,19 +289,31 @@
             </div>
             <div id="sec-plan" class="section overflow-y-auto scroll-v h-full">
                 <div class="max-w-4xl mx-auto px-8 pt-8 pb-28">
-                    <!-- Tabs de cursos -->
                     <div id="plan-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
-                    <!-- Contenido: se llena con showPlan() -->
                     <div id="plan-content"></div>
-                    <!-- Footer nav -->
                     <div class="mt-10 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
                         <button onclick="SonarIA.nav('sec-canvas')" class="text-xs font-black text-slate-300 uppercase hover:text-slate-500 transition-colors">← Letra</button>
+                        <button onclick="SonarIA.nav('sec-instrumental')" class="bg-[#001739] text-white px-8 py-4 rounded-[2rem] font-black uppercase flex items-center gap-2 text-xs italic hover:opacity-90 transition-opacity">
+                            <i data-lucide="music-2" class="w-4 h-4"></i> Ejecución Instrumental →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Sección Ejecución Instrumental ── -->
+            <div id="sec-instrumental" class="section overflow-y-auto scroll-v h-full">
+                <div class="max-w-4xl mx-auto px-8 pt-8 pb-28">
+                    <div id="inst-tabs" class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2"></div>
+                    <div id="inst-content"></div>
+                    <div class="mt-10 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <button onclick="SonarIA.nav('sec-plan')" class="text-xs font-black text-slate-300 uppercase hover:text-slate-500 transition-colors">← Planificación</button>
                         <button onclick="SonarIA.handlePdf()" class="bg-[#FF8700] text-white px-10 py-5 rounded-[2rem] font-black uppercase shadow-2xl flex items-center gap-3 text-sm italic">
                             <i data-lucide="file-text"></i> Exportar Informe PDF Pro
                         </button>
                     </div>
                 </div>
             </div>
+
             <div id="sec-history" class="section pt-10 overflow-y-auto scroll-v h-full pb-20">
                 <div class="max-w-3xl mx-auto">
                     <h2 class="text-6xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739] mb-10">Historial</h2>
@@ -657,7 +670,7 @@
             },
             showResults(data) {
                 const isPro = this.state.user.plan === 'pro';
-                ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
+                ['nav-sec-diag', 'nav-sec-canvas', 'nav-sec-plan', 'nav-sec-instrumental'].forEach(id => { const b = document.getElementById(id); if(b) b.classList.remove('opacity-40'); });
 
                 // ── Encabezado: canción analizada ─────────────────────────────
                 document.getElementById('res-cancion-titulo').innerText = data._titulo || data.titulo || '—';
@@ -751,6 +764,7 @@
                 this.switchCanvasTab('adaptada');
 
                 this.renderPlan(data.pedagogia);
+                this.renderInstrumental(data.pedagogia);
                 this.nav('sec-diag');
             },
             switchCanvasTab(tab) {
@@ -803,128 +817,188 @@
             },
             showPlan(idx) {
                 if (!this.state.lastData?.pedagogia?.por_curso?.[idx]) return;
-                const p = this.state.lastData.pedagogia.por_curso[idx];
-                const isPro = this.state.user.plan === 'pro';
-                const fullOA  = p.oa || OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
-                const activ   = (p.actividades || []).filter(a => a && !a.includes('Pro'));
-                const pregs   = p.preguntas || [];
-                const reflex  = p.reflexion || '';
-                const arreglo = p.arreglo   || {};
-                document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
+                const p      = this.state.lastData.pedagogia.por_curso[idx];
+                const isPro  = this.state.user.plan === 'pro';
+                const titulo = this.state.lastData?._titulo || 'esta canción';
+                const temas  = this.state.lastData?.temas  || [];
+                const fullOA = p.oa || OAs_FULL[p.curso] || "Objetivo de Aprendizaje Ministerial Chile";
+                const activ  = (p.actividades || []).filter(a => a && !a.includes('Pro'));
+                const reflex = p.reflexion || '';
 
-                const INST = [
-                    { key:'voces',      label:'Voces'      },
-                    { key:'guitarra',   label:'Guitarra'   },
-                    { key:'bajo',       label:'Bajo'       },
-                    { key:'bateria',    label:'Batería'    },
-                    { key:'percusion',  label:'Percusión'  },
-                    { key:'teclado',    label:'Teclado'    },
-                    { key:'metalofono', label:'Metalófono' },
-                    { key:'melodica',   label:'Melódica'   },
+                // Preguntas: usa las de la IA o genera fallback contextual
+                const rawPregs = p.preguntas || [];
+                const fallbackQ = [
+                    `¿Qué mensaje central transmite "${titulo}" y cómo se relaciona con experiencias propias?`,
+                    temas.length
+                        ? `Esta canción trabaja el tema "${temas[0]}" — ¿de qué manera ese tema puede influir en las personas de tu edad?`
+                        : `¿Qué emociones provoca esta canción y por qué crees que produce ese efecto?`,
+                    `¿En qué contexto histórico, social o personal crees que fue escrita esta canción? ¿Qué referencias encuentras en la letra?`,
                 ];
-                const instRows = INST.filter(i => arreglo[i.key])
-                    .map(i => `
-                        <div class="py-3 border-b border-white/10 last:border-0 flex gap-4">
-                            <span class="text-orange-400 font-black uppercase text-[10px] tracking-widest w-24 shrink-0 pt-0.5">${i.label}</span>
-                            <p class="text-white text-[13px] italic leading-relaxed">${arreglo[i.key]}</p>
-                        </div>`).join('');
+                const pregs = rawPregs.length ? rawPregs : fallbackQ;
+
+                document.querySelectorAll('.course-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
 
                 if (isPro) {
                     document.getElementById('plan-content').innerHTML = `
-                        <div class="flex flex-col gap-6">
-
-                            <!-- ── BLOQUE 1: CONTEXTO PEDAGÓGICO ── -->
-                            <div>
-                                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 pl-1">Contexto Pedagógico</p>
-
-                                <!-- OA -->
-                                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-4">
-                                    <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
-                                    <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
-                                </div>
-
-                                <!-- Actividades -->
-                                <div class="bg-orange-50 border border-orange-100 rounded-2xl p-6 mb-4">
-                                    <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-3">Actividades para el Aula</span>
-                                    ${activ.length
-                                        ? activ.map((a,i) => `
-                                            <div class="flex gap-3 mb-3 last:mb-0">
-                                                <span class="f1-navy text-white text-[9px] font-black rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">${i+1}</span>
-                                                <p class="text-[13px] text-[#001739] italic leading-relaxed">${a}</p>
-                                            </div>`).join('')
-                                        : `<p class="text-[12px] text-orange-300 italic">Realiza un nuevo análisis para obtener actividades específicas.</p>`}
-                                </div>
-
-                                <!-- Preguntas clave -->
-                                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-4">
-                                    <span class="text-[#001739] font-black uppercase text-[9px] tracking-widest block mb-3">Preguntas Clave para los Estudiantes</span>
-                                    ${pregs.length
-                                        ? pregs.map((q,i) => `
-                                            <div class="flex gap-3 mb-3 last:mb-0">
-                                                <span class="text-orange-400 font-black text-sm shrink-0">→</span>
-                                                <p class="text-[13px] text-slate-600 italic leading-relaxed">${q}</p>
-                                            </div>`).join('')
-                                        : `<p class="text-[12px] text-slate-300 italic">Las preguntas se generan con el análisis Pro IA.</p>`}
-                                </div>
-
-                                <!-- Reflexión -->
-                                ${reflex ? `
-                                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
-                                    <span class="text-slate-400 font-black uppercase text-[9px] tracking-widest block mb-2">Reflexión de Cierre</span>
-                                    <p class="text-[13px] text-[#001739] italic leading-relaxed">${reflex}</p>
-                                </div>` : ''}
+                        <div class="flex flex-col gap-4">
+                            <!-- OA -->
+                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
+                                <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
                             </div>
-
-                            <!-- ── BLOQUE 2: EJECUCIÓN INSTRUMENTAL ── -->
-                            <div>
-                                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 pl-1">Ejecución Instrumental</p>
-                                ${instRows ? `
-                                <div class="bg-[#001739] rounded-2xl p-6">
-                                    <span class="text-orange-400 font-black uppercase text-[9px] tracking-widest block mb-1">Guía por Instrumento — Banda Escolar de Rock</span>
-                                    <p class="text-white/40 text-[10px] italic mb-5">Percusiones · Voces · Teclados · Metalófonos · Melódicas · Guitarra · Bajo · Batería</p>
-                                    <div>${instRows}</div>
-                                </div>` : `
-                                <div class="bg-[#001739] rounded-2xl p-6 text-center opacity-50">
-                                    <span class="text-orange-400 font-black uppercase text-[9px] tracking-widest block mb-2">Guía por Instrumento</span>
-                                    <p class="text-white/50 text-[11px] italic">Disponible en el próximo análisis con la nueva versión del motor</p>
-                                </div>`}
+                            <!-- Actividades -->
+                            <div class="bg-orange-50 border border-orange-100 rounded-2xl p-6">
+                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-3">Actividades para el Aula</span>
+                                ${activ.length
+                                    ? activ.map((a,i) => `
+                                        <div class="flex gap-3 mb-3 last:mb-0">
+                                            <span class="f1-navy text-white text-[9px] font-black rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">${i+1}</span>
+                                            <p class="text-[13px] text-[#001739] italic leading-relaxed">${a}</p>
+                                        </div>`).join('')
+                                    : `<p class="text-[12px] text-orange-300 italic">Realiza un nuevo análisis para obtener actividades específicas para este nivel.</p>`}
                             </div>
-
+                            <!-- Preguntas clave -->
+                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                                <span class="text-[#001739] font-black uppercase text-[9px] tracking-widest block mb-3">Preguntas Clave para los Estudiantes</span>
+                                ${pregs.map(q => `
+                                    <div class="flex gap-3 mb-3 last:mb-0">
+                                        <span class="text-orange-400 font-black text-sm shrink-0 mt-0.5">→</span>
+                                        <p class="text-[13px] text-slate-600 italic leading-relaxed">${q}</p>
+                                    </div>`).join('')}
+                            </div>
+                            <!-- Reflexión -->
+                            ${reflex ? `
+                            <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
+                                <span class="text-slate-400 font-black uppercase text-[9px] tracking-widest block mb-2">Reflexión de Cierre</span>
+                                <p class="text-[13px] text-[#001739] italic leading-relaxed">${reflex}</p>
+                            </div>` : ''}
                         </div>`;
                 } else {
                     document.getElementById('plan-content').innerHTML = `
-                        <div class="flex flex-col gap-6">
-                            <!-- OA visible en Free -->
-                            <div>
-                                <p class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 pl-1">Contexto Pedagógico</p>
-                                <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                                    <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
-                                    <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
-                                </div>
+                        <div class="flex flex-col gap-4">
+                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                                <span class="text-orange-500 font-black uppercase text-[9px] tracking-widest block mb-1">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
+                                <p class="text-[13px] text-slate-600 italic leading-relaxed">${fullOA}</p>
                             </div>
-                            <!-- Pro wall -->
-                            <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:260px;">
+                            <!-- Preguntas siempre disponibles -->
+                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+                                <span class="text-[#001739] font-black uppercase text-[9px] tracking-widest block mb-3">Preguntas para Trabajar con los Estudiantes</span>
+                                ${fallbackQ.map(q => `
+                                    <div class="flex gap-3 mb-3 last:mb-0">
+                                        <span class="text-orange-400 font-black text-sm shrink-0 mt-0.5">→</span>
+                                        <p class="text-[13px] text-slate-600 italic leading-relaxed">${q}</p>
+                                    </div>`).join('')}
+                            </div>
+                            <!-- Pro wall: actividades + reflexión -->
+                            <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:220px;">
                                 <div class="p-8 flex flex-col gap-3 blur-pro pointer-events-none select-none">
                                     <div class="h-3 bg-orange-400/30 rounded-full w-3/4"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-full"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-5/6"></div>
                                     <div class="mt-3 h-3 bg-orange-400/20 rounded-full w-2/3"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-full"></div>
-                                    <div class="h-3 bg-white/10 rounded-full w-4/5"></div>
-                                    <div class="mt-3 h-3 bg-white/10 rounded-full w-3/4"></div>
-                                    <div class="h-3 bg-white/10 rounded-full w-full"></div>
                                 </div>
                                 <div class="pro-floating-card">
                                     <div class="inner-card-white">
                                         <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-3 animate-bounce"></i>
                                         <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Planificación Pro</h4>
-                                        <p class="text-[10px] text-slate-400 italic mb-4">Actividades · Preguntas · Arreglo de banda escolar generados por IA</p>
+                                        <p class="text-[10px] text-slate-400 italic mb-4">Actividades + preguntas IA + arreglo de banda</p>
                                         <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
                                     </div>
                                 </div>
                             </div>
                         </div>`;
                 }
+                lucide.createIcons();
+            },
+            renderInstrumental(ped) {
+                if (!ped) return;
+                const tabs    = document.getElementById('inst-tabs');
+                const content = document.getElementById('inst-content');
+                if (!tabs || !content) return;
+                if (!ped.por_curso || ped.por_curso.length === 0) {
+                    tabs.innerHTML = '';
+                    content.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-12">No hay datos de ejecución instrumental para esta canción.</div>';
+                    return;
+                }
+                tabs.innerHTML = ped.por_curso.map((p, i) =>
+                    `<button onclick="SonarIA.showInstrumental(${i})" class="inst-tab course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0?'active':''} transition-all shadow-sm italic">${courseLabel(p.curso)}</button>`
+                ).join('');
+                this.showInstrumental(0);
+            },
+            showInstrumental(idx) {
+                if (!this.state.lastData?.pedagogia?.por_curso?.[idx]) return;
+                const p      = this.state.lastData.pedagogia.por_curso[idx];
+                const isPro  = this.state.user.plan === 'pro';
+                const arreglo = p.arreglo || {};
+                document.querySelectorAll('.inst-tab').forEach((t, i) => t.classList.toggle('active', i===idx));
+
+                const INST = [
+                    { key:'voces',      label:'Voces',       desc:'Línea melódica y armonías vocales' },
+                    { key:'guitarra',   label:'Guitarra',    desc:'Acordes y riffs principales' },
+                    { key:'bajo',       label:'Bajo',        desc:'Línea de bajo y apoyo rítmico' },
+                    { key:'bateria',    label:'Batería',     desc:'Patrón rítmico y fills' },
+                    { key:'percusion',  label:'Percusión',   desc:'Percusión auxiliar y acentos' },
+                    { key:'teclado',    label:'Teclado',     desc:'Acordes, pads y contracantos' },
+                    { key:'metalofono', label:'Metalófono',  desc:'Melodía en xilófono / metalófono' },
+                    { key:'melodica',   label:'Melódica',    desc:'Línea melódica con melódica/armónica' },
+                ];
+
+                const hasArreglo = INST.some(i => arreglo[i.key]);
+
+                if (!isPro) {
+                    document.getElementById('inst-content').innerHTML = `
+                        <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:280px;">
+                            <div class="p-10 flex flex-col gap-3 blur-pro pointer-events-none select-none">
+                                ${INST.slice(0,5).map(i => `
+                                    <div class="flex gap-4 py-2 border-b border-white/10">
+                                        <div class="w-24 h-3 bg-orange-400/30 rounded-full"></div>
+                                        <div class="flex-1 h-3 bg-white/10 rounded-full"></div>
+                                    </div>`).join('')}
+                            </div>
+                            <div class="pro-floating-card">
+                                <div class="inner-card-white">
+                                    <i data-lucide="music-2" class="w-10 h-10 text-[#FF8700] mx-auto mb-3 animate-bounce"></i>
+                                    <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Banda Escolar Pro</h4>
+                                    <p class="text-[10px] text-slate-400 italic mb-4">Guía de ejecución por instrumento generada por IA</p>
+                                    <a href="planes-test.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
+                                </div>
+                            </div>
+                        </div>`;
+                    lucide.createIcons(); return;
+                }
+
+                if (!hasArreglo) {
+                    document.getElementById('inst-content').innerHTML = `
+                        <div class="bg-[#001739] rounded-2xl p-8 text-center">
+                            <i data-lucide="music-2" class="w-10 h-10 text-orange-400/50 mx-auto mb-3"></i>
+                            <p class="text-white/50 italic text-sm">Analiza esta canción de nuevo para obtener el arreglo de banda.<br>El motor ya fue actualizado para generar guías instrumentales.</p>
+                        </div>`;
+                    lucide.createIcons(); return;
+                }
+
+                const rows = INST.filter(i => arreglo[i.key]).map(i => `
+                    <div class="py-4 border-b border-slate-100 last:border-0">
+                        <div class="flex items-start gap-4">
+                            <div class="w-28 shrink-0">
+                                <span class="text-[#001739] font-black uppercase text-[10px] tracking-widest">${i.label}</span>
+                                <p class="text-[9px] text-slate-400 italic mt-0.5">${i.desc}</p>
+                            </div>
+                            <p class="text-[13px] text-slate-600 italic leading-relaxed flex-1">${arreglo[i.key]}</p>
+                        </div>
+                    </div>`).join('');
+
+                document.getElementById('inst-content').innerHTML = `
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                            <div>
+                                <span class="text-[#001739] font-black uppercase text-[10px] tracking-widest">Banda Escolar de Rock</span>
+                                <p class="text-[9px] text-slate-400 italic mt-0.5">Percusiones · Voces · Teclados · Metalófonos · Melódicas · Guitarra · Bajo · Batería</p>
+                            </div>
+                            <span class="text-[9px] font-black uppercase text-orange-500 bg-orange-50 border border-orange-100 px-3 py-1 rounded-full">${courseLabel(p.curso)}</span>
+                        </div>
+                        <div class="px-6 py-2">${rows}</div>
+                    </div>`;
                 lucide.createIcons();
             },
             async activarProTest() {
@@ -976,7 +1050,14 @@
                         return;
                     }
                     const COLORS = { 'APTA': 'text-emerald-600 bg-emerald-50 border-emerald-100', 'USO MEDIADO': 'text-amber-600 bg-amber-50 border-amber-100', 'NO APTA': 'text-red-600 bg-red-50 border-red-100' };
-                    list.innerHTML = d.items.map(item => {
+                    // Deduplicar: conservar solo el análisis más reciente por canción+artista
+                    const seen = new Set();
+                    const unique = d.items.filter(item => {
+                        const key = (item.titulo || '').toLowerCase().trim() + '||' + (item.artista || '').toLowerCase().trim();
+                        if (seen.has(key)) return false;
+                        seen.add(key); return true;
+                    });
+                    list.innerHTML = unique.map(item => {
                         const colorClass = COLORS[item.resultado] || 'text-slate-600 bg-slate-50 border-slate-100';
                         const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-CL', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
                         const temas = (item.temas || []).map(t => `<span class="bg-orange-50 text-orange-500 border border-orange-100 px-3 py-1 rounded-full text-[9px] font-black uppercase italic">${t}</span>`).join('');
@@ -995,6 +1076,9 @@
                             </div>
                         </div>`;
                     }).join('');
+                    if (unique.length < d.items.length) {
+                        list.insertAdjacentHTML('beforeend', `<p class="text-[9px] text-slate-300 italic text-center mt-2">${d.items.length - unique.length} análisis duplicados ocultados</p>`);
+                    }
                 } catch(e) {
                     list.innerHTML = '<div class="text-red-400 italic text-sm text-center py-20">Error al cargar el historial. Intenta más tarde.</div>';
                 }
