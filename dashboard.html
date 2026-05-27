@@ -564,10 +564,11 @@
         }
 
         window.SonarIA = {
-            state: { 
-                cursos: JSON.parse(localStorage.getItem('my_courses') || '[]'), 
-                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "name":"Mauricio Pinto"}'), 
-                lastData: null
+            state: {
+                cursos: JSON.parse(localStorage.getItem('my_courses') || '[]'),
+                user: JSON.parse(localStorage.getItem('sonaria_user') || '{"plan":"free", "name":"Mauricio Pinto"}'),
+                lastData: null,
+                currentPlanIdx: 0
             },
             async init() {
                 this.renderCourses(); this.checkViewer(); this.updatePlanUI();
@@ -624,8 +625,12 @@
                 if (btn) btn.innerHTML = '<span class="animate-pulse">Generando PDF…</span>';
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
                 try {
-                    const exportData = {
+                    // Solo exporta el plan del curso activo en la pestaña
+                const allPlans = this.state.lastData?.pedagogia?.por_curso || [];
+                const selectedPlan = allPlans[this.state.currentPlanIdx] || allPlans[0];
+                const exportData = {
                         ...this.state.lastData,
+                        pedagogia: { por_curso: selectedPlan ? [selectedPlan] : [] },
                         school_name:  localStorage.getItem('sonaria_school_name')  || '',
                         school_color: localStorage.getItem('sonaria_school_color') || '',
                         school_logo:  localStorage.getItem('sonaria_school_logo')  || '',
@@ -1041,6 +1046,12 @@
             },
             showPlan(idx) {
                 if (!this.state.lastData?.pedagogia?.por_curso?.[idx]) return;
+                this.state.currentPlanIdx = idx;
+                // Actualiza label del botón PDF con el curso activo
+                const pdfBtn = document.querySelector('[onclick="SonarIA.handlePdf()"]');
+                const cursoLabel = courseLabel(this.state.lastData.pedagogia.por_curso[idx].curso);
+                if (pdfBtn) pdfBtn.innerHTML = `<i data-lucide="file-text" class="w-3 h-3"></i> PDF — ${cursoLabel}`;
+                lucide.createIcons();
                 const p      = this.state.lastData.pedagogia.por_curso[idx];
                 const isPro  = this.state.user.plan === 'pro';
                 const titulo = this.state.lastData?._titulo || 'esta canción';
