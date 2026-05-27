@@ -11,8 +11,6 @@
         .nav-btn { transition: all 0.2s; border-right: 4px solid transparent; border-radius: 0.75rem; }
         .nav-btn:hover:not(.active) { background: rgba(0,23,57,0.05); color: #001739; }
         .nav-btn.active { border-right: 4px solid #FF8700; background: rgba(255,135,0,0.07); color: #FF8700; font-weight: 900; border-radius: 0.75rem; }
-        [data-tip] { position: relative; cursor: pointer; }
-        [data-tip]:not(button):not(a) { cursor: help; }
         .section { display: none; height: 100%; animation: fadeIn 0.3s ease; }
         .section.active { display: flex; flex-direction: column; }
         @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
@@ -27,6 +25,15 @@
         [data-tip] { position: relative; cursor: help; }
         [data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #001739; color: #fff; padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; z-index: 200; pointer-events: none; white-space: nowrap; }
         [data-tip]:hover::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #001739; z-index: 200; pointer-events: none; }
+        .field { background:#f8fafc; border:2px solid #e2e8f0; border-radius:1.25rem; padding:.9rem 1.25rem; font-size:.875rem; font-weight:600; outline:none; transition:border-color .2s; width:100%; }
+        .field:focus { border-color:#FF8700; }
+        .btn-orange { background:#FF8700; color:#fff; padding:.9rem 1.5rem; border-radius:1.25rem; font-weight:900; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; font-style:italic; cursor:pointer; transition:opacity .2s; border:none; }
+        .btn-orange:hover { opacity:.88; }
+        .btn-ghost { background:transparent; border:2px solid #e2e8f0; color:#94a3b8; padding:.75rem 1.25rem; border-radius:1.25rem; font-weight:900; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; font-style:italic; cursor:pointer; transition:all .2s; }
+        .btn-ghost:hover { border-color:#FF8700; color:#FF8700; }
+        .license-card { background:white; border-radius:1.5rem; border:1px solid #eef2f7; box-shadow:0 2px 12px rgba(0,0,0,.04); overflow:hidden; }
+        .license-seats { background:#f8fafc; border-top:1px solid #eef2f7; padding:1rem 1.25rem; }
+        .action-pill { display:inline-flex; align-items:center; gap:.35rem; font-size:.7rem; font-weight:900; text-transform:uppercase; font-style:italic; letter-spacing:.06em; padding:.4rem .9rem; border-radius:9999px; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
@@ -37,17 +44,24 @@
             <h3 class="text-2xl font-black uppercase italic mb-1 text-[#001739]">Cambiar Plan</h3>
             <p id="modal-email" class="text-xs text-slate-400 mb-6 italic"></p>
             <div class="flex flex-col gap-4">
-                <label class="text-xs font-black uppercase text-slate-500 italic">Plan</label>
-                <select id="modal-plan-select" class="bg-slate-50 border-2 rounded-2xl p-4 font-bold text-sm outline-none focus:border-[#FF8700]">
-                    <option value="pro">PRO</option>
-                    <option value="free">Free (cancelar PRO)</option>
-                </select>
-                <label class="text-xs font-black uppercase text-slate-500 italic">Días de PRO</label>
-                <input id="modal-days" type="number" value="30" min="1" max="365"
-                       class="bg-slate-50 border-2 rounded-2xl p-4 font-bold text-sm outline-none focus:border-[#FF8700]">
+                <div>
+                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Plan</label>
+                    <select id="modal-plan-select" class="field">
+                        <option value="pro">PRO</option>
+                        <option value="free">Free (cancelar PRO)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Días de PRO</label>
+                    <input id="modal-days" type="number" value="30" min="1" max="3650" class="field">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Motivo (queda en auditoría)</label>
+                    <input id="modal-reason" type="text" placeholder="ej: soporte, cortesía..." class="field">
+                </div>
                 <div class="flex gap-3 mt-2">
-                    <button onclick="Admin.setPlan()" class="flex-1 bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg">Confirmar</button>
-                    <button onclick="Admin.closeModal()" class="flex-1 bg-slate-100 text-slate-500 py-4 rounded-2xl font-black uppercase text-xs">Cancelar</button>
+                    <button onclick="Admin.setPlan()" class="btn-orange flex-1">Confirmar</button>
+                    <button onclick="Admin.closeModal()" class="btn-ghost flex-1">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -67,57 +81,58 @@
 
     <div class="flex flex-grow overflow-hidden">
         <!-- Sidebar -->
-        <nav class="w-72 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
-            <!-- Header -->
-            <div class="px-8 pt-8 pb-5 border-b shrink-0">
-                <div class="text-2xl font-black italic uppercase tracking-tight text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></div>
+        <nav class="w-64 bg-white border-r flex flex-col shrink-0 z-40 shadow-sm">
+            <div class="px-6 pt-7 pb-5 border-b shrink-0">
+                <div class="text-xl font-black italic uppercase tracking-tight text-[#001739]">Sonar<span class="text-[#FF8700]">IA</span></div>
                 <div class="text-[9px] font-black text-slate-300 uppercase italic tracking-widest mt-1">Panel de control</div>
-                <!-- Reloj -->
-                <div class="mt-4 flex items-end gap-3">
-                    <span id="admin-clock" class="text-4xl font-black italic text-[#001739] tracking-tighter leading-none tabular-nums">--:--</span>
+                <div class="mt-4 flex items-end gap-2">
+                    <span id="admin-clock" class="text-3xl font-black italic text-[#001739] tracking-tighter leading-none tabular-nums">--:--</span>
                     <div class="pb-0.5">
                         <div id="admin-date" class="text-[9px] text-slate-400 font-black uppercase italic tracking-widest leading-tight">...</div>
                         <div id="admin-seconds" class="text-[9px] text-slate-200 font-black italic tabular-nums leading-none mt-0.5">:--</div>
                     </div>
                 </div>
             </div>
-            <!-- Nav -->
-            <div class="flex-grow overflow-y-auto scroll-v px-4 py-5 flex flex-col gap-1">
+            <div class="flex-grow overflow-y-auto scroll-v px-3 py-4 flex flex-col gap-0.5">
                 <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Datos</p>
-                <button onclick="Admin.nav('sec-stats')" id="nav-sec-stats"
-                        class="nav-btn active px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                <button onclick="Admin.nav('sec-stats')" id="nav-sec-stats" class="nav-btn active px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
                     <i data-lucide="bar-chart-2" class="w-4 h-4 shrink-0"></i> Estadísticas
                 </button>
-                <button onclick="Admin.nav('sec-users')" id="nav-sec-users"
-                        class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                <button onclick="Admin.nav('sec-users')" id="nav-sec-users" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
                     <i data-lucide="users" class="w-4 h-4 shrink-0"></i> Usuarios
                 </button>
-                <button onclick="Admin.nav('sec-analyses')" id="nav-sec-analyses"
-                        class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                <button onclick="Admin.nav('sec-analyses')" id="nav-sec-analyses" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
                     <i data-lucide="activity" class="w-4 h-4 shrink-0"></i> Análisis
                 </button>
-                <div class="h-px bg-slate-100 my-3 mx-2"></div>
-                <a href="/sonaria.html"
-                   class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400">
+                <div class="h-px bg-slate-100 my-2 mx-2"></div>
+                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Gestión</p>
+                <button onclick="Admin.nav('sec-gift')" id="nav-sec-gift" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                    <i data-lucide="gift" class="w-4 h-4 shrink-0"></i> Regalar Pro
+                </button>
+                <button onclick="Admin.nav('sec-licenses')" id="nav-sec-licenses" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                    <i data-lucide="building-2" class="w-4 h-4 shrink-0"></i> Licencias
+                </button>
+                <button onclick="Admin.nav('sec-audit')" id="nav-sec-audit" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3">
+                    <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i> Auditoría
+                </button>
+                <div class="h-px bg-slate-100 my-2 mx-2"></div>
+                <a href="/sonaria.html" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400">
                     <i data-lucide="arrow-left" class="w-4 h-4 shrink-0"></i> Workspace
                 </a>
             </div>
-            <!-- Pie -->
-            <div class="shrink-0 p-5 border-t">
-                <button onclick="Admin.refresh()"
-                        class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black uppercase text-[9px] italic hover:border-[#FF8700] hover:text-[#FF8700] transition-all flex items-center justify-center gap-2">
+            <div class="shrink-0 p-4 border-t">
+                <button onclick="Admin.refresh()" class="w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black uppercase text-[9px] italic hover:border-[#FF8700] hover:text-[#FF8700] transition-all flex items-center justify-center gap-2">
                     <i data-lucide="refresh-cw" class="w-3 h-3"></i> Actualizar datos
                 </button>
             </div>
         </nav>
 
         <!-- Content -->
-        <main class="flex-grow p-10 overflow-hidden relative">
+        <main class="flex-grow p-8 overflow-hidden relative">
 
-            <!-- ── ESTADÍSTICAS ──────────────────────────────────────────── -->
+            <!-- ── ESTADÍSTICAS ─────────────────────────────────────────────── -->
             <div id="sec-stats" class="section active overflow-y-auto scroll-v pb-10 gap-8">
                 <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739] shrink-0">Estadísticas</h2>
-                <!-- Cards -->
                 <div class="grid grid-cols-4 gap-5 shrink-0">
                     <div class="stat-card">
                         <div class="text-[9px] font-black uppercase italic tracking-widest text-slate-400 mb-2">Total usuarios</div>
@@ -136,7 +151,6 @@
                         <div id="stat-total" class="text-4xl font-black text-[#001739]">—</div>
                     </div>
                 </div>
-                <!-- Top songs -->
                 <div class="bg-white rounded-[2.5rem] p-10 border">
                     <h3 class="text-lg font-black uppercase italic text-[#001739] mb-6">Top canciones más analizadas</h3>
                     <div id="top-songs" class="flex flex-col gap-4">
@@ -145,25 +159,21 @@
                 </div>
             </div>
 
-            <!-- ── USUARIOS ──────────────────────────────────────────────── -->
+            <!-- ── USUARIOS ─────────────────────────────────────────────────── -->
             <div id="sec-users" class="section overflow-hidden gap-5">
                 <div class="flex items-center justify-between shrink-0">
                     <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Usuarios</h2>
                     <span id="users-total-badge" class="text-xs text-slate-400 italic font-bold"></span>
                 </div>
-                <!-- Filtros -->
                 <div class="flex gap-4 shrink-0">
                     <input id="search-users" type="text" placeholder="Buscar por email o nombre..."
-                           class="flex-grow bg-white border-2 rounded-2xl px-6 py-4 text-sm font-medium focus:border-[#FF8700] outline-none transition-colors"
-                           oninput="Admin.searchUsers()">
-                    <select id="filter-plan" onchange="Admin.searchUsers()"
-                            class="bg-white border-2 rounded-2xl px-6 py-4 text-sm font-bold outline-none focus:border-[#FF8700] transition-colors">
+                           class="flex-grow field" oninput="Admin.searchUsers()">
+                    <select id="filter-plan" onchange="Admin.searchUsers()" class="field" style="width:auto">
                         <option value="">Todos los planes</option>
                         <option value="pro">Solo PRO</option>
                         <option value="free">Solo Free</option>
                     </select>
                 </div>
-                <!-- Tabla -->
                 <div class="flex-grow overflow-y-auto scroll-v pb-6">
                     <table class="w-full border-separate border-spacing-y-1">
                         <thead class="sticky top-0 bg-[#F3F4F6] z-10">
@@ -184,14 +194,11 @@
                 </div>
             </div>
 
-            <!-- ── ANÁLISIS RECIENTES ─────────────────────────────────────── -->
+            <!-- ── ANÁLISIS RECIENTES ────────────────────────────────────────── -->
             <div id="sec-analyses" class="section overflow-hidden gap-5">
                 <div class="flex items-center justify-between shrink-0">
                     <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Análisis Recientes</h2>
-                    <button onclick="Admin.loadAnalyses(100)"
-                            class="text-[10px] font-black uppercase italic border border-slate-200 rounded-2xl px-5 py-3 hover:border-[#FF8700] hover:text-[#FF8700] transition-all">
-                        Ver 100 →
-                    </button>
+                    <button onclick="Admin.loadAnalyses(100)" class="btn-ghost">Ver 100 →</button>
                 </div>
                 <div class="flex-grow overflow-y-auto scroll-v pb-6">
                     <div id="analyses-list" class="flex flex-col gap-3">
@@ -200,7 +207,131 @@
                 </div>
             </div>
 
-            <!-- Loader -->
+            <!-- ── REGALAR PRO ───────────────────────────────────────────────── -->
+            <div id="sec-gift" class="section overflow-y-auto scroll-v pb-10 gap-8">
+                <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739] shrink-0">Regalar Pro</h2>
+                <div class="grid grid-cols-2 gap-8 items-start">
+                    <!-- Formulario regalo -->
+                    <div class="bg-white rounded-[2rem] p-8 border shadow-sm">
+                        <h3 class="text-base font-black uppercase italic text-[#001739] mb-1">Activar días Pro a un docente</h3>
+                        <p class="text-[11px] text-slate-400 italic mb-6">El docente debe haber iniciado sesión al menos una vez. Se enviará un email de notificación.</p>
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Email del docente</label>
+                                <input id="gift-email" type="email" placeholder="docente@colegio.cl" class="field">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Días de Pro</label>
+                                    <input id="gift-days" type="number" value="30" min="1" max="3650" class="field">
+                                </div>
+                                <div>
+                                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Presets</label>
+                                    <select onchange="document.getElementById('gift-days').value=this.value" class="field">
+                                        <option value="30">1 mes (30 días)</option>
+                                        <option value="90">3 meses</option>
+                                        <option value="180">6 meses</option>
+                                        <option value="365">1 año</option>
+                                        <option value="custom" selected>Personalizado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Motivo (queda en auditoría, no se envía al docente)</label>
+                                <input id="gift-reason" type="text" placeholder="ej: concurso, cortesía, soporte, prueba..." class="field">
+                            </div>
+                            <button onclick="Admin.giftPro()" id="btn-gift" class="btn-orange mt-2">
+                                🎁 Activar Pro
+                            </button>
+                            <div id="gift-msg" class="text-xs font-black italic text-center min-h-[20px]"></div>
+                        </div>
+                    </div>
+                    <!-- Log de regalos recientes -->
+                    <div class="bg-white rounded-[2rem] p-8 border shadow-sm flex flex-col gap-4">
+                        <h3 class="text-base font-black uppercase italic text-[#001739]">Activaciones recientes</h3>
+                        <div id="gift-log" class="flex flex-col gap-2 overflow-y-auto scroll-v" style="max-height:400px">
+                            <div class="text-slate-300 italic text-xs text-center py-6">Cargando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── LICENCIAS INSTITUCIONALES ─────────────────────────────────── -->
+            <div id="sec-licenses" class="section overflow-y-auto scroll-v pb-10 gap-8">
+                <div class="flex items-center justify-between shrink-0">
+                    <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Licencias</h2>
+                    <button onclick="Admin.toggleCreateLicense()" id="btn-new-license" class="btn-orange">
+                        + Nueva licencia
+                    </button>
+                </div>
+
+                <!-- Formulario crear licencia (oculto por defecto) -->
+                <div id="create-license-form" class="hidden bg-white rounded-[2rem] p-8 border shadow-sm">
+                    <h3 class="text-base font-black uppercase italic text-[#001739] mb-5">Nueva licencia institucional</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Nombre del establecimiento *</label>
+                            <input id="lic-org" type="text" placeholder="Colegio / Liceo / Corporación" class="field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Email de contacto institucional *</label>
+                            <input id="lic-contact" type="email" placeholder="utp@establecimiento.cl" class="field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">N° de cupos (docentes)</label>
+                            <input id="lic-seats" type="number" value="5" min="1" class="field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Días Pro por cupo</label>
+                            <input id="lic-days" type="number" value="365" min="1" class="field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Vigencia de la licencia (días, opcional)</label>
+                            <input id="lic-valid" type="number" placeholder="ej: 365 — vacío = sin vencimiento" class="field">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Notas internas</label>
+                            <input id="lic-notes" type="text" placeholder="Contrato N°, fecha acuerdo, etc." class="field">
+                        </div>
+                    </div>
+                    <div class="flex gap-3 mt-5">
+                        <button onclick="Admin.createLicense()" class="btn-orange">Crear licencia</button>
+                        <button onclick="Admin.toggleCreateLicense()" class="btn-ghost">Cancelar</button>
+                    </div>
+                    <div id="license-create-msg" class="text-xs font-black italic mt-3 min-h-[18px]"></div>
+                </div>
+
+                <!-- Lista de licencias -->
+                <div id="licenses-list" class="flex flex-col gap-5">
+                    <div class="text-slate-300 italic text-sm text-center py-10">Cargando licencias...</div>
+                </div>
+            </div>
+
+            <!-- ── AUDITORÍA ─────────────────────────────────────────────────── -->
+            <div id="sec-audit" class="section overflow-hidden gap-5">
+                <div class="flex items-center justify-between shrink-0">
+                    <h2 class="text-5xl font-black border-l-8 border-[#FF8700] pl-6 uppercase italic text-[#001739]">Auditoría</h2>
+                    <div class="flex gap-3">
+                        <select id="audit-filter" onchange="Admin.loadAudit()" class="field" style="width:auto">
+                            <option value="">Todas las acciones</option>
+                            <option value="gift_days">Regalos</option>
+                            <option value="set_plan">Cambio de plan</option>
+                            <option value="set_free">Cancelación PRO</option>
+                            <option value="create_license">Licencias creadas</option>
+                            <option value="assign_seat">Cupos asignados</option>
+                            <option value="update_license">Licencias editadas</option>
+                        </select>
+                        <button onclick="Admin.loadAudit()" class="btn-ghost">Actualizar</button>
+                    </div>
+                </div>
+                <div class="flex-grow overflow-y-auto scroll-v pb-6">
+                    <div id="audit-list" class="flex flex-col gap-2">
+                        <div class="text-slate-300 italic text-sm text-center py-16">Cargando auditoría...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader global -->
             <div id="loader" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm z-50 flex items-center justify-center">
                 <div class="w-16 h-2 bg-[#FF8700] animate-bounce rounded-full shadow-lg"></div>
             </div>
@@ -215,9 +346,29 @@
             if (!isoStr) return '—';
             return new Date(isoStr).toLocaleDateString('es-CL', {day:'numeric',month:'short',year:'numeric'});
         }
+        function fmtFull(isoStr) {
+            if (!isoStr) return '—';
+            const d = new Date(isoStr);
+            return d.toLocaleDateString('es-CL', {day:'numeric',month:'short',year:'numeric'}) + ' ' +
+                   d.toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit'});
+        }
+        function daysFromNow(isoStr) {
+            if (!isoStr) return null;
+            const ms = new Date(isoStr) - Date.now();
+            return Math.round(ms / 86400000);
+        }
         function getToken() {
             return localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
         }
+
+        const ACTION_LABELS = {
+            gift_days:       '🎁 Regalo Pro',
+            set_plan:        '👑 Activar Pro',
+            set_free:        '🔓 Cancelar Pro',
+            create_license:  '🏫 Licencia creada',
+            assign_seat:     '🪑 Cupo asignado',
+            update_license:  '✏️ Licencia editada',
+        };
 
         window.Admin = {
             state: { usersPage: 1, modalEmail: '' },
@@ -227,7 +378,14 @@
                 document.getElementById('admin-email').innerText = user.email || '';
                 this._startClock();
                 this.showLoader(true);
-                await Promise.all([this.loadStats(), this.loadUsers(1), this.loadAnalyses(50)]);
+                await Promise.all([
+                    this.loadStats(),
+                    this.loadUsers(1),
+                    this.loadAnalyses(50),
+                    this.loadLicenses(),
+                    this.loadAudit(),
+                    this.loadGiftLog(),
+                ]);
                 this.showLoader(false);
                 this.nav('sec-stats');
             },
@@ -240,9 +398,9 @@
                     const hh = String(n.getHours()).padStart(2,'0');
                     const mm = String(n.getMinutes()).padStart(2,'0');
                     const ss = String(n.getSeconds()).padStart(2,'0');
-                    const c = document.getElementById('admin-clock');
-                    const d = document.getElementById('admin-date');
-                    const s = document.getElementById('admin-seconds');
+                    const c  = document.getElementById('admin-clock');
+                    const d  = document.getElementById('admin-date');
+                    const s  = document.getElementById('admin-seconds');
                     if (c) c.textContent = hh + ':' + mm;
                     if (d) d.textContent = DIAS[n.getDay()] + ' ' + n.getDate() + ' ' + MESES[n.getMonth()];
                     if (s) s.textContent = ':' + ss;
@@ -253,28 +411,29 @@
             nav(id) {
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                const el  = document.getElementById(id);       if (el)  el.classList.add('active');
-                const btn = document.getElementById('nav-' + id); if (btn) btn.classList.add('active');
+                const el  = document.getElementById(id);
+                const btn = document.getElementById('nav-' + id);
+                if (el)  el.classList.add('active');
+                if (btn) btn.classList.add('active');
+                lucide.createIcons();
             },
 
             async refresh() {
                 this.showLoader(true);
-                await Promise.all([this.loadStats(), this.loadUsers(this.state.usersPage), this.loadAnalyses(50)]);
+                await Promise.all([
+                    this.loadStats(), this.loadUsers(this.state.usersPage),
+                    this.loadAnalyses(50), this.loadLicenses(),
+                    this.loadAudit(), this.loadGiftLog(),
+                ]);
                 this.showLoader(false);
             },
 
-            showLoader(v) {
-                document.getElementById('loader').classList.toggle('hidden', !v);
-            },
+            showLoader(v) { document.getElementById('loader').classList.toggle('hidden', !v); },
 
             async api(path, opts = {}) {
                 const res = await fetch(API_URL + path, {
                     ...opts,
-                    headers: {
-                        'Authorization': 'Bearer ' + getToken(),
-                        'Content-Type': 'application/json',
-                        ...(opts.headers || {}),
-                    },
+                    headers: { 'Authorization': 'Bearer ' + getToken(), 'Content-Type': 'application/json', ...(opts.headers || {}) },
                 });
                 if (res.status === 401) { this.logout(); return null; }
                 if (res.status === 403) {
@@ -283,14 +442,14 @@
                             <div style="font-size:2.5rem;font-weight:900;font-style:italic;color:#001739">Sonar<span style="color:#FF8700">IA</span></div>
                             <p style="color:#dc2626;font-weight:900;text-transform:uppercase;font-style:italic">Acceso denegado</p>
                             <p style="color:#94a3b8;font-size:.9rem;font-style:italic">Tu cuenta no tiene permisos de administrador.</p>
-                            <a href="dashboard.html" style="background:#FF8700;color:#fff;padding:.75rem 2rem;border-radius:1rem;font-weight:900;text-transform:uppercase;font-size:.8rem;text-decoration:none">Volver al Workspace</a>
+                            <a href="/sonaria.html" style="background:#FF8700;color:#fff;padding:.75rem 2rem;border-radius:1rem;font-weight:900;text-transform:uppercase;font-size:.8rem;text-decoration:none">Volver al Workspace</a>
                         </div>`;
                     return null;
                 }
                 return res.json();
             },
 
-            // ── Stats ────────────────────────────────────────────────────
+            // ── Stats ────────────────────────────────────────────────────────
             async loadStats() {
                 const d = await this.api('/admin/stats');
                 if (!d?.ok) return;
@@ -298,12 +457,9 @@
                 document.getElementById('stat-pro-users').innerText   = d.pro_users;
                 document.getElementById('stat-today').innerText       = d.analyses_today;
                 document.getElementById('stat-total').innerText       = d.total_analyses;
-                const topEl  = document.getElementById('top-songs');
-                const songs  = d.top_songs || [];
-                if (!songs.length) {
-                    topEl.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-6">Sin datos aún.</div>';
-                    return;
-                }
+                const topEl = document.getElementById('top-songs');
+                const songs = d.top_songs || [];
+                if (!songs.length) { topEl.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-6">Sin datos aún.</div>'; return; }
                 const maxC = songs[0].count || 1;
                 topEl.innerHTML = songs.map((s, i) => `
                     <div class="flex items-center gap-4">
@@ -314,19 +470,16 @@
                                 <span class="text-xs font-black text-[#FF8700] shrink-0 ml-3">${s.count}</span>
                             </div>
                             <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-[#FF8700] rounded-full transition-all" style="width:${Math.round((s.count/maxC)*100)}%"></div>
+                                <div class="h-full bg-[#FF8700] rounded-full" style="width:${Math.round((s.count/maxC)*100)}%"></div>
                             </div>
                             ${s.artista ? `<div class="text-[9px] text-slate-400 italic mt-0.5">${s.artista}</div>` : ''}
                         </div>
                     </div>`).join('');
             },
 
-            // ── Users ────────────────────────────────────────────────────
+            // ── Users ────────────────────────────────────────────────────────
             _searchTimer: null,
-            searchUsers() {
-                clearTimeout(this._searchTimer);
-                this._searchTimer = setTimeout(() => this.loadUsers(1), 350);
-            },
+            searchUsers() { clearTimeout(this._searchTimer); this._searchTimer = setTimeout(() => this.loadUsers(1), 350); },
 
             async loadUsers(page = 1) {
                 this.state.usersPage = page;
@@ -337,16 +490,21 @@
                 if (plan)   qs.set('plan', plan);
                 const d = await this.api('/admin/users?' + qs);
                 if (!d?.ok) return;
-
                 document.getElementById('users-total-badge').innerText = `${d.total} usuarios`;
-
                 const tbody = document.getElementById('users-tbody');
                 if (!d.users?.length) {
                     tbody.innerHTML = '<tr><td colspan="6" class="text-center text-slate-400 italic text-sm py-16">Sin resultados.</td></tr>';
                     document.getElementById('users-pagination').innerHTML = '';
                     return;
                 }
-                tbody.innerHTML = d.users.map(u => `
+                tbody.innerHTML = d.users.map(u => {
+                    const days = daysFromNow(u.expires_at);
+                    const expiryLabel = u.expires_at
+                        ? (days !== null && days < 14 && days >= 0
+                            ? `<span class="text-orange-400 font-black">${fmt(u.expires_at)} (${days}d)</span>`
+                            : fmt(u.expires_at))
+                        : '—';
+                    return `
                     <tr class="bg-white rounded-2xl hover:shadow-sm transition-shadow">
                         <td class="py-4 pl-4 rounded-l-2xl">
                             <div class="flex items-center gap-3">
@@ -362,27 +520,31 @@
                                 ${u.plan === 'pro' ? '👑 PRO' : 'Free'}
                             </span>
                         </td>
-                        <td class="py-4 text-xs text-slate-400 italic">${u.expires_at ? fmt(u.expires_at) : '—'}</td>
+                        <td class="py-4 text-xs italic">${expiryLabel}</td>
                         <td class="py-4 text-right text-sm font-black text-slate-300">${u.analyses_count}</td>
                         <td class="py-4 text-right text-xs text-slate-400 italic">${fmt(u.created_at)}</td>
                         <td class="py-4 pr-4 text-right rounded-r-2xl">
-                            <button onclick="Admin.openModal('${u.email}')"
-                                    class="text-[9px] font-black uppercase italic border border-slate-200 rounded-xl px-4 py-2 hover:border-[#FF8700] hover:text-[#FF8700] transition-all">
-                                Plan
-                            </button>
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="Admin.prefillGift('${u.email}')" class="btn-ghost" style="padding:.4rem .75rem;font-size:.65rem" data-tip="Regalar días Pro">🎁</button>
+                                <button onclick="Admin.openModal('${u.email}')"
+                                        class="text-[9px] font-black uppercase italic border border-slate-200 rounded-xl px-4 py-2 hover:border-[#FF8700] hover:text-[#FF8700] transition-all">
+                                    Plan
+                                </button>
+                            </div>
                         </td>
-                    </tr>`).join('');
+                    </tr>`;
+                }).join('');
                 lucide.createIcons();
-
-                // paginación
                 const totalPages = Math.ceil(d.total / 30);
                 const pag = document.getElementById('users-pagination');
                 if (totalPages <= 1) { pag.innerHTML = ''; return; }
                 pag.innerHTML = Array.from({length: totalPages}, (_, i) => i + 1).map(p => `
-                    <button onclick="Admin.loadUsers(${p})"
-                            class="w-9 h-9 rounded-xl text-xs font-black transition-all ${p === page ? 'bg-[#001739] text-white' : 'bg-white text-slate-400 border hover:border-[#FF8700] hover:text-[#FF8700]'}">
-                        ${p}
-                    </button>`).join('');
+                    <button onclick="Admin.loadUsers(${p})" class="w-9 h-9 rounded-xl text-xs font-black transition-all ${p === page ? 'bg-[#001739] text-white' : 'bg-white text-slate-400 border hover:border-[#FF8700] hover:text-[#FF8700]'}">${p}</button>`).join('');
+            },
+
+            prefillGift(email) {
+                document.getElementById('gift-email').value = email;
+                this.nav('sec-gift');
             },
 
             openModal(email) {
@@ -390,39 +552,36 @@
                 document.getElementById('modal-email').innerText = email;
                 document.getElementById('modal-plan-select').value = 'pro';
                 document.getElementById('modal-days').value = 30;
+                document.getElementById('modal-reason').value = '';
                 const m = document.getElementById('modal-plan');
-                m.classList.remove('hidden');
-                m.classList.add('flex');
+                m.classList.remove('hidden'); m.classList.add('flex');
             },
             closeModal() {
                 const m = document.getElementById('modal-plan');
-                m.classList.add('hidden');
-                m.classList.remove('flex');
+                m.classList.add('hidden'); m.classList.remove('flex');
             },
             async setPlan() {
-                const plan = document.getElementById('modal-plan-select').value;
-                const days = parseInt(document.getElementById('modal-days').value, 10) || 30;
+                const plan   = document.getElementById('modal-plan-select').value;
+                const days   = parseInt(document.getElementById('modal-days').value, 10) || 30;
+                const reason = document.getElementById('modal-reason').value.trim();
                 const d = await this.api(
                     `/admin/users/${encodeURIComponent(this.state.modalEmail)}/set-plan`,
-                    { method: 'POST', body: JSON.stringify({ plan, days }) }
+                    { method: 'POST', body: JSON.stringify({ plan, days, reason }) }
                 );
                 if (d?.ok) {
                     this.closeModal();
-                    await Promise.all([this.loadUsers(this.state.usersPage), this.loadStats()]);
+                    await Promise.all([this.loadUsers(this.state.usersPage), this.loadStats(), this.loadAudit(), this.loadGiftLog()]);
                 } else {
                     alert(d?.error || 'Error al actualizar el plan.');
                 }
             },
 
-            // ── Analyses ─────────────────────────────────────────────────
+            // ── Analyses ─────────────────────────────────────────────────────
             async loadAnalyses(limit = 50) {
                 const d = await this.api(`/admin/analyses?limit=${limit}`);
                 if (!d?.ok) return;
                 const list = document.getElementById('analyses-list');
-                if (!d.items?.length) {
-                    list.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-16">Sin análisis aún.</div>';
-                    return;
-                }
+                if (!d.items?.length) { list.innerHTML = '<div class="text-slate-400 italic text-sm text-center py-16">Sin análisis aún.</div>'; return; }
                 function badgeClass(res) {
                     if (!res) return 'badge-free';
                     if (res.includes('NO APTA'))  return 'badge-nopta';
@@ -449,7 +608,227 @@
                     </div>`).join('');
             },
 
-            logout() { localStorage.clear(); window.location.href = 'login-test.html'; },
+            // ── Gift Pro ─────────────────────────────────────────────────────
+            async giftPro() {
+                const email  = document.getElementById('gift-email').value.trim().toLowerCase();
+                const days   = parseInt(document.getElementById('gift-days').value, 10) || 30;
+                const reason = document.getElementById('gift-reason').value.trim();
+                const msg    = document.getElementById('gift-msg');
+                const btn    = document.getElementById('btn-gift');
+                if (!email) { msg.innerText = 'Ingresa el email del docente.'; msg.className = 'text-xs font-black italic text-center text-red-400 min-h-[20px]'; return; }
+                btn.disabled = true; btn.innerText = '⏳ Activando...';
+                msg.innerText = '';
+                const d = await this.api('/admin/gift', { method: 'POST', body: JSON.stringify({ email, days, reason }) });
+                btn.disabled = false; btn.innerText = '🎁 Activar Pro';
+                if (d?.ok) {
+                    msg.innerText = d.message || 'Pro activado correctamente.';
+                    msg.className = 'text-xs font-black italic text-center text-emerald-500 min-h-[20px]';
+                    document.getElementById('gift-email').value  = '';
+                    document.getElementById('gift-reason').value = '';
+                    await Promise.all([this.loadGiftLog(), this.loadStats(), this.loadUsers(this.state.usersPage)]);
+                } else {
+                    msg.innerText = d?.error || 'Error al activar Pro.';
+                    msg.className = 'text-xs font-black italic text-center text-red-400 min-h-[20px]';
+                }
+            },
+
+            async loadGiftLog() {
+                const d = await this.api('/admin/audit?limit=15&action=gift_days');
+                const d2 = await this.api('/admin/audit?limit=15&action=set_plan');
+                const items = [...(d?.items || []), ...(d2?.items || [])]
+                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    .slice(0, 15);
+                const el = document.getElementById('gift-log');
+                if (!items.length) { el.innerHTML = '<div class="text-slate-300 italic text-xs text-center py-4">Sin activaciones aún.</div>'; return; }
+                el.innerHTML = items.map(r => `
+                    <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                        <div class="min-w-0 flex-grow">
+                            <div class="text-xs font-black text-[#001739] italic truncate">${r.target_email}</div>
+                            <div class="text-[9px] text-slate-400 italic">
+                                ${r.details?.days || '—'} días
+                                ${r.details?.reason ? `· ${r.details.reason}` : ''}
+                            </div>
+                        </div>
+                        <div class="text-[9px] text-slate-300 italic shrink-0 text-right">
+                            ${fmt(r.created_at)}<br>
+                            <span class="text-[8px]">${r.admin_email.split('@')[0]}</span>
+                        </div>
+                    </div>`).join('');
+            },
+
+            // ── Licencias ─────────────────────────────────────────────────────
+            toggleCreateLicense() {
+                const f = document.getElementById('create-license-form');
+                f.classList.toggle('hidden');
+                document.getElementById('lic-org').value     = '';
+                document.getElementById('lic-contact').value = '';
+                document.getElementById('lic-notes').value   = '';
+                document.getElementById('license-create-msg').innerText = '';
+            },
+
+            async createLicense() {
+                const org    = document.getElementById('lic-org').value.trim();
+                const contact = document.getElementById('lic-contact').value.trim();
+                const seats  = parseInt(document.getElementById('lic-seats').value, 10) || 1;
+                const days   = parseInt(document.getElementById('lic-days').value, 10) || 365;
+                const valid  = document.getElementById('lic-valid').value.trim() || null;
+                const notes  = document.getElementById('lic-notes').value.trim();
+                const msgEl  = document.getElementById('license-create-msg');
+                if (!org)    { msgEl.innerText = 'Nombre del establecimiento requerido.'; msgEl.className = 'text-xs font-black italic mt-3 text-red-400'; return; }
+                if (!contact){ msgEl.innerText = 'Email de contacto requerido.'; msgEl.className = 'text-xs font-black italic mt-3 text-red-400'; return; }
+                const d = await this.api('/admin/licenses', {
+                    method: 'POST',
+                    body: JSON.stringify({ org_name: org, contact_email: contact, seats_total: seats, days_per_seat: days, valid_days: valid ? parseInt(valid) : null, notes }),
+                });
+                if (d?.ok) {
+                    msgEl.innerText = d.message || 'Licencia creada.';
+                    msgEl.className = 'text-xs font-black italic mt-3 text-emerald-500';
+                    setTimeout(() => { this.toggleCreateLicense(); this.loadLicenses(); }, 1200);
+                } else {
+                    msgEl.innerText = d?.error || 'Error al crear la licencia.';
+                    msgEl.className = 'text-xs font-black italic mt-3 text-red-400';
+                }
+            },
+
+            async loadLicenses() {
+                const d = await this.api('/admin/licenses');
+                const el = document.getElementById('licenses-list');
+                if (!d?.ok) return;
+                const lics = d.licenses || [];
+                if (!lics.length) {
+                    el.innerHTML = '<div class="bg-white rounded-[2rem] p-10 border text-center text-slate-400 italic text-sm">No hay licencias creadas. Crea la primera con el botón de arriba.</div>';
+                    return;
+                }
+                el.innerHTML = lics.map(lic => {
+                    const pct  = lic.seats_total > 0 ? Math.round((lic.seats_used / lic.seats_total) * 100) : 0;
+                    const vd   = lic.valid_until ? daysFromNow(lic.valid_until) : null;
+                    const vLabel = lic.valid_until
+                        ? (vd !== null && vd < 30 && vd >= 0
+                            ? `<span class="text-orange-400 font-black">${fmt(lic.valid_until)} (${vd}d)</span>`
+                            : `<span>${fmt(lic.valid_until)}</span>`)
+                        : '<span class="text-slate-300">Sin vencimiento</span>';
+                    return `
+                    <div class="license-card">
+                        <div class="p-6 flex items-start gap-5">
+                            <div class="flex-grow min-w-0">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <span class="text-lg font-black italic text-[#001739]">${lic.org_name}</span>
+                                    <span class="text-[9px] font-black uppercase italic px-2.5 py-1 rounded-full ${lic.active ? 'badge-apta' : 'badge-free'}">${lic.active ? 'Activa' : 'Inactiva'}</span>
+                                </div>
+                                <div class="text-xs text-slate-400 italic mb-3">${lic.contact_email}</div>
+                                <!-- Barra de cupos -->
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="flex-grow h-2 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-[#FF8700] rounded-full transition-all" style="width:${pct}%"></div>
+                                    </div>
+                                    <span class="text-xs font-black text-[#FF8700] shrink-0">${lic.seats_used}/${lic.seats_total} cupos</span>
+                                </div>
+                                <div class="flex gap-5 text-[9px] text-slate-400 italic">
+                                    <span>${lic.days_per_seat} días Pro/cupo</span>
+                                    <span>Vigencia: ${vLabel}</span>
+                                    <span>Creada: ${fmt(lic.created_at)}</span>
+                                </div>
+                                ${lic.notes ? `<div class="text-[9px] text-slate-300 italic mt-1">${lic.notes}</div>` : ''}
+                            </div>
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="Admin.toggleLicenseSeats('${lic.id}')" class="btn-ghost" style="padding:.5rem 1rem;font-size:.65rem">
+                                    Cupos (${lic.seats_used})
+                                </button>
+                                <button onclick="Admin.toggleLicense('${lic.id}', ${!lic.active})" class="btn-ghost" style="padding:.5rem 1rem;font-size:.65rem;color:${lic.active ? '#ef4444' : '#16a34a'}">
+                                    ${lic.active ? 'Desactivar' : 'Activar'}
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Zona de cupos (oculta) -->
+                        <div id="seats-${lic.id}" class="hidden license-seats">
+                            <div class="flex items-end gap-3 mb-4">
+                                <div class="flex-grow">
+                                    <label class="text-[9px] font-black uppercase text-slate-400 italic block mb-1.5">Email del docente a agregar</label>
+                                    <input id="assign-email-${lic.id}" type="email" placeholder="docente@colegio.cl" class="field">
+                                </div>
+                                <button onclick="Admin.assignSeat('${lic.id}')" class="btn-orange shrink-0" style="padding:.85rem 1.25rem">Asignar cupo</button>
+                            </div>
+                            <div id="assign-msg-${lic.id}" class="text-xs font-black italic mb-3 min-h-[16px]"></div>
+                            ${lic.seats.length ? `
+                            <div class="flex flex-col gap-1.5">
+                                <div class="text-[9px] font-black uppercase text-slate-400 italic tracking-widest mb-1">Docentes asignados</div>
+                                ${lic.seats.map(s => `
+                                    <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-2.5">
+                                        <span class="text-xs font-black text-[#001739] flex-grow italic">${s.user_email}</span>
+                                        <span class="text-[9px] text-slate-300 italic">${s.days_granted} días · ${fmt(s.assigned_at)}</span>
+                                    </div>`).join('')}
+                            </div>` : '<p class="text-xs text-slate-300 italic">Sin cupos asignados aún.</p>'}
+                        </div>
+                    </div>`;
+                }).join('');
+            },
+
+            toggleLicenseSeats(licId) {
+                const el = document.getElementById('seats-' + licId);
+                if (el) el.classList.toggle('hidden');
+            },
+
+            async toggleLicense(licId, active) {
+                if (!confirm(`¿${active ? 'Activar' : 'Desactivar'} esta licencia?`)) return;
+                const d = await this.api(`/admin/licenses/${licId}`, { method: 'PUT', body: JSON.stringify({ active }) });
+                if (d?.ok) this.loadLicenses();
+                else alert(d?.error || 'Error.');
+            },
+
+            async assignSeat(licId) {
+                const emailEl = document.getElementById(`assign-email-${licId}`);
+                const msgEl   = document.getElementById(`assign-msg-${licId}`);
+                const email   = emailEl.value.trim().toLowerCase();
+                if (!email) { msgEl.innerText = 'Ingresa el email del docente.'; msgEl.className = 'text-xs font-black italic mb-3 text-red-400'; return; }
+                const d = await this.api(`/admin/licenses/${licId}/assign`, { method: 'POST', body: JSON.stringify({ email }) });
+                if (d?.ok) {
+                    msgEl.innerText = d.message || 'Cupo asignado correctamente.';
+                    msgEl.className = 'text-xs font-black italic mb-3 text-emerald-500';
+                    emailEl.value = '';
+                    setTimeout(() => { this.loadLicenses(); this.loadStats(); this.loadAudit(); }, 800);
+                } else {
+                    msgEl.innerText = d?.error || 'Error al asignar cupo.';
+                    msgEl.className = 'text-xs font-black italic mb-3 text-red-400';
+                }
+            },
+
+            // ── Auditoría ─────────────────────────────────────────────────────
+            async loadAudit() {
+                const action = document.getElementById('audit-filter')?.value || '';
+                const qs = new URLSearchParams({ limit: 100 });
+                if (action) qs.set('action', action);
+                const d = await this.api('/admin/audit?' + qs);
+                const el = document.getElementById('audit-list');
+                if (!d?.ok) return;
+                const items = d.items || [];
+                if (!items.length) {
+                    el.innerHTML = '<div class="bg-white rounded-2xl border p-10 text-center text-slate-400 italic text-sm">Sin registros de auditoría aún.</div>';
+                    return;
+                }
+                el.innerHTML = items.map(r => {
+                    const label = ACTION_LABELS[r.action] || r.action;
+                    const det = r.details || {};
+                    let detail = '';
+                    if (det.days)         detail += `${det.days} días `;
+                    if (det.plan)         detail += `→ ${det.plan} `;
+                    if (det.reason)       detail += `· ${det.reason} `;
+                    if (det.org_name)     detail += `· ${det.org_name} `;
+                    if (det.seats)        detail += `· ${det.seats} cupos `;
+                    if (det.days_per_seat) detail += `· ${det.days_per_seat}d/cupo`;
+                    return `
+                    <div class="bg-white rounded-xl border px-5 py-3 flex items-center gap-4">
+                        <div class="text-[9px] text-slate-300 italic shrink-0 text-right" style="min-width:90px">${fmtFull(r.created_at)}</div>
+                        <div class="text-[9px] font-black text-slate-400 italic shrink-0" style="min-width:80px">${r.admin_email.split('@')[0]}</div>
+                        <span class="action-pill badge-pro shrink-0">${label}</span>
+                        <div class="flex-grow min-w-0">
+                            <span class="text-xs font-black text-[#001739] italic">${r.target_email || '—'}</span>
+                            ${detail ? `<span class="text-[9px] text-slate-400 italic ml-2">${detail.trim()}</span>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+            },
+
+            logout() { localStorage.clear(); window.location.href = 'login.html'; },
         };
 
         Admin.init();

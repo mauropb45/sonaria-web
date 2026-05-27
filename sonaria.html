@@ -1087,36 +1087,33 @@
                             </div>` : ''}
                         </div>`;
                 } else {
+                    // Plan free: muestra código OA + pro wall para descripción, actividades, preguntas
+                    const isCodeOnly = _oaColon === -1; // API envió solo código sin descripción
                     document.getElementById('plan-content').innerHTML = `
                         <div class="flex flex-col gap-4">
+                            <!-- OA: solo código en free -->
                             <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6">
                                 <span class="text-orange-400 font-black uppercase text-[9px] tracking-widest block mb-3">Objetivo de Aprendizaje — OA Música ${courseLabel(p.curso)}</span>
-                                ${oaCode ? `<p class="text-xl font-black text-[#FF8700] italic leading-none mb-2">${oaCode}</p>` : ''}
-                                <p class="text-base text-slate-700 italic leading-relaxed">${oaDesc}</p>
+                                <p class="text-xl font-black text-[#FF8700] italic leading-none mb-2">${isCodeOnly ? oaDesc : (oaCode || oaDesc)}</p>
+                                ${isCodeOnly
+                                    ? `<p class="text-[11px] text-slate-300 italic">Descripción completa del OA disponible en Pro</p>`
+                                    : `<p class="text-base text-slate-700 italic leading-relaxed">${oaDesc}</p>`}
                             </div>
-                            <!-- Preguntas siempre disponibles -->
-                            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                                <span class="text-[#001739] font-black uppercase text-[9px] tracking-widest block mb-3">Preguntas para Trabajar con los Estudiantes</span>
-                                ${fallbackQ.map(q => `
-                                    <div class="flex gap-3 mb-3 last:mb-0">
-                                        <span class="text-orange-400 font-black text-sm shrink-0 mt-0.5">→</span>
-                                        <p class="text-[13px] text-slate-600 italic leading-relaxed">${q}</p>
-                                    </div>`).join('')}
-                            </div>
-                            <!-- Pro wall: actividades + reflexión -->
-                            <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:220px;">
+                            <!-- Pro wall: descripción OA + actividades + preguntas IA + reflexión -->
+                            <div class="pro-unlock-container bg-[#001739] rounded-2xl relative overflow-hidden" style="min-height:240px;">
                                 <div class="p-8 flex flex-col gap-3 blur-pro pointer-events-none select-none">
                                     <div class="h-3 bg-orange-400/30 rounded-full w-3/4"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-full"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-5/6"></div>
                                     <div class="mt-3 h-3 bg-orange-400/20 rounded-full w-2/3"></div>
                                     <div class="h-3 bg-white/10 rounded-full w-full"></div>
+                                    <div class="h-3 bg-white/10 rounded-full w-4/5"></div>
                                 </div>
                                 <div class="pro-floating-card">
                                     <div class="inner-card-white">
                                         <i data-lucide="crown" class="w-10 h-10 text-[#FF8700] mx-auto mb-3 animate-bounce"></i>
                                         <h4 class="text-lg font-black uppercase mb-1 text-[#001739] italic leading-none">Planificación Pro</h4>
-                                        <p class="text-[10px] text-slate-400 italic mb-4">Actividades + preguntas IA + arreglo de banda</p>
+                                        <p class="text-[10px] text-slate-400 italic mb-4">OA completo · actividades · preguntas IA · reflexión</p>
                                         <a href="planes.html" class="block w-full bg-[#FF8700] text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg text-center">Activar PRO</a>
                                     </div>
                                 </div>
