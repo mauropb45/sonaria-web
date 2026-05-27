@@ -69,8 +69,6 @@
             #sec-canvas .grid > div:last-child { height: 65vh; border-radius: 1.5rem !important; }
             #plan-content .grid { grid-template-columns: 1fr !important; }
             #plan-content .h-\[450px\] { height: auto !important; }
-            #sec-diag .flex.items-start.gap-10 { flex-direction: column !important; gap: 1rem !important; }
-            #sec-diag .text-right.shrink-0 { text-align: left !important; align-items: flex-start !important; flex-direction: row !important; gap: 1rem; align-items: center !important; }
             #risk-svg { width: 80px; height: 80px; }
             #in-texto { height: 7rem !important; }
             .mobile-nav { display: flex !important; }
@@ -250,7 +248,7 @@
                                        class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                                 <p id="hint-titulo" class="hidden absolute -bottom-5 left-4 text-[9px] font-black text-red-400 uppercase italic tracking-widest">Ingresa el nombre de la canción</p>
                             </div>
-                            <input id="in-artista" type="text" placeholder="Artista (ej: Los Prisioneros)"
+                            <input id="in-artista" type="text" placeholder="Artista (ej: The Beatles)"
                                    class="w-full bg-slate-50 border-2 rounded-[2rem] px-6 py-5 text-lg font-bold focus:border-[#FF8700] outline-none transition-colors">
                         </div>
 
@@ -281,21 +279,16 @@
             <div id="sec-diag" class="section h-full">
               <div class="flex flex-col h-full">
                 <div class="flex-grow overflow-y-auto scroll-v">
-                <div class="max-w-xl mx-auto pt-8 pb-8 px-2">
-
-                    <!-- Encabezado canción -->
-                    <div class="mb-4 flex items-baseline gap-2 pl-1">
-                        <span id="res-cancion-titulo" class="text-xl font-black uppercase italic text-[#001739] tracking-tighter leading-none">--</span>
-                        <span id="res-cancion-artista" class="text-xs font-bold text-slate-400 italic"></span>
-                    </div>
+                <div class="max-w-xl mx-auto pt-4 pb-6 px-2">
 
                     <!-- Card principal -->
                     <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden">
 
-                        <!-- Zona medidor: fondo suave, centrado -->
-                        <div class="flex flex-col items-center pt-10 pb-7 px-8 bg-gradient-to-b from-slate-50 to-white">
-                            <div data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA">
-                                <svg id="risk-svg" width="150" height="150" viewBox="0 0 150 150">
+                        <!-- Zona superior: medidor + clasificación en fila -->
+                        <div class="flex items-center gap-4 px-7 pt-6 pb-5 bg-gradient-to-b from-slate-50 to-white">
+                            <!-- Medidor (izquierda) -->
+                            <div class="shrink-0" data-tip="Índice de riesgo 0–100. Bajo 15 = APTA · 15–44 = USO MEDIADO · 45+ = NO APTA">
+                                <svg id="risk-svg" width="100" height="100" viewBox="0 0 150 150">
                                     <circle cx="75" cy="75" r="60" fill="none" stroke="#e2e8f0" stroke-width="12"/>
                                     <circle id="risk-arc" cx="75" cy="75" r="60" fill="none" stroke="#16a34a" stroke-width="12"
                                             stroke-linecap="round"
@@ -307,16 +300,20 @@
                                           font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#94a3b8" letter-spacing="2">RIESGO</text>
                                 </svg>
                             </div>
-                            <!-- Clasificación debajo del medidor -->
-                            <h3 id="res-resultado"
-                                class="text-3xl font-black leading-none uppercase italic mt-5 text-center"
-                                style="color:#001739">--</h3>
-                            <div id="res-age"
-                                 class="text-[10px] font-black uppercase italic tracking-widest text-slate-400 mt-2 text-center"></div>
+                            <!-- Canción + clasificación (derecha) -->
+                            <div class="flex flex-col justify-center min-w-0 flex-grow">
+                                <span id="res-cancion-titulo" class="text-base font-black uppercase italic text-[#001739] tracking-tighter leading-tight truncate">--</span>
+                                <span id="res-cancion-artista" class="text-[10px] font-bold text-slate-400 italic mb-2 truncate"></span>
+                                <h3 id="res-resultado"
+                                    class="text-2xl font-black leading-tight uppercase italic"
+                                    style="color:#001739">--</h3>
+                                <div id="res-age"
+                                     class="text-[10px] font-black uppercase italic tracking-widest text-slate-400 mt-0.5"></div>
+                            </div>
                         </div>
 
                         <!-- Zona de detalles -->
-                        <div class="px-8 pb-8 flex flex-col gap-4">
+                        <div class="px-7 pb-6 flex flex-col gap-3">
                             <div class="h-px bg-slate-100"></div>
 
                             <!-- Justificación -->
@@ -335,12 +332,12 @@
                             </div>
 
                             <!-- ── Card SonarIA: qué hacer con este resultado ── -->
-                            <div id="diag-sonaria-action" class="hidden rounded-2xl border p-5 flex gap-4 items-start">
-                                <div id="diag-action-icon" class="text-2xl shrink-0 mt-0.5"></div>
+                            <div id="diag-sonaria-action" class="hidden rounded-2xl border p-4 flex gap-3 items-start">
+                                <div id="diag-action-icon" class="text-xl shrink-0 mt-0.5"></div>
                                 <div class="flex-grow min-w-0">
                                     <p id="diag-action-title" class="text-[10px] font-black uppercase italic tracking-widest mb-1"></p>
                                     <p id="diag-action-body" class="text-[12px] italic leading-relaxed"></p>
-                                    <p class="text-[10px] text-slate-400 italic mt-2 leading-relaxed">La decisión pedagógica es siempre tuya. SonarIA te entrega las herramientas para usarla bien.</p>
+                                    <p class="text-[10px] text-slate-400 italic mt-1 leading-relaxed">La decisión pedagógica es siempre tuya. SonarIA te entrega las herramientas para usarla bien.</p>
                                 </div>
                             </div>
 
