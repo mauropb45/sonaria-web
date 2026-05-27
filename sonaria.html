@@ -149,6 +149,13 @@
                 <div class="h-px bg-slate-100 my-3 mx-2"></div>
                 <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Actividad</p>
                 <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4 shrink-0"></i> Historial</button>
+                <!-- Enlace Admin — solo visible para administradores -->
+                <div id="nav-admin-link" class="hidden">
+                    <div class="h-px bg-slate-100 my-3 mx-2"></div>
+                    <a href="admin.html" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-[#FF8700]/70 hover:text-[#FF8700]">
+                        <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i> Panel Admin
+                    </a>
+                </div>
             </div>
             <!-- Pie fijo -->
             <div class="shrink-0 p-6 border-t flex flex-col gap-2 text-center">
@@ -577,7 +584,12 @@
                 // Sincroniza nav: si tiene cursos va al analizador, si no a Mis Cursos
                 this.nav(this.state.cursos.length > 0 ? 'sec-analyze' : 'sec-config');
             },
-            updatePlanUI() { document.getElementById('plan-indicator').innerText = this.state.user.plan === 'pro' ? 'Plan PRO ✓' : 'Plan Free'; },
+            updatePlanUI() {
+                document.getElementById('plan-indicator').innerText = this.state.user.plan === 'pro' ? 'Plan PRO ✓' : 'Plan Free';
+                // Muestra el enlace al panel admin solo para administradores
+                const adminLink = document.getElementById('nav-admin-link');
+                if (adminLink) adminLink.classList.toggle('hidden', !this.state.user.is_admin);
+            },
             async refreshMe() {
                 const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
                 if (!token) return;
