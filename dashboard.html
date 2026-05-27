@@ -160,7 +160,6 @@
             <!-- Pie fijo -->
             <div class="shrink-0 p-6 border-t flex flex-col gap-2 text-center">
                 <a href="planes.html" class="block w-full py-4 bg-[#FF8700] text-white rounded-2xl font-black uppercase text-[10px] shadow-xl italic">👑 Ser PRO ahora</a>
-                <button id="btn-test-pro" onclick="SonarIA.activarProTest()" class="hidden w-full py-3 border-2 border-dashed border-slate-200 text-slate-400 rounded-2xl font-black uppercase text-[9px] italic hover:border-[#FF8700] hover:text-[#FF8700] transition-all">🧪 Activar PRO de prueba (24h)</button>
             </div>
         </nav>
 
@@ -580,7 +579,7 @@
                 this.setupSmartListeners();
                 this._loadSchoolProfile();
                 this.refreshMe();
-                this.checkTestMode();
+
                 // Sincroniza nav: si tiene cursos va al analizador, si no a Mis Cursos
                 this.nav(this.state.cursos.length > 0 ? 'sec-analyze' : 'sec-config');
             },
@@ -1133,37 +1132,6 @@
                         </div>`;
                 }
                 lucide.createIcons();
-            },
-            async activarProTest() {
-                const token = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || '';
-                const btn = document.getElementById('btn-test-pro');
-                btn.innerText = '⏳ Activando...';
-                try {
-                    const res = await fetch(API_URL + "/dev/activar-pro", {
-                        method: 'POST',
-                        headers: { 'Authorization': 'Bearer ' + token }
-                    });
-                    const d = await res.json();
-                    if (d.ok) {
-                        const newToken = d.access_token || token;
-                        ['sonaria_token','mejoraria_token','token','access_token'].forEach(k => localStorage.setItem(k, newToken));
-                        localStorage.setItem('sonaria_user', JSON.stringify(d.user));
-                        localStorage.setItem('mejoraria_user', JSON.stringify(d.user));
-                        this.state.user = d.user;
-                        this.updatePlanUI();
-                        btn.innerText = '✅ PRO activo (24h)';
-                        btn.disabled = true;
-                    }
-                } catch(e) { btn.innerText = '🧪 Activar PRO de prueba (24h)'; }
-            },
-            async checkTestMode() {
-                try {
-                    const res = await fetch(API_URL + "/");
-                    const d = await res.json();
-                    if (d.status && d.status.includes('test')) {
-                        document.getElementById('btn-test-pro').classList.remove('hidden');
-                    }
-                } catch(_) {}
             },
             async navHistory() {
                 this.nav('sec-history');
