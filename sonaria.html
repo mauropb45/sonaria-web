@@ -101,7 +101,7 @@
             <div class="px-8 pt-7 pb-6">
                 <div class="flex items-start justify-between mb-5">
                     <div>
-                        <span class="text-[10px] font-black uppercase italic text-[#FF8700] tracking-widest block mb-0.5">¿Te refieres a...?</span>
+                        <span class="text-[10px] font-black uppercase italic text-[#FF8700] tracking-widest block mb-0.5">Encontramos estas sugerencias</span>
                         <span class="text-[11px] text-slate-400 italic">Selecciona la canción correcta</span>
                     </div>
                     <button onclick="SonarIA._closeSuggestModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-slate-200 transition-colors shrink-0 mt-0.5">
@@ -298,10 +298,6 @@
                             <span class="text-lg shrink-0">⚠️</span>
                             <p id="analyze-error-text" class="text-[11px] font-black text-red-500 uppercase italic tracking-widest text-left"></p>
                         </div>
-                        <!-- ── Link manual sugerencias ───────────────── -->
-                        <button onclick="SonarIA._manualSuggest()" class="text-[9px] font-black uppercase italic text-slate-300 hover:text-[#FF8700] transition-colors tracking-widest w-full text-center pt-1">
-                            ¿No encuentras la canción? Ver sugerencias →
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1370,29 +1366,32 @@
                 const modal = document.getElementById('suggest-modal');
                 const list  = document.getElementById('suggest-modal-list');
                 if (!modal || !list) return;
-                // Mostrar modal con spinner
                 list.innerHTML = '<div class="text-slate-300 text-xs italic text-center py-6 animate-pulse">Buscando sugerencias...</div>';
                 modal.classList.remove('hidden');
                 try {
-                    const q = encodeURIComponent((titulo + ' ' + artista).trim());
-                    const res = await fetch(`https://lrclib.net/api/search?q=${q}`);
-                    if (!res.ok) { modal.classList.add('hidden'); return; }
-                    const arr = await res.json();
-                    const top = (Array.isArray(arr) ? arr : []).slice(0, 4);
+                    const q   = encodeURIComponent((titulo + (artista ? ' ' + artista : '')).trim());
+                    // iTunes Search API: gratuita, sin auth, cobertura global
+                    const res = await fetch(`https://itunes.apple.com/search?term=${q}&entity=song&limit=6&country=CL`);
+                    if (!res.ok) throw new Error('itunes_fail');
+                    const data = await res.json();
+                    const top  = (data.results || []).slice(0, 4);
                     if (!top.length) { modal.classList.add('hidden'); return; }
-                    // Si el primero coincide exactamente con lo escrito, no mostrar
-                    const firstT = (top[0]?.trackName || '').toLowerCase().trim();
-                    const firstA = (top[0]?.artistName || '').toLowerCase().trim();
-                    if (firstT === titulo.toLowerCase().trim() && (!artista || firstA === artista.toLowerCase().trim())) {
+                    // Ocultar si el primer resultado coincide exactamente con lo escrito
+                    const fT = (top[0]?.trackName  || '').toLowerCase().trim();
+                    const fA = (top[0]?.artistName || '').toLowerCase().trim();
+                    if (fT === titulo.toLowerCase().trim() && (!artista || fA === artista.toLowerCase().trim())) {
                         modal.classList.add('hidden'); return;
                     }
                     list.innerHTML = top.map(s => {
-                        const t2 = (s.trackName || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-                        const a2 = (s.artistName || '').replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+                        const t2 = (s.trackName  || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+                        const a2 = (s.artistName || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
                         return `<button onclick="SonarIA._fillAndAnalyze('${t2}','${a2}')"
-                            class="w-full text-left bg-orange-50 border border-orange-100 hover:border-[#FF8700] rounded-2xl px-5 py-3.5 transition-all group">
-                            <div class="text-sm font-black text-[#001739] italic group-hover:text-[#FF8700] transition-colors">${s.trackName}</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">${s.artistName || '—'}</div>
+                            class="w-full text-left bg-orange-50 border border-orange-100 hover:border-[#FF8700] rounded-2xl px-5 py-3.5 transition-all group flex items-center gap-4">
+                            ${s.artworkUrl60 ? `<img src="${s.artworkUrl60}" class="w-10 h-10 rounded-xl shrink-0 object-cover" loading="lazy">` : ''}
+                            <div class="min-w-0">
+                                <div class="text-sm font-black text-[#001739] italic group-hover:text-[#FF8700] transition-colors truncate">${s.trackName}</div>
+                                <div class="text-[10px] text-slate-400 mt-0.5 truncate">${s.artistName || '—'}</div>
+                            </div>
                         </button>`;
                     }).join('');
                 } catch(_) { modal.classList.add('hidden'); }
