@@ -615,6 +615,11 @@
                 if (!token) return;
                 try {
                     const res = await fetch(API_URL + "/me", { headers: { 'Authorization': 'Bearer ' + token } });
+                    if (res.status === 401) {
+                        // Token inválido o sesión cerrada desde otro dispositivo → logout automático
+                        this.logout();
+                        return;
+                    }
                     if (res.ok) {
                         const d = await res.json();
                         if (d.user) { this.state.user = {...this.state.user, ...d.user}; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
@@ -858,8 +863,19 @@
                     });
 
                     if (res.status === 401) {
-                        this.showAnalyzeError("Tu sesión expiró. Vuelve a iniciar sesión.");
+                        this.showAnalyzeError("Sesión cerrada. Vuelve a iniciar sesión.");
                         setTimeout(() => this.logout(), 2500);
+                        return;
+                    }
+
+                    if (res.status === 429) {
+                        const d = await res.json().catch(() => ({}));
+                        this.showAnalyzeError((d.error || 'Límite diario alcanzado.') + ' → ');
+                        // Añade link a planes dentro del mensaje de error
+                        const errEl = document.getElementById('analyze-error-text');
+                        if (errEl) errEl.innerHTML = (d.error || 'Límite diario alcanzado.') +
+                            ' <a href="planes.html" class="underline font-black">Ver Plan Pro →</a>';
+                        document.getElementById('analyze-error')?.classList.remove('hidden');
                         return;
                     }
 
