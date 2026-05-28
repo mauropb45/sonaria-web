@@ -81,6 +81,20 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- ── Auth Gate: cubre todo hasta verificar sesión con el servidor ── -->
+    <div id="auth-gate" class="fixed inset-0 z-[300] bg-[#001739] flex flex-col items-center justify-center gap-6">
+        <div class="text-5xl font-black italic uppercase tracking-tight text-white">
+            Sonar<span class="text-[#FF8700]">IA</span>
+        </div>
+        <div class="flex gap-1.5">
+            <div class="w-2 h-2 rounded-full bg-[#FF8700] animate-bounce" style="animation-delay:0ms"></div>
+            <div class="w-2 h-2 rounded-full bg-[#FF8700] animate-bounce" style="animation-delay:150ms"></div>
+            <div class="w-2 h-2 rounded-full bg-[#FF8700] animate-bounce" style="animation-delay:300ms"></div>
+        </div>
+        <p id="auth-gate-msg" class="text-[10px] font-black uppercase italic text-slate-500 tracking-widest">Verificando sesión...</p>
+    </div>
+
     <!-- ── Modal "¿Te refieres a...?" ───────────────────────────────────── -->
     <div id="suggest-modal" class="hidden fixed inset-0 z-[95] flex items-end sm:items-center justify-center p-4 bg-[#001739]/70 backdrop-blur-sm">
         <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-sm w-full border-t-4 border-[#FF8700] overflow-hidden fade-up">
@@ -126,7 +140,10 @@
             <!-- Encabezado fijo -->
             <div class="px-8 pt-8 pb-5 border-b shrink-0">
                 <div id="user-greeting" class="text-2xl font-black text-[#001739] italic leading-tight uppercase tracking-tighter">¡Hola!</div>
-                <div id="user-mail" class="text-[9px] font-bold text-slate-300 truncate uppercase mt-1 italic">--</div>
+                <div id="user-mail" class="text-[11px] font-bold text-slate-500 truncate mt-1 flex items-center gap-1.5">
+                    <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                    <span id="user-mail-text">--</span>
+                </div>
                 <!-- Reloj en vivo -->
                 <div class="mt-4 flex items-end gap-3">
                     <span id="sidebar-clock" class="text-4xl font-black italic text-[#001739] tracking-tighter leading-none">--:--</span>
@@ -572,17 +589,47 @@
                 currentPlanIdx: 0
             },
             async init() {
+                // ── Auth gate: valida sesión en servidor ANTES de mostrar la app ──
+                const _tk = localStorage.getItem('sonaria_token') || localStorage.getItem('mejoraria_token') || localStorage.getItem('token') || '';
+                const _gate = document.getElementById('auth-gate');
+                const _gateMsg = document.getElementById('auth-gate-msg');
+
+                if (!_tk) {
+                    if (_gateMsg) _gateMsg.innerText = 'Sin sesión — redirigiendo...';
+                    window.location.replace('login.html'); return;
+                }
+                try {
+                    const _res = await fetch(API_URL + "/me", { headers: { Authorization: 'Bearer ' + _tk } });
+                    if (_res.status === 401 || _res.status === 403) {
+                        if (_gateMsg) _gateMsg.innerText = 'Sesión inválida — redirigiendo...';
+                        ['sonaria_token','mejoraria_token','token','access_token','sonaria_user','mejoraria_user'].forEach(k => localStorage.removeItem(k));
+                        window.location.replace('login.html'); return;
+                    }
+                    if (_res.ok) {
+                        const _d = await _res.json();
+                        if (_d.user) {
+                            this.state.user = { ...this.state.user, ..._d.user };
+                            localStorage.setItem('sonaria_user', JSON.stringify(this.state.user));
+                        }
+                    }
+                } catch (_) { /* sin red: continúa con datos cacheados */ }
+
+                // ── Sesión OK: ocultar gate y mostrar la app ─────────────────────
+                if (_gate) _gate.style.display = 'none';
+
+                // ── Inicialización normal ─────────────────────────────────────────
                 this.renderCourses(); this.checkViewer(); this.updatePlanUI();
                 this._startClock();
                 const params = new URLSearchParams(window.location.search);
                 if (params.get('payment') === 'success') { await this.syncPayment(params.get('order_id')); }
-                document.getElementById('user-greeting').innerText = "¡Hola, " + (this.state.user.name || "Docente").split(' ')[0] + "!";
-                document.getElementById('user-mail').innerText = this.state.user.email || "";
+
+                // Saludo y email (datos frescos desde /me)
+                document.getElementById('user-greeting').innerText = '¡Hola, ' + (this.state.user.name || 'Docente').split(' ')[0] + '!';
+                const mailSpan = document.getElementById('user-mail-text');
+                if (mailSpan) mailSpan.innerText = this.state.user.email || '';
+
                 this.setupSmartListeners();
                 this._loadSchoolProfile();
-                this.refreshMe();
-
-                // Sincroniza nav: si tiene cursos va al analizador, si no a Mis Cursos
                 this.nav(this.state.cursos.length > 0 ? 'sec-analyze' : 'sec-config');
             },
             updatePlanUI() {
@@ -622,7 +669,13 @@
                     }
                     if (res.ok) {
                         const d = await res.json();
-                        if (d.user) { this.state.user = {...this.state.user, ...d.user}; localStorage.setItem('sonaria_user', JSON.stringify(this.state.user)); this.updatePlanUI(); }
+                        if (d.user) {
+                            this.state.user = {...this.state.user, ...d.user};
+                            localStorage.setItem('sonaria_user', JSON.stringify(this.state.user));
+                            this.updatePlanUI();
+                            const mailSpan = document.getElementById('user-mail-text');
+                            if (mailSpan) mailSpan.innerText = this.state.user.email || '';
+                        }
                     }
                 } catch (_) {}
             },
