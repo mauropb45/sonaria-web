@@ -128,11 +128,16 @@
     </div>
     
     <header class="h-14 f1-navy flex items-center justify-between px-5 text-white z-50 shrink-0" style="padding-top: env(safe-area-inset-top)">
-        <h1 class="text-xl font-black italic uppercase tracking-tight">Sonar<span class="text-[#FF8700]">IA</span></h1>
-        <div class="flex items-center gap-3">
-            <div id="plan-indicator" class="text-[9px] font-black uppercase border-white/20 border px-3 py-1 rounded-full italic tracking-widest text-slate-400">Plan Free</div>
-            <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest">Salir →</button>
+        <!-- Logo + badge de plan integrado -->
+        <div class="flex items-center gap-2.5">
+            <h1 class="text-xl font-black italic uppercase tracking-tight">Sonar<span class="text-[#FF8700]">IA</span></h1>
+            <div id="plan-indicator"
+                 class="text-[9px] font-black uppercase px-2.5 py-1 rounded-md italic tracking-widest border text-slate-500 border-white/10">
+                FREE
+            </div>
         </div>
+        <!-- Solo salir -->
+        <button onclick="SonarIA.logout()" class="text-[9px] font-black uppercase text-slate-500 hover:text-white transition-colors italic tracking-widest">Salir →</button>
     </header>
 
     <div class="flex flex-grow overflow-hidden">
@@ -635,13 +640,20 @@
             updatePlanUI() {
                 const isPro = this.state.user.plan === 'pro';
 
-                // Badge en header: naranja para Pro, gris para Free
+                // Badge integrado al logo: oro para PRO, verde tenue para FREE
                 const ind = document.getElementById('plan-indicator');
                 if (ind) {
-                    ind.textContent = isPro ? 'SonarIA PRO' : 'Plan Free';
-                    ind.className = isPro
-                        ? 'text-[9px] font-black uppercase px-3 py-1 rounded-full italic tracking-widest bg-[#FF8700] text-white shadow-sm'
-                        : 'text-[9px] font-black uppercase border-white/20 border px-3 py-1 rounded-full italic tracking-widest text-slate-400';
+                    if (isPro) {
+                        ind.textContent = 'PRO';
+                        // Oro: poderoso, contrasta sobre navy, distinto del naranja
+                        ind.className = 'text-[9px] font-black uppercase px-2.5 py-1 rounded-md italic tracking-widest border'
+                            + ' text-[#FFD700] border-[#FFD700]/40 bg-[#FFD700]/10';
+                    } else {
+                        ind.textContent = 'FREE';
+                        // Verde tenue: distinguible, no compite con el logo
+                        ind.className = 'text-[9px] font-black uppercase px-2.5 py-1 rounded-md italic tracking-widest border'
+                            + ' text-emerald-400 border-emerald-500/30 bg-emerald-500/5';
+                    }
                 }
 
                 // Coronitas en nav: ocultar si es Pro
