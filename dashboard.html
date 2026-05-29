@@ -59,7 +59,10 @@
             letter-spacing:.1em; padding:4px 10px; border-radius:20px;
             background:rgba(0,23,57,.7); color:rgba(255,255,255,.4);
             pointer-events:none; transition:opacity .3s; }
-        @media (max-width:768px){ #device-chip{ bottom:72px; } }
+        @media (max-width:768px){ #device-chip{ bottom:80px; right:8px; font-size:8px; padding:3px 8px; } }
+        /* Estado activo barra móvil: ícono naranja + punto indicador */
+        .mnav-btn.active { color: #FF8700 !important; }
+        .mnav-btn.active i { filter: drop-shadow(0 0 4px rgba(255,135,0,.4)); }
 
         /* ── TABLET (769 – 1023 px) ───────────────────────────────────────── */
         @media (min-width:769px) and (max-width:1023px) {
@@ -490,34 +493,33 @@
 
     <!-- ── Barra de navegación inferior (solo móvil) ── -->
     <nav class="mobile-nav fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50 shadow-[0_-6px_24px_rgba(0,0,0,0.08)]" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex h-16">
+        <div class="flex h-[4.25rem] items-stretch">
+            <!-- Cursos -->
             <button onclick="SonarIA.nav('sec-config')" id="mnav-sec-config"
-                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
-                <i data-lucide="settings" class="w-[18px] h-[18px]"></i>
-                <span class="text-[9px] font-black uppercase leading-none">Cursos</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1.5 text-slate-300 transition-all active:scale-90 touch-manipulation">
+                <i data-lucide="settings" class="w-[22px] h-[22px]"></i>
             </button>
+            <!-- Analizar -->
             <button onclick="SonarIA.nav('sec-analyze')" id="mnav-sec-analyze"
-                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
-                <i data-lucide="search" class="w-[18px] h-[18px]"></i>
-                <span class="text-[9px] font-black uppercase leading-none">Analizar</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1.5 text-slate-300 transition-all active:scale-90 touch-manipulation">
+                <i data-lucide="search" class="w-[22px] h-[22px]"></i>
             </button>
-            <!-- Botón central destacado -->
+            <!-- Botón central flotante — Diagnóstico -->
             <button onclick="SonarIA.nav('sec-diag')" id="mnav-sec-diag"
-                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 transition-colors active:scale-95 relative">
-                <div class="absolute -top-5 w-12 h-12 f1-navy rounded-full flex items-center justify-center shadow-lg border-4 border-white">
-                    <i data-lucide="activity" class="w-5 h-5 text-[#FF8700]"></i>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center transition-all active:scale-90 touch-manipulation relative">
+                <div class="absolute -top-[1.1rem] w-14 h-14 f1-navy rounded-full flex items-center justify-center shadow-xl border-[3px] border-white">
+                    <i data-lucide="activity" class="w-6 h-6 text-[#FF8700]"></i>
                 </div>
-                <span class="text-[9px] font-black uppercase leading-none text-slate-400 mt-5">Diag.</span>
             </button>
+            <!-- Planificación -->
             <button onclick="SonarIA.nav('sec-plan')" id="mnav-sec-plan"
-                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
-                <i data-lucide="book-open" class="w-[18px] h-[18px]"></i>
-                <span class="text-[9px] font-black uppercase leading-none">Plan</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1.5 text-slate-300 transition-all active:scale-90 touch-manipulation">
+                <i data-lucide="book-open" class="w-[22px] h-[22px]"></i>
             </button>
+            <!-- Historial -->
             <button onclick="SonarIA.navHistory()" id="mnav-sec-history"
-                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition-colors active:scale-95">
-                <i data-lucide="clock" class="w-[18px] h-[18px]"></i>
-                <span class="text-[9px] font-black uppercase leading-none">Historial</span>
+                    class="mnav-btn flex-1 flex flex-col items-center justify-center gap-1.5 text-slate-300 transition-all active:scale-90 touch-manipulation">
+                <i data-lucide="clock" class="w-[22px] h-[22px]"></i>
             </button>
         </div>
     </nav>
@@ -851,15 +853,11 @@
                 const el = document.getElementById(id); if(!el) return;
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                // mobile nav highlight
-                document.querySelectorAll('.mnav-btn').forEach(b => {
-                    b.style.color = '';
-                });
+                document.querySelectorAll('.mnav-btn').forEach(b => b.classList.remove('active'));
                 el.classList.add('active');
                 if(document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
                 const mBtn = document.getElementById('mnav-' + id);
-                if (mBtn) mBtn.style.color = '#FF8700';
-                // scroll to top of section
+                if (mBtn) mBtn.classList.add('active');
                 el.scrollTop = 0;
             },
             renderCourses() { 
