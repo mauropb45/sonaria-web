@@ -52,6 +52,37 @@
         [data-tip]:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #001739; color: #fff; padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 600; z-index: 200; pointer-events: none; font-style: normal; letter-spacing: .03em; max-width: 260px; white-space: normal; text-align: center; line-height: 1.4; }
         [data-tip]:hover::before { content: ''; position: absolute; bottom: calc(100% + 3px); left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #001739; z-index: 200; pointer-events: none; }
 
+        /* ── DEVICE DETECTION ────────────────────────────────────────────── */
+        /* Chip discreto: esquina inferior derecha en desktop */
+        #device-chip { position:fixed; bottom:12px; right:12px; z-index:200;
+            font-size:9px; font-weight:900; text-transform:uppercase; font-style:italic;
+            letter-spacing:.1em; padding:4px 10px; border-radius:20px;
+            background:rgba(0,23,57,.7); color:rgba(255,255,255,.4);
+            pointer-events:none; transition:opacity .3s; }
+        @media (max-width:768px){ #device-chip{ bottom:72px; } }
+
+        /* ── TABLET (769 – 1023 px) ───────────────────────────────────────── */
+        @media (min-width:769px) and (max-width:1023px) {
+            nav.desktop-nav { width: 4.5rem !important; }
+            nav.desktop-nav .nav-label,
+            nav.desktop-nav .sidebar-section-title,
+            nav.desktop-nav #user-greeting,
+            nav.desktop-nav #user-mail,
+            nav.desktop-nav #sidebar-clock,
+            nav.desktop-nav #sidebar-date,
+            nav.desktop-nav #sidebar-seconds,
+            nav.desktop-nav #sidebar-upgrade-btn,
+            nav.desktop-nav #sidebar-pro-badge { display: none !important; }
+            nav.desktop-nav .nav-btn { justify-content: center !important; padding: 0.85rem !important; border-right: none !important; }
+            nav.desktop-nav .nav-btn.active { border-right: none !important; border-left: 3px solid #FF8700 !important; border-radius: 0.75rem !important; }
+            nav.desktop-nav > div:first-child { padding: 1rem 0.5rem !important; justify-content: center !important; }
+            nav.desktop-nav .flex-grow { padding: 0.5rem !important; }
+            nav.desktop-nav .shrink-0.p-6 { padding: 0.5rem !important; }
+            nav.desktop-nav .h-px { margin: 0.25rem 0.5rem !important; }
+            main.desktop-main { padding: 1.5rem !important; }
+            .glass-card { border-radius: 2rem !important; }
+        }
+
         /* ── MOBILE ──────────────────────────────────────────────────────── */
         .mobile-nav { display: none; }
         @media (max-width: 768px) {
@@ -81,6 +112,8 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
+    <!-- Chip de dispositivo detectado (solo visible en modo debug; siempre presente pero discreto) -->
+    <div id="device-chip">···</div>
 
     <!-- ── Auth Gate: cubre todo hasta verificar sesión con el servidor ── -->
     <div id="auth-gate" class="fixed inset-0 z-[300] bg-[#001739] flex flex-col items-center justify-center gap-6">
@@ -160,17 +193,17 @@
             </div>
             <!-- Botones de navegación con scroll -->
             <div class="flex-grow overflow-y-auto scroll-v px-4 py-5 flex flex-col gap-1">
-                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Configuración</p>
-                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4 shrink-0"></i> Mis Cursos</button>
-                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3"><i data-lucide="search" class="w-4 h-4 shrink-0"></i> Analizador</button>
+                <p class="sidebar-section-title text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Configuración</p>
+                <button onclick="SonarIA.nav('sec-config')" id="nav-sec-config" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3" data-tip-tablet="Mis Cursos"><i data-lucide="settings" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Mis Cursos</span></button>
+                <button onclick="SonarIA.nav('sec-analyze')" id="nav-sec-analyze" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3" data-tip-tablet="Analizador"><i data-lucide="search" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Analizador</span></button>
                 <div class="h-px bg-slate-100 my-3 mx-2"></div>
-                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Resultados</p>
-                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="activity" class="w-4 h-4 shrink-0"></i> Diagnóstico</button>
-                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="file-text" class="w-4 h-4 shrink-0"></i> Letra <i data-lucide="crown" class="crown-nav w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
-                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40"><i data-lucide="book-open" class="w-4 h-4 shrink-0"></i> Planificación <i data-lucide="crown" class="crown-nav w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
+                <p class="sidebar-section-title text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Resultados</p>
+                <button onclick="SonarIA.nav('sec-diag')" id="nav-sec-diag" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip-tablet="Diagnóstico"><i data-lucide="activity" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Diagnóstico</span></button>
+                <button onclick="SonarIA.nav('sec-canvas')" id="nav-sec-canvas" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip-tablet="Letra"><i data-lucide="file-text" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Letra</span> <i data-lucide="crown" class="crown-nav w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
+                <button onclick="SonarIA.nav('sec-plan')" id="nav-sec-plan" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 opacity-40" data-tip-tablet="Planificación"><i data-lucide="book-open" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Planificación</span> <i data-lucide="crown" class="crown-nav w-3 h-3 text-[#FF8700] ml-auto shrink-0"></i></button>
                 <div class="h-px bg-slate-100 my-3 mx-2"></div>
-                <p class="text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Actividad</p>
-                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400"><i data-lucide="clock" class="w-4 h-4 shrink-0"></i> Historial</button>
+                <p class="sidebar-section-title text-[9px] font-black uppercase italic text-slate-300 tracking-widest px-3 mb-1">Actividad</p>
+                <button onclick="SonarIA.navHistory()" id="nav-sec-history" class="nav-btn px-4 py-3 text-sm font-bold text-left italic flex items-center gap-3 text-slate-400" data-tip-tablet="Historial"><i data-lucide="clock" class="w-4 h-4 shrink-0"></i><span class="nav-label"> Historial</span></button>
                 <!-- Enlace Admin — solo visible para administradores -->
                 <div id="nav-admin-link" class="hidden">
                     <div class="h-px bg-slate-100 my-3 mx-2"></div>
@@ -617,6 +650,10 @@
 
                 // ── Sesión OK: ocultar gate y mostrar la app ─────────────────────
                 if (_gate) _gate.style.display = 'none';
+
+                // ── Detección de dispositivo ──────────────────────────────────────
+                this._detectDevice();
+                window.addEventListener('resize', () => this._detectDevice(), { passive: true });
 
                 // ── Inicialización normal ─────────────────────────────────────────
                 this.renderCourses(); this.checkViewer(); this.updatePlanUI();
@@ -1415,6 +1452,22 @@
                     if (d.ok) await this.loadHistory();
                     else alert(d.error || 'No se pudo eliminar.');
                 } catch(e) { console.error('[deleteHistory]', e); }
+            },
+            _detectDevice() {
+                const w = window.innerWidth;
+                const hasTouch = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+                let type, label, icon;
+                if (w < 769) {
+                    type = 'mobile'; label = '📱 Móvil'; icon = '📱';
+                } else if (w < 1024) {
+                    type = 'tablet'; label = '📟 Tablet'; icon = '📟';
+                } else {
+                    type = 'desktop'; label = hasTouch ? '🖥️ Desktop touch' : '🖥️ Desktop'; icon = '🖥️';
+                }
+                this.state.deviceType = type;
+                document.body.dataset.device = type;
+                const chip = document.getElementById('device-chip');
+                if (chip) chip.textContent = label;
             },
             _startClock() {
                 const DIAS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
