@@ -64,10 +64,6 @@
         .mnav-btn { color: #cbd5e1; }
         .mnav-btn.active { color: #FF8700; }
         .mnav-btn.active .mnav-dot { background-color: #FF8700; }
-        /* Padding inferior del contenido principal para que no tape la barra */
-        @media (max-width:768px) {
-            main.desktop-main { padding-bottom: 72px !important; }
-        }
 
         /* ── TABLET (769 – 1023 px) ───────────────────────────────────────── */
         @media (min-width:769px) and (max-width:1023px) {
@@ -95,7 +91,13 @@
         .mobile-nav { display: none; }
         @media (max-width: 768px) {
             nav.desktop-nav { display: none !important; }
-            main.desktop-main { padding: 0.875rem 0.875rem 5.5rem !important; overflow-y: auto !important; }
+            /* main acotado para que nunca quede bajo la barra inferior (60px) */
+            main.desktop-main {
+                padding: 0.875rem !important;
+                overflow: hidden !important;
+                height: calc(100dvh - 56px - 60px) !important;
+                max-height: calc(100dvh - 56px - 60px) !important;
+            }
             .section { overflow-y: auto !important; height: 100% !important; -webkit-overflow-scrolling: touch; }
             .glass-card { border-radius: 1.5rem !important; padding: 1.25rem !important; }
             #grid-cursos { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
