@@ -621,6 +621,14 @@
             const m = {"1M":"I° Medio","2M":"II° Medio","3M":"III° Medio","4M":"IV° Medio"};
             return m[code] ? m[code] : code + "° Básico";
         }
+        const COURSE_ORDER = ['1','2','3','4','5','6','7','8','1M','2M','3M','4M'];
+        function sortCourses(arr) {
+            return [...arr].sort((a, b) => {
+                const ia = COURSE_ORDER.indexOf(a);
+                const ib = COURSE_ORDER.indexOf(b);
+                return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+            });
+        }
 
         window.SonarIA = {
             state: {
@@ -960,7 +968,7 @@
                     const res = await fetch(API_URL + "/analizar", {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
-                        body: JSON.stringify({ titulo: t, artista: a, texto, buscar_letra: texto.trim() === "", cursos: [...this.state.cursos].sort((a,b) => ['1b','2b','3b','4b','5b','6b','7b','8b','1m','2m','3m','4m'].indexOf(a) - ['1b','2b','3b','4b','5b','6b','7b','8b','1m','2m','3m','4m'].indexOf(b)) })
+                        body: JSON.stringify({ titulo: t, artista: a, texto, buscar_letra: texto.trim() === "", cursos: sortCourses(this.state.cursos) })
                     });
 
                     if (res.status === 401) {
@@ -1051,7 +1059,7 @@
                     : '';
 
                 // ── Cursos excluidos por edad ─────────────────────────────────
-                const excluidos = data.cursos_excluidos || [];
+                const excluidos = sortCourses(data.cursos_excluidos || []);
                 const exclDiv   = document.getElementById('diag-excluded');
                 if (excluidos.length > 0) {
                     const labels = excluidos.map(c => courseLabel(c)).join(', ');
@@ -1155,7 +1163,7 @@
                 const content = document.getElementById('plan-content');
                 if (!ped.por_curso || ped.por_curso.length === 0) {
                     tabs.innerHTML = '';
-                    const excl    = this.state.lastData?.cursos_excluidos || [];
+                    const excl    = sortCourses(this.state.lastData?.cursos_excluidos || []);
                     const ageMin  = this.state.lastData?.age_min || 0;
                     if (excl.length > 0 && this.state.cursos.length > 0) {
                         const labels = excl.map(c => courseLabel(c)).join(', ');
@@ -1178,6 +1186,11 @@
                     }
                     return;
                 }
+                ped.por_curso = [...ped.por_curso].sort((a, b) => {
+                    const ia = COURSE_ORDER.indexOf(a.curso);
+                    const ib = COURSE_ORDER.indexOf(b.curso);
+                    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+                });
                 tabs.innerHTML = ped.por_curso.map((p, i) => `<button onclick="SonarIA.showPlan(${i})" class="course-tab p-5 border rounded-2xl font-black text-[10px] flex-1 ${i===0 ? 'active':''} transition-all shadow-sm italic italic">${courseLabel(p.curso)}</button>`).join('');
                 this.showPlan(0);
             },
